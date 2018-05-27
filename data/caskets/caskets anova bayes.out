@@ -1,0 +1,604 @@
+Mplus VERSION 7.11
+MUTHEN & MUTHEN
+02/13/2014   4:56 PM
+
+INPUT INSTRUCTIONS
+
+  Title:
+      Caskets moderation
+
+  Data:
+      File is caskets with centered.txt;
+
+  Variable:
+      Names are policy interest age educ male conserv kerry kerryc policyc;
+      Usevariables are interest kerry policy kxp;
+
+  Define:
+      kxp = kerry*policy;
+
+  Analysis:
+      Estimator = Bayes;
+      Biterations = 50000(20000);
+      processors = 2;
+
+  Model:
+      interest on kerry policy kxp ;
+
+  Output:
+      tech1 tech4 tech8 standardized;
+
+  Plot:
+      Type = plot3;
+
+
+
+INPUT READING TERMINATED NORMALLY
+
+
+
+
+Caskets moderation
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                         541
+
+Number of dependent variables                                    1
+Number of independent variables                                  3
+Number of continuous latent variables                            0
+
+Observed dependent variables
+
+  Continuous
+   INTEREST
+
+Observed independent variables
+   KERRY       POLICY      KXP
+
+
+Estimator                                                    BAYES
+Specifications for Bayesian Estimation
+  Point estimate                                            MEDIAN
+  Number of Markov chain Monte Carlo (MCMC) chains               2
+  Random seed for the first chain                                0
+  Starting value information                           UNPERTURBED
+  Treatment of categorical mediator                         LATENT
+  Algorithm used for Markov chain Monte Carlo           GIBBS(PX1)
+  Convergence criterion                                  0.500D-01
+  Maximum number of iterations                               50000
+  K-th iteration used for thinning                               1
+
+Input data file(s)
+  caskets with centered.txt
+Input data format  FREE
+
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+     USE THE FBITERATIONS OPTION TO INCREASE THE NUMBER OF ITERATIONS BY A FACTOR
+     OF AT LEAST TWO TO CHECK CONVERGENCE AND THAT THE PSR VALUE DOES NOT INCREASE.
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                               5
+
+Bayesian Posterior Predictive Checking using Chi-Square
+
+          95% Confidence Interval for the Difference Between
+          the Observed and the Replicated Chi-Square Values
+
+                                 -9.290             9.643
+
+          Posterior Predictive P-Value              0.503
+
+Information Criterion
+
+          Deviance (DIC)                         1576.703
+          Estimated Number of Parameters (pD)       4.968
+          Bayesian (BIC)                         1598.218
+
+
+
+MODEL RESULTS
+
+                                Posterior  One-Tailed         95% C.I.
+                    Estimate       S.D.      P-Value   Lower 2.5%  Upper 2.5%  Significance
+
+ INTEREST   ON
+    KERRY              0.599       0.128      0.000       0.343       0.846      *
+    POLICY            -0.386       0.127      0.001      -0.638      -0.133      *
+    KXP                0.364       0.179      0.023       0.006       0.709      *
+
+ Intercepts
+    INTEREST           1.783       0.090      0.000       1.607       1.963      *
+
+ Residual Variances
+    INTEREST           1.074       0.067      0.000       0.953       1.214      *
+
+
+STANDARDIZED MODEL RESULTS
+
+
+STDYX Standardization
+
+                                Posterior  One-Tailed         95% C.I.
+                    Estimate       S.D.      P-Value   Lower 2.5%  Upper 2.5%  Significance
+ INTEREST   ON
+    KERRY              0.268       0.056      0.000       0.155       0.374      *
+    POLICY            -0.173       0.056      0.001      -0.282      -0.059      *
+    KXP                0.145       0.071      0.023       0.002       0.281      *
+
+ Intercepts
+    INTEREST           1.597       0.099      0.000       1.404       1.789      *
+
+ Residual Variances
+    INTEREST           0.861       0.026      0.000       0.807       0.910      *
+
+
+STDY Standardization
+
+                                Posterior  One-Tailed         95% C.I.
+                    Estimate       S.D.      P-Value   Lower 2.5%  Upper 2.5%  Significance
+ INTEREST   ON
+    KERRY              0.268       0.056      0.000       0.155       0.374      *
+    POLICY            -0.173       0.056      0.001      -0.282      -0.059      *
+    KXP                0.145       0.071      0.023       0.002       0.281      *
+
+ Intercepts
+    INTEREST           1.597       0.099      0.000       1.404       1.789      *
+
+ Residual Variances
+    INTEREST           0.861       0.026      0.000       0.807       0.910      *
+
+
+STD Standardization
+
+                                Posterior  One-Tailed         95% C.I.
+                    Estimate       S.D.      P-Value   Lower 2.5%  Upper 2.5%  Significance
+ INTEREST   ON
+    KERRY              0.599       0.128      0.000       0.343       0.846      *
+    POLICY            -0.386       0.127      0.001      -0.638      -0.133      *
+    KXP                0.364       0.179      0.023       0.006       0.709      *
+
+ Intercepts
+    INTEREST           1.783       0.090      0.000       1.607       1.963      *
+
+ Residual Variances
+    INTEREST           1.074       0.067      0.000       0.953       1.214      *
+
+
+R-SQUARE
+
+                                Posterior  One-Tailed         95% C.I.
+    Variable        Estimate       S.D.      P-Value   Lower 2.5%  Upper 2.5%
+
+    INTEREST           0.139       0.026      0.000       0.090       0.193
+
+
+TECHNICAL 1 OUTPUT
+
+
+     PARAMETER SPECIFICATION
+
+
+           NU
+              INTEREST      KERRY         POLICY        KXP
+              ________      ________      ________      ________
+ 1                  0             0             0             0
+
+
+           LAMBDA
+              INTEREST      KERRY         POLICY        KXP
+              ________      ________      ________      ________
+ INTEREST           0             0             0             0
+ KERRY              0             0             0             0
+ POLICY             0             0             0             0
+ KXP                0             0             0             0
+
+
+           THETA
+              INTEREST      KERRY         POLICY        KXP
+              ________      ________      ________      ________
+ INTEREST           0
+ KERRY              0             0
+ POLICY             0             0             0
+ KXP                0             0             0             0
+
+
+           ALPHA
+              INTEREST      KERRY         POLICY        KXP
+              ________      ________      ________      ________
+ 1                  1             0             0             0
+
+
+           BETA
+              INTEREST      KERRY         POLICY        KXP
+              ________      ________      ________      ________
+ INTEREST           0             2             3             4
+ KERRY              0             0             0             0
+ POLICY             0             0             0             0
+ KXP                0             0             0             0
+
+
+           PSI
+              INTEREST      KERRY         POLICY        KXP
+              ________      ________      ________      ________
+ INTEREST           5
+ KERRY              0             0
+ POLICY             0             0             0
+ KXP                0             0             0             0
+
+
+     STARTING VALUES
+
+
+           NU
+              INTEREST      KERRY         POLICY        KXP
+              ________      ________      ________      ________
+ 1              0.000         0.000         0.000         0.000
+
+
+           LAMBDA
+              INTEREST      KERRY         POLICY        KXP
+              ________      ________      ________      ________
+ INTEREST       1.000         0.000         0.000         0.000
+ KERRY          0.000         1.000         0.000         0.000
+ POLICY         0.000         0.000         1.000         0.000
+ KXP            0.000         0.000         0.000         1.000
+
+
+           THETA
+              INTEREST      KERRY         POLICY        KXP
+              ________      ________      ________      ________
+ INTEREST       0.000
+ KERRY          0.000         0.000
+ POLICY         0.000         0.000         0.000
+ KXP            0.000         0.000         0.000         0.000
+
+
+           ALPHA
+              INTEREST      KERRY         POLICY        KXP
+              ________      ________      ________      ________
+ 1              1.989         0.000         0.000         0.000
+
+
+           BETA
+              INTEREST      KERRY         POLICY        KXP
+              ________      ________      ________      ________
+ INTEREST       0.000         0.000         0.000         0.000
+ KERRY          0.000         0.000         0.000         0.000
+ POLICY         0.000         0.000         0.000         0.000
+ KXP            0.000         0.000         0.000         0.000
+
+
+           PSI
+              INTEREST      KERRY         POLICY        KXP
+              ________      ________      ________      ________
+ INTEREST       0.616
+ KERRY          0.000         0.125
+ POLICY         0.000         0.000         0.125
+ KXP            0.000         0.000         0.000         0.099
+
+
+
+     PRIORS FOR ALL PARAMETERS            PRIOR MEAN      PRIOR VARIANCE     PRIOR STD. DEV.
+
+     Parameter 1~N(0.000,infinity)           0.0000            infinity            infinity
+     Parameter 2~N(0.000,infinity)           0.0000            infinity            infinity
+     Parameter 3~N(0.000,infinity)           0.0000            infinity            infinity
+     Parameter 4~N(0.000,infinity)           0.0000            infinity            infinity
+     Parameter 5~IG(-1.000,0.000)          infinity            infinity            infinity
+
+
+TECHNICAL 4 OUTPUT
+
+
+     ESTIMATES DERIVED FROM THE MODEL
+
+
+           ESTIMATED MEANS FOR THE LATENT VARIABLES
+              INTEREST      KERRY         POLICY        KXP
+              ________      ________      ________      ________
+ 1              1.989         0.510         0.514         0.272
+
+
+           ESTIMATED COVARIANCE MATRIX FOR THE LATENT VARIABLES
+              INTEREST      KERRY         POLICY        KXP
+              ________      ________      ________      ________
+ INTEREST       1.244
+ KERRY          0.194         0.250
+ POLICY        -0.043         0.010         0.250
+ KXP            0.101         0.133         0.132         0.198
+
+
+           ESTIMATED CORRELATION MATRIX FOR THE LATENT VARIABLES
+              INTEREST      KERRY         POLICY        KXP
+              ________      ________      ________      ________
+ INTEREST       1.000
+ KERRY          0.348         1.000
+ POLICY        -0.077         0.038         1.000
+ KXP            0.203         0.599         0.594         1.000
+
+
+TECHNICAL 8 OUTPUT
+
+
+
+     Kolmogorov-Smirnov comparing posterior distributions across chains 1 and 2 using 100 draws.
+
+
+
+
+
+     Parameter   KS Statistic P-value
+     Parameter 4    0.1800    0.0691
+     Parameter 2    0.1300    0.3439
+     Parameter 3    0.1200    0.4431
+     Parameter 5    0.0600    0.9921
+     Parameter 1    0.0200    1.0000
+
+
+
+     Simulated prior distributions
+
+     Parameter       Prior Mean  Prior Variance  Prior Std. Dev.
+
+
+     Parameter 1 Improper Prior
+     Parameter 2 Improper Prior
+     Parameter 3 Improper Prior
+     Parameter 4 Improper Prior
+     Parameter 5 Improper Prior
+
+
+   TECHNICAL 8 OUTPUT FOR BAYES ESTIMATION
+
+     CHAIN    BSEED
+     1        0
+     2        285380
+
+                     POTENTIAL       PARAMETER WITH
+     ITERATION    SCALE REDUCTION      HIGHEST PSR
+     100              1.000               1
+     200              1.014               2
+     300              1.000               1
+     400              1.000               1
+     500              1.000               3
+     600              1.000               1
+     700              1.000               1
+     800              1.000               1
+     900              1.001               1
+     1000             1.000               1
+     1100             1.000               1
+     1200             1.000               2
+     1300             1.000               1
+     1400             1.000               1
+     1500             1.000               1
+     1600             1.000               1
+     1700             1.000               1
+     1800             1.000               1
+     1900             1.000               5
+     2000             1.000               5
+     2100             1.001               2
+     2200             1.001               2
+     2300             1.001               2
+     2400             1.001               2
+     2500             1.001               2
+     2600             1.001               2
+     2700             1.000               2
+     2800             1.000               2
+     2900             1.001               2
+     3000             1.000               2
+     3100             1.000               1
+     3200             1.000               4
+     3300             1.000               1
+     3400             1.000               1
+     3500             1.000               1
+     3600             1.000               1
+     3700             1.000               2
+     3800             1.000               5
+     3900             1.000               5
+     4000             1.000               5
+     4100             1.000               5
+     4200             1.000               5
+     4300             1.000               5
+     4400             1.000               5
+     4500             1.000               2
+     4600             1.000               2
+     4700             1.000               2
+     4800             1.000               2
+     4900             1.000               3
+     5000             1.000               3
+     5100             1.000               1
+     5200             1.000               1
+     5300             1.000               3
+     5400             1.000               1
+     5500             1.000               1
+     5600             1.000               1
+     5700             1.000               1
+     5800             1.000               1
+     5900             1.000               1
+     6000             1.000               3
+     6100             1.000               1
+     6200             1.000               1
+     6300             1.000               1
+     6400             1.000               1
+     6500             1.000               1
+     6600             1.000               1
+     6700             1.000               1
+     6800             1.000               1
+     6900             1.000               1
+     7000             1.000               3
+     7100             1.000               3
+     7200             1.000               3
+     7300             1.000               3
+     7400             1.000               3
+     7500             1.000               3
+     7600             1.000               3
+     7700             1.000               3
+     7800             1.000               3
+     7900             1.000               1
+     8000             1.000               1
+     8100             1.000               2
+     8200             1.000               2
+     8300             1.000               1
+     8400             1.000               2
+     8500             1.000               2
+     8600             1.000               2
+     8700             1.000               2
+     8800             1.000               2
+     8900             1.000               2
+     9000             1.000               2
+     9100             1.000               2
+     9200             1.000               1
+     9300             1.000               2
+     9400             1.000               2
+     9500             1.000               5
+     9600             1.000               5
+     9700             1.000               2
+     9800             1.000               5
+     9900             1.000               5
+     10000            1.000               5
+     10100            1.000               5
+     10200            1.000               5
+     10300            1.000               5
+     10400            1.000               1
+     10500            1.000               1
+     10600            1.000               1
+     10700            1.000               1
+     10800            1.000               1
+     10900            1.000               2
+     11000            1.000               2
+     11100            1.000               1
+     11200            1.000               2
+     11300            1.000               1
+     11400            1.000               1
+     11500            1.000               1
+     11600            1.000               1
+     11700            1.000               1
+     11800            1.000               1
+     11900            1.000               1
+     12000            1.000               1
+     12100            1.000               4
+     12200            1.000               4
+     12300            1.000               4
+     12400            1.000               4
+     12500            1.000               4
+     12600            1.000               4
+     12700            1.000               4
+     12800            1.000               4
+     12900            1.000               1
+     13000            1.000               1
+     13100            1.000               4
+     13200            1.000               4
+     13300            1.000               1
+     13400            1.000               1
+     13500            1.000               1
+     13600            1.000               1
+     13700            1.000               4
+     13800            1.000               3
+     13900            1.000               3
+     14000            1.000               3
+     14100            1.000               3
+     14200            1.000               3
+     14300            1.000               3
+     14400            1.000               3
+     14500            1.000               3
+     14600            1.000               3
+     14700            1.000               3
+     14800            1.000               3
+     14900            1.000               3
+     15000            1.000               3
+     15100            1.000               3
+     15200            1.000               3
+     15300            1.000               3
+     15400            1.000               3
+     15500            1.000               1
+     15600            1.000               1
+     15700            1.000               1
+     15800            1.000               1
+     15900            1.000               1
+     16000            1.000               1
+     16100            1.000               1
+     16200            1.000               4
+     16300            1.000               1
+     16400            1.000               1
+     16500            1.000               1
+     16600            1.000               1
+     16700            1.000               1
+     16800            1.000               1
+     16900            1.000               1
+     17000            1.000               1
+     17100            1.000               1
+     17200            1.000               1
+     17300            1.000               1
+     17400            1.000               1
+     17500            1.000               1
+     17600            1.000               1
+     17700            1.000               1
+     17800            1.000               1
+     17900            1.000               1
+     18000            1.000               1
+     18100            1.000               1
+     18200            1.000               2
+     18300            1.000               2
+     18400            1.000               2
+     18500            1.000               2
+     18600            1.000               2
+     18700            1.000               2
+     18800            1.000               2
+     18900            1.000               2
+     19000            1.000               2
+     19100            1.000               2
+     19200            1.000               2
+     19300            1.000               2
+     19400            1.000               2
+     19500            1.000               2
+     19600            1.000               2
+     19700            1.000               2
+     19800            1.000               2
+     19900            1.000               2
+     20000            1.000               2
+
+
+PLOT INFORMATION
+
+The following plots are available:
+
+  Histograms of sample values
+  Scatterplots (sample values)
+  Bayesian posterior parameter distributions
+  Bayesian posterior parameter trace plots
+  Bayesian autocorrelation plots
+  Bayesian posterior predictive checking scatterplots
+  Bayesian posterior predictive checking distribution plots
+
+DIAGRAM INFORMATION
+
+  Use View Diagram under the Diagram menu in the Mplus Editor to view the diagram.
+  If running Mplus from the Mplus Diagrammer, the diagram opens automatically.
+
+  Diagram output
+    c:\users\owner\documents\stats\hayes (2013) text\caskets\caskets anova bayes.dgm
+
+     Beginning Time:  16:56:15
+        Ending Time:  16:56:15
+       Elapsed Time:  00:00:00
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2013 Muthen & Muthen

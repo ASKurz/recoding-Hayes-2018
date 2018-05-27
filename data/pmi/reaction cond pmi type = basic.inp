@@ -1,0 +1,16 @@
+Title: reaction on cond med by pmi Bayes
+    
+
+Data:
+    File is pmi.txt;
+
+Variable:
+    Names are cond pmi import reaction gender age;
+    Usevariables are cond reaction pmi;
+   
+Analysis:
+    type = basic;
+
+Output:
+    tech1 tech8 stdy CINTERVAL(bcbootstrap);
+

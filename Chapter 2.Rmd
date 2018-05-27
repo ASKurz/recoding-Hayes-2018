@@ -1,0 +1,406 @@
+---
+title: "Chapter 02"
+author: "A Solomon Kurz"
+date: "`r format(Sys.Date())`"
+output:
+  html_document:
+    code_folding: show
+---
+
+## 2.1 Correlation and prediction
+
+```{r, warning = F, message = F}
+library(readr)
+library(tidyverse)
+
+glbwarm <- read_csv("data/glbwarm/glbwarm.csv")
+
+glimpse(glbwarm)
+```
+
+Here is our version of Figure 2.1. 
+
+```{r, fig.width = 5, fig.height = 4}
+glbwarm %>% 
+  group_by(negemot, govact) %>% 
+  count() %>% 
+  
+  ggplot(aes(x = negemot, y = govact)) +
+  geom_point(aes(size = n)) +
+  labs(x = expression(paste("NEGEMOT: Negative emotions about climate change (", italic("X"), ")")),
+       y = expression(paste("GOVACT: Support for governmentaction (", italic("Y"), ")"))) +
+  theme_bw() +
+  theme(legend.position = "none")
+```
+
+There are other ways to handle the [overplotting issue, such as jittering](http://ggplot2.tidyverse.org/reference/position_jitter.html). 
+
+```{r, fig.width = 5, fig.height = 4}
+glbwarm %>% 
+  ggplot(aes(x = negemot, y = govact)) +
+  geom_jitter(height = .05, width = .05, 
+              alpha = 1/2, size = 1/3) +
+  labs(x = expression(paste("NEGEMOT: Negative emotions about climate change (", italic("X"), ")")),
+       y = expression(paste("GOVACT: Support for governmentaction (", italic("Y"), ")"))) +
+  theme_bw()
+```
+
+Here's the simple Pearson's correlation coefficient.
+
+```{r}
+cor(glbwarm$negemot, glbwarm$govact)
+```
+
+If you want more plentiful output, the `cor.test()` function provides a $t$ value, the degrees of freedom, the corresponding $p$-value and the 95% confidence intervals, in addition to the Pearson's correlation coefficient.
+
+```{r}
+cor.test(glbwarm$negemot, glbwarm$govact)
+```
+
+To get the Bayesian version, we'll open the brms package. Here we'll start simple and just use the default priors and settings.
+
+```{r, message = F, warning = F}
+library(brms)
+
+fit0 <- 
+  brm(data = glbwarm, family = gaussian,
+      cbind(negemot, govact) ~ 1,
+      chains = 4, cores = 4)
+```
+
+```{r}
+print(fit0)
+```
+
+Within the brms framework, $\sigma$ of the Gaussian likelihood is considered a family-specific parameter (e.g., there is no $\sigma$ for the Poisson distribution). When you have an intercept-only regression model with multiple variables, the covariance among their $\sigma$ parameters, `rescor(negemot,govact)` in this case, is a correlation.
+
+To learn more about the multivariate syntax in brms, code `vignette("brms_multivariate")`.
+
+But to clarify the output:
+
+* 'Estimate'  = the posterior mean, analogous to the frequentist point estimate
+* 'Est.Error' = the posterior $SD$, analogous to the frequentist standard error
+* 'l-95% CI'  = the lower-level of the percentile-based 95% Bayesian credible interval
+* 'u-95% CI'  = the upper-level of the same
+
+## 2.2 The simple linear regression model
+
+Here is how one might get the simple OLS coefficients in base R with the `lm()` function.
+
+```{r}
+(fit1 <- lm(data = glbwarm, govact ~ 1 + negemot))
+```
+
+For more detailed output, put the model object `fit1` into the `summary()` function.
+
+```{r}
+summary(fit1)
+```
+
+Here's the Bayesian model in brms.
+
+```{r, message = F, warning = F}
+fit1 <- 
+  brm(data = glbwarm, family = gaussian,
+      govact ~ 1 + negemot,
+      chains = 4, cores = 4)
+```
+
+```{r}
+print(fit1)
+```
+
+To make a quick plot of the regression line, one can use the convenient brms function, `marginal_effects()`.
+
+```{r, fig.width = 4.5, fig.height = 3}
+marginal_effects(fit1)
+```
+
+If you want to customize that output, you might nest it in `plot()`.
+
+```{r, fig.width = 4.5, fig.height = 3}
+plot(marginal_effects(fit1),
+     points = T,
+     point_args = c(height = .05, width = .05, 
+                    alpha = 1/2, size = 1/3))
+```
+
+It's also useful to be able to work with the output of a brms model directly. For our first step, we'll put our HMC draws into a data frame.
+
+```{r}
+(post <- posterior_samples(fit1))
+```
+
+Next, we'll 
+
+```{r}
+nd <- tibble(negemot = seq(from = 0, to = 7, length.out = 30))
+
+f_fit1 <-
+  fitted(fit1,
+         newdata = nd) %>% 
+  as_tibble() %>% 
+  bind_cols(nd)
+
+f_fit1
+```
+
+The first two columns should look familiar to the output from `print(fit1)`, above. The next two columns, `Q2.5` and `Q97.5`, are the lower- and upper-levels of the 95% credible intervals. The `Q` prefix stands for quantile, [see this thread](https://github.com/paul-buerkner/brms/issues/425). We got the final column with the `bind_cols(nd)` code.
+
+Here's our bespoke version of Figure 2.4.
+
+```{r, fig.width = 5, fig.height = 4}
+glbwarm %>% 
+  group_by(negemot, govact) %>% 
+  count() %>% 
+  
+  ggplot(aes(x = negemot)) +
+  geom_point(aes(y = govact, size = n)) +
+  geom_ribbon(data = f_fit1,
+              aes(ymin = Q2.5,
+                  ymax = Q97.5),
+              fill = "grey75", alpha = 3/4) +
+  geom_line(data = f_fit1,
+            aes(y = Estimate)) +
+  annotate("text", x = 2.2, y = 7.5, label = "Cases with positive residuals", color = "red3") +
+  annotate("text", x = 4.75, y = .8, label = "Cases with negative residuals", color = "blue3") +
+  labs(x = expression(paste("NEGEMOT: Negative emotions about climate change (", italic("X"), ")")),
+       y = expression(paste("GOVACT: Support for governmentaction (", italic("Y"), ")"))) +
+  coord_cartesian(xlim = range(glbwarm$negemot)) +
+  theme_bw() +
+  theme(legend.position = "none")
+```
+
+### Simple linear regression with a dichotomos antecedent variable.
+
+```{r, message = F, warning = F}
+fit2 <- 
+  brm(data = glbwarm, family = gaussian,
+      govact ~ 1 + sex,
+      chains = 4, cores = 4)
+```
+
+```{r}
+print(fit2)
+```
+
+Our model output is very close to that in the text. If you just wanted the coefficients, you might use the `fixef()` function.
+
+```{r}
+fixef(fit2) %>% round(digits = 3)
+```
+
+Though not necessary, we used the `round()` function to reduce the number of significant digits in the output. 
+
+You can get a little more information with the `posterior_summary()` function.
+
+Here we can plot the 
+
+```{r}
+post <- posterior_samples(fit2)
+```
+
+```{r, fig.width = 3, fig.height = 2}
+post %>% 
+  rename(female = b_Intercept) %>% 
+  mutate(male = female + b_sex) %>% 
+  select(male, female) %>% 
+  gather() %>% 
+  
+  ggplot(aes(x = key, y = value)) +
+  geom_violin(aes(fill = key), color = "transparent", alpha = 2/3) +
+  stat_summary(fun.y = median,
+               fun.ymin = function(i){quantile(i, probs = .025)},
+               fun.ymax = function(i){quantile(i, probs = .975)}) +
+  theme_bw() +
+  theme(legend.position = "none")
+```
+
+Or a density plot
+
+```{r, fig.width = 4, fig.height = 2}
+post %>% 
+  rename(female = b_Intercept) %>% 
+  mutate(male = female + b_sex) %>% 
+  select(male, female) %>% 
+  gather() %>% 
+  
+  ggplot(aes(x = value, group = key, fill = key)) +
+  geom_density(color = "transparent", alpha = 2/3) +
+  theme_bw()
+```
+
+You can also get a sense of the model estimates for women and men with a little addition. Here we continue to use the `round()` function to simplify the output.
+
+```{r}
+# for women
+round(fixef(fit2)[1, ], digits = 2)
+
+# for men
+round(fixef(fit2)[1, ] + fixef(fit2)[2, ], digits = 2)
+```
+
+Here's the partially standardized model.
+
+```{r, message = F, warning = F}
+glbwarm <-
+  glbwarm %>% 
+  mutate(govact_z = (govact - mean(govact))/sd(govact))
+
+lm(data = glbwarm, govact_z ~ 1 + sex)
+```
+
+```{r}
+fit2_p_z <- 
+  brm(data = glbwarm, family = gaussian,
+      govact_z ~ 1 + sex,
+      chains = 4, cores = 4)
+```
+
+```{r}
+fixef(fit2_p_z)
+```
+
+## Multiple linear regression
+
+```{r}
+fit3 <- 
+  brm(data = glbwarm, family = gaussian,
+      govact ~ 1 + negemot + posemot + ideology + sex + age,
+      chains = 4, cores = 4)
+```
+
+```{r}
+print(fit3)
+```
+
+Here is the posterior mean, what you might call the Bayesian point estimate, for:
+
+* negative emotions = 3,
+* positive emotions = 4,
+* `ideology` = 2,
+* is male (i.e., `sex` = 1), and
+* is 30 years of `age`
+
+```{r}
+fixef(fit3)[1] + 
+  fixef(fit3)[2]*3 + 
+  fixef(fit3)[3]*4 + 
+  fixef(fit3)[4]*2 + 
+  fixef(fit3)[5]*1 + 
+  fixef(fit3)[6]*30
+```
+
+Here's the same deal for a man of the same values, but with one point higher on `negemot`.
+
+```{r}
+fixef(fit3)[1] + 
+  fixef(fit3)[2]*4 + 
+  fixef(fit3)[3]*4 + 
+  fixef(fit3)[4]*2 + 
+  fixef(fit3)[5]*1 + 
+  fixef(fit3)[6]*30
+```
+
+If you want a full expression of the model uncertaintly in terms of the shape of the posterior distribution and the 95% intervals, you'll probably just want to use `posterior_samples()` and do a little data processing.
+
+```{r, fig.width = 4, fig.height = 3}
+post <- posterior_samples(fit3)
+
+post <-
+  post %>%
+  mutate(our_posterior = b_Intercept + b_negemot*4 + b_posemot*4 + b_ideology*2 + b_sex*1 + b_age*30)
+  
+post_summary <-
+  quantile(post$our_posterior, probs = c(.025, .5, .975)) %>% 
+  as_tibble() %>% 
+  mutate(labels = value %>% 
+           round(digits = 2) %>% 
+           as.character())
+
+ggplot(data = post,
+       aes(x = our_posterior)) +
+  geom_density(fill = "black") +
+  geom_vline(xintercept = post_summary$value,
+             size = c(.5, .75, .5), linetype = c(2, 1, 2), color = "white") +
+  scale_x_continuous(breaks = post_summary$value,
+                     labels = post_summary$labels) +
+  theme_bw()
+```
+
+### The standardized regression model.
+
+If we want to standardize a handful of varaibles, we might just make a custom function.
+
+```{r}
+sandardize <- function(x){
+  (x - mean(x))/sd(x)
+}
+```
+
+Here we'll put our custom `standardize()` function to work.
+
+```{r}
+glbwarm <-
+  glbwarm %>% 
+  mutate(posemot_z = sandardize(posemot), 
+         negemot_z = sandardize(negemot), 
+         ideology_z = sandardize(ideology),
+         sex_z = sandardize(sex),
+         age_z = sandardize(age))
+```
+
+
+
+```{r}
+fit3_z <- 
+  brm(data = glbwarm, family = gaussian,
+      govact_z ~ 1 + negemot_z + posemot_z + ideology_z + sex_z + age_z,
+      chains = 4, cores = 4)
+```
+
+Here are the newly standardized coefficient summaries, minus the `Intercept`.
+
+```{r}
+fixef(fit3_z)[-1, ] %>% round(3)
+```
+
+```{r}
+fit3_z_p <- 
+  update(fit3_z,
+         newdata = glbwarm,
+         formula = govact_z ~ 1 + negemot_z + posemot_z + ideology_z + sex + age_z,
+         chains = 4, cores = 4)
+```
+
+And here are the coefficient summaries, including the `Intercept`, for the *partially*-standardized model.
+
+```{r}
+fixef(fit3_z_p) %>% round(3)
+```
+
+As Hayes wrote, now `sex` = `r fixef(fit3_z_p)[5] %>% round(3)` has a sensible interpretation. "We can say that men and women differ by [`r fixef(fit3_z_p)[5] %>% round(3)`] standard deviations in their support for government action when all other variables in the model are held constant (p. 53)."
+
+On page 54, Hayes gave us the equation to transform unstandardized coefficients to standardized ones:
+
+$$\tilde{b}_{i} = b_{i}\left(\frac{SD_{X_{i}}}{SD_{Y}}\right)$$
+
+<MOre>
+
+## 2.5 
+
+Note. The analyses in this document were done with:
+
+* R           3.4.4
+* RStudio     1.1.442
+* rmarkdown   1.9
+* readr       1.1.1
+* tidyverse   1.2.1
+* rstan       2.17.3
+* rethinking  1.59
+* brms        2.3.1
+
+## Reference
+
+Hayes, A. F. (2018). *Introduction to mediation, moderation, and conditional process analysis: A regression-based approach.* (2nd ed.). New York, NY, US: The Guilford Press.
+

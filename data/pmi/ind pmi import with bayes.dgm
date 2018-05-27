@@ -1,0 +1,82 @@
+VERSION 1.1.0
+INPUT
+TITLE:
+ reaction on cond med by pmi Bayes
+
+
+DATA:
+    File is pmi.txt;
+VARIABLE:
+    Names are cond pmi import reaction gender age;
+    Usevariables are cond reaction pmi import;
+ANALYSIS:
+    Estimator = Bayes ;
+    Biterations = 170000(150000);
+    processors = 2;
+OUTPUT:
+    tech1 tech8 stdy CINTERVAL;
+PLOT:
+    Type = plot1 plot2;
+MODEL:
+    import on cond (a1);
+    pmi on cond (a2);
+    reaction on cond import;
+    reaction on import (b1);
+    reaction on pmi (b2);
+    import with pmi;
+INPUT_END
+3
+0
+3
+3
+BAYES
+1
+GENERAL
+0
+3
+0
+1
+reaction pmi import cond
+3
+2 1 1 0
+0
+0
+1 1 COND IMPORT    0.628    0.317    0.003    1.249
+91 1 COND IMPORT a1
+1 1 COND PMI    0.476    0.242    0.000    0.952
+91 1 COND PMI a2
+1 1 COND REACTION    0.103    0.243   -0.373    0.582
+1 1 IMPORT REACTION    0.324    0.072    0.183    0.466
+91 1 IMPORT REACTION b1
+1 1 PMI REACTION    0.397    0.095    0.211    0.583
+91 1 PMI REACTION b2
+2 1 IMPORT PMI    0.597    0.227    0.188    1.085
+4 1 REACTION    1.702    0.229    1.329    2.224
+4 1 PMI    1.771    0.239    1.384    2.317
+4 1 IMPORT    3.060    0.412    2.393    3.997
+21 1 COND IMPORT    0.176    0.086    0.001    0.335
+91 1 COND IMPORT a1
+21 1 COND PMI    0.176    0.086    0.000    0.336
+91 1 COND PMI a2
+21 1 COND REACTION    0.032    0.075   -0.115    0.179
+21 1 IMPORT REACTION    0.362    0.076    0.207    0.503
+91 1 IMPORT REACTION b1
+21 1 PMI REACTION    0.337    0.076    0.182    0.480
+91 1 PMI REACTION b2
+22 1 IMPORT PMI    0.259    0.086    0.083    0.419
+24 1 REACTION    0.667    0.069    0.532    0.802
+24 1 PMI    0.969    0.031    0.887    1.000
+24 1 IMPORT    0.969    0.031    0.888    1.000
+31 1 COND IMPORT    0.176    0.086    0.001    0.335
+91 1 COND IMPORT a1
+31 1 COND PMI    0.176    0.086    0.000    0.336
+91 1 COND PMI a2
+31 1 COND REACTION    0.032    0.075   -0.115    0.179
+31 1 IMPORT REACTION    0.362    0.076    0.207    0.503
+91 1 IMPORT REACTION b1
+31 1 PMI REACTION    0.337    0.076    0.182    0.480
+91 1 PMI REACTION b2
+32 1 IMPORT PMI    0.259    0.086    0.083    0.419
+34 1 REACTION    0.667    0.069    0.532    0.802
+34 1 PMI    0.969    0.031    0.887    1.000
+34 1 IMPORT    0.969    0.031    0.888    1.000

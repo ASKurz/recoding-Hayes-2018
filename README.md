@@ -1,1 +1,9 @@
-# recoding_Introduction_to_Mediation_Moderation_and_Conditional_Process_Analysis
+# recoding Introduction to Mediation, Moderation, and Conditional Process Analysis
+
+Andrew Hayes’s *Introduction to Mediation, Moderation, and Conditional Process Analysis*  text, [the second edition of which just came out](http://afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html). Hayes's text has become a staple in social science graduate education. Both editions of his text have been from a frequentist perspective. This project is an effort to bring his work into the Bayesian paradigm. Here in, I'll refit his models in my favorite R package for Bayesian regression, Bürkner’s [brms package](https://github.com/paul-buerkner/brms). [It's just spectacular.](http://andrewgelman.com/2017/01/10/r-packages-interfacing-stan-brms/) I also prefer plotting with Wickham's [ggplot2](https://cran.r-project.org/web/packages/ggplot2/index.html), and recently converted to using [tidyverse](https://www.tidyverse.org)-style syntax (which you might learn about [here](http://r4ds.had.co.nz/transform.html) or [here](http://style.tidyverse.org)).
+
+This project is not meant to stand alone. It's a supplement to the textbook. Starting with chapter 2, each chapter from has its own document available in either an [R Notebook file](http://rmarkdown.rstudio.com/r_notebooks.html) or the corresponding HTML document. I also play around with the plots, a bit. This is particularly aimed at newer ggplot2 users, to give them a sense of what's possible.
+
+**Disclaimer**: brms is a rapidly-evolving package. To get a sense, see how frequently Bürkner has updated some of the most [recent versions](https://cran.r-project.org/src/contrib/Archive/brms/). I also have a lot to learn as a Bayesian and as an R user. So some of the code may appear dated or inelegant and I'm not yet sure how to reproduce some of the models/plots in the text. Which is all to say, *suggestions on how to improve my code are welcome*.
+
+Happy modeling!

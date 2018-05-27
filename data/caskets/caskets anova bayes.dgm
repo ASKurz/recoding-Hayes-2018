@@ -1,0 +1,68 @@
+VERSION 1.1.0
+INPUT
+TITLE:
+
+    Caskets moderation
+
+DATA:
+    File is caskets with centered.txt;
+VARIABLE:
+    Names are policy interest age educ male conserv kerry kerryc policyc;
+    Usevariables are interest kerry policy kxp;
+DEFINE:
+    kxp = kerry*policy;
+ANALYSIS:
+    Estimator = Bayes;
+    Biterations = 50000(20000);
+    processors = 2;
+OUTPUT:
+    tech1 tech4 tech8 standardized;
+PLOT:
+    Type = plot3;
+MODEL:
+    interest on kerry policy kxp ;
+INPUT_END
+3
+3
+3
+3
+BAYES
+1
+GENERAL
+0
+1
+0
+3
+interest kerry policy kxp
+2
+1 0 0 0
+0
+0
+1 1 KERRY INTEREST    0.599    0.128    0.343    0.846
+1 1 POLICY INTEREST   -0.386    0.127   -0.638   -0.133
+1 1 KXP INTEREST    0.364    0.179    0.006    0.709
+4 1 INTEREST    1.074    0.067    0.953    1.214
+2 1 KERRY POLICY  999.000  999.000  999.000  999.000
+2 1 KERRY KXP  999.000  999.000  999.000  999.000
+2 1 POLICY KXP  999.000  999.000  999.000  999.000
+11 1 KERRY INTEREST    0.268    0.056    0.155    0.374
+11 1 POLICY INTEREST   -0.173    0.056   -0.282   -0.059
+11 1 KXP INTEREST    0.145    0.071    0.002    0.281
+14 1 INTEREST    0.861    0.026    0.807    0.910
+12 1 KERRY POLICY  999.000  999.000  999.000  999.000
+12 1 KERRY KXP  999.000  999.000  999.000  999.000
+12 1 POLICY KXP  999.000  999.000  999.000  999.000
+21 1 KERRY INTEREST    0.268    0.056    0.155    0.374
+21 1 POLICY INTEREST   -0.173    0.056   -0.282   -0.059
+21 1 KXP INTEREST    0.145    0.071    0.002    0.281
+24 1 INTEREST    0.861    0.026    0.807    0.910
+22 1 KERRY POLICY  999.000  999.000  999.000  999.000
+22 1 KERRY KXP  999.000  999.000  999.000  999.000
+22 1 POLICY KXP  999.000  999.000  999.000  999.000
+31 1 KERRY INTEREST    0.599    0.128    0.343    0.846
+31 1 POLICY INTEREST   -0.386    0.127   -0.638   -0.133
+31 1 KXP INTEREST    0.364    0.179    0.006    0.709
+34 1 INTEREST    1.074    0.067    0.953    1.214
+32 1 KERRY POLICY  999.000  999.000  999.000  999.000
+32 1 KERRY KXP  999.000  999.000  999.000  999.000
+32 1 POLICY KXP  999.000  999.000  999.000  999.000

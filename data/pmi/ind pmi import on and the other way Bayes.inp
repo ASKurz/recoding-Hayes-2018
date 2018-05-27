@@ -1,0 +1,44 @@
+Title: reaction on cond med by pmi Bayes
+    
+
+Data:
+    File is pmi.txt;
+
+Variable:
+    Names are cond pmi import reaction gender age;
+    Usevariables are cond reaction pmi import;
+   
+Analysis:
+    Estimator = Bayes ;
+    Biterations = 200000(190000);
+    processors = 2;
+    point = mean;
+    ALGORITHM=MH;
+    THIN = 60;
+
+Model: 
+    import on cond (a1);
+    pmi on cond (a2);
+    reaction on cond import;
+    reaction on import (b1);
+    reaction on pmi (b2);
+
+    pmi on import(d21);
+    import on pmi(d12);
+
+Model Constraint:
+    New(indimpor indpmi indpi indip diff1 diff2 diff3);
+    indimpor = a1*b1;
+    indpmi = a2*b2;
+    indpi = a1*d21*b2;
+    indip = b2*d12*a1;
+    
+    diff1 = indimpor-indpmi;
+    diff2 = indimpor-indpi;
+    diff3 = indpmi-indpi;
+
+Output:
+    tech1 tech8 stdy CINTERVAL;
+
+Plot:
+    Type = plot1 plot2;

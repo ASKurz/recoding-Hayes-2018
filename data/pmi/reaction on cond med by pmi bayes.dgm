@@ -1,0 +1,61 @@
+VERSION 1.1.0
+INPUT
+TITLE:
+ reaction on cond med by pmi Bayes
+
+
+DATA:
+    File is pmi.txt;
+VARIABLE:
+    Names are cond pmi import reaction gender age;
+    Usevariables are cond pmi reaction;
+ANALYSIS:
+    Estimator = Bayes ;
+    Biterations = 170000(150000);
+    processors = 2;
+OUTPUT:
+    tech1 tech8 stdy CINTERVAL;
+PLOT:
+    Type = plot1 plot2;
+MODEL:
+    pmi on cond (a1);
+    reaction on cond;
+    reaction on pmi (b1);
+INPUT_END
+3
+0
+3
+3
+BAYES
+1
+GENERAL
+0
+2
+0
+1
+pmi reaction cond
+3
+1 2 0
+0
+0
+1 1 COND PMI    0.477    0.240    0.006    0.947
+91 1 COND PMI a1
+1 1 COND REACTION    0.254    0.261   -0.263    0.765
+1 1 PMI REACTION    0.506    0.099    0.312    0.700
+91 1 PMI REACTION b1
+4 1 PMI    1.740    0.232    1.363    2.268
+4 1 REACTION    1.985    0.266    1.551    2.592
+21 1 COND PMI    0.178    0.086    0.002    0.338
+91 1 COND PMI a1
+21 1 COND REACTION    0.080    0.081   -0.082    0.235
+21 1 PMI REACTION    0.430    0.076    0.271    0.567
+91 1 PMI REACTION b1
+24 1 PMI    0.968    0.031    0.886    1.000
+24 1 REACTION    0.790    0.065    0.655    0.906
+31 1 COND PMI    0.178    0.086    0.002    0.338
+91 1 COND PMI a1
+31 1 COND REACTION    0.080    0.081   -0.082    0.235
+31 1 PMI REACTION    0.430    0.076    0.271    0.567
+91 1 PMI REACTION b1
+34 1 PMI    0.968    0.031    0.886    1.000
+34 1 REACTION    0.790    0.065    0.655    0.906

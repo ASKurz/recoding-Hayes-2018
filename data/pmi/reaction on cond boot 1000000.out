@@ -1,0 +1,303 @@
+Mplus VERSION 7.11
+MUTHEN & MUTHEN
+04/03/2014   4:35 PM
+
+INPUT INSTRUCTIONS
+
+  Title: reaction on cond med by pmi Bayes
+
+
+  Data:
+      File is pmi.txt;
+
+  Variable:
+      Names are cond pmi import reaction gender age;
+      Usevariables are cond reaction;
+
+  Analysis:
+      Estimator = ML ;
+      Bootstrap = 1000000;
+
+  Model:
+      !pmi on cond (a1);
+      reaction on cond;
+      !reaction on pmi (b1);
+
+  !Model Constraint:
+  !    New (indirct1);
+  !    indirct1 = a1*b1;
+
+  Output:
+      tech1 tech8 stdy CINTERVAL(bcbootstrap);
+
+  Plot:
+      Type = plot1 plot2;
+
+
+
+*** WARNING in OUTPUT command
+  TECH8 option is available only with analysis types MIXTURE, RANDOM, or
+  TWOLEVEL with estimators ML, MLF, or MLR or ALGORITHM=INTEGRATION.
+  Request for TECH8 is ignored.
+   1 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+reaction on cond med by pmi Bayes
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                         123
+
+Number of dependent variables                                    1
+Number of independent variables                                  1
+Number of continuous latent variables                            0
+
+Observed dependent variables
+
+  Continuous
+   REACTION
+
+Observed independent variables
+   COND
+
+
+Estimator                                                       ML
+Information matrix                                        OBSERVED
+Maximum number of iterations                                  1000
+Convergence criterion                                    0.500D-04
+Maximum number of steepest descent iterations                   20
+Number of bootstrap draws
+    Requested                                              1000000
+    Completed                                              1000000
+
+Input data file(s)
+  pmi.txt
+
+Input data format  FREE
+
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                        3
+
+Loglikelihood
+
+          H0 Value                        -226.356
+          H1 Value                        -226.356
+
+Information Criteria
+
+          Akaike (AIC)                     458.712
+          Bayesian (BIC)                   467.149
+          Sample-Size Adjusted BIC         457.663
+            (n* = (n + 2) / 24)
+
+Chi-Square Test of Model Fit
+
+          Value                              0.000
+          Degrees of Freedom                     0
+          P-Value                           0.0000
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+          Estimate                           0.000
+          90 Percent C.I.                    0.000  0.000
+          Probability RMSEA <= .05           0.000
+
+CFI/TLI
+
+          CFI                                1.000
+          TLI                                1.000
+
+Chi-Square Test of Model Fit for the Baseline Model
+
+          Value                              3.200
+          Degrees of Freedom                     1
+          P-Value                           0.0736
+
+SRMR (Standardized Root Mean Square Residual)
+
+          Value                              0.000
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ REACTION ON
+    COND               0.495      0.275      1.802      0.071
+
+ Intercepts
+    REACTION           3.250      0.198     16.375      0.000
+
+ Residual Variances
+    REACTION           2.323      0.225     10.314      0.000
+
+
+STANDARDIZED MODEL RESULTS
+
+                       StdY
+                    Estimate
+
+ REACTION ON
+    COND               0.321
+
+ Intercepts
+    REACTION           2.105
+
+ Residual Variances
+    REACTION           0.974
+
+
+R-SQUARE
+
+    Observed
+    Variable        Estimate
+
+    REACTION           0.026
+
+
+CONFIDENCE INTERVALS OF MODEL RESULTS
+
+                  Lower .5%  Lower 2.5%    Lower 5%    Estimate    Upper 5%  Upper 2.5%   Upper .5%
+
+ REACTION ON
+    COND            -0.216      -0.046       0.041       0.495       0.946       1.031       1.198
+
+ Intercepts
+    REACTION         2.754       2.871       2.932       3.250       3.585       3.650       3.777
+
+ Residual Variances
+    REACTION         1.802       1.932       1.999       2.323       2.749       2.824       2.975
+
+
+TECHNICAL 1 OUTPUT
+
+
+     PARAMETER SPECIFICATION
+
+
+           NU
+              REACTION      COND
+              ________      ________
+      1           0             0
+
+
+           LAMBDA
+              REACTION      COND
+              ________      ________
+ REACTION           0             0
+ COND               0             0
+
+
+           THETA
+              REACTION      COND
+              ________      ________
+ REACTION           0
+ COND               0             0
+
+
+           ALPHA
+              REACTION      COND
+              ________      ________
+      1           1             0
+
+
+           BETA
+              REACTION      COND
+              ________      ________
+ REACTION           0             2
+ COND               0             0
+
+
+           PSI
+              REACTION      COND
+              ________      ________
+ REACTION           3
+ COND               0             0
+
+
+     STARTING VALUES
+
+
+           NU
+              REACTION      COND
+              ________      ________
+      1         0.000         0.000
+
+
+           LAMBDA
+              REACTION      COND
+              ________      ________
+ REACTION       1.000         0.000
+ COND           0.000         1.000
+
+
+           THETA
+              REACTION      COND
+              ________      ________
+ REACTION       0.000
+ COND           0.000         0.000
+
+
+           ALPHA
+              REACTION      COND
+              ________      ________
+      1         3.484         0.472
+
+
+           BETA
+              REACTION      COND
+              ________      ________
+ REACTION       0.000         0.000
+ COND           0.000         0.000
+
+
+           PSI
+              REACTION      COND
+              ________      ________
+ REACTION       1.202
+ COND           0.000         0.249
+
+
+PLOT INFORMATION
+
+The following plots are available:
+
+  Histograms of sample values
+  Histograms of estimated values
+  Scatterplots (sample values, estimated values)
+
+DIAGRAM INFORMATION
+
+  Use View Diagram under the Diagram menu in the Mplus Editor to view the diagram.
+  If running Mplus from the Mplus Diagrammer, the diagram opens automatically.
+
+  Diagram output
+    c:\users\owner\documents\stats\hayes (2013) text\pmi\reaction on cond boot 1000000.dgm
+
+     Beginning Time:  16:35:05
+        Ending Time:  16:39:41
+       Elapsed Time:  00:04:36
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2013 Muthen & Muthen

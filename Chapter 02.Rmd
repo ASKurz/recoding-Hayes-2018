@@ -426,7 +426,7 @@ fitted(fit3,
 
 ### The standardized regression model.
 
-Since brms doesn't automatically give us the standardized coefficients the way OLS output often does, we'll have to bet proactive. One solution is just to standardized the data themselves and then re-fit the model with those standardized variables. That leads us to the issue of how one standardized variables to begin with. Recall that standardizing entails subtracting the mean of a variable from that variable and then dividing that value by the standard deviation. We don't want to do that by hand. So one handy way is to make a custom function to do that work for us.
+Since brms doesn't automatically give us the standardized coefficients the way OLS output often does, we'll have to be proactive. One solution is just to standardized the data themselves and then re-fit the model with those standardized variables. That leads us to the issue of how one standardized variables to begin with. Recall that standardizing entails subtracting the mean of a variable from that variable and then dividing that value by the standard deviation. We don't want to do that by hand. So one handy way is to make a custom function to do that work for us.
 
 ```{r}
 sandardize <- function(x){
@@ -434,7 +434,9 @@ sandardize <- function(x){
 }
 ```
 
-Here we'll put our custom `standardize()` function to work.
+Go [here](http://r4ds.had.co.nz/functions.html) to learn more about making custom functions in R.
+
+Here we'll employ our custom `standardize()` function to make standardized versions of our variables.
 
 ```{r}
 glbwarm <-
@@ -548,7 +550,7 @@ bayes_R2(fit3, summary = F) %>%
   theme_bw()
 ```
 
-Another way we examine model fit is with graphical posterior predictive checks. Posterior predictive checking is a very general approach. One basic way is to use the model in order to simulate data and then compare those data with the original data--the basic idea being that good fitting models should produce data similar to the original data.
+Another way we examine model fit is with graphical posterior predictive checks. Posterior predictive checking is a very general approach, which you might learn more about [here](http://www.stat.columbia.edu/~gelman/research/published/bayes-vis.pdf) or with a few keyword searches in on [Gelman's blog](http://andrewgelman.com). One basic way is to use the model in order to simulate data and then compare those data with the original data--the basic idea being that good fitting models should produce data similar to the original data.
 
 Recall how we've used `fitted()` to make regression lines and expected values? We'll, now we'll use `predict()` to simulate data based on our models.
 
@@ -587,11 +589,11 @@ glbwarm %>%
   theme_bw()
 ```
 
-Overall, the simulations aren't bad. In all three simulated data sets, `govact` tends to veer above 7.5, which is where the original data appear to be bounded. But otherwise, the overall shape is pretty close, at least with respect to `negemot`. 
+Overall, the simulations aren't bad. But in all three, `govact` tends to veer above 7.5, which is where the original data appear to be bounded. But otherwise the overall shape is pretty close, at least with respect to `negemot`. 
 
-There's nothing special about three simulations. Three is just more than one. It gives you a sense of the variance across simulations. Also, we only examined the model fit with respect to `negemot`. Since there are other variables in the model, we might also assess the model based on them.
+There's nothing special about three simulations. Three is just more than one and gives you a sense of the variance across simulations. Also, we only examined the model fit with respect to `negemot`. Since there are other variables in the model, we might also assess the model based on them.
 
-Another method is with the `pp_check()` function. `brms::pp_check()` allows users to access a variety of convenience functions from the [bayesplot package](https://github.com/stan-dev/bayesplot). Here we'll use the default settings.
+Another method is with the `brms::pp_check()` function, which allows users to access a variety of convenience functions from the [bayesplot package](https://github.com/stan-dev/bayesplot). Here we'll use the default settings.
 
 ```{r, fig.width = 6, fig.height = 3}
 pp_check(fit3)
@@ -601,7 +603,7 @@ What we did was simulate 10 data sets worth of `govact` values, plot their densi
 
 ## 2.6 Statistical inference
 
-Here's a tidyverse way to do Hayes's simulation. Here we just use OLS regression with the `lm()` function. You could do this with Bayesian HMC estimation, but man would it take a while.
+Here's a tidyverse way to do Hayes's simulation. We're just using OLS regression with the `lm()` function. You could do this with Bayesian HMC estimation, but man would it take a while.
 
 ```{r, fig.width = 6, fig.height = 3.5}
 # first, we'll need two custom functions
@@ -684,11 +686,13 @@ library(HDInterval)
 hdi(posterior_samples(fit3)[ , "b_negemot"], credMass = .95)
 ```
 
-Finally, because Bayesians aren't bound to the NHST paradigm, we aren’t bound to 95% intervals, either. For example, in both his [excellent text](http://xcelab.net/rm/statistical-rethinking/) and as a default in its accompanying [rethinking package](https://github.com/rmcelreath/rethinking) Richard McElreath often uses 89% intervals. Alternatively, Andrew Gelman has publically advocated for [50% intervals](http://andrewgelman.com/2016/11/05/why-i-prefer-50-to-95-intervals/). If you'd like, say, 80% intervals in your model summary, you can insert a `prob` argument into either `print()` or `summary()`.
+Finally, because Bayesians aren't bound to the NHST paradigm, we aren’t bound to 95% intervals, either. For example, in both his [excellent text](http://xcelab.net/rm/statistical-rethinking/) and as a default in its accompanying [rethinking package](https://github.com/rmcelreath/rethinking), Richard McElreath often uses 89% intervals. Alternatively, Andrew Gelman has publically advocated for [50% intervals](http://andrewgelman.com/2016/11/05/why-i-prefer-50-to-95-intervals/). The most important thing is to express the uncertainty in the posterior in a clearly-specified way. If you'd like, say, 80% intervals in your model summary, you can insert a `prob` argument into either `print()` or `summary()`.
 
 ```{r}
 print(fit3, prob = .8)
 ```
+
+Note how two of our columns changed to 'l-80% CI' and 'u-80% CI'.
 
 You can specify custom percentile levels with `posterior_summary()`:
 
@@ -711,7 +715,7 @@ posterior_samples(fit3) %>%
   mutate_if(is.double, round, digits = 2)
 ```
 
-Throughout this project, I'll default to conventional 95% intervals and occasionally replace or augment them with 50% intervals.
+Throughout this project, I'm going to be lazy and default to conventional 95% intervals, with occasional appearances of 50% intervals.
 
 ### Testing a hypothesis about a set of antecedent variables.
 
@@ -775,9 +779,9 @@ R2s %>%
   theme_bw()
 ```
 
-The $R^2$ approach is popular within the social sciences. But it has its limitations. It's first limitation is that it doesn't correct for model complexity. It's second limitation is that it’s not applicable to a range of models, such as those that do not use the Gaussian likelihood (e.g., logistic regression) or to multilevel models.
+The $R^2$ approach is popular within the social sciences. But it has its limitations. It's first limitation is that it doesn't correct for model complexity. The second is it’s not applicable to a range of models, such as those that do not use the Gaussian likelihood (e.g., logistic regression) or to multilevel models.
 
-Happily, information criteria offer a more general framework. The AIC is the most popular information criteria in the frequentist world. Within the Bayesian world, we have the DIC, the WAIC, and the LOO. The DIC is quickly falling out of favor and is not immediately available with the brms package. However, we can use the WAIC and the LOO, both of which are computed in brms via the [loo package](https://github.com/stan-dev/loo).
+Happily, information criteria offer a more general framework. The AIC is the most popular information criteria among frequentists. Within the Bayesian world, we have the DIC, the WAIC, and the LOO. The DIC is quickly falling out of favor and is not immediately available with the brms package. However, we can use the WAIC and the LOO, both of which are computed in brms via the [loo package](https://github.com/stan-dev/loo).
 
 In brms, you can get the WAIC or LOO values with either `waic()` or `loo()`. Here we use `loo()` and save the output as objects.
 
@@ -813,7 +817,7 @@ compare_ic(l_fit3, l_fit4)
 
 We also get a standard error. Here it looks like `fit3` was substantially better, in terms of LOO-values, than `fit4`.
 
-For more on the LOO, see the [loo reference manual](https://cran.r-project.org/web/packages/loo/loo.pdf), this [handy vignette](https://cran.r-project.org/web/packages/loo/vignettes/loo2-example.html), or the scholarly papers referenced therein. Also, although McElreath doesn't discuss the LOO, he does cover Bayesian information criteria, with an emphasis on the WAIC, in his [text](http://xcelab.net/rm/statistical-rethinking/) and in his [online lectures on the topic](https://www.youtube.com/watch?v=t0pRuy1_190&t=1307s&list=PLDcUM9US4XdM9_N6XUUFrhghGJ4K25bFc&index=9).
+For more on the LOO, see the [loo reference manual](https://cran.r-project.org/web/packages/loo/loo.pdf), this [handy vignette](https://cran.r-project.org/web/packages/loo/vignettes/loo2-example.html), or the scholarly papers referenced therein. Also, although McElreath doesn't discuss the LOO, he does cover the topic in general in his [text](http://xcelab.net/rm/statistical-rethinking/) and in his [online lectures on the topic](https://www.youtube.com/watch?v=t0pRuy1_190&t=1307s&list=PLDcUM9US4XdM9_N6XUUFrhghGJ4K25bFc&index=9).
 
 ## 2.7 Multicategorical antecedent variables
 
@@ -854,6 +858,8 @@ fit5 <-
 fixef(fit5)
 ```
 
+The intercept is the stand-in for Independents and the other two coefficients are difference scores.
+
 The $R^2$ is okay:
 
 ```{r}
@@ -862,7 +868,7 @@ bayes_R2(fit5) %>% round(digits = 3)
 
 There's no need to compute an $F$ test on our $R^2$. The posterior mean and it's 95% intervals are well away from zero. But you could use your `bayes_R2(fit5, summary = F)` plotting skills from above to more fully inspect the posterior if you'd like.
 
-We couls also use information criteria. One method would be to compare the WAIC or LOO value of `fit5` with an intercept-only model. First, we'll need to fit that model.
+We could also use information criteria. One method would be to compare the WAIC or LOO value of `fit5` with an intercept-only model. First, we'll need to fit that model.
 
 ```{r, warning = F, message = F}
 fit6 <- 

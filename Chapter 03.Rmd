@@ -114,6 +114,7 @@ bayes_R2(fit0) %>% round(digits = 3)
 It's worth it to actually plot the $R^2$ distributions.
 
 ```{r, fig.width = 6, fig.height = 2}
+# we'll get our color palette from ggthemes
 library(ggthemes)
 
 bayes_R2(fit0, summary = F) %>% 
@@ -174,17 +175,101 @@ quantile(post$ab, probs = c(.5, .025, .975)) %>%
 
 And we can even visualize it as a density.
 
-```{r, fig.width = 6, fig.height = 2}
+```{r, fig.width = 4, fig.height = 2}
 post %>% 
   
   ggplot(aes(x = ab)) +
   geom_density(color = "transparent", 
-               fill = colorblind_pal()(2)[2]) +
+               fill = colorblind_pal()(3)[3]) +
   scale_y_continuous(NULL, breaks = NULL) +
   labs(title = expression(paste("Our indirect effect, the ", italic("ab"), " pathway")),
        x = NULL) +
   theme_classic()
 ```
+
+It's also worth pointing out that as the indirect effect isn't perfectly symmetric, it's mean and median aren't quite the same.
+
+```{r}
+post %>% 
+  summarize(mean = mean(ab),
+            median = median(ab)) %>% 
+  round(digits = 3)
+```
+
+Their magnitudes are similar, but this asymmetry will be a source of contrast to our estimates and those in the text. 
+
+On page 90, Hayes computed the *adjusted means* for $Y$. For both `cond == 1` and `cond == 0`, he computed the expected values for `reaction` when `pmi` was at its mean. A natural way to do that in brms is with fitted. First, we'll put our input values for `cond` and `pmi` in a tibble, which we'll call `nd`. Then we'll feed `nd` into the `newdata` argument within the `fitted()` function.
+
+```{r}
+nd <-
+  tibble(cond = 1:0,
+         pmi = mean(p$pmi))
+
+fitted(fit0, newdata = nd)
+```
+
+Because `fit0` is a multivariate model, `fitted()` returns the model-implied summaries for both `reaction` and `pmi`. If you just want the adjusted means for `reaction`, you can use the `resp` argument within `fitted()`.
+
+```{r}
+fitted(fit0, newdata = nd, resp = "reaction") %>% round(digits = 3)
+```
+
+Note how this is where the two values in the $Y$ adjusted column in Table 3.1 came from. 
+
+However, if we want to reproduce how Hayes computed the total effect (i.e. $c^\prime + ab$), we'll need to work with the posterior itself, `post`. Recall, we've already saved the indirect effect as a vector, `ab`. The direct effect, $c^\prime$, is labeled `b_reaction_cond` within `post`. in order to get the total effect, $c$, all we need to is add those vectors together.
+
+```{r}
+post <-
+  post %>% 
+  mutate(total_effect = b_reaction_cond + ab)
+```
+
+Here's the posterior mean with its 95% intervals
+
+```{r}
+post %>% 
+  summarize(mean = mean(total_effect),
+            ll = quantile(total_effect, prob = .025),
+            ul = quantile(total_effect, prob = .975))
+```
+
+### ~~Estimation of the model in PROCESS for SPSS and SAS~~
+
+Nothing new for us, here.
+
+## 3.4 Statistical inference
+
+### Inference about hte direct effect of $X$ on $Y$
+
+In this section, Hayes provides a $t$ test and corresponding $p$-value for the direct effect (i.e., $c^\prime$, `b_reaction_cond`). Instead of the $t$ test, we can just look at the posterior distribution.
+
+```{r, fig.width = 4, fig.height = 2}
+post %>% 
+  
+  ggplot(aes(x = b_reaction_cond)) +
+  geom_density(color = "transparent", 
+               fill = colorblind_pal()(4)[4]) +
+  geom_vline(xintercept = 0, color = "white", linetype = 2) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  labs(title = expression(paste("Yep, 0 is a credible value for ", italic("c"), ".")),
+       x = NULL) +
+  theme_classic()
+```
+
+If you wanted to quantify what proportion of the density was less than 0, you could do:
+
+```{r}
+post %>% 
+  summarize(proportion_below_zero = filter(., b_reaction_cond < 0) %>% nrow()/nrow(.))
+```
+
+This is something like a Bayesian $p$-value. But of course, you could always just look at the posterior intervals.
+
+```{r}
+posterior_interval(fit0)["b_reaction_cond", ]
+```
+
+
 
 
 

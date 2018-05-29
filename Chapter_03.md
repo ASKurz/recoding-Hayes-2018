@@ -1,7 +1,7 @@
 Chapter 03
 ================
 A Solomon Kurz
-2018-05-28
+2018-05-29
 
 3.2. Example with dichotomous *X*: The influence of presumed media influence
 ----------------------------------------------------------------------------
@@ -138,16 +138,16 @@ print(fit0)
     ## 
     ## Population-Level Effects: 
     ##                    Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-    ## reaction_Intercept     0.53      0.54    -0.52     1.59       4000 1.00
-    ## pmi_Intercept          5.38      0.17     5.05     5.71       4000 1.00
-    ## reaction_pmi           0.51      0.10     0.31     0.70       4000 1.00
-    ## reaction_cond          0.25      0.26    -0.25     0.75       4000 1.00
-    ## pmi_cond               0.48      0.24     0.01     0.96       4000 1.00
+    ## reaction_Intercept     0.53      0.55    -0.52     1.61       4000 1.00
+    ## pmi_Intercept          5.38      0.16     5.06     5.69       4000 1.00
+    ## reaction_pmi           0.51      0.10     0.32     0.69       4000 1.00
+    ## reaction_cond          0.26      0.26    -0.25     0.77       4000 1.00
+    ## pmi_cond               0.48      0.24     0.01     0.95       4000 1.00
     ## 
     ## Family Specific Parameters: 
     ##                Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-    ## sigma_reaction     1.41      0.09     1.25     1.59       4000 1.00
-    ## sigma_pmi          1.32      0.09     1.17     1.51       4000 1.00
+    ## sigma_reaction     1.41      0.10     1.24     1.62       4000 1.00
+    ## sigma_pmi          1.32      0.09     1.16     1.50       4000 1.00
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -162,9 +162,9 @@ fixef(fit0)[3:5, ] %>% round(digits = 3)
 ```
 
     ##               Estimate Est.Error   Q2.5 Q97.5
-    ## reaction_pmi     0.506     0.098  0.314 0.698
-    ## reaction_cond    0.251     0.258 -0.246 0.752
-    ## pmi_cond         0.482     0.243  0.014 0.956
+    ## reaction_pmi     0.505     0.096  0.316 0.690
+    ## reaction_cond    0.257     0.256 -0.254 0.770
+    ## pmi_cond         0.479     0.238  0.012 0.948
 
 Also note that Hayes tends to refer to the intercepts as constants.
 
@@ -175,12 +175,13 @@ bayes_R2(fit0) %>% round(digits = 3)
 ```
 
     ##             Estimate Est.Error  Q2.5 Q97.5
-    ## R2_reaction    0.209     0.055 0.101 0.315
-    ## R2_pmi         0.040     0.032 0.001 0.116
+    ## R2_reaction    0.209     0.055 0.102 0.315
+    ## R2_pmi         0.039     0.031 0.000 0.115
 
 It's worth it to actually plot the *R*<sup>2</sup> distributions.
 
 ``` r
+# we'll get our color palette from ggthemes
 library(ggthemes)
 
 bayes_R2(fit0, summary = F) %>% 
@@ -211,15 +212,15 @@ You can isolate them with `fixef()[i]`.
 fixef(fit0)[5 , ]
 ```
 
-    ##  Estimate Est.Error      Q2.5     Q97.5 
-    ## 0.4819944 0.2430722 0.0135772 0.9562304
+    ##   Estimate  Est.Error       Q2.5      Q97.5 
+    ## 0.47936648 0.23776524 0.01203656 0.94816819
 
 ``` r
 fixef(fit0)[3 , ]
 ```
 
-    ##  Estimate Est.Error      Q2.5     Q97.5 
-    ## 0.5060646 0.0976633 0.3141897 0.6980785
+    ##   Estimate  Est.Error       Q2.5      Q97.5 
+    ## 0.50500954 0.09595046 0.31601740 0.68966730
 
 So the naive approach would be to just multiply them.
 
@@ -228,7 +229,7 @@ So the naive approach would be to just multiply them.
 ```
 
     ##  Estimate Est.Error      Q2.5     Q97.5 
-    ##     0.244     0.024     0.004     0.668
+    ##     0.242     0.023     0.004     0.654
 
 Now, this does get us the correct 'Estimate' (i.e., posterior mean). However, the posterior *S**D* and 95% intervals are off. If you want to do this properly, you need to work with the poster samples themselves. Here they are:
 
@@ -240,14 +241,14 @@ glimpse(post)
 
     ## Observations: 4,000
     ## Variables: 8
-    ## $ b_reaction_Intercept <dbl> 0.75775425, 0.80799622, 0.27800519, 0.95328528, 1.00721986, 1.26748526, -0.1...
-    ## $ b_pmi_Intercept      <dbl> 5.568519, 5.246249, 5.555607, 5.325756, 5.357816, 5.348240, 5.398154, 5.0983...
-    ## $ b_reaction_pmi       <dbl> 0.4906762, 0.4781968, 0.5356177, 0.4327614, 0.4134809, 0.4103802, 0.5878054,...
-    ## $ b_reaction_cond      <dbl> 0.12545875, 0.42504991, 0.08036166, 0.46447436, 0.35691319, 0.14674151, 0.31...
-    ## $ b_pmi_cond           <dbl> -0.228103534, 0.897404248, 0.059609017, 0.677536124, 0.473503990, 0.53950804...
-    ## $ sigma_reaction       <dbl> 1.346505, 1.409901, 1.407250, 1.367248, 1.369626, 1.388301, 1.410006, 1.3849...
-    ## $ sigma_pmi            <dbl> 1.317257, 1.335113, 1.284563, 1.365747, 1.340849, 1.181413, 1.449527, 1.3403...
-    ## $ lp__                 <dbl> -436.8911, -434.6342, -434.0985, -432.9711, -431.9473, -433.9431, -434.0656,...
+    ## $ b_reaction_Intercept <dbl> -0.28115970, 0.62200831, 0.58157332, 0.02143685, -0.41197137, 0.28864804, 0....
+    ## $ b_pmi_Intercept      <dbl> 5.321566, 5.460493, 5.286848, 5.502795, 5.752869, 5.325021, 5.300863, 5.4520...
+    ## $ b_reaction_pmi       <dbl> 0.6270093, 0.5406060, 0.4502046, 0.6240616, 0.6762247, 0.5599866, 0.4503599,...
+    ## $ b_reaction_cond      <dbl> 0.27527959, 0.23810965, 0.24557968, 0.07715507, 0.09369346, 0.10183750, 0.24...
+    ## $ b_pmi_cond           <dbl> 0.63671042, 0.61464757, 0.34907679, 0.27577554, -0.06624962, 0.35854652, 0.3...
+    ## $ sigma_reaction       <dbl> 1.407755, 1.336900, 1.463407, 1.428664, 1.414679, 1.308803, 1.352680, 1.4810...
+    ## $ sigma_pmi            <dbl> 1.335458, 1.369248, 1.254629, 1.182069, 1.281619, 1.297255, 1.288574, 1.3191...
+    ## $ lp__                 <dbl> -432.9393, -435.3835, -435.0549, -434.0420, -436.3363, -432.5405, -432.1107,...
 
 Here we compute the indirect effect, `ab`.
 
@@ -265,7 +266,7 @@ quantile(post$ab, probs = c(.5, .025, .975)) %>%
 ```
 
     ##   50%  2.5% 97.5% 
-    ## 0.236 0.006 0.534
+    ## 0.235 0.006 0.516
 
 And we can even visualize it as a density.
 
@@ -274,7 +275,7 @@ post %>%
   
   ggplot(aes(x = ab)) +
   geom_density(color = "transparent", 
-               fill = colorblind_pal()(2)[2]) +
+               fill = colorblind_pal()(3)[3]) +
   scale_y_continuous(NULL, breaks = NULL) +
   labs(title = expression(paste("Our indirect effect, the ", italic("ab"), " pathway")),
        x = NULL) +
@@ -282,6 +283,119 @@ post %>%
 ```
 
 ![](Chapter_03_files/figure-markdown_github/unnamed-chunk-18-1.png)
+
+It's also worth pointing out that as the indirect effect isn't perfectly symmetric, it's mean and median aren't quite the same.
+
+``` r
+post %>% 
+  summarize(mean = mean(ab),
+            median = median(ab)) %>% 
+  round(digits = 3)
+```
+
+    ##    mean median
+    ## 1 0.241  0.235
+
+Their magnitudes are similar, but this asymmetry will be a source of contrast to our estimates and those in the text.
+
+On page 90, Hayes computed the *adjusted means* for *Y*. For both `cond == 1` and `cond == 0`, he computed the expected values for `reaction` when `pmi` was at its mean. A natural way to do that in brms is with fitted. First, we'll put our input values for `cond` and `pmi` in a tibble, which we'll call `nd`. Then we'll feed `nd` into the `newdata` argument within the `fitted()` function.
+
+``` r
+nd <-
+  tibble(cond = 1:0,
+         pmi = mean(p$pmi))
+
+fitted(fit0, newdata = nd)
+```
+
+    ## , , reaction
+    ## 
+    ##      Estimate Est.Error     Q2.5    Q97.5
+    ## [1,] 3.615226 0.1894777 3.238465 3.971558
+    ## [2,] 3.357784 0.1768709 3.006871 3.703902
+    ## 
+    ## , , pmi
+    ## 
+    ##      Estimate Est.Error     Q2.5    Q97.5
+    ## [1,] 5.857917 0.1703916 5.521682 6.193695
+    ## [2,] 5.378551 0.1599040 5.058301 5.690644
+
+Because `fit0` is a multivariate model, `fitted()` returns the model-implied summaries for both `reaction` and `pmi`. If you just want the adjusted means for `reaction`, you can use the `resp` argument within `fitted()`.
+
+``` r
+fitted(fit0, newdata = nd, resp = "reaction") %>% round(digits = 3)
+```
+
+    ##      Estimate Est.Error  Q2.5 Q97.5
+    ## [1,]    3.615     0.189 3.238 3.972
+    ## [2,]    3.358     0.177 3.007 3.704
+
+Note how this is where the two values in the *Y* adjusted column in Table 3.1 came from.
+
+However, if we want to reproduce how Hayes computed the total effect (i.e. *c*<sup>′</sup> + *a**b*), we'll need to work with the posterior itself, `post`. Recall, we've already saved the indirect effect as a vector, `ab`. The direct effect, *c*<sup>′</sup>, is labeled `b_reaction_cond` within `post`. in order to get the total effect, *c*, all we need to is add those vectors together.
+
+``` r
+post <-
+  post %>% 
+  mutate(total_effect = b_reaction_cond + ab)
+```
+
+Here's the posterior mean with its 95% intervals
+
+``` r
+post %>% 
+  summarize(mean = mean(total_effect),
+            ll = quantile(total_effect, prob = .025),
+            ul = quantile(total_effect, prob = .975))
+```
+
+    ##        mean          ll       ul
+    ## 1 0.4986968 -0.04308541 1.057497
+
+### ~~Estimation of the model in PROCESS for SPSS and SAS~~
+
+Nothing new for us, here.
+
+3.4 Statistical inference
+-------------------------
+
+### Inference about hte direct effect of *X* on *Y*
+
+In this section, Hayes provides a *t* test and corresponding *p*-value for the direct effect (i.e., *c*<sup>′</sup>, `b_reaction_cond`). Instead of the *t* test, we can just look at the posterior distribution.
+
+``` r
+post %>% 
+  
+  ggplot(aes(x = b_reaction_cond)) +
+  geom_density(color = "transparent", 
+               fill = colorblind_pal()(4)[4]) +
+  geom_vline(xintercept = 0, color = "white", linetype = 2) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  labs(title = expression(paste("Yep, 0 is a credible value for ", italic("c"), ".")),
+       x = NULL) +
+  theme_classic()
+```
+
+![](Chapter_03_files/figure-markdown_github/unnamed-chunk-24-1.png)
+
+If you wanted to quantify what proportion of the density was less than 0, you could do:
+
+``` r
+post %>% 
+  summarize(proportion_below_zero = filter(., b_reaction_cond < 0) %>% nrow()/nrow(.))
+```
+
+    ##   proportion_below_zero
+    ## 1                0.1575
+
+This is something like a Bayesian *p*-value. But of course, you could always just look at the posterior intervals.
+
+``` r
+posterior_interval(fit0)["b_reaction_cond", ]
+```
+
+    ##       2.5%      97.5% 
+    ## -0.2535087  0.7695793
 
 **More to come**
 

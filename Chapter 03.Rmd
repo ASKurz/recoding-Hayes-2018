@@ -39,7 +39,7 @@ p %>%
   count()
 ```
 
-Here is how to get the ungrouped Mean and $SD$ values for `reaction` and `pmi`, as presented in Table 3.1,
+Here is how to get the ungrouped Mean and *SD* values for `reaction` and `pmi`, as presented in Table 3.1,
 
 ```{r}
 p %>% 
@@ -51,7 +51,7 @@ p %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
-You might get the Mean and $SD$ values for `reaction` and `pmi` grouped by `cond` like this:
+You might get the Mean and *SD* values for `reaction` and `pmi` grouped by `cond` like this:
 
 ```{r}
 p %>% 
@@ -132,7 +132,7 @@ bayes_R2(fit0, summary = F) %>%
 
 We went through the trouble of plotting the $R^2$ distributions because it’s useful to understand that they won’t often be symmetric when they’re near their logical boundaries (i.e., 0 and 1). This is where asymmetric Bayesian credible intervals can really shine.
 
-Let's get down to business, the indirect effect, the $ab$ pathway. In our model
+Let's get down to business, the indirect effect, the *ab* pathway. In our model
 
 * $a$ = `pmi_cond`
 * $b$ = `reaction_pmi`
@@ -150,7 +150,7 @@ So the naive approach would be to just multiply them.
 (fixef(fit0)[5 , ] * fixef(fit0)[3 , ]) %>% round(digits = 3)
 ```
 
-Now, this does get us the correct 'Estimate' (i.e., posterior mean). However, the posterior $SD$ and 95% intervals are off. If you want to do this properly, you need to work with the poster samples themselves. Here they are:
+Now, this does get us the correct 'Estimate' (i.e., posterior mean). However, the posterior *SD* and 95% intervals are off. If you want to do this properly, you need to work with the poster samples themselves. Here they are:
 
 ```{r}
 post <- posterior_samples(fit0)
@@ -196,7 +196,7 @@ post %>%
   round(digits = 3)
 ```
 
-Their magnitudes are similar, but this asymmetry will be a source of contrast to our estimates and those in the text. 
+Their magnitudes are similar, but this asymmetry will be a source of contrast to our estimates and those in the text. This is also something to consider when reporting on central tendency. When the indirect effect--or any other parameter, for that matter--is quite asymmetric, you might prefer reporting the median rather than the mean.
 
 On page 90, Hayes computed the *adjusted means* for $Y$. For both `cond == 1` and `cond == 0`, he computed the expected values for `reaction` when `pmi` was at its mean. A natural way to do that in brms is with fitted. First, we'll put our input values for `cond` and `pmi` in a tibble, which we'll call `nd`. Then we'll feed `nd` into the `newdata` argument within the `fitted()` function.
 
@@ -216,7 +216,7 @@ fitted(fit0, newdata = nd, resp = "reaction") %>% round(digits = 3)
 
 Note how this is where the two values in the $Y$ adjusted column in Table 3.1 came from. 
 
-However, if we want to reproduce how Hayes computed the total effect (i.e. $c^\prime + ab$), we'll need to work with the posterior itself, `post`. Recall, we've already saved the indirect effect as a vector, `ab`. The direct effect, $c^\prime$, is labeled `b_reaction_cond` within `post`. in order to get the total effect, $c$, all we need to is add those vectors together.
+However, if we want to reproduce how Hayes computed the total effect (i.e. $c^\prime$ + *ab*), we'll need to work with the posterior itself, `post`. Recall, we've already saved the indirect effect as a vector, `ab`. The direct effect, $c^\prime$, is labeled `b_reaction_cond` within `post`. in order to get the total effect, $c$, all we need to is add those vectors together.
 
 ```{r}
 post <-
@@ -269,18 +269,195 @@ This is something like a Bayesian $p$-value. But of course, you could always jus
 posterior_interval(fit0)["b_reaction_cond", ]
 ```
 
+### Inference about the indirect of *X* on *Y* through *M*.
 
+#### The normal theory approach.
 
+This is not our approach.
 
+#### Bootstrap confidence interval.
 
+This is not our approach.
 
+However, Markov chain Monte Carlo (MCMC) methods are iterative and share some characteristics with boostrapping. On page 98, Hayes outlined 6 steps for constructing the *ab* bootstrap confidence interval. Here are our responses to those steps w/r/t Bayes with MCMC--or in our case HMC (i.e., Hamiltonian Monte Carlo).
 
-**More to come**
+If HMC or MCMC, in general, are new to you, you might check out [this lecture](https://www.youtube.com/watch?v=BWEtS3HuU5A&t=7s).
 
+Anyway, Hayes's 6 steps:
 
+##### 1.
 
+With HMC we do not take random samples of the data themselves. Rather, we take random draws from the posterior distribution. The posterior distribution is the joint probability distribution of our model. 
 
+##### 2.
 
+After we fit our model (i.e., with the `brm()` function) and save our posterior draws in a data frame (i.e., `post <- posterior_samples(my_model_fit)`), we then make a new column (a.k.a. vector, variable) that is the product of our coefficients for the *a* and *b* pathways. In the example above, this looked like `post %>% mutate(ab = b_pmi_cond*b_reaction_pmi)`. Let's take a look at those columns.
+
+```{r}
+post %>% 
+  select(b_pmi_cond, b_reaction_pmi, ab) %>% 
+  slice(1:10)
+```
+
+Our data frame, `post`, has 4000 rows. Why 4000? By default, brms runs 4 HMC chains. Each chain has 2000 iterations, 1000 of which are warmups. We discard the warmups. As such, there are 1000 good iterations left in each chain and 1000*4 = 4000. We can change these defaults as needed. At this point in the project, the default settings have been fine.
+
+So, each row in `post` are the parameter values based on one of those draws. And again, these are draws from the posterior distribution. They are not draws from the data.
+
+##### 3.
+We don't refit the model $k$ times based on the samples from the data. We take a number of draws from the posterior distribution. Hayes likes to take 5000 samples when he bootstraps. Happily, that number is quite similar to our 4000 HMC draws. Whether 5000, 4000 or 10,000, these are all large enough numbers that the distributions become fairly stable. With HMC, however, you might want to increase the number of iterations if the effective sample size, 'Eff.Sample' in the `print()` output, is substantially smaller than the number of iterations.
+
+##### 4.
+When we use the `quantile()` function to compute our Bayesian credible intervals, we've sorted. Conceptually, we've done this:
+
+```{r}
+post %>% 
+  select(ab) %>% 
+  arrange(ab) %>% 
+  slice(1:10)
+```  
+
+##### 5. 
+
+Yes, this is what we do, too.
+
+```{r}
+ci <- 95
+
+.5*(100 - ci)
+```
+
+##### 6.
+
+This is also what we do.
+
+```{r}
+ci <- 95
+
+(100 - .5*(100 - ci))
+```
+
+Also, notice the headers in the rightmost two columns in our `posterior_summary()` output:
+
+```{r}
+posterior_summary(fit0)
+```
+
+Those 2.5 and 97.5 quantiles from above are just what brms is giving us in our 95% Bayesian credible intervals. 
+
+Here's our version of Figure 3.5
+
+```{r, fig.width = 4.25, fig.height = 4}
+# these will come in handy in the subtitle
+ll <- quantile(post$ab, probs = .025) %>% round(digits = 3)
+ul <- quantile(post$ab, probs = .975) %>% round(digits = 3)
+
+post %>% 
+  
+  ggplot(aes(x = ab)) +
+  geom_histogram(color = "white", size = .25, 
+               fill = colorblind_pal()(5)[5],
+               binwidth = .025, boundary = 0) +
+  geom_vline(xintercept = quantile(post$ab, probs = c(.025, .975)),
+             linetype = 3, color = colorblind_pal()(6)[6]) +
+  labs(x = expression(paste("Indirect effect (", italic("ab"), ")")),
+       y = "Frequency in 4,000 HMC posterior draws",
+       subtitle = paste("95% of the posterior draws are between", ll, "and", ul)) +
+  theme_classic()
+```
+
+Again, as Hayes discussed how to specify different types of intervals in PROCESS on page 102, you can ask for different kinds of intervals in your `print()` or `summary()` output with the `probs` argument, just as you can with `quantile()` when working directly with the posterior draws. 
+
+Hayes discussed setting the seed in PROCESS on page 104. You can do this with the `seed` argument in the `brm()` function, too. 
+
+#### Alternative "asymmetric" confidence interval approaches.
+
+This section does not quite refer to us. I'm a little surprised Hayes didn't at least dedicate a paragraph or two mentioning Bayesian estimation. Sure, he mentioned Monte Carlo, but not within the context of Bayes. So it goes...
+
+## 3.5 An example with continuous $X$: Economic stress among small-business owners
+
+Here's the `estress` data.
+
+```{r, warning = F, message = F}
+estress <- read_csv("data/estress/estress.csv")
+
+glimpse(estress)
+```
+
+The model set up is just like before. There are no complications switching from a binary $X$ variable to a continuous one.
+
+```{r}
+y_model <- bf(withdraw ~ 1 + estress + affect)
+m_model <- bf(affect ~ 1 + estress)
+```
+
+With our `y_model` and `m_model` defined, we're ready to fit.
+
+```{r, message = F, warning = F}
+fit1 <-
+  brm(data = estress, family = gaussian,
+      y_model + m_model + set_rescor(FALSE),
+      chains = 4, cores = 4)
+```
+
+Let's take a look.
+
+```{r}
+print(fit1, digits = 3)
+```
+
+The 'Eff.Sample' and 'Rhat' values look great. Happily, the values in our summary cohere well with those Hayes reported in Table 3.5. Here are our $R^2$ values.
+
+```{r}
+bayes_R2(fit1)
+```
+
+These are also quite similar to those in the text. Here's our indirect effect.
+
+```{r}
+# putting the posterior draws into a data frame
+post <- posterior_samples(fit1)
+
+# computing the ab coefficient with multiplication
+post <-
+  post %>% 
+  mutate(ab = b_affect_estress*b_withdraw_affect)
+
+# getting the posterior median and 95% intervals with `quantile()`
+quantile(post$ab, probs = c(.5, .025, .975)) %>% round(digits = 3)
+```
+
+We can visualize its shape, median, and 95% intervals in a density plot.
+
+```{r, fig.width = 4, fig.height = 2}
+post %>% 
+  ggplot(aes(x = ab)) +
+  geom_density(color = "transparent", 
+               fill = colorblind_pal()(7)[7]) +
+  geom_vline(xintercept = quantile(post$ab, probs = c(.025, .5, .975)), 
+             color = "white", linetype = c(2, 1, 2), size = c(.5, .8, .5)) +
+  scale_x_continuous(breaks = quantile(post$ab, probs = c(.025, .5, .975)),
+                     labels = quantile(post$ab, probs = c(.025, .5, .975)) %>% round(2) %>% as.character()) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  labs(title = expression(paste("Behold our ", italic("ab"), "!")),
+       x = NULL) +
+  theme_classic()
+```
+
+Here's $c^\prime$, the direct effect of `esterss` predicting `withdraw`.
+
+```{r}
+posterior_summary(fit1)["b_withdraw_estress", ]
+```
+
+It has wide flapping intervals with do straddle zero. A little addition will give us the direct effect, $c$.
+
+```{r}
+post <-
+  post %>% 
+  mutate(c = b_withdraw_estress + ab)
+
+quantile(post$c, probs = c(.5, .025, .975)) %>% round(digits = 3)
+```
 
 Note. The analyses in this document were done with:
 

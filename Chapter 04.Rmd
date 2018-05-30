@@ -51,9 +51,7 @@ Since we have posteriors for the correlations, why not plot them? Here we use th
 ```{r, message = F, warning = F, fig.width = 10, fig.height = 1.75}
 library(viridis)
 
-post <- posterior_samples(fit0)
-
-post %>% 
+posterior_samples(fit0) %>% 
   select(rescor__ese__estress, rescor__ese__affect, rescor__estress__withdraw) %>% 
   gather() %>% 
   
@@ -63,7 +61,9 @@ post %>%
                      labels = c(expression(paste(rho["ese, affect"])),
                                 expression(paste(rho["ese, estress"])),
                                 expression(paste(rho["estress, withdraw"]))),
-                    guide = guide_legend(label.hjust = 0)) +
+                     guide = guide_legend(label.hjust = 0,
+                                          label.theme = element_text(size = 15, angle = 0, color = "white"),
+                                          title.theme = element_blank())) +
   coord_cartesian(xlim = c(-1, 1)) +
   labs(title = "Our correlation density plot",
        x = NULL) +
@@ -73,14 +73,390 @@ post %>%
         axis.ticks.y = element_blank())
 ```
 
+### Accounting for confounding and epiphenomenal association
 
+```{r}
+y_model <- bf(withdraw ~ 1 + estress + affect + ese + sex + tenure)
+m_model <- bf(affect ~ 1 + estress + ese + sex + tenure)
+```
 
+With our `y_model` and `m_model` defined, we're ready to fit.
 
+```{r, message = F, warning = F}
+fit1 <-
+  brm(data = estress, family = gaussian,
+      y_model + m_model + set_rescor(FALSE),
+      chains = 4, cores = 4)
+```
 
+Here's the summary:
 
+```{r}
+print(fit1, digits = 3)
+```
 
+In the printout, notice how first within intercepts and then with covariates and sigma, the coefficients are presented as for `withdraw` first and then `affect`. Also notice how the coefficients for the covariates are presented in the same order for each criterions. Hopefully that'll make it easier to sift through the printout. Happily, our coefficients are quite similar to those in Table 4.1 
 
+Here are the $R^2$ values.
 
+```{r}
+bayes_R2(fit1) %>% round(digits = 3)
+```
+
+These are also in the same ballpark, but a little higher. Why not glance at their densities?
+
+```{r, fig.width = 6, fig.height = 2}
+bayes_R2(fit1, summary = F) %>% 
+  as_tibble() %>% 
+  gather() %>% 
+  
+  ggplot(aes(x = value, fill = key)) +
+  geom_density(color = "transparent", alpha = .85) +
+  scale_fill_manual(values = c(viridis_pal(option = "A")(7)[c(7, 3)]), 
+                    labels = c("affect", "withdraw"),
+                    guide = guide_legend(title.theme = element_blank())) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  coord_cartesian(xlim = 0:1) +
+  labs(title = expression(paste("The ", italic("R")^{2}, " distributions for fit1")),
+       x = NULL) +
+  theme_black() +
+  theme(panel.grid = element_blank())
+```
+
+Here we retrieve the posterior samples, compute the indirect effect, and summarize the indirect effect with `quantile()`.
+
+```{r}
+post <-
+  posterior_samples(fit1) %>% 
+  mutate(ab = b_affect_estress*b_withdraw_affect)
+
+quantile(post$ab, probs = c(.5, .025, .975)) %>% 
+  round(digits = 3)
+```
+
+Similar results to the text (p. 127). Here's what it looks like.
+
+```{r, fig.width = 4, fig.height = 3.5}
+post %>% 
+  
+  ggplot(aes(x = ab)) +
+  geom_density(color = "transparent",
+               fill = viridis_pal(option = "A")(7)[5]) +
+  geom_vline(xintercept = quantile(post$ab, probs = c(.5, .025, .975)),
+             color = "black", linetype = c(1, 3, 3)) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  xlab(expression(italic("ab"))) +
+  theme_black() +
+  theme(panel.grid = element_blank())
+```
+
+Once again, those sweet Bayesian credible intervals get the job done.
+
+Here's a way to get both the direct effect, $c^\prime$ (i.e., `b_withdraw_estress`), and the total effect, $c$ (i.e., $c^\prime$ + *ab*) of `estress` on `withdraw`.
+
+```{r}
+post %>% 
+  mutate(c = b_withdraw_estress + ab) %>% 
+  rename(c_prime = b_withdraw_estress) %>% 
+  select(c_prime, c) %>% 
+  gather() %>%
+  group_by(key) %>% 
+  summarize(mean = mean(value), 
+            ll = quantile(value, probs = .025),
+            ul = quantile(value, probs = .975)) %>% 
+  mutate_if(is_double, round, digits = 3)
+```
+
+Both appear pretty small. Which leads us to the next section...
+
+## 4.3 Effect size
+
+### The partially standardized effect.
+
+We get *SD*s using the `sd()` function. Here's the *SD* for our $Y$ variable, `withdraw`.
+
+```{r}
+sd(estress$withdraw)
+```
+
+Here we compute the partially standardized effect sizes for $c^\prime$ and *ab* by dividing those vectors in our `post` object by `sd(estress$withdraw)`, which we saved as `SD_y`.
+
+```{r}
+SD_y <- sd(estress$withdraw)
+
+post %>% 
+  mutate(c_prime_ps = b_withdraw_estress/SD_y,
+         ab_ps = ab/SD_y) %>% 
+  mutate(c_ps = c_prime_ps + ab_ps) %>% 
+  select(c_prime_ps, ab_ps, c_ps) %>% 
+  gather() %>%
+  group_by(key) %>% 
+  summarize(mean = mean(value), 
+            median = median(value),
+            ll = quantile(value, probs = .025),
+            ul = quantile(value, probs = .975)) %>% 
+  mutate_if(is_double, round, digits = 3)
+```
+
+The results are similar, though not identical, to those in the text. Here we have both rounding error and estimation differences at play. The plots:
+
+```{r, fig.height = 3, fig.width = 10}
+post %>% 
+  mutate(c_prime_ps = b_withdraw_estress/SD_y,
+         ab_ps = ab/SD_y) %>% 
+  mutate(c_ps = c_prime_ps + ab_ps) %>% 
+  select(c_prime_ps, ab_ps, c_ps) %>% 
+  gather() %>% 
+  
+  ggplot(aes(x = value, fill = key)) +
+  geom_density(alpha = .85, color = "transparent") +
+  scale_fill_viridis(discrete = T, option = "D") +
+  scale_y_continuous(NULL, breaks = NULL) +
+  labs(title = "Partially-standardized coefficients",
+       x = NULL) +
+  theme_black() +
+  theme(panel.grid = element_blank(),
+        legend.position = "none") +
+  facet_wrap(~key, ncol = 3)
+```
+
+On page 135, Hayes revisited the model from section 3.3. We'll have to reload the data and refit that model to follow along.
+
+```{r, message = F, warning = F}
+p <- read_csv("data/pmi/pmi.csv")
+
+y_model <- bf(reaction ~ 1 + pmi + cond)
+m_model <- bf(pmi ~ 1 + cond)
+
+fit_3.3 <-
+  brm(data = p, family = gaussian,
+      y_model + m_model + set_rescor(FALSE),
+      chains = 4, cores = 4)
+```
+
+The partially-standardized parameters require some posterior samples wrangling.
+
+```{r}
+post_3.3 <- posterior_samples(fit_3.3)
+
+SD_y_3.3 <- sd(p$reaction)
+
+post_3.3 %>% 
+  mutate(ab = b_pmi_cond * b_reaction_pmi,
+         c_prime = b_reaction_cond) %>% 
+  mutate(ab_ps = ab/SD_y_3.3,
+         c_prime_ps = c_prime/SD_y_3.3) %>% 
+  mutate(c_ps = c_prime_ps + ab_ps) %>% 
+  select(c_prime_ps, ab_ps, c_ps) %>% 
+  gather() %>%
+  group_by(key) %>% 
+  summarize(mean = mean(value), 
+            median = median(value),
+            ll = quantile(value, probs = .025),
+            ul = quantile(value, probs = .975)) %>% 
+  mutate_if(is_double, round, digits = 3)
+```
+
+Happily, these results are closer to those in the text than with the previous example.
+
+### The completely standardized effect
+
+**Note**. Hayes could have made this more clear in the text, but the `estress` model he referred to in this section was the one from way back in section 3.5, _not_ the one from earlier in this chapter.
+
+One way to get a sandardized sollution is to standardize the variables in the data and then fit the model with those standardized variables. To do so, we'll revisit our custom `standardize()`, put it to work, and fit the standardized version of the model from section 3.5, which we'll call `fit1_z`.
+
+```{r, message = F, warning = F}
+sandardize <- function(x){
+  (x - mean(x))/sd(x)
+}
+
+estress <-
+  estress %>% 
+  mutate(withdraw_z = sandardize(withdraw), 
+         estress_z  = sandardize(estress), 
+         affect_z   = sandardize(affect))
+
+y_model <- bf(withdraw_z ~ 1 + estress_z + affect_z)
+m_model <- bf(affect_z ~ 1 + estress_z)
+
+fit_3.5_z <-
+  brm(data = estress, family = gaussian,
+      y_model + m_model + set_rescor(FALSE),
+      chains = 4, cores = 4)
+```
+
+Here they are, our newly standardized coefficients:
+
+```{r}
+fixef(fit_3.5_z) %>% round(digits = 3)
+```
+
+Here we do the wrangling necessary to spell out the standardized effects for *ab*, $c^\prime$, and $c$.
+
+```{r}
+post_3.5 <- posterior_samples(fit_3.5_z)
+
+post_3.5 %>% 
+  mutate(ab_s = b_affectz_estress_z * b_withdrawz_affect_z,
+         c_prime_s = b_withdrawz_estress_z) %>%
+  mutate(c_s = ab_s + c_prime_s) %>% 
+  select(c_prime_s, ab_s, c_s) %>% 
+  gather() %>%
+  group_by(key) %>% 
+  summarize(mean = mean(value), 
+            median = median(value),
+            ll = quantile(value, probs = .025),
+            ul = quantile(value, probs = .975)) %>% 
+  mutate_if(is_double, round, digits = 3)
+```
+
+Let's confirm that we can recover these values by applying the formulas on page 135 to the unstandardized model, which we'll call `fit_3.5`. First, we'll have to fit that model (recall, we haven't fit that one since chapter 3).
+
+```{r, message = F, warning = F}
+y_model <- bf(withdraw ~ 1 + estress + affect)
+m_model <- bf(affect ~ 1 + estress)
+
+fit_3.5 <-
+  brm(data = estress, family = gaussian,
+      y_model + m_model + set_rescor(FALSE),
+      chains = 4, cores = 4)
+```
+
+Here are the unstandardized coefficients:
+
+```{r}
+fixef(fit_3.5) %>% round(digits = 3)
+```
+
+And here we hand compute the standardized effects by applying Hayes's formulas to the unstandardized results:
+
+```{r}
+post_3.5 <- posterior_samples(fit_3.5)
+
+SD_x <- sd(estress$estress)
+SD_y <- sd(estress$withdraw)
+
+post_3.5 %>% 
+  mutate(ab = b_affect_estress * b_withdraw_affect,
+         c_prime = b_withdraw_estress) %>% 
+  mutate(ab_s = (SD_x*ab)/SD_y,
+         c_prime_s = (SD_x*c_prime)/SD_y) %>% 
+  mutate(c_s = ab_s + c_prime_s) %>% 
+  select(c_prime_s, ab_s, c_s) %>% 
+  gather() %>%
+  group_by(key) %>% 
+  summarize(mean = mean(value), 
+            median = median(value),
+            ll = quantile(value, probs = .025),
+            ul = quantile(value, probs = .975)) %>% 
+  mutate_if(is_double, round, digits = 3)
+```
+
+Success!
+
+### Some (problematic) measures only for indirect effects.
+
+Hayes recommended against these, so I'm not going to bother working any examples.
+
+## 4.4 Statistical power
+
+As Hayed discussed, power is an important but thorny issue within the frequentist paradigm. Given that we’re not particularly interested in rejecting the point-null hypothesis as Bayesians and that we bring in priors (which we’ve largely avoided explicitly mentioning in his project but have been quietly using all along), the issue is even more difficult for Bayesians. To learn more on the topic, check out [Miočević, MacKinnon, and Levy's paper](https://www.tandfonline.com/doi/abs/10.1080/10705511.2017.1312407?src=recsys&journalCode=hsem20) on power in small-sample Bayesian analyses or [Gelman and Carlin's paper](http://journals.sagepub.com/doi/pdf/10.1177/1745691614551642) offering an alternative to the power paradigm. 
+
+## 4.5 Multiple $X$s or $Y$s: Analyze separately or simultaneously?
+
+### Multiple $X$ variables.
+
+The same basic problems with multicollinearity applies to the Bayesian paradigm, too.
+
+### Estimation of a model with multiple $X$ variables in ~~PROCESS~~ brms.
+
+Hayes discussed the limitation that his PROCESS program may only handle a single $X$ variable in the `x=` part of the command line, for which he displayed a workaround. We don’t have such a limitation in brms. Using Hayes’s hypothetical data syntax for a model with three $X$s, the brms code would be:
+
+```{r, eval = F}
+y_model <- bf(dv ~ 1 + iv1 + iv2 + iv3 + med)
+m_model <- bf(med ~ 1 + iv1 + iv2 + iv3)
+
+fit <-
+  brm(data = data, family = gaussian,
+      y_model + m_model + set_rescor(FALSE),
+      chains = 4, cores = 4)
+```
+
+To show it in action, let's simulate some data.
+
+```{r}
+N <- 1e3
+
+set.seed(4.5)
+d <-
+  tibble(iv1 = rnorm(N, mean = 0, sd = 1),
+         iv2 = rnorm(N, mean = 0, sd = 1),
+         iv3 = rnorm(N, mean = 0, sd = 1),
+         med = rnorm(N, mean = 0 + iv1*-1 + iv2*0 + iv3*1, sd = 1),
+         dv  = rnorm(N, mean = 0 + iv1*0 + iv2*.5 + iv3*1 + med*.5, sd = 1))
+
+head(d)
+```
+
+Before we proceed, if data simulation is new to you, you might check out [Roger Peng's helpful tutorial](https://www.youtube.com/watch?v=tvv4IA8PEzw) on the subject.
+
+Here's the model.
+
+```{r, message = F, warning = F}
+y_model <- bf(dv ~ 1 + iv1 + iv2 + iv3 + med)
+m_model <- bf(med ~ 1 + iv1 + iv2 + iv3)
+
+fit_4.5_simulation_mx <-
+  brm(data = d, family = gaussian,
+      y_model + m_model + set_rescor(FALSE),
+      chains = 4, cores = 4)
+```
+
+And the results:
+
+```{r}
+print(fit_4.5_simulation_mx)
+```
+
+brms came through just fine. If you wanted to simulate data with a particular correlation structure for the `iv` variables, you might use the `mvnorm()` function from the [MASS package](https://cran.r-project.org/web/packages/MASS/index.html), which you can learn more about [here](http://blog.revolutionanalytics.com/2016/02/multivariate_data_with_r.html).
+
+### Multiple $Y$ variables.
+
+We've already been using the multivariate syntax in brms for our simple mediation models. Fitting a mediation model with multiple $Y$ variables is a minor extension. Let's simulate more data.
+
+```{r}
+N <- 1e3
+
+set.seed(4.5)
+d <-
+  tibble(iv  = rnorm(N, mean = 0, sd = 1),
+         med = rnorm(N, mean = 0 + iv*.5, sd = 1),
+         dv1 = rnorm(N, mean = 0 + iv*-1 + med*0,  sd = 1),
+         dv2 = rnorm(N, mean = 0 + iv*0  + med*.5, sd = 1),
+         dv3 = rnorm(N, mean = 0 + iv*1  + med*1,  sd = 1))
+
+head(d)
+```
+
+Here's the model.
+
+```{r, message = F, warning = F}
+y_model_1 <- bf(dv1 ~ 1 + iv + med)
+y_model_2 <- bf(dv2 ~ 1 + iv + med)
+y_model_3 <- bf(dv3 ~ 1 + iv + med)
+m_model <- bf(med ~ 1 + iv)
+
+fit_4.5_simulation_my <-
+  brm(data = d, family = gaussian,
+      y_model_1 + y_model_2 + y_model_3 + m_model + set_rescor(FALSE),
+      chains = 4, cores = 4)
+```
+
+```{r}
+print(fit_4.5_simulation_my)
+```
+
+brms to the rescue once again!
 
 Note. The analyses in this document were done with:
 

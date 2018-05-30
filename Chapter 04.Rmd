@@ -1,0 +1,99 @@
+---
+title: "Chapter 04"
+author: "A Solomon Kurz"
+date: "`r format(Sys.Date())`"
+output:
+  github_document
+---
+
+```{r set-options, echo = FALSE, cache = FALSE}
+options(width = 110)
+```
+
+## 4.2. Confounding and causal order
+
+Here we load a couple necessary packages, load the data, and take a peek at them.
+
+```{r, warning = F, message = F}
+library(readr)
+library(tidyverse)
+
+estress <- read_csv("data/estress/estress.csv")
+
+glimpse(estress)
+```
+
+Here are the Pearson's correlations.
+
+```{r}
+psych::lowerCor(estress, digits = 3)
+```
+
+Recall that if you want the correlations with Bayesian estimation and those sweet Bayesian credible intervals, you set up an intercept-only multivariate model.
+
+```{r, message = F, warning = F}
+library(brms)
+
+fit0 <- 
+  brm(data = estress, family = gaussian,
+      cbind(ese, estress, affect, withdraw) ~ 1,
+      chains = 4, cores = 4)
+```
+
+The summary:
+
+```{r}
+print(fit0, digits = 3)
+```
+
+Since we have posteriors for the correlations, why not plot them? Here we use the `theme_black()` from brms and a color scheme from the [viridis package](https://cran.r-project.org/web/packages/viridis/index.html).
+
+```{r, message = F, warning = F, fig.width = 10, fig.height = 1.75}
+library(viridis)
+
+post <- posterior_samples(fit0)
+
+post %>% 
+  select(rescor__ese__estress, rescor__ese__affect, rescor__estress__withdraw) %>% 
+  gather() %>% 
+  
+  ggplot(aes(x = value, fill = key)) +
+  geom_density(alpha = .85, color = "transparent") +
+  scale_fill_viridis(discrete = T, option = "D", direction = -1,
+                     labels = c(expression(paste(rho["ese, affect"])),
+                                expression(paste(rho["ese, estress"])),
+                                expression(paste(rho["estress, withdraw"]))),
+                    guide = guide_legend(label.hjust = 0)) +
+  coord_cartesian(xlim = c(-1, 1)) +
+  labs(title = "Our correlation density plot",
+       x = NULL) +
+  theme_black() +
+  theme(panel.grid = element_blank(),
+        axis.text.y = element_text(hjust = 0),
+        axis.ticks.y = element_blank())
+```
+
+
+
+
+
+
+
+
+
+
+Note. The analyses in this document were done with:
+
+* R           3.4.4
+* RStudio     1.1.442
+* rmarkdown   1.9
+* readr       1.1.1
+* tidyverse   1.2.1
+* psych       1.7.3.21
+* rstan       2.17.3
+* brms        2.3.1
+* viridis     0.4.0
+
+## Reference
+
+Hayes, A. F. (2018). *Introduction to mediation, moderation, and conditional process analysis: A regression-based approach.* (2nd ed.). New York, NY, US: The Guilford Press.

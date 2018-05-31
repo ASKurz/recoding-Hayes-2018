@@ -1,0 +1,194 @@
+---
+title: "Chapter 05"
+author: "A Solomon Kurz"
+date: "`r format(Sys.Date())`"
+output:
+  github_document
+---
+
+```{r set-options, echo = FALSE, cache = FALSE}
+options(width = 110)
+```
+
+## 5.2 Example using the presumed media influence study
+
+Here we load a couple necessary packages, load the data, and take a peek at them.
+
+```{r, warning = F, message = F}
+library(readr)
+library(tidyverse)
+
+pmi <- read_csv("data/pmi/pmi.csv")
+
+glimpse(pmi)
+```
+
+```{r, message = F, warning = F}
+library(brms)
+
+fit0 <- 
+  brm(data = pmi, family = gaussian,
+      cbind(pmi, import) ~ 1,
+      chains = 4, cores = 4)
+```
+
+Here's the Bayesian correlation with its posterior *SD* and intervals.
+
+```{r}
+posterior_summary(fit0)["rescor__pmi__import", ] %>% round(digits = 3)
+```
+
+```{r}
+y_model  <- bf(reaction ~ 1 + import + pmi + cond)
+m1_model <- bf(import   ~ 1 + cond)
+m2_model <- bf(pmi      ~ 1 + cond)
+```
+
+Now we have our `bf()` objects in hand, we'll combine them with the `+` operator within the `brm()` function. We'll also specify `set_rescor(FALSE)`--we're not interested in adding a residual correlation between `reaction` and `pmi`.
+
+```{r, message = F, warning = F}
+fit1 <-
+  brm(data = pmi, family = gaussian,
+      y_model + m1_model + m2_model + set_rescor(FALSE),
+      chains = 4, cores = 4)
+```
+
+```{r}
+print(fit1)
+```
+
+Now we have three criteria, we'll have three Bayesian $R^2$ posteriors.
+
+```{r, fig.width = 8, fig.height = 2}
+library(ggthemes)
+
+bayes_R2(fit1, summary = F) %>% 
+  as_tibble() %>% 
+  gather() %>% 
+  mutate(key = str_remove(key, "R2_")) %>% 
+  
+  ggplot(aes(x = value, color = key, fill = key)) +
+  geom_density(alpha = .5) +
+  scale_color_ptol() +
+  scale_fill_ptol() +
+  scale_y_continuous(NULL, breaks = NULL) +
+  coord_cartesian(xlim = 0:1) +
+  labs(title = expression(paste("Our ", italic("R")^{2}, " distributions")),
+       subtitle = "The densities for import and pmi are asymmetric, small, and largely overlapping. The density for reaction is Gaussian and\nmore impressive in magnitude.",
+       x = NULL) +
+  theme_minimal() +
+  theme(legend.title = element_blank())
+```
+
+It'll take a bit of data wrangling to rename/configure our model parameters to the $a$, $b$...configuration.
+
+```{r}
+post <- posterior_samples(fit1)
+
+post<-
+  post %>% 
+  mutate(a1 = b_import_cond,
+         a2 = b_pmi_cond,
+         b1 = b_reaction_import,
+         b2 = b_reaction_pmi,
+         c_prime = b_reaction_cond) %>% 
+  mutate(a1b1 = a1*b1,
+         a2b2 = a2*b2) %>% 
+  mutate(c = c_prime + a1b1 + a2b2)
+```
+
+Here are their summaries, this time using the posterior medians instead of the means. 
+
+```{r}
+post %>% 
+  select(a1:c) %>% 
+  gather() %>% 
+  group_by(key) %>% 
+  summarize(median = median(value), 
+            ll = quantile(value, probs = .025),
+            ul = quantile(value, probs = .975)) %>% 
+  mutate_if(is_double, round, digits = 3)
+```
+
+```{r}
+post %>% 
+  mutate(dif = a1b1*b1) %>% 
+  summarize(median = median(dif), 
+            ll = quantile(dif, probs = .025),
+            ul = quantile(dif, probs = .975)) %>% 
+  mutate_if(is_double, round, digits = 3)
+```
+
+In the middle paragraph of page 158, Hayes shows how the mean difference in `imprt` between the two `cond` groups multiplied by `b1`, the coefficient of `import` predicting `reaction`, is equal to the `a1b1` indirect effect. He does this with simple algebra using the group means and the point estimates. 
+
+Let's follow along. First, here we'll get those two group means and save them as numbers to arbitrary precision.
+
+```{r}
+(
+  means <-
+    pmi %>%
+    group_by(cond) %>% 
+    summarize(mean = mean(import))
+ )
+
+(cond_0_mean <- means[1, 2] %>% pull())
+(cond_1_mean <- means[2, 2] %>% pull())
+```
+
+Here we follow the formula in the last sentence of the paragraph and then compare the results to the posterior for `a1b1`.
+
+```{r}
+post %>% 
+  # Using his formula to make our new vector, `hand_made_a1b1` 
+  mutate(hand_made_a1b1 = (cond_1_mean - cond_0_mean)*b1) %>% 
+  # Here's all the usual data wrangling
+  select(a1b1, hand_made_a1b1) %>% 
+  gather() %>% 
+  group_by(key) %>% 
+  summarize(mean = mean(value), 
+            median = median(value), 
+            ll = quantile(value, probs = .025),
+            ul = quantile(value, probs = .975)) %>% 
+  mutate_if(is_double, round, digits = 3)
+```
+
+Yep, at the mean, Hayes's formula is spot on. But the distributions are distinct. They differ slightly at the median and vastly in the widths of the posterior intervals. I’m no mathematician, so take this with a grain of salt, but I suspect this has to do with how we used fixed values (i.e., the difference of the subsample means) to compute `hand_made_a1b1`, but all the components in `a1b1` were estimated.
+
+```{r}
+# nd <- 
+#   tibble(cond = 0:1,
+#          import = mean(pmi$import),
+#          pmi = 0)
+# 
+# fitted(fit1, 
+#        newdata = nd, 
+#        resp = "reaction",
+#        summary = F) %>% 
+#   as_tibble() %>% 
+#   rename(cond_0 = V1,
+#          cond_1 = V2) %>% 
+#   mutate(difference = cond_1 - cond_0) %>% 
+#   gather() %>% 
+#   group_by(key) %>% 
+#   summarize(median = median(value), 
+#             ll = quantile(value, probs = .025),
+#             ul = quantile(value, probs = .975)) %>% 
+#   mutate_if(is_double, round, digits = 3)
+```
+
+**More to come...**
+
+Note. The analyses in this document were done with:
+
+* R           3.4.4
+* RStudio     1.1.442
+* rmarkdown   1.9
+* readr       1.1.1
+* tidyverse   1.2.1
+* rstan       2.17.3
+* brms        2.3.1
+* ggthemes    3.5.0
+
+## Reference
+
+Hayes, A. F. (2018). *Introduction to mediation, moderation, and conditional process analysis: A regression-based approach.* (2nd ed.). New York, NY, US: The Guilford Press.

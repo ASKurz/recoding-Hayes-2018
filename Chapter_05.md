@@ -1,7 +1,7 @@
 Chapter 05
 ================
 A Solomon Kurz
-2018-05-30
+2018-06-02
 
 5.2 Example using the presumed media influence study
 ----------------------------------------------------
@@ -42,7 +42,7 @@ posterior_summary(fit0)["rescor__pmi__import", ] %>% round(digits = 3)
 ```
 
     ##  Estimate Est.Error      Q2.5     Q97.5 
-    ##     0.277     0.083     0.108     0.433
+    ##     0.277     0.085     0.101     0.436
 
 ``` r
 y_model  <- bf(reaction ~ 1 + import + pmi + cond)
@@ -76,14 +76,14 @@ print(fit1)
     ## 
     ## Population-Level Effects: 
     ##                    Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-    ## reaction_Intercept    -0.15      0.53    -1.15     0.87       4000 1.00
-    ## import_Intercept       3.91      0.22     3.49     4.33       4000 1.00
-    ## pmi_Intercept          5.38      0.16     5.05     5.69       4000 1.00
-    ## reaction_import        0.33      0.07     0.18     0.47       4000 1.00
-    ## reaction_pmi           0.40      0.10     0.21     0.58       4000 1.00
-    ## reaction_cond          0.11      0.24    -0.37     0.59       4000 1.00
-    ## import_cond            0.63      0.32    -0.01     1.25       4000 1.00
-    ## pmi_cond               0.48      0.24     0.01     0.96       4000 1.00
+    ## reaction_Intercept    -0.14      0.54    -1.19     0.93       4000 1.00
+    ## import_Intercept       3.90      0.22     3.47     4.32       4000 1.00
+    ## pmi_Intercept          5.38      0.17     5.06     5.71       4000 1.00
+    ## reaction_import        0.32      0.07     0.19     0.46       4000 1.00
+    ## reaction_pmi           0.40      0.10     0.20     0.58       4000 1.00
+    ## reaction_cond          0.10      0.23    -0.36     0.56       4000 1.00
+    ## import_cond            0.63      0.31     0.03     1.24       4000 1.00
+    ## pmi_cond               0.47      0.24    -0.01     0.95       4000 1.00
     ## 
     ## Family Specific Parameters: 
     ##                Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
@@ -153,14 +153,14 @@ post %>%
     ## # A tibble: 8 x 4
     ##   key     median       ll    ul
     ##   <chr>    <dbl>    <dbl> <dbl>
-    ## 1 a1       0.635 -0.0120  1.25 
-    ## 2 a1b1     0.195 -0.00400 0.444
-    ## 3 a2       0.479  0.00600 0.957
-    ## 4 a2b2     0.179  0.00300 0.436
-    ## 5 b1       0.324  0.181   0.470
-    ## 6 b2       0.395  0.209   0.579
-    ## 7 c        0.502 -0.00800 1.04 
-    ## 8 c_prime  0.107 -0.369   0.588
+    ## 1 a1       0.627  0.0340  1.24 
+    ## 2 a1b1     0.195  0.0110  0.455
+    ## 3 a2       0.476 -0.0110  0.953
+    ## 4 a2b2     0.179 -0.00500 0.423
+    ## 5 b1       0.325  0.187   0.462
+    ## 6 b2       0.397  0.203   0.580
+    ## 7 c        0.495 -0.0240  1.02 
+    ## 8 c_prime  0.102 -0.362   0.558
 
 ``` r
 post %>% 
@@ -171,8 +171,8 @@ post %>%
   mutate_if(is_double, round, digits = 3)
 ```
 
-    ##   median     ll    ul
-    ## 1  0.061 -0.001 0.189
+    ##   median    ll    ul
+    ## 1  0.062 0.003 0.184
 
 In the middle paragraph of page 158, Hayes shows how the mean difference in `imprt` between the two `cond` groups multiplied by `b1`, the coefficient of `import` predicting `reaction`, is equal to the `a1b1` indirect effect. He does this with simple algebra using the group means and the point estimates.
 
@@ -180,7 +180,7 @@ Let's follow along. First, here we'll get those two group means and save them as
 
 ``` r
 (
-  means <-
+  import_means <-
     pmi %>%
     group_by(cond) %>% 
     summarize(mean = mean(import))
@@ -194,13 +194,13 @@ Let's follow along. First, here we'll get those two group means and save them as
     ## 2     1  4.53
 
 ``` r
-(cond_0_mean <- means[1, 2] %>% pull())
+(cond_0_import_mean <- import_means[1, 2] %>% pull())
 ```
 
     ## [1] 3.907692
 
 ``` r
-(cond_1_mean <- means[2, 2] %>% pull())
+(cond_1_import_mean <- import_means[2, 2] %>% pull())
 ```
 
     ## [1] 4.534483
@@ -210,7 +210,7 @@ Here we follow the formula in the last sentence of the paragraph and then compar
 ``` r
 post %>% 
   # Using his formula to make our new vector, `hand_made_a1b1` 
-  mutate(hand_made_a1b1 = (cond_1_mean - cond_0_mean)*b1) %>% 
+  mutate(hand_made_a1b1 = (cond_1_import_mean - cond_0_import_mean)*b1) %>% 
   # Here's all the usual data wrangling
   select(a1b1, hand_made_a1b1) %>% 
   gather() %>% 
@@ -223,34 +223,228 @@ post %>%
 ```
 
     ## # A tibble: 2 x 5
-    ##   key             mean median       ll    ul
-    ##   <chr>          <dbl>  <dbl>    <dbl> <dbl>
-    ## 1 a1b1           0.204  0.195 -0.00400 0.444
-    ## 2 hand_made_a1b1 0.204  0.203  0.114   0.294
+    ##   key             mean median     ll    ul
+    ##   <chr>          <dbl>  <dbl>  <dbl> <dbl>
+    ## 1 a1b1           0.205  0.195 0.0110 0.455
+    ## 2 hand_made_a1b1 0.203  0.204 0.117  0.290
 
 Yep, at the mean, Hayes's formula is spot on. But the distributions are distinct. They differ slightly at the median and vastly in the widths of the posterior intervals. I’m no mathematician, so take this with a grain of salt, but I suspect this has to do with how we used fixed values (i.e., the difference of the subsample means) to compute `hand_made_a1b1`, but all the components in `a1b1` were estimated.
 
+Here we'll follow the same protocol for `a2b2`.
+
 ``` r
-# nd <- 
-#   tibble(cond = 0:1,
-#          import = mean(pmi$import),
-#          pmi = 0)
-# 
-# fitted(fit1, 
-#        newdata = nd, 
-#        resp = "reaction",
-#        summary = F) %>% 
-#   as_tibble() %>% 
-#   rename(cond_0 = V1,
-#          cond_1 = V2) %>% 
-#   mutate(difference = cond_1 - cond_0) %>% 
-#   gather() %>% 
-#   group_by(key) %>% 
-#   summarize(median = median(value), 
-#             ll = quantile(value, probs = .025),
-#             ul = quantile(value, probs = .975)) %>% 
-#   mutate_if(is_double, round, digits = 3)
+(
+  pmi_means <-
+    pmi %>%
+    group_by(cond) %>% 
+    summarize(mean = mean(pmi))
+ )
 ```
+
+    ## # A tibble: 2 x 2
+    ##    cond  mean
+    ##   <int> <dbl>
+    ## 1     0  5.38
+    ## 2     1  5.85
+
+``` r
+cond_0_pmi_mean <- pmi_means[1, 2] %>% pull()
+cond_1_pmi_mean <- pmi_means[2, 2] %>% pull()
+```
+
+``` r
+post %>% 
+  mutate(hand_made_a2b2 = (cond_1_pmi_mean - cond_0_pmi_mean)*b2) %>% 
+  select(a2b2, hand_made_a2b2) %>% 
+  gather() %>% 
+  group_by(key) %>% 
+  summarize(mean = mean(value), 
+            median = median(value), 
+            ll = quantile(value, probs = .025),
+            ul = quantile(value, probs = .975)) %>% 
+  mutate_if(is_double, round, digits = 3)
+```
+
+    ## # A tibble: 2 x 5
+    ##   key             mean median       ll    ul
+    ##   <chr>          <dbl>  <dbl>    <dbl> <dbl>
+    ## 1 a2b2           0.189  0.179 -0.00500 0.423
+    ## 2 hand_made_a2b2 0.188  0.189  0.0970  0.276
+
+To get the total indirece effect as discussed on page 160, we simply add the `a1b1` and `a2b2` columns.
+
+``` r
+post <-
+  post %>% 
+  mutate(total_indirect_effect = a1b1 + a2b2) 
+
+post %>% 
+  select(total_indirect_effect) %>% 
+  summarize(mean = mean(total_indirect_effect), 
+            median = median(total_indirect_effect), 
+            ll = quantile(total_indirect_effect, probs = .025),
+            ul = quantile(total_indirect_effect, probs = .975)) %>% 
+  mutate_if(is_double, round, digits = 3)
+```
+
+    ##    mean median    ll    ul
+    ## 1 0.394  0.387 0.109 0.709
+
+To work the equations on the top of page 161, we'll just work directly with the original vectors in `post`.
+
+``` r
+post %>% 
+  mutate(Y_bar_given_X_1 = b_import_Intercept + b_reaction_cond*1 + b_reaction_import*b_import_Intercept + b_reaction_pmi*b_pmi_Intercept,
+         Y_bar_given_X_0 = b_import_Intercept + b_reaction_cond*0 + b_reaction_import*b_import_Intercept + b_reaction_pmi*b_pmi_Intercept) %>% 
+  mutate(c_prime_by_hand = Y_bar_given_X_1 - Y_bar_given_X_0) %>% 
+  select(c_prime, c_prime_by_hand) %>% 
+  gather() %>% 
+  group_by(key) %>% 
+  summarize(mean = mean(value), 
+            median = median(value), 
+            ll = quantile(value, probs = .025),
+            ul = quantile(value, probs = .975))
+```
+
+    ## # A tibble: 2 x 5
+    ##   key              mean median     ll    ul
+    ##   <chr>           <dbl>  <dbl>  <dbl> <dbl>
+    ## 1 c_prime         0.103  0.102 -0.362 0.558
+    ## 2 c_prime_by_hand 0.103  0.102 -0.362 0.558
+
+We already computed `c` a while ago.
+
+``` r
+post %>% 
+  summarize(mean = mean(c), 
+            median = median(c), 
+            ll = quantile(c, probs = .025),
+            ul = quantile(c, probs = .975))
+```
+
+    ##        mean    median          ll       ul
+    ## 1 0.4967174 0.4954561 -0.02405504 1.021424
+
+And `c` minus `c_prime` is straight subtraction.
+
+``` r
+post %>% 
+  mutate(c_minus_c_prime = c - c_prime) %>% 
+  summarize(mean = mean(c_minus_c_prime), 
+            median = median(c_minus_c_prime), 
+            ll = quantile(c_minus_c_prime, probs = .025),
+            ul = quantile(c_minus_c_prime, probs = .975))
+```
+
+    ##      mean   median        ll        ul
+    ## 1 0.39388 0.387354 0.1094908 0.7088137
+
+5.3 Statistical inference
+-------------------------
+
+### Inference about the direct and total effects.
+
+We're not going to bother with *p*-values and we've already computed the 95% Bayesian credible intervals, above. But we can examine our parameters with a density plot.
+
+``` r
+post %>% 
+  select(c, c_prime) %>% 
+  gather() %>%
+  
+  ggplot(aes(x = value, fill = key, color = key)) +
+  geom_vline(xintercept = 0, color = "black") +
+  geom_density(alpha = .5) +
+  scale_color_ptol(NULL) +
+  scale_fill_ptol(NULL) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  labs(title = expression(paste("It appears zero is more credible for the direct effect, ", italic(c), "', than it is the total effect, ", italic(c), ".")),
+       x = NULL) +
+  coord_cartesian(xlim = -c(-1.5, 1.5)) +
+  theme_minimal()
+```
+
+![](Chapter_05_files/figure-markdown_github/unnamed-chunk-19-1.png)
+
+### Inference about specific indirect effects.
+
+Again, no need to worry about bootstrapping within the Bayesian paradigm. We have high-quality percentile-based intervals based on our HMC-based posterior samples.
+
+``` r
+post %>%
+  select(a1b1, a2b2) %>% 
+  gather() %>% 
+  group_by(key) %>% 
+  summarize(ll = quantile(value, probs = .025),
+            ul = quantile(value, probs = .975)) %>% 
+  mutate_if(is.double, round, digits = 3)
+```
+
+    ## # A tibble: 2 x 3
+    ##   key         ll    ul
+    ##   <chr>    <dbl> <dbl>
+    ## 1 a1b1   0.0110  0.455
+    ## 2 a2b2  -0.00500 0.423
+
+### Pairwise comparisons between specific indirect effects.
+
+Within the Bayesian paradigm, it straightforward to compare indirect effects. All one has to do is compute a difference score. Here it is, `a1b1` minus `a2b2`
+
+``` r
+post <-
+  post %>% 
+  mutate(difference = a1b1 - a2b2) 
+
+post %>%
+  summarize(mean = mean(difference),
+            ll = quantile(difference, probs = .025),
+            ul = quantile(difference, probs = .975)) %>% 
+  mutate_if(is.double, round, digits = 3)
+```
+
+    ##    mean     ll    ul
+    ## 1 0.016 -0.298 0.331
+
+Why not plot?
+
+``` r
+post %>% 
+  
+  ggplot(aes(x = difference)) +
+  geom_vline(xintercept = 0, color = "black", linetype = 2) +
+  geom_density(color = "black", fill = "black", alpha = .5) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  labs(title = "The difference score between the indirect effects",
+       subtitle = expression(paste("No ", italic(p), "-value or 95% intervals needed for this one.")),
+       x = NULL) +
+  coord_cartesian(xlim = -1:1) +
+  theme_minimal()
+```
+
+![](Chapter_05_files/figure-markdown_github/unnamed-chunk-22-1.png)
+
+### Inference about the total indirect effect.
+
+Here's the plot.
+
+``` r
+post %>% 
+  
+  ggplot(aes(x = total_indirect_effect, fill = factor(0), color = factor(0))) +
+  geom_density(alpha = .5) +
+  scale_color_ptol() +
+  scale_fill_ptol() +
+  scale_y_continuous(NULL, breaks = NULL) +
+  labs(title = "The total indirect effect of condition on reaction",
+       subtitle = expression(paste("This is the sum of ", italic(a)[1], italic(b)[1], " and ", italic(a)[2], italic(b)[2], ". Look how wide and uncertain it is.")),
+       x = NULL) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+![](Chapter_05_files/figure-markdown_github/unnamed-chunk-23-1.png)
+
+5.4 The serial multiple mediator model
+--------------------------------------
 
 **More to come...**
 

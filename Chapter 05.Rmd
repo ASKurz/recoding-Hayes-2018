@@ -125,14 +125,14 @@ Let's follow along. First, here we'll get those two group means and save them as
 
 ```{r}
 (
-  means <-
+  import_means <-
     pmi %>%
     group_by(cond) %>% 
     summarize(mean = mean(import))
  )
 
-(cond_0_mean <- means[1, 2] %>% pull())
-(cond_1_mean <- means[2, 2] %>% pull())
+(cond_0_import_mean <- import_means[1, 2] %>% pull())
+(cond_1_import_mean <- import_means[2, 2] %>% pull())
 ```
 
 Here we follow the formula in the last sentence of the paragraph and then compare the results to the posterior for `a1b1`.
@@ -140,7 +140,7 @@ Here we follow the formula in the last sentence of the paragraph and then compar
 ```{r}
 post %>% 
   # Using his formula to make our new vector, `hand_made_a1b1` 
-  mutate(hand_made_a1b1 = (cond_1_mean - cond_0_mean)*b1) %>% 
+  mutate(hand_made_a1b1 = (cond_1_import_mean - cond_0_import_mean)*b1) %>% 
   # Here's all the usual data wrangling
   select(a1b1, hand_made_a1b1) %>% 
   gather() %>% 
@@ -154,27 +154,180 @@ post %>%
 
 Yep, at the mean, Hayes's formula is spot on. But the distributions are distinct. They differ slightly at the median and vastly in the widths of the posterior intervals. I’m no mathematician, so take this with a grain of salt, but I suspect this has to do with how we used fixed values (i.e., the difference of the subsample means) to compute `hand_made_a1b1`, but all the components in `a1b1` were estimated.
 
+Here we'll follow the same protocol for `a2b2`.
+
 ```{r}
-# nd <- 
-#   tibble(cond = 0:1,
-#          import = mean(pmi$import),
-#          pmi = 0)
-# 
-# fitted(fit1, 
-#        newdata = nd, 
-#        resp = "reaction",
-#        summary = F) %>% 
-#   as_tibble() %>% 
-#   rename(cond_0 = V1,
-#          cond_1 = V2) %>% 
-#   mutate(difference = cond_1 - cond_0) %>% 
-#   gather() %>% 
-#   group_by(key) %>% 
-#   summarize(median = median(value), 
-#             ll = quantile(value, probs = .025),
-#             ul = quantile(value, probs = .975)) %>% 
-#   mutate_if(is_double, round, digits = 3)
+(
+  pmi_means <-
+    pmi %>%
+    group_by(cond) %>% 
+    summarize(mean = mean(pmi))
+ )
+
+cond_0_pmi_mean <- pmi_means[1, 2] %>% pull()
+cond_1_pmi_mean <- pmi_means[2, 2] %>% pull()
 ```
+
+```{r}
+post %>% 
+  mutate(hand_made_a2b2 = (cond_1_pmi_mean - cond_0_pmi_mean)*b2) %>% 
+  select(a2b2, hand_made_a2b2) %>% 
+  gather() %>% 
+  group_by(key) %>% 
+  summarize(mean = mean(value), 
+            median = median(value), 
+            ll = quantile(value, probs = .025),
+            ul = quantile(value, probs = .975)) %>% 
+  mutate_if(is_double, round, digits = 3)
+```
+
+To get the total indirece effect as discussed on page 160, we simply add the `a1b1` and `a2b2` columns.
+
+```{r}
+post <-
+  post %>% 
+  mutate(total_indirect_effect = a1b1 + a2b2) 
+
+post %>% 
+  select(total_indirect_effect) %>% 
+  summarize(mean = mean(total_indirect_effect), 
+            median = median(total_indirect_effect), 
+            ll = quantile(total_indirect_effect, probs = .025),
+            ul = quantile(total_indirect_effect, probs = .975)) %>% 
+  mutate_if(is_double, round, digits = 3)
+```
+
+To work the equations on the top of page 161, we'll just work directly with the original vectors in `post`.
+
+```{r}
+post %>% 
+  mutate(Y_bar_given_X_1 = b_import_Intercept + b_reaction_cond*1 + b_reaction_import*b_import_Intercept + b_reaction_pmi*b_pmi_Intercept,
+         Y_bar_given_X_0 = b_import_Intercept + b_reaction_cond*0 + b_reaction_import*b_import_Intercept + b_reaction_pmi*b_pmi_Intercept) %>% 
+  mutate(c_prime_by_hand = Y_bar_given_X_1 - Y_bar_given_X_0) %>% 
+  select(c_prime, c_prime_by_hand) %>% 
+  gather() %>% 
+  group_by(key) %>% 
+  summarize(mean = mean(value), 
+            median = median(value), 
+            ll = quantile(value, probs = .025),
+            ul = quantile(value, probs = .975))
+```
+
+We already computed `c` a while ago.
+
+```{r}
+post %>% 
+  summarize(mean = mean(c), 
+            median = median(c), 
+            ll = quantile(c, probs = .025),
+            ul = quantile(c, probs = .975))
+```
+
+And `c` minus `c_prime` is straight subtraction.
+
+```{r}
+post %>% 
+  mutate(c_minus_c_prime = c - c_prime) %>% 
+  summarize(mean = mean(c_minus_c_prime), 
+            median = median(c_minus_c_prime), 
+            ll = quantile(c_minus_c_prime, probs = .025),
+            ul = quantile(c_minus_c_prime, probs = .975))
+```
+
+## 5.3 Statistical inference
+
+### Inference about the direct and total effects.
+
+We're not going to bother with $p$-values and we've already computed the 95% Bayesian credible intervals, above. But we can examine our parameters with a density plot.
+
+```{r, fig.width = 8, fig.height = 2.5}
+post %>% 
+  select(c, c_prime) %>% 
+  gather() %>%
+  
+  ggplot(aes(x = value, fill = key, color = key)) +
+  geom_vline(xintercept = 0, color = "black") +
+  geom_density(alpha = .5) +
+  scale_color_ptol(NULL) +
+  scale_fill_ptol(NULL) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  labs(title = expression(paste("It appears zero is more credible for the direct effect, ", italic(c), "', than it is the total effect, ", italic(c), ".")),
+       x = NULL) +
+  coord_cartesian(xlim = -c(-1.5, 1.5)) +
+  theme_minimal()
+```
+
+### Inference about specific indirect effects.
+
+Again, no need to worry about bootstrapping within the Bayesian paradigm. We have high-quality percentile-based intervals based on our HMC-based posterior samples.
+
+```{r}
+post %>%
+  select(a1b1, a2b2) %>% 
+  gather() %>% 
+  group_by(key) %>% 
+  summarize(ll = quantile(value, probs = .025),
+            ul = quantile(value, probs = .975)) %>% 
+  mutate_if(is.double, round, digits = 3)
+```  
+
+### Pairwise comparisons between specific indirect effects.
+
+Within the Bayesian paradigm, it straightforward to compare indirect effects. All one has to do is compute a difference score. Here it is, `a1b1` minus `a2b2`
+
+```{r}
+post <-
+  post %>% 
+  mutate(difference = a1b1 - a2b2) 
+
+post %>%
+  summarize(mean = mean(difference),
+            ll = quantile(difference, probs = .025),
+            ul = quantile(difference, probs = .975)) %>% 
+  mutate_if(is.double, round, digits = 3)
+```
+
+Why not plot?
+
+```{r, fig.width = 6, fig.height = 2.5}
+post %>% 
+  
+  ggplot(aes(x = difference)) +
+  geom_vline(xintercept = 0, color = "black", linetype = 2) +
+  geom_density(color = "black", fill = "black", alpha = .5) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  labs(title = "The difference score between the indirect effects",
+       subtitle = expression(paste("No ", italic(p), "-value or 95% intervals needed for this one.")),
+       x = NULL) +
+  coord_cartesian(xlim = -1:1) +
+  theme_minimal()
+```
+
+### Inference about the total indirect effect.
+
+Here's the plot.
+
+```{r, fig.width = 4.5, fig.height = 2.5}
+post %>% 
+  
+  ggplot(aes(x = total_indirect_effect, fill = factor(0), color = factor(0))) +
+  geom_density(alpha = .5) +
+  scale_color_ptol() +
+  scale_fill_ptol() +
+  scale_y_continuous(NULL, breaks = NULL) +
+  labs(title = "The total indirect effect of condition on reaction",
+       subtitle = expression(paste("This is the sum of ", italic(a)[1], italic(b)[1], " and ", italic(a)[2], italic(b)[2], ". Look how wide and uncertain it is.")),
+       x = NULL) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+## 5.4 The serial multiple mediator model
+
+
+
+
+
 
 **More to come...**
 

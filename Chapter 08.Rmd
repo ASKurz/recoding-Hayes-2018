@@ -121,14 +121,14 @@ head(post)
 
 We've got six rows, each one corresponding to the credible parameter values from a given posterior draw. The `lp__` is uniquely Bayesian and beyond the scope of this project. You might think of `sigma` as the Bayesian analogue to what the OLS folks often refer to as error or the residual variance. Hayes doesn't tend to emphasize it in this text, but it's something you'll want to pay increasing attention to as you move along in your Bayesian career. All the columns starting with `b_` are the regression parameters, the model coefficients or the fixed effects. But anyways, notice that those `b_` columns correspond to the four parameter values in formula 8.2 on page 270. Here they are, but reformatted to more closely mimic the text:
 
-1. $Y$_hat = `r post[1, 1] %>% round(3)` + `r post[1, 2] %>% round(3)`$X$ + `r post[1, 3] %>% round(3)`$W$ + `r post[1, 4] %>% round(3)`*XW*
-2. $Y$_hat = `r post[2, 1] %>% round(3)` + `r post[2, 2] %>% round(3)`$X$ + `r post[2, 3] %>% round(3)`$W$ + `r post[2, 4] %>% round(3)`*XW*
-3. $Y$_hat = `r post[3, 1] %>% round(3)` + `r post[3, 2] %>% round(3)`$X$ + `r post[3, 3] %>% round(3)`$W$ + `r post[3, 4] %>% round(3)`*XW*
-4. $Y$_hat = `r post[4, 1] %>% round(3)` + `r post[4, 2] %>% round(3)`$X$ + `r post[4, 3] %>% round(3)`$W$ + `r post[4, 4] %>% round(3)`*XW*
-5. $Y$_hat = `r post[5, 1] %>% round(3)` + `r post[5, 2] %>% round(3)`$X$ + `r post[5, 3] %>% round(3)`$W$ + `r post[5, 4] %>% round(3)`*XW*
-6. $Y$_hat = `r post[6, 1] %>% round(3)` + `r post[6, 2] %>% round(3)`$X$ + `r post[6, 3] %>% round(3)`$W$ + `r post[6, 4] %>% round(3)`*XW*
+1. $Y$-hat = `r post[1, 1] %>% round(3)` + `r post[1, 2] %>% round(3)`$X$ + `r post[1, 3] %>% round(3)`$W$ + `r post[1, 4] %>% round(3)`*XW*
+2. $Y$-hat = `r post[2, 1] %>% round(3)` + `r post[2, 2] %>% round(3)`$X$ + `r post[2, 3] %>% round(3)`$W$ + `r post[2, 4] %>% round(3)`*XW*
+3. $Y$-hat = `r post[3, 1] %>% round(3)` + `r post[3, 2] %>% round(3)`$X$ + `r post[3, 3] %>% round(3)`$W$ + `r post[3, 4] %>% round(3)`*XW*
+4. $Y$-hat = `r post[4, 1] %>% round(3)` + `r post[4, 2] %>% round(3)`$X$ + `r post[4, 3] %>% round(3)`$W$ + `r post[4, 4] %>% round(3)`*XW*
+5. $Y$-hat = `r post[5, 1] %>% round(3)` + `r post[5, 2] %>% round(3)`$X$ + `r post[5, 3] %>% round(3)`$W$ + `r post[5, 4] %>% round(3)`*XW*
+6. $Y$-hat = `r post[6, 1] %>% round(3)` + `r post[6, 2] %>% round(3)`$X$ + `r post[6, 3] %>% round(3)`$W$ + `r post[6, 4] %>% round(3)`*XW*
 
-Each row of `post`, each iteration or posterior draw, yields a full model equation that is a credible description of the data—or at least a credible as we can get within the limits of the model we have specified, our priors (which we typically cop out on and just use defaults in this project), and how well those fit when applied to the data at hand. So when we use brms convenience functions like `fitted()`, we pass specific predictor values through those 4000 unique model equations, which produces 4000 similar but distinct expected $Y$-values. So although a nice way to summarize those 4000 values is with summaries such as the posterior mean/median and 95% intervals, another way is to just plot an individual regression line for each of the iterations. That is what’s going on when we depict out models with a spaghetti plot.
+Each row of `post`, each iteration or posterior draw, yields a full model equation that is a credible description of the data—or at least as credible as we can get within the limits of the model we have specified, our priors (which we typically cop out on and just use defaults in this project), and how well those fit when applied to the data at hand. So when we use brms convenience functions like `fitted()`, we pass specific predictor values through those 4000 unique model equations, which produces 4000 similar but distinct expected $Y$-values. So although a nice way to summarize those 4000 values is with summaries such as the posterior mean/median and 95% intervals, another way is to just plot an individual regression line for each of the iterations. That is what’s going on when we depict out models with a spaghetti plot.
 
 The thing I like about spaghetti plots is that they give a three-dimensional sense of the posterior. Note that each individual line is very skinny and semitransparent. When you pile a whole bunch of them atop each other, the peaked or most credible regions of the posterior are the most saturated in color. Less credible posterior regions almost seamlessly merge into the background. Also, note how the combination of many similar but distinct straight lines results in a bowtie shape. Hopefully this clarifies where that shape’s been coming from when we use `geom_ribbon()` to plot the 95% intervals.
 
@@ -167,7 +167,7 @@ glbwarm <- read_csv("data/glbwarm/glbwarm.csv")
 glimpse(glbwarm)
 ```
 
-Although Hayes made a distinction between the $X$, $M$, and $C$ variables in the text. That distinction is conceptual and doesn't impact the way we enter them into `brm()`. Rather, the `brm()` formula clarifies they're all just predictors.
+Although Hayes made a distinction between the $X$, $M$, and $C$ variables in the text, that distinction is conceptual and doesn't impact the way we enter them into `brm()`. Rather, the `brm()` formula clarifies they're all just predictors.
 
 ```{r, message = F, warning = F}
 fit2 <- 
@@ -264,7 +264,7 @@ fitted(fit2, newdata = nd,
 
 When we reduce the number of lines depicted in the plot, we lose some of the three-dimensional illusion. It’s nice, however, to get a closer look to each individual line. To each their own.
 
-We'll continue with our spaghetti plot approach for Figure 8.7. Again, when we did the JN technique plot for Chapter 7, we computed values for the posterior mean and the 95% intervals. Because the intervals follow a bowtie shape, we had to compute the y-values for many values across the x-axis in order to make the curve look smooth. But as long as we stick with the spaghetti plot approach, all we need are the values at the endpoints of each iteration. Although each line is straight, the combination of many lines is what produces the bowtie effect.
+We'll continue with our spaghetti plot approach for Figure 8.7. Again, when we did the JN technique plot for Chapter 7, we computed values for the posterior mean and the 95% intervals. Because the intervals follow a bowtie shape, we had to compute the $Y$-values for many values across the x-axis in order to make the curve look smooth. But as long as we stick with the spaghetti plot approach, all we need are the values at the endpoints of each iteration. Although each line is straight, the combination of many lines is what produces the bowtie effect.
 
 ```{r, fig.width = 6, fig.height = 4.5}
 # here is our primary data object
@@ -645,7 +645,7 @@ bayes_R2(fit4) %>% round(digits = 3)
 
 ### Main effects parameterization.
 
-A nice feature of brms is you can do data transformations right within the `brm()` or `update()` functions. Here we'll make our two new main-effects-coded variables, `policy_me` and `kerry_me`, with the `mutate()` function right within `update()`.
+A nice feature of brms is you transform your data right within the `brm()` or `update()` functions. Here we'll make our two new main-effects-coded variables, `policy_me` and `kerry_me`, with the `mutate()` function right within `update()`.
 
 ```{r, message = F, warning = F}
 fit5 <-
@@ -708,7 +708,7 @@ fit5 <-
          chains = 4, cores = 4, warmup = 1000, iter = 21000)
 ```
 
-Now there quite a bit closer. 
+Now they're quite a bit closer. 
 
 ```{r}
 fixef(fit4)[4, ] %>% round(digits = 3)
@@ -740,11 +740,9 @@ posterior_samples(fit4) %>%
   theme_08 
 ```
 
-
-
 ### Conducting ~~a 2 X 2 between-participants factorial ANOVA using PROCESS~~ another regression model with brms.
 
-Since we're square in regression land with brms, there's no direct analogue for us, here. However, notice the post-ANOVA $t$-tests Hayes presented on page 300. If we just want to consider the 2 X 2 structure of our two dummy variables as indicative of four groups, we have one more coding system up ourselves. With the handy `str_c()` function, we'll concatenate the `policy` and `kerry` values into a nominal variable, `policy_kerry`. Here's what that looks like:
+Since we're square in regression land with brms, there's no direct analogue for us, here. However, notice the post-ANOVA $t$-tests Hayes presented on page 300. If we just want to consider the 2 X 2 structure of our two dummy variables as indicative of four groups, we have one more coding system available for the job. With the handy `str_c()` function, we'll concatenate the `policy` and `kerry` values into a nominal variable, `policy_kerry`. Here's what that looks like:
 
 ```{r}
 caskets <-
@@ -763,14 +761,13 @@ fit6 <-
       chains = 4, cores = 4)
 ```
 
-The `brm()` function recnognized `policy_kerry` was a character vector and treated it as a nominal variable. The `0 + ` part of the fucntion removed the model intercept. Here's how that effects the output:
+The `brm()` function recnognized `policy_kerry` was a character vector and treated it as a nominal variable. The `0 + ` part of the function removed the model intercept. Here's how that effects the output:
 
 ```{r}
 print(fit6)
 ```
 
-Without the typical interecept, `brm()` estimated the means for each of the four `policy_kerry` groups. Here's what their densities look like:
-
+Without the typical intercept, `brm()` estimated the means for each of the four `policy_kerry` groups. It's kinda like an intercept-only model, but with four intercepts. Here's what their densities look like:
 
 ```{r, fig.width = 8, fig.height = 2.5}
 post <- posterior_samples(fit6)

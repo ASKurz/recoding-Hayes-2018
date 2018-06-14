@@ -49,14 +49,14 @@ print(fit0)
     ## 
     ## Population-Level Effects: 
     ##               Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-    ## Intercept         2.45      0.15     2.15     2.75       2137 1.00
-    ## skeptic           0.10      0.04     0.03     0.18       1922 1.00
-    ## frame            -0.57      0.22    -1.00    -0.13       1941 1.00
-    ## skeptic:frame     0.20      0.06     0.09     0.31       1726 1.00
+    ## Intercept         2.45      0.16     2.14     2.75       2336 1.00
+    ## skeptic           0.11      0.04     0.03     0.19       2372 1.00
+    ## frame            -0.55      0.23    -1.00    -0.12       2253 1.00
+    ## skeptic:frame     0.20      0.06     0.09     0.31       2072 1.00
     ## 
     ## Family Specific Parameters: 
     ##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-    ## sigma     0.82      0.04     0.74     0.90       3068 1.00
+    ## sigma     0.82      0.04     0.74     0.91       2939 1.00
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -69,7 +69,7 @@ bayes_R2(fit0) %>% round(digits = 3)
 ```
 
     ##    Estimate Est.Error  Q2.5 Q97.5
-    ## R2     0.25     0.043 0.165 0.332
+    ## R2     0.25     0.042 0.166 0.329
 
 For the plots in this chapter, we'll take our color palette from the [ochRe package](https://github.com/ropenscilabs/ochRe), which provides Australia-inspired colors. We'll also use a few theme settings from good-old [ggthemes](https://cran.r-project.org/web/packages/ggthemes/vignettes/ggthemes.html). As in the last chapter, we'll save our adjusted theme settings as an object, `theme_08`.
 
@@ -166,23 +166,23 @@ head(post)
 ```
 
     ##   b_Intercept  b_skeptic    b_frame b_skeptic:frame     sigma      lp__
-    ## 1    2.549050 0.09258496 -0.3461821       0.1211432 0.8355606 -262.8891
-    ## 2    2.707469 0.04190372 -0.5742361       0.2431124 0.8235679 -263.7272
-    ## 3    2.671014 0.03872929 -0.5471022       0.2359973 0.8157986 -262.8736
-    ## 4    2.770654 0.05186789 -0.7019119       0.2324239 0.8029811 -263.5347
-    ## 5    2.394105 0.11124396 -0.7168553       0.2215241 0.7730753 -261.8377
-    ## 6    2.256837 0.16594131 -0.3940379       0.1345528 0.8580425 -261.8731
+    ## 1    2.181246 0.15800347 -0.2967809       0.1821742 0.8432269 -262.9937
+    ## 2    2.524536 0.10316424 -0.4793419       0.1931617 0.8834599 -262.7362
+    ## 3    2.409651 0.11022222 -0.5098975       0.2073337 0.8652528 -261.0372
+    ## 4    2.400388 0.11050731 -0.4434697       0.1953643 0.8651934 -261.1708
+    ## 5    2.758750 0.07123612 -0.8474136       0.2439093 0.7708104 -264.4655
+    ## 6    2.623882 0.09766234 -0.7663309       0.2334980 0.7771151 -262.5795
 
 We've got six rows, each one corresponding to the credible parameter values from a given posterior draw. The `lp__` is uniquely Bayesian and beyond the scope of this project. You might think of `sigma` as the Bayesian analogue to what the OLS folks often refer to as error or the residual variance. Hayes doesn't tend to emphasize it in this text, but it's something you'll want to pay increasing attention to as you move along in your Bayesian career. All the columns starting with `b_` are the regression parameters, the model coefficients or the fixed effects. But anyways, notice that those `b_` columns correspond to the four parameter values in formula 8.2 on page 270. Here they are, but reformatted to more closely mimic the text:
 
-1.  *Y*\_hat = 2.549 + 0.093*X* + -0.346*W* + 0.121*XW*
-2.  *Y*\_hat = 2.707 + 0.042*X* + -0.574*W* + 0.243*XW*
-3.  *Y*\_hat = 2.671 + 0.039*X* + -0.547*W* + 0.236*XW*
-4.  *Y*\_hat = 2.771 + 0.052*X* + -0.702*W* + 0.232*XW*
-5.  *Y*\_hat = 2.394 + 0.111*X* + -0.717*W* + 0.222*XW*
-6.  *Y*\_hat = 2.257 + 0.166*X* + -0.394*W* + 0.135*XW*
+1.  *Y*-hat = 2.181 + 0.158*X* + -0.297*W* + 0.182*XW*
+2.  *Y*-hat = 2.525 + 0.103*X* + -0.479*W* + 0.193*XW*
+3.  *Y*-hat = 2.41 + 0.11*X* + -0.51*W* + 0.207*XW*
+4.  *Y*-hat = 2.4 + 0.111*X* + -0.443*W* + 0.195*XW*
+5.  *Y*-hat = 2.759 + 0.071*X* + -0.847*W* + 0.244*XW*
+6.  *Y*-hat = 2.624 + 0.098*X* + -0.766*W* + 0.233*XW*
 
-Each row of `post`, each iteration or posterior draw, yields a full model equation that is a credible description of the data—or at least a credible as we can get within the limits of the model we have specified, our priors (which we typically cop out on and just use defaults in this project), and how well those fit when applied to the data at hand. So when we use brms convenience functions like `fitted()`, we pass specific predictor values through those 4000 unique model equations, which produces 4000 similar but distinct expected *Y*-values. So although a nice way to summarize those 4000 values is with summaries such as the posterior mean/median and 95% intervals, another way is to just plot an individual regression line for each of the iterations. That is what’s going on when we depict out models with a spaghetti plot.
+Each row of `post`, each iteration or posterior draw, yields a full model equation that is a credible description of the data—or at least as credible as we can get within the limits of the model we have specified, our priors (which we typically cop out on and just use defaults in this project), and how well those fit when applied to the data at hand. So when we use brms convenience functions like `fitted()`, we pass specific predictor values through those 4000 unique model equations, which produces 4000 similar but distinct expected *Y*-values. So although a nice way to summarize those 4000 values is with summaries such as the posterior mean/median and 95% intervals, another way is to just plot an individual regression line for each of the iterations. That is what’s going on when we depict out models with a spaghetti plot.
 
 The thing I like about spaghetti plots is that they give a three-dimensional sense of the posterior. Note that each individual line is very skinny and semitransparent. When you pile a whole bunch of them atop each other, the peaked or most credible regions of the posterior are the most saturated in color. Less credible posterior regions almost seamlessly merge into the background. Also, note how the combination of many similar but distinct straight lines results in a bowtie shape. Hopefully this clarifies where that shape’s been coming from when we use `geom_ribbon()` to plot the 95% intervals.
 
@@ -212,14 +212,14 @@ print(fit1)
     ## 
     ## Population-Level Effects: 
     ##                  Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-    ## Intercept            1.89      0.16     1.57     2.20       2344 1.00
-    ## skeptic              0.31      0.04     0.23     0.38       2512 1.00
-    ## frame_ep             0.56      0.22     0.13     1.01       2328 1.00
-    ## skeptic:frame_ep    -0.20      0.06    -0.31    -0.09       2237 1.00
+    ## Intercept            1.88      0.16     1.58     2.17       1669 1.00
+    ## skeptic              0.31      0.04     0.23     0.39       1779 1.00
+    ## frame_ep             0.57      0.22     0.16     1.00       1691 1.00
+    ## skeptic:frame_ep    -0.20      0.05    -0.31    -0.10       1682 1.00
     ## 
     ## Family Specific Parameters: 
     ##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-    ## sigma     0.82      0.04     0.75     0.90       2841 1.00
+    ## sigma     0.82      0.04     0.74     0.90       2789 1.00
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -234,7 +234,7 @@ posterior_interval(fit1)["b_skeptic", ] %>% round(digits = 3)
 ```
 
     ##  2.5% 97.5% 
-    ## 0.228 0.381
+    ## 0.230 0.387
 
 8.2 Interaction between two quantitative variables
 --------------------------------------------------
@@ -257,7 +257,7 @@ glimpse(glbwarm)
     ## $ sex      <int> 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1...
     ## $ partyid  <int> 2, 1, 1, 1, 1, 2, 1, 1, 2, 3, 2, 1, 1, 1, 1, 1, 2, 3, 1, 3, 2, 1, 3, 2, 1, 1, 1, 3, 1, 1...
 
-Although Hayes made a distinction between the *X*, *M*, and *C* variables in the text. That distinction is conceptual and doesn't impact the way we enter them into `brm()`. Rather, the `brm()` formula clarifies they're all just predictors.
+Although Hayes made a distinction between the *X*, *M*, and *C* variables in the text, that distinction is conceptual and doesn't impact the way we enter them into `brm()`. Rather, the `brm()` formula clarifies they're all just predictors.
 
 ``` r
 fit2 <- 
@@ -281,17 +281,17 @@ print(fit2, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##             Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## Intercept      5.171     0.342    4.518    5.833       2425 1.002
-    ## negemot        0.121     0.083   -0.043    0.279       2137 1.002
-    ## age           -0.024     0.006   -0.036   -0.012       1966 1.002
-    ## posemot       -0.021     0.028   -0.077    0.034       3742 1.000
-    ## ideology      -0.212     0.027   -0.264   -0.158       3579 0.999
-    ## sex           -0.011     0.077   -0.161    0.143       3681 1.000
-    ## negemot:age    0.006     0.002    0.003    0.009       1992 1.002
+    ## Intercept      5.170     0.344    4.496    5.816       2245 1.003
+    ## negemot        0.121     0.085   -0.037    0.286       2048 1.003
+    ## age           -0.024     0.006   -0.035   -0.012       2116 1.003
+    ## posemot       -0.021     0.028   -0.076    0.033       3689 1.001
+    ## ideology      -0.212     0.027   -0.264   -0.160       4000 1.001
+    ## sex           -0.010     0.075   -0.156    0.137       3321 0.999
+    ## negemot:age    0.006     0.002    0.003    0.009       2086 1.003
     ## 
     ## Family Specific Parameters: 
     ##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma    1.058     0.027    1.006    1.110       3830 1.000
+    ## sigma    1.059     0.027    1.006    1.112       3548 1.000
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -304,7 +304,7 @@ bayes_R2(fit2) %>% round(digits = 3)
 ```
 
     ##    Estimate Est.Error  Q2.5 Q97.5
-    ## R2    0.401     0.021 0.358  0.44
+    ## R2    0.401     0.021 0.359 0.439
 
 As the *R*<sup>2</sup> is a good bit away from the boundaries, it's nicely Gaussian.
 
@@ -396,7 +396,7 @@ fitted(fit2, newdata = nd,
 
 When we reduce the number of lines depicted in the plot, we lose some of the three-dimensional illusion. It’s nice, however, to get a closer look to each individual line. To each their own.
 
-We'll continue with our spaghetti plot approach for Figure 8.7. Again, when we did the JN technique plot for Chapter 7, we computed values for the posterior mean and the 95% intervals. Because the intervals follow a bowtie shape, we had to compute the y-values for many values across the x-axis in order to make the curve look smooth. But as long as we stick with the spaghetti plot approach, all we need are the values at the endpoints of each iteration. Although each line is straight, the combination of many lines is what produces the bowtie effect.
+We'll continue with our spaghetti plot approach for Figure 8.7. Again, when we did the JN technique plot for Chapter 7, we computed values for the posterior mean and the 95% intervals. Because the intervals follow a bowtie shape, we had to compute the *Y*-values for many values across the x-axis in order to make the curve look smooth. But as long as we stick with the spaghetti plot approach, all we need are the values at the endpoints of each iteration. Although each line is straight, the combination of many lines is what produces the bowtie effect.
 
 ``` r
 # here is our primary data object
@@ -479,9 +479,9 @@ R2s %>%
     ## # A tibble: 3 x 4
     ##   R2                  median      ll    ul
     ##   <chr>                <dbl>   <dbl> <dbl>
-    ## 1 difference          0.0500 -0.0690 0.172
-    ## 2 moderation_model    0.250   0.165  0.332
-    ## 3 multivariable_model 0.202   0.114  0.283
+    ## 1 difference          0.0510 -0.0710 0.166
+    ## 2 moderation_model    0.250   0.166  0.329
+    ## 3 multivariable_model 0.199   0.117  0.286
 
 Note that the Bayesian *R*<sup>2</sup> performed differently than the *F*-test in the text.
 
@@ -511,7 +511,7 @@ We can also compare these with the LOO, which, as is typical of information crit
     ## Computed from 4000 by 211 log-likelihood matrix
     ## 
     ##          Estimate   SE
-    ## elpd_loo   -259.1 10.9
+    ## elpd_loo   -259.1 10.8
     ## p_loo         5.5  0.9
     ## looic       518.2 21.7
     ## ------
@@ -528,9 +528,9 @@ We can also compare these with the LOO, which, as is typical of information crit
     ## Computed from 4000 by 211 log-likelihood matrix
     ## 
     ##          Estimate   SE
-    ## elpd_loo   -264.7 11.2
-    ## p_loo         4.7  0.9
-    ## looic       529.4 22.4
+    ## elpd_loo   -264.8 11.2
+    ## p_loo         4.8  0.9
+    ## looic       529.7 22.4
     ## ------
     ## Monte Carlo SE of elpd_loo is 0.0.
     ## 
@@ -544,9 +544,9 @@ compare_ic(l_fit0, l_fit3)
 ```
 
     ##              LOOIC    SE
-    ## fit0        518.23 21.75
-    ## fit3        529.38 22.38
-    ## fit0 - fit3 -11.14  8.31
+    ## fit0        518.25 21.69
+    ## fit3        529.68 22.39
+    ## fit0 - fit3 -11.43  8.19
 
 As a reminder, we generally prefer models with lower information criteria, which in this case is clearly the moderation model (i.e., `fit0`). However, the standard error value for the difference is quite large, which suggests that the model with the lowest value isn't the clear winner. Happily, these results match nicely with the Bayesian *R*<sup>2</sup> difference score. The moderation model appears somewhat better than the multivariable model, but its superiority is hardly decisive.
 
@@ -595,14 +595,14 @@ print(fit4)
     ## 
     ## Population-Level Effects: 
     ##              Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-    ## Intercept        1.78      0.09     1.60     1.96       2348 1.00
-    ## policy          -0.38      0.13    -0.63    -0.14       2212 1.00
-    ## kerry            0.60      0.13     0.35     0.85       2106 1.00
-    ## policy:kerry     0.36      0.18     0.01     0.72       1958 1.00
+    ## Intercept        1.78      0.09     1.61     1.95       2573 1.00
+    ## policy          -0.38      0.12    -0.62    -0.14       2256 1.00
+    ## kerry            0.61      0.12     0.37     0.84       2496 1.00
+    ## policy:kerry     0.35      0.17     0.03     0.68       2037 1.00
     ## 
     ## Family Specific Parameters: 
     ##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-    ## sigma     1.04      0.03     0.98     1.10       3478 1.00
+    ## sigma     1.04      0.03     0.98     1.10       4000 1.00
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -640,10 +640,10 @@ post %>%
     ## # A tibble: 4 x 4
     ##   key     median    ll    ul
     ##   <chr>    <dbl> <dbl> <dbl>
-    ## 1 Y_bar_1   1.78  1.60  1.96
-    ## 2 Y_bar_2   1.40  1.22  1.58
-    ## 3 Y_bar_3   2.38  2.20  2.57
-    ## 4 Y_bar_4   2.36  2.19  2.52
+    ## 1 Y_bar_1   1.78  1.61  1.95
+    ## 2 Y_bar_2   1.40  1.22  1.57
+    ## 3 Y_bar_3   2.39  2.20  2.57
+    ## 4 Y_bar_4   2.36  2.18  2.52
 
 And here are the marginal means from Table 8.3.
 
@@ -661,10 +661,10 @@ post %>%
     ## # A tibble: 4 x 4
     ##   key      median    ll    ul
     ##   <chr>     <dbl> <dbl> <dbl>
-    ## 1 Y_bar_12   1.59  1.46  1.72
-    ## 2 Y_bar_13   2.08  1.96  2.20
+    ## 1 Y_bar_12   1.59  1.46  1.71
+    ## 2 Y_bar_13   2.08  1.95  2.21
     ## 3 Y_bar_24   1.88  1.75  2.00
-    ## 4 Y_bar_34   2.37  2.24  2.50
+    ## 4 Y_bar_34   2.37  2.24  2.49
 
 For kicks and giggles, here are what the cell-specific means look like in box plots.
 
@@ -722,8 +722,8 @@ post %>%
     ## # A tibble: 2 x 4
     ##   key                  median     ll     ul
     ##   <chr>                 <dbl>  <dbl>  <dbl>
-    ## 1 simple_effect_Bush  -0.384  -0.625 -0.144
-    ## 2 simple_effect_Kerry -0.0310 -0.275  0.224
+    ## 1 simple_effect_Bush  -0.380  -0.622 -0.140
+    ## 2 simple_effect_Kerry -0.0290 -0.273  0.213
 
 So then computing the main effect for policy information using the simple effects is little more than an extension of those steps.
 
@@ -736,8 +736,8 @@ post %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
-    ##   median     ll     ul
-    ## 1 -0.206 -0.384 -0.034
+    ##   median    ll     ul
+    ## 1 -0.205 -0.38 -0.032
 
 And we get the same results by strategically subtracting the marginal means.
 
@@ -750,8 +750,8 @@ post %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
-    ##   median     ll     ul
-    ## 1 -0.206 -0.384 -0.034
+    ##   median    ll     ul
+    ## 1 -0.205 -0.38 -0.032
 
 So then the main effect of for candidate is similarly computed using either approach:
 
@@ -764,8 +764,8 @@ post %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
-    ##   median  ll   ul
-    ## 1   0.78 0.6 0.96
+    ##   median   ll    ul
+    ## 1  0.783 0.61 0.947
 
 ``` r
 post %>% 
@@ -776,8 +776,8 @@ post %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
-    ##   median  ll   ul
-    ## 1   0.78 0.6 0.96
+    ##   median   ll    ul
+    ## 1  0.783 0.61 0.947
 
 We don't have an *F*-test for our Bayesian moderation model. But we do have an interaction term. Here's it's distribution:
 
@@ -812,7 +812,7 @@ post %>%
 ```
 
     ##   median   ll   ul
-    ## 1   0.35 0.01 0.72
+    ## 1   0.35 0.03 0.68
 
 Extending that logic, we also get:
 
@@ -826,7 +826,7 @@ post %>%
 ```
 
     ##   median   ll   ul
-    ## 1   0.35 0.01 0.72
+    ## 1   0.35 0.03 0.68
 
 ### Simple effects parameterization.
 
@@ -869,8 +869,8 @@ post %>%
     ## # A tibble: 2 x 3
     ##   key                 mean    sd
     ##   <chr>              <dbl> <dbl>
-    ## 1 b1                -0.385 0.126
-    ## 2 Y_bar_2 - Y_bar_1 -0.385 0.126
+    ## 1 b1                -0.381 0.123
+    ## 2 Y_bar_2 - Y_bar_1 -0.381 0.123
 
 ``` r
 post %>% 
@@ -886,8 +886,8 @@ post %>%
     ## # A tibble: 2 x 3
     ##   key                mean    sd
     ##   <chr>             <dbl> <dbl>
-    ## 1 b2                0.602 0.129
-    ## 2 Y_bar_3 - Y_bar_1 0.602 0.129
+    ## 1 b2                0.606 0.122
+    ## 2 Y_bar_3 - Y_bar_1 0.606 0.122
 
 Here we compute *b*<sub>3</sub> with the difference between the simple effects of *X* at levels of *W*.
 
@@ -905,8 +905,8 @@ post %>%
     ## # A tibble: 2 x 3
     ##   key                                        mean    sd
     ##   <chr>                                     <dbl> <dbl>
-    ## 1 (Y_bar_4 - Y_bar_3) - (Y_bar_2 - Y_bar_1) 0.357 0.179
-    ## 2 b3                                        0.357 0.179
+    ## 1 (Y_bar_4 - Y_bar_3) - (Y_bar_2 - Y_bar_1) 0.351 0.169
+    ## 2 b3                                        0.351 0.169
 
 And now *b*<sub>3</sub> with the difference between the simple effects of *W* at levels of *X*.
 
@@ -924,8 +924,8 @@ post %>%
     ## # A tibble: 2 x 3
     ##   key                                        mean    sd
     ##   <chr>                                     <dbl> <dbl>
-    ## 1 (Y_bar_4 - Y_bar_2) - (Y_bar_3 - Y_bar_1) 0.357 0.179
-    ## 2 b3                                        0.357 0.179
+    ## 1 (Y_bar_4 - Y_bar_2) - (Y_bar_3 - Y_bar_1) 0.351 0.169
+    ## 2 b3                                        0.351 0.169
 
 Here's our analogue to the "Model 1" portion of Table 8.5.
 
@@ -934,21 +934,21 @@ fixef(fit4) %>% round(digits = 3)
 ```
 
     ##              Estimate Est.Error   Q2.5  Q97.5
-    ## Intercept       1.786     0.089  1.606  1.959
-    ## policy         -0.387     0.127 -0.640 -0.140
-    ## kerry           0.597     0.126  0.347  0.849
-    ## policy:kerry    0.361     0.174  0.009  0.696
+    ## Intercept       1.784     0.092  1.604  1.965
+    ## policy         -0.391     0.131 -0.652 -0.140
+    ## kerry           0.601     0.129  0.351  0.859
+    ## policy:kerry    0.363     0.182  0.009  0.718
 
 ``` r
 bayes_R2(fit4) %>% round(digits = 3)
 ```
 
     ##    Estimate Est.Error  Q2.5 Q97.5
-    ## R2     0.14     0.025 0.093  0.19
+    ## R2    0.141     0.025 0.093 0.192
 
 ### Main effects parameterization.
 
-A nice feature of brms is you can do data transformations right within the `brm()` or `update()` functions. Here we'll make our two new main-effects-coded variables, `policy_me` and `kerry_me`, with the `mutate()` function right within `update()`.
+A nice feature of brms is you transform your data right within the `brm()` or `update()` functions. Here we'll make our two new main-effects-coded variables, `policy_me` and `kerry_me`, with the `mutate()` function right within `update()`.
 
 ``` r
 fit5 <-
@@ -968,17 +968,17 @@ fixef(fit5) %>% round(digits = 3)
 ```
 
     ##                    Estimate Est.Error   Q2.5  Q97.5
-    ## Intercept             1.980     0.044  1.894  2.068
-    ## policy_me            -0.206     0.088 -0.381 -0.032
-    ## kerry_me              0.780     0.088  0.612  0.957
-    ## policy_me:kerry_me    0.359     0.180  0.000  0.708
+    ## Intercept             1.978     0.045  1.889  2.064
+    ## policy_me            -0.206     0.090 -0.380 -0.029
+    ## kerry_me              0.780     0.089  0.606  0.957
+    ## policy_me:kerry_me    0.353     0.174  0.011  0.685
 
 ``` r
 bayes_R2(fit5) %>% round(digits = 3)
 ```
 
     ##    Estimate Est.Error  Q2.5 Q97.5
-    ## R2     0.14     0.025 0.093  0.19
+    ## R2     0.14     0.025 0.091 0.191
 
 Like with `fit4`, above, we'll need a bit of algebra to compute our *Y*-bar<sub>*i*</sub> vectors.
 
@@ -1007,8 +1007,8 @@ post %>%
     ## # A tibble: 2 x 3
     ##   key     mean     sd
     ##   <chr>  <dbl>  <dbl>
-    ## 1 b1    -0.206 0.0880
-    ## 2 b2     0.780 0.0880
+    ## 1 b1    -0.206 0.0900
+    ## 2 b2     0.780 0.0890
 
 Hayes pointed out that the interaction effect, *b*<sub>3</sub>, is the same across models his OLS Models 1 and 2. This is largely true for our Bayesian HMC `fit4` adn `fit5` models:
 
@@ -1017,14 +1017,14 @@ fixef(fit4)[4, ] %>% round(digits = 3)
 ```
 
     ##  Estimate Est.Error      Q2.5     Q97.5 
-    ##     0.361     0.174     0.009     0.696
+    ##     0.363     0.182     0.009     0.718
 
 ``` r
 fixef(fit5)[4, ] %>% round(digits = 3)
 ```
 
     ##  Estimate Est.Error      Q2.5     Q97.5 
-    ##     0.359     0.180     0.000     0.708
+    ##     0.353     0.174     0.011     0.685
 
 However, the results aren’t exactly the same because of simulation error. If you were working on a project requiring high precision, increase the number of posterior iterations. To demonstrate, here we'll increase each chain's post-warmup iteration count by an order of magnitude, resulting in 80,000 post-warmup iterations rather than the defuault 4,000.
 
@@ -1038,21 +1038,21 @@ fit5 <-
          chains = 4, cores = 4, warmup = 1000, iter = 21000)
 ```
 
-Now there quite a bit closer.
+Now they're quite a bit closer.
 
 ``` r
 fixef(fit4)[4, ] %>% round(digits = 3)
 ```
 
     ##  Estimate Est.Error      Q2.5     Q97.5 
-    ##     0.361     0.178     0.010     0.708
+    ##     0.360     0.178     0.012     0.713
 
 ``` r
 fixef(fit5)[4, ] %>% round(digits = 3)
 ```
 
     ##  Estimate Est.Error      Q2.5     Q97.5 
-    ##     0.359     0.178     0.010     0.709
+    ##     0.359     0.178     0.009     0.709
 
 And before you get fixate on how there are still differences after 80,000 iterations, each, consider comparing the two density plots:
 
@@ -1083,7 +1083,7 @@ posterior_samples(fit4) %>%
 
 ### Conducting ~~a 2 X 2 between-participants factorial ANOVA using PROCESS~~ another regression model with brms.
 
-Since we're square in regression land with brms, there's no direct analogue for us, here. However, notice the post-ANOVA *t*-tests Hayes presented on page 300. If we just want to consider the 2 X 2 structure of our two dummy variables as indicative of four groups, we have one more coding system up ourselves. With the handy `str_c()` function, we'll concatenate the `policy` and `kerry` values into a nominal variable, `policy_kerry`. Here's what that looks like:
+Since we're square in regression land with brms, there's no direct analogue for us, here. However, notice the post-ANOVA *t*-tests Hayes presented on page 300. If we just want to consider the 2 X 2 structure of our two dummy variables as indicative of four groups, we have one more coding system available for the job. With the handy `str_c()` function, we'll concatenate the `policy` and `kerry` values into a nominal variable, `policy_kerry`. Here's what that looks like:
 
 ``` r
 caskets <-
@@ -1112,7 +1112,7 @@ fit6 <-
       chains = 4, cores = 4)
 ```
 
-The `brm()` function recnognized `policy_kerry` was a character vector and treated it as a nominal variable. The `0 +` part of the fucntion removed the model intercept. Here's how that effects the output:
+The `brm()` function recnognized `policy_kerry` was a character vector and treated it as a nominal variable. The `0 +` part of the function removed the model intercept. Here's how that effects the output:
 
 ``` r
 print(fit6)
@@ -1127,20 +1127,20 @@ print(fit6)
     ## 
     ## Population-Level Effects: 
     ##                Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-    ## policy_kerry00     1.78      0.09     1.62     1.95       4000 1.00
-    ## policy_kerry01     2.38      0.09     2.20     2.56       4000 1.00
+    ## policy_kerry00     1.79      0.09     1.61     1.96       4000 1.00
+    ## policy_kerry01     2.38      0.09     2.21     2.56       4000 1.00
     ## policy_kerry10     1.40      0.09     1.22     1.57       4000 1.00
-    ## policy_kerry11     2.36      0.09     2.18     2.53       4000 1.00
+    ## policy_kerry11     2.36      0.09     2.19     2.53       4000 1.00
     ## 
     ## Family Specific Parameters: 
     ##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-    ## sigma     1.04      0.03     0.98     1.09       4000 1.00
+    ## sigma     1.04      0.03     0.98     1.10       4000 1.00
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
     ## scale reduction factor on split chains (at convergence, Rhat = 1).
 
-Without the typical interecept, `brm()` estimated the means for each of the four `policy_kerry` groups. Here's what their densities look like:
+Without the typical intercept, `brm()` estimated the means for each of the four `policy_kerry` groups. It's kinda like an intercept-only model, but with four intercepts. Here's what their densities look like:
 
 ``` r
 post <- posterior_samples(fit6)
@@ -1179,8 +1179,8 @@ post %>%
     ## # A tibble: 2 x 4
     ##   key           median     ll     ul
     ##   <chr>          <dbl>  <dbl>  <dbl>
-    ## 1 difference_1 -0.389  -0.633 -0.138
-    ## 2 difference_2 -0.0280 -0.265  0.216
+    ## 1 difference_1 -0.391  -0.641 -0.135
+    ## 2 difference_2 -0.0260 -0.269  0.223
 
 Note. The analyses in this document were done with:
 

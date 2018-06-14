@@ -57,7 +57,7 @@ theme_08 <-
                                        color = "transparent"))
 ```
 
-Happily, the ochRe package has a handy convenience function, `viz_palette()`, that makes it easy to get a glimpse of the colors available in a given palette. We'll be using "olsen_qual" and "olsen_seq".
+Happily, the ochRe package has a handy convenience function, `viz_palette()`, that makes it easy to preview the colors available in a given palette. We'll be using "olsen_qual" and "olsen_seq".
 
 ```{r, fig.width = 8, fig.height = 3}
 viz_palette(ochre_palettes[["olsen_qual"]])
@@ -130,7 +130,7 @@ We've got six rows, each one corresponding to the credible parameter values from
 
 Each row of `post`, each iteration or posterior draw, yields a full model equation that is a credible description of the data—or at least a credible as we can get within the limits of the model we have specified, our priors (which we typically cop out on and just use defaults in this project), and how well those fit when applied to the data at hand. So when we use brms convenience functions like `fitted()`, we pass specific predictor values through those 4000 unique model equations, which produces 4000 similar but distinct expected $Y$-values. So although a nice way to summarize those 4000 values is with summaries such as the posterior mean/median and 95% intervals, another way is to just plot an individual regression line for each of the iterations. That is what’s going on when we depict out models with a spaghetti plot.
 
-The thing I like about spaghetti plots is that they give a three-dimensional sense of the posterior. Note that each individual line is very skinny and semitransparent. When you pile a whole bunch of them atop each other, the peaked or most credible regions of the posterior are the most saturated in color. Less credible posterior regions almost seamlessly merge into the background. Also, note how the combination of many similar but distinct straight lines results in a bowtie shape. Hopefully this clarifies where that shape’s been coming from in our simple summary plots.
+The thing I like about spaghetti plots is that they give a three-dimensional sense of the posterior. Note that each individual line is very skinny and semitransparent. When you pile a whole bunch of them atop each other, the peaked or most credible regions of the posterior are the most saturated in color. Less credible posterior regions almost seamlessly merge into the background. Also, note how the combination of many similar but distinct straight lines results in a bowtie shape. Hopefully this clarifies where that shape’s been coming from when we use `geom_ribbon()` to plot the 95% intervals.
 
 But anyways, you could recode `frame` in a number of ways, including `ifelse()` or, in this case, by simple arithmetic. With `frame_ep` in hand, we’re ready to refit the model.
 
@@ -204,6 +204,8 @@ bayes_R2(fit2, summary = F) %>%
   theme_08
 ```
 
+For our version of Figure 8.4, we'll need to adjust our `nd` data for `fitted()`.
+
 ```{r}
 (
   nd <-
@@ -214,6 +216,8 @@ bayes_R2(fit2, summary = F) %>%
          sex = mean(glbwarm$sex))
   )
 ```
+
+Our `fitted()` and ggplot2 code will be quite similar to the last spaghetti plot. Only this time we'll use `filter()` to reduce the number of posterior draws we show in the plot.
 
 ```{r, fig.width = 8, fig.height = 4.5}
 # these will come in handy with `geom_text()`, below
@@ -258,38 +262,7 @@ fitted(fit2, newdata = nd,
   theme(legend.position = "none")
 ```
 
-```{r, eval = F, echo = F}
-sapply(15:90, function(i){
-  post$b_negemot + post$`b_negemot:age`*i
-}) %>% 
-  as_tibble() %>% 
-  gather() %>% 
-  mutate(age = rep(15:90, each = 4000),
-         iter = rep(1:4000, times = 76)) %>% 
-  
-  ggplot(aes(x = age, y = value, 
-             group = interaction(age, iter),
-             color = age %>% as.character())) +
-  geom_line(aes(color = age %>% as.character()),
-            size = 1/4, alpha = 1/20) +
-  geom_text(data = tibble(negemot = 6.1,
-                          value   = c(5.4, 5.7, 6),
-                          age     = c(30, 50, 70),
-                          label   = c(paste("the slope for 30 year olds is about", slope_30),
-                                      paste("the slope for 50 year olds is about", slope_50),
-                                      paste("the slope for 70 year olds is about", slope_70))),
-            aes(label = label),
-            hjust = 0) +
-  scale_color_manual(NULL, values = ochre_palettes[["olsen_qual"]][c(4, 1, 3)]) +
-  scale_x_continuous(breaks = 1:6) +
-  coord_cartesian(xlim = 1:9,
-                  ylim = c(2.9, 6.1)) +
-  labs(title = "The moderation effect of age on negemot",
-       x = expression(paste("Negative Emotions about Climate Change (", italic("X"), ")")),
-       y = "Support for Government Action") +
-  theme_08 +
-  theme(legend.position = "none")
-```
+When we reduce the number of lines depicted in the plot, we lose some of the three-dimensional illusion. It’s nice, however, to get a closer look to each individual line. To each their own.
 
 We'll continue with our spaghetti plot approach for Figure 8.7. Again, when we did the JN technique plot for Chapter 7, we computed values for the posterior mean and the 95% intervals. Because the intervals follow a bowtie shape, we had to compute the y-values for many values across the x-axis in order to make the curve look smooth. But as long as we stick with the spaghetti plot approach, all we need are the values at the endpoints of each iteration. Although each line is straight, the combination of many lines is what produces the bowtie effect.
 
@@ -332,6 +305,8 @@ post %>%
 
 ## 8.3 Hierarchical versus simultaneous entry
 
+Here's our multivariable but non-moderation model, `fit3`.
+
 ```{r, message = F, warning = F}
 fit3 <-
   update(fit0, 
@@ -339,6 +314,7 @@ fit3 <-
          chains = 4, cores = 4)
 ```
 
+Here we'll compute the corresponding $R^2$ and compare it with the one for the original interaction model with a difference score.
 
 ```{r}
 # the moderation model's R2
@@ -421,7 +397,7 @@ fit4 <-
 print(fit4)
 ```
 
-Those results don't look anything like what Hayes reported in Tables 8.3 or 8.4. However, we a little deft manipulation of the posterior samples can yield equivalent results to Hayes's Table 8.3. 
+Those results don't look anything like what Hayes reported in Tables 8.3 or 8.4. However, a little deft manipulation of the posterior samples can yield equivalent results to Hayes's Table 8.3. 
 
 ```{r}
 post <- 
@@ -634,7 +610,7 @@ post %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
-Here we compute *b*[3] with the difference between the simple effects of $X$ at levels of $W$.
+Here we compute *b*~3~ with the difference between the simple effects of $X$ at levels of $W$.
 
 ```{r}
 post %>% 
@@ -647,7 +623,7 @@ post %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
-And now *b*[3] with the difference between the simple effects of $W$ at levels of $X$.
+And now *b*~3~ with the difference between the simple effects of $W$ at levels of $X$.
 
 ```{r}
 post %>% 
@@ -689,7 +665,7 @@ fixef(fit5) %>% round(digits = 3)
 bayes_R2(fit5) %>% round(digits = 3)
 ```
 
-Like with `fit4`, above, we'll need a bit of algebra to compute our $Y$_bar[*i*] vectors.
+Like with `fit4`, above, we'll need a bit of algebra to compute our $Y$-bar~*i*~ vectors.
 
 ```{r}
 post <- 
@@ -700,7 +676,7 @@ post <-
          Y_bar_4 = b_Intercept + b_policy_me*.5 + b_kerry_me*.5 + `b_policy_me:kerry_me`*.5*.5)
 ```
 
-With our `post` for `fit5` in hand, we'll follow the formulas at the top of page 298 to compute our *b*[1] and *b*[2] distributions.
+With our `post` for `fit5` in hand, we'll follow the formulas at the top of page 298 to compute our *b*~1~ and *b*~2~ distributions.
 
 ```{r}
 post %>% 
@@ -713,7 +689,7 @@ post %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
-Hayes pointed out that the interaction effect, *b*[3], is the same across models his OLS Models 1 and 2. This is largely true for our Bayesian HMC `fit4` adn `fit5` models:
+Hayes pointed out that the interaction effect, *b*~3~, is the same across models his OLS Models 1 and 2. This is largely true for our Bayesian HMC `fit4` adn `fit5` models:
 
 ```{r}
 fixef(fit4)[4, ] %>% round(digits = 3)
@@ -768,7 +744,7 @@ posterior_samples(fit4) %>%
 
 ### Conducting ~~a 2 X 2 between-participants factorial ANOVA using PROCESS~~ another regression model with brms.
 
-Since we're square in regression land with brms, there's no direct analogue for us, here. However, notice all those post-ANOVA $t$-tests Hayes presented on page 300. If we just want to consider the 2 X 2 structure of our two dummy variables as indicative of four groups, we have one more coding system up ourselves. With the handy `str_c()` function, we'll concatenate the `policy` and `kerry` values into an unordered categorical variable, `policy_kerry`. Here's what that looks like:
+Since we're square in regression land with brms, there's no direct analogue for us, here. However, notice the post-ANOVA $t$-tests Hayes presented on page 300. If we just want to consider the 2 X 2 structure of our two dummy variables as indicative of four groups, we have one more coding system up ourselves. With the handy `str_c()` function, we'll concatenate the `policy` and `kerry` values into a nominal variable, `policy_kerry`. Here's what that looks like:
 
 ```{r}
 caskets <-
@@ -778,7 +754,7 @@ caskets <-
 head(caskets)
 ```
 
-Now check out what happens if we reformat our formula as `interest ~ 0 + policy_kerry`.
+Now check out what happens if we reformat our formula to `interest ~ 0 + policy_kerry`.
 
 ```{r, message = F, warning = F}
 fit6 <-
@@ -797,7 +773,9 @@ Without the typical interecept, `brm()` estimated the means for each of the four
 
 
 ```{r, fig.width = 8, fig.height = 2.5}
-posterior_samples(fit6) %>% 
+post <- posterior_samples(fit6)
+
+post %>% 
   select(b_policy_kerry00:b_policy_kerry11) %>% 
   gather() %>%
   mutate(key = str_remove(key, "b_")) %>% 
@@ -812,10 +790,10 @@ posterior_samples(fit6) %>%
   theme_08
 ```
 
-Since each of the four primary vectors returned by `posterior_samples(fit6)` is of a group mean, it's trivial to compute difference scores. To compute the difference score analogous to Hayes's two $t$-tests, we'd do the following.
+Since each of the four primary vectors in our `post` object is of a group mean, it's trivial to compute difference scores. To compute the difference score analogous to Hayes's two $t$-tests, we'd do the following.
 
 ```{r}
-posterior_samples(fit6) %>% 
+post %>% 
   transmute(difference_1 = b_policy_kerry10 - b_policy_kerry00,
             difference_2 = b_policy_kerry11 - b_policy_kerry01) %>% 
   gather() %>% 

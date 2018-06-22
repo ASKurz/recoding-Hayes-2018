@@ -1,7 +1,7 @@
 Chapter 02
 ================
 A Solomon Kurz
-2018-05-28
+2018-06-21
 
 2.1 Correlation and prediction
 ------------------------------
@@ -68,7 +68,7 @@ cor(glbwarm$negemot, glbwarm$govact)
 
     ## [1] 0.5777458
 
-If you want more plentiful output, the `cor.test()` function provides a *t* value, the degrees of freedom, the corresponding *p*-value and the 95% confidence intervals, in addition to the Pearson's correlation coefficient.
+If you want more plentiful output, the `cor.test()` function provides a *t*-value, the degrees of freedom, the corresponding *p*-value and the 95% confidence intervals, in addition to the Pearson's correlation coefficient.
 
 ``` r
 cor.test(glbwarm$negemot, glbwarm$govact)
@@ -86,7 +86,7 @@ cor.test(glbwarm$negemot, glbwarm$govact)
     ##       cor 
     ## 0.5777458
 
-To get the Bayesian version, we'll open the brms package. Here we'll start simple and just use the default priors and settings, but with the addition of parallel sampling via `cores = 4`.
+To get the Bayesian version, we'll open our focal statistical package, Bürkner's [brms](https://github.com/paul-buerkner/brms). \[And I'll also briefly note that you could also do many of these analyses with other packages, such as [blavaan](https://cran.r-project.org/web/packages/blavaan/index.html). I just prefer brms.\] Here we'll start simple and just use the default priors and settings, but with the addition of parallel sampling via `cores = 4`.
 
 ``` r
 library(brms)
@@ -112,14 +112,14 @@ print(fit0)
     ## 
     ## Population-Level Effects: 
     ##                   Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-    ## negemot_Intercept     3.56      0.05     3.45     3.66       3323 1.00
-    ## govact_Intercept      4.59      0.05     4.49     4.68       3510 1.00
+    ## negemot_Intercept     3.56      0.05     3.45     3.67       3342 1.00
+    ## govact_Intercept      4.59      0.05     4.49     4.68       3300 1.00
     ## 
     ## Family Specific Parameters: 
     ##                        Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-    ## sigma_negemot              1.53      0.04     1.46     1.61       3098 1.00
-    ## sigma_govact               1.36      0.03     1.30     1.43       3582 1.00
-    ## rescor(negemot,govact)     0.58      0.02     0.53     0.62       3489 1.00
+    ## sigma_negemot              1.53      0.04     1.46     1.61       3313 1.00
+    ## sigma_govact               1.36      0.03     1.30     1.43       3289 1.00
+    ## rescor(negemot,govact)     0.58      0.02     0.53     0.62       3479 1.00
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -127,12 +127,12 @@ print(fit0)
 
 Within the brms framework, *σ* of the Gaussian likelihood is considered a family-specific parameter (e.g., there is no *σ* for the Poisson distribution). When you have an intercept-only regression model with multiple variables, the covariance among their *σ* parameters, `rescor(negemot,govact)` in this case, is a correlation.
 
-To learn more about the multivariate syntax in brms, code `vignette("brms_multivariate")`.
+To learn more about the multivariate syntax in brms, click [here](https://cran.r-project.org/web/packages/brms/vignettes/brms_multivariate.html) or code `vignette("brms_multivariate")`.
 
 But to clarify the output:
 
 -   'Estimate' = the posterior mean, analogous to the frequentist point estimate
--   'Est.Error' = the posterior *S**D*, analogous to the frequentist standard error
+-   'Est.Error' = the posterior *SD*, analogous to the frequentist standard error
 -   'l-95% CI' = the lower-level of the percentile-based 95% Bayesian credible interval
 -   'u-95% CI' = the upper-level of the same
 
@@ -202,8 +202,8 @@ print(fit1)
     ## 
     ## Population-Level Effects: 
     ##           Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-    ## Intercept     2.76      0.10     2.55     2.95       3280 1.00
-    ## negemot       0.51      0.03     0.47     0.57       3188 1.00
+    ## Intercept     2.76      0.10     2.56     2.95       4000 1.00
+    ## negemot       0.51      0.03     0.47     0.56       4000 1.00
     ## 
     ## Family Specific Parameters: 
     ##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
@@ -220,10 +220,10 @@ posterior_summary(fit1)
 ```
 
     ##                  Estimate  Est.Error          Q2.5         Q97.5
-    ## b_Intercept     2.7561806 0.09823308     2.5541589     2.9478411
-    ## b_negemot       0.5145271 0.02518915     0.4651528     0.5653607
-    ## sigma           1.1129013 0.02798737     1.0590556     1.1668103
-    ## lp__        -1248.6359693 1.21346322 -1251.6572789 -1247.2301212
+    ## b_Intercept     2.7593684 0.09794444     2.5649519     2.9512663
+    ## b_negemot       0.5138407 0.02505543     0.4655806     0.5636426
+    ## sigma           1.1135920 0.02734239     1.0626764     1.1697145
+    ## lp__        -1248.5942928 1.23743128 -1251.9260927 -1247.2335127
 
 That also yields the log posterior, `lp__`, which you can learn more about [here](https://cran.r-project.org/web/packages/rstan/vignettes/rstan.html#the-log-posterior-function-and-gradient) or [here](https://www.jax.org/news-and-insights/jax-blog/2015/october/lp-in-stan-output). We won't focus on the `lp__` directly in this project.
 
@@ -257,12 +257,12 @@ head(post)
 ```
 
     ##   b_Intercept b_negemot    sigma      lp__
-    ## 1    3.033007 0.4608034 1.153014 -1252.520
-    ## 2    2.996691 0.4682748 1.126836 -1250.709
-    ## 3    2.801110 0.4991724 1.143643 -1247.999
-    ## 4    2.765419 0.5116679 1.158539 -1248.539
-    ## 5    2.774392 0.5218589 1.138820 -1248.275
-    ## 6    2.717307 0.5257444 1.163556 -1248.928
+    ## 1    2.933270 0.4821072 1.093740 -1249.410
+    ## 2    2.932847 0.4626506 1.150091 -1250.023
+    ## 3    2.719573 0.5119417 1.144171 -1248.486
+    ## 4    2.951266 0.4685887 1.103374 -1249.102
+    ## 5    2.948589 0.4697323 1.111807 -1248.991
+    ## 6    2.868670 0.4797836 1.088978 -1248.417
 
 Next, we'll use the `fitted()` function to simulate model-implied summaries for the expected `govact` value, given particular predictor values. Our first model only has `negemot` as a predictor, and we'll ask for the expected `govact` values for `negemot` ranging from 0 to 7.
 
@@ -281,16 +281,16 @@ f_fit1
     ## # A tibble: 30 x 5
     ##    Estimate Est.Error  Q2.5 Q97.5 negemot
     ##       <dbl>     <dbl> <dbl> <dbl>   <dbl>
-    ##  1     2.76    0.0982  2.55  2.95   0    
-    ##  2     2.88    0.0927  2.69  3.06   0.241
-    ##  3     3.00    0.0873  2.83  3.17   0.483
-    ##  4     3.13    0.0819  2.96  3.29   0.724
-    ##  5     3.25    0.0767  3.10  3.40   0.966
-    ##  6     3.38    0.0715  3.23  3.52   1.21 
-    ##  7     3.50    0.0666  3.37  3.63   1.45 
-    ##  8     3.63    0.0618  3.50  3.75   1.69 
-    ##  9     3.75    0.0573  3.63  3.86   1.93 
-    ## 10     3.87    0.0531  3.77  3.98   2.17 
+    ##  1     2.76    0.0979  2.56  2.95   0    
+    ##  2     2.88    0.0924  2.70  3.07   0.241
+    ##  3     3.01    0.0870  2.84  3.18   0.483
+    ##  4     3.13    0.0817  2.97  3.29   0.724
+    ##  5     3.26    0.0764  3.11  3.41   0.966
+    ##  6     3.38    0.0713  3.24  3.52   1.21 
+    ##  7     3.50    0.0664  3.37  3.64   1.45 
+    ##  8     3.63    0.0616  3.51  3.75   1.69 
+    ##  9     3.75    0.0571  3.64  3.86   1.93 
+    ## 10     3.88    0.0529  3.77  3.98   2.17 
     ## # ... with 20 more rows
 
 The first two columns should look familiar to the output from `print(fit1)`, above. The next two columns, `Q2.5` and `Q97.5`, are the lower- and upper-levels of the 95% credible intervals, like we got from `posterior_samples()`. We got the final column with the `bind_cols(nd)` code.
@@ -345,12 +345,12 @@ print(fit2)
     ## 
     ## Population-Level Effects: 
     ##           Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-    ## Intercept     4.72      0.07     4.59     4.84       3721 1.00
-    ## sex          -0.27      0.10    -0.46    -0.08       4000 1.00
+    ## Intercept     4.72      0.07     4.59     4.85       3856 1.00
+    ## sex          -0.26      0.10    -0.45    -0.07       3610 1.00
     ## 
     ## Family Specific Parameters: 
     ##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-    ## sigma     1.36      0.03     1.29     1.43       4000 1.00
+    ## sigma     1.36      0.03     1.29     1.42       3338 1.00
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -363,14 +363,14 @@ fixef(fit2) %>% round(digits = 3)
 ```
 
     ##           Estimate Est.Error   Q2.5  Q97.5
-    ## Intercept    4.717     0.067  4.585  4.844
-    ## sex         -0.265     0.096 -0.461 -0.081
+    ## Intercept    4.716     0.067  4.585  4.845
+    ## sex         -0.263     0.096 -0.447 -0.072
 
 Though not necessary, we used the `round()` function to reduce the number of significant digits in the output.
 
 You can get a little more information with the `posterior_summary()` function.
 
-But since Bayesian estimation yields an entire posterior distrubution, you can visualize that distribution in any number of ways. Before we do so, we'll need to put the posterior draws into a data frame.
+But since Bayesian estimation yields an entire posterior distribution, you can visualize that distribution in any number of ways. Because we'll be using ggplot2, we'll need to put the posterior draws into a data frame before plotting.
 
 ``` r
 post <- posterior_samples(fit2)
@@ -403,7 +403,7 @@ post %>%
   gather() %>% 
   
   ggplot(aes(x = value, group = key, fill = key)) +
-  geom_density(color = "transparent", alpha = 2/3) +
+  geom_density(color = "transparent", alpha = 3/4) +
   theme_bw()
 ```
 
@@ -419,7 +419,7 @@ post %>%
   gather() %>% 
   
   ggplot(aes(x = key, y = value)) +
-  geom_violin(aes(fill = key), color = "transparent", alpha = 2/3) +
+  geom_violin(aes(fill = key), color = "transparent", alpha = 3/4) +
   stat_summary(fun.y = median,
                fun.ymin = function(i){quantile(i, probs = .025)},
                fun.ymax = function(i){quantile(i, probs = .975)}) +
@@ -437,7 +437,7 @@ round(fixef(fit2)[1, ], digits = 2)
 ```
 
     ##  Estimate Est.Error      Q2.5     Q97.5 
-    ##      4.72      0.07      4.59      4.84
+    ##      4.72      0.07      4.59      4.85
 
 ``` r
 # for men
@@ -445,9 +445,9 @@ round(fixef(fit2)[1, ] + fixef(fit2)[2, ], digits = 2)
 ```
 
     ##  Estimate Est.Error      Q2.5     Q97.5 
-    ##      4.45      0.16      4.12      4.76
+    ##      4.45      0.16      4.14      4.77
 
-Here's the partially standardized model.
+Here's the partially-standardized model, first with `lm()`.
 
 ``` r
 glbwarm <-
@@ -465,6 +465,8 @@ lm(data = glbwarm, govact_z ~ 1 + sex)
     ## (Intercept)          sex  
     ##     0.09629     -0.19717
 
+Now we'll use Bayes.
+
 ``` r
 fit2_p_z <- 
   brm(data = glbwarm, family = gaussian,
@@ -472,22 +474,18 @@ fit2_p_z <-
       chains = 4, cores = 4)
 ```
 
-    ## Compiling the C++ model
-
-    ## Start sampling
-
 ``` r
 fixef(fit2_p_z)
 ```
 
-    ##             Estimate  Est.Error         Q2.5       Q97.5
-    ## Intercept  0.0967205 0.04892884  0.002069941  0.19106976
-    ## sex       -0.1975736 0.06937593 -0.332382534 -0.06161169
+    ##              Estimate  Est.Error         Q2.5       Q97.5
+    ## Intercept  0.09744524 0.04820953  0.001424861  0.19254961
+    ## sex       -0.19815958 0.07016276 -0.334740962 -0.05653177
 
 2.3 Alternative explanations for association
 --------------------------------------------
 
-On page 46, Hayes produces a couple correlations. Here's how to get them from base R.
+On page 46, Hayes produced a couple correlations. Here's how to get them from base R.
 
 ``` r
 cor(glbwarm$sex, glbwarm$negemot)
@@ -524,18 +522,18 @@ brm(data = glbwarm, family = gaussian,
     ## 
     ## Population-Level Effects: 
     ##                   Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## negemot_Intercept    3.558     0.054    3.453    3.663       4000 0.999
-    ## govact_Intercept     4.588     0.047    4.497    4.678       4000 1.000
-    ## sex_Intercept        0.488     0.018    0.453    0.524       4000 1.000
+    ## negemot_Intercept    3.558     0.054    3.453    3.665       4000 1.000
+    ## govact_Intercept     4.587     0.048    4.493    4.677       4000 1.001
+    ## sex_Intercept        0.488     0.018    0.452    0.523       4000 1.000
     ## 
     ## Family Specific Parameters: 
     ##                        Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma_negemot             1.532     0.039    1.456    1.610       4000 1.000
-    ## sigma_govact              1.363     0.034    1.299    1.433       4000 1.000
-    ## sigma_sex                 0.501     0.012    0.477    0.527       4000 0.999
-    ## rescor(negemot,govact)    0.576     0.024    0.529    0.622       4000 1.000
-    ## rescor(negemot,sex)      -0.117     0.035   -0.185   -0.047       4000 1.000
-    ## rescor(govact,sex)       -0.098     0.035   -0.166   -0.030       4000 0.999
+    ## sigma_negemot             1.531     0.037    1.462    1.606       4000 0.999
+    ## sigma_govact              1.363     0.033    1.299    1.428       4000 0.999
+    ## sigma_sex                 0.501     0.012    0.478    0.526       4000 0.999
+    ## rescor(negemot,govact)    0.576     0.023    0.528    0.618       4000 0.999
+    ## rescor(negemot,sex)      -0.117     0.034   -0.184   -0.050       4000 1.000
+    ## rescor(govact,sex)       -0.098     0.034   -0.163   -0.030       4000 0.999
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -581,11 +579,11 @@ print(fit3)
     ## 
     ## Population-Level Effects: 
     ##           Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-    ## Intercept     4.06      0.21     3.65     4.46       4000 1.00
+    ## Intercept     4.06      0.20     3.67     4.46       4000 1.00
     ## negemot       0.44      0.03     0.39     0.49       4000 1.00
     ## posemot      -0.03      0.03    -0.08     0.03       4000 1.00
     ## ideology     -0.22      0.03    -0.27    -0.16       4000 1.00
-    ## sex          -0.01      0.08    -0.16     0.14       4000 1.00
+    ## sex          -0.01      0.08    -0.16     0.15       4000 1.00
     ## age          -0.00      0.00    -0.01     0.00       4000 1.00
     ## 
     ## Family Specific Parameters: 
@@ -596,7 +594,7 @@ print(fit3)
     ## is a crude measure of effective sample size, and Rhat is the potential 
     ## scale reduction factor on split chains (at convergence, Rhat = 1).
 
-Here is the posterior mean, what you might call the Bayesian point estimate, for:
+Here is the posterior mean, what you might call the Bayesian point estimate, for someone with:
 
 -   negative emotions = 3,
 -   positive emotions = 4,
@@ -613,9 +611,9 @@ fixef(fit3)[1] +
   fixef(fit3)[6]*30
 ```
 
-    ## [1] 4.793519
+    ## [1] 4.792063
 
-Here's the same deal for a man of the same values, but with one point higher on `negemot`.
+Here's the same deal for a man of the same profile, but with one point higher on `negemot`.
 
 ``` r
 fixef(fit3)[1] + 
@@ -626,7 +624,7 @@ fixef(fit3)[1] +
   fixef(fit3)[6]*30
 ```
 
-    ## [1] 5.234857
+    ## [1] 5.232832
 
 If you want a full expression of the model uncertaintly in terms of the shape of the posterior distribution and the 95% intervals, you'll probably just want to use `posterior_samples()` and do a little data processing.
 
@@ -636,7 +634,8 @@ post <- posterior_samples(fit3)
 post <-
   post %>%
   mutate(our_posterior = b_Intercept + b_negemot*4 + b_posemot*4 + b_ideology*2 + b_sex*1 + b_age*30)
-  
+
+# This intermediary step will make it easier to specify the break points and their labels for the x-axis  
 post_summary <-
   quantile(post$our_posterior, probs = c(.025, .5, .975)) %>% 
   as_tibble() %>% 
@@ -659,7 +658,7 @@ ggplot(data = post,
 
 ![](Chapter_02_files/figure-markdown_github/unnamed-chunk-36-1.png)
 
-In the text, Hayes shows that individuals based on these two conditions would be expected to differ by 0.441 (i.e., 5.244 - 4.803 = 0.441). That's fine if you're only working with OLS point estimates. But a proper Bayesian approach would express the difference in terms of an entire poster distribution, or at least a point estimate accompanied by some sort of intervals. Here we'll just work with the posterior to create a difference distribution. You could do that with a little deft `posterior_samples()` wrangling. Here we'll employ `fitted()`.
+In the text, Hayes showed that individuals based on these two profiles would be expected to differ by 0.441 (i.e., 5.244 - 4.803 = 0.441). That's fine if you're only working with OLS point estimates. But a proper Bayesian approach would express the difference in terms of an entire poster distribution, or at least a point estimate accompanied by some sort of intervals. Here we'll just work with the posterior to create a difference distribution. You could do that with a little deft `posterior_samples()` wrangling. Here we'll employ `fitted()`.
 
 ``` r
 nd <-
@@ -726,15 +725,15 @@ fixef(fit3_z)[-1, ] %>% round(3)
 ```
 
     ##            Estimate Est.Error   Q2.5  Q97.5
-    ## negemot_z     0.495     0.028  0.440  0.551
-    ## posemot_z    -0.026     0.028 -0.081  0.028
-    ## ideology_z   -0.242     0.029 -0.300 -0.185
+    ## negemot_z     0.495     0.030  0.438  0.554
+    ## posemot_z    -0.027     0.028 -0.082  0.028
+    ## ideology_z   -0.242     0.030 -0.303 -0.183
     ## sex_z        -0.004     0.028 -0.059  0.052
-    ## age_z        -0.016     0.029 -0.073  0.042
+    ## age_z        -0.016     0.029 -0.073  0.041
 
 Our coefficients match up nicely with those in the text. Just as with Hayes's OLS estimates, we should not attempt to interpret the standardized `sex_z` coefficient from our Bayesian model.
 
-Here's how we'd fit a partially standardized model--a model in which all variables except for `sex` are standardized.
+Here's how we'd fit a *partially*-standardized model--a model in which all variables except for `sex` are standardized.
 
 ``` r
 fit3_z_p <- 
@@ -744,21 +743,21 @@ fit3_z_p <-
          chains = 4, cores = 4)
 ```
 
-And here are the coefficient summaries, including the `Intercept`, for the *partially*-standardized model.
+And here are the coefficient summaries, including the `Intercept`, for the partially-standardized model.
 
 ``` r
 fixef(fit3_z_p) %>% round(3)
 ```
 
     ##            Estimate Est.Error   Q2.5  Q97.5
-    ## Intercept     0.004     0.038 -0.070  0.077
-    ## negemot_z     0.495     0.030  0.438  0.555
-    ## posemot_z    -0.026     0.027 -0.082  0.028
-    ## ideology_z   -0.242     0.030 -0.300 -0.184
-    ## sex          -0.008     0.054 -0.112  0.102
-    ## age_z        -0.017     0.029 -0.073  0.039
+    ## Intercept     0.004     0.039 -0.070  0.081
+    ## negemot_z     0.495     0.030  0.437  0.555
+    ## posemot_z    -0.027     0.027 -0.080  0.026
+    ## ideology_z   -0.243     0.030 -0.301 -0.184
+    ## sex          -0.007     0.057 -0.120  0.104
+    ## age_z        -0.015     0.028 -0.072  0.038
 
-As Hayes wrote, now `sex` = -0.008 has a sensible interpretation. "We can say that men and women differ by \[-0.008\] standard deviations in their support for government action when all other variables in the model are held constant (p. 53)."
+As Hayes wrote, now `sex` = -0.007 has a sensible interpretation. "We can say that men and women differ by \[-0.007\] standard deviations in their support for government action when all other variables in the model are held constant (p. 53)."
 
 On page 54, Hayes gave us the equation to transform unstandardized coefficients to standardized ones:
 
@@ -771,21 +770,21 @@ Let's give it a whirl with `negemot`.
 fixef(fit3_z)["negemot_z", "Estimate"]
 ```
 
-    ## [1] 0.495402
+    ## [1] 0.4952634
 
 ``` r
 # Here's the coefficient for `negemot` from the unstandardized model, `fit3`
 fixef(fit3)["negemot", "Estimate"]
 ```
 
-    ## [1] 0.4413384
+    ## [1] 0.440769
 
 ``` r
 # And here we use Hayes's formula to standardize the unstandardized coefficient
 fixef(fit3)["negemot", "Estimate"]*(sd(glbwarm$negemot)/sd(glbwarm$govact))
 ```
 
-    ## [1] 0.4958377
+    ## [1] 0.4951979
 
 Looks like we got it within rounding error--pretty good!
 
@@ -815,22 +814,22 @@ posterior_samples(fit3) %>%
     ## # A tibble: 2 x 5
     ##   key                    mean     sd    ll    ul
     ##   <chr>                 <dbl>  <dbl> <dbl> <dbl>
-    ## 1 b_negemot_z           0.495 0.0280 0.440 0.551
-    ## 2 hand_made_b_negemot_z 0.496 0.0300 0.437 0.553
+    ## 1 b_negemot_z           0.495 0.0300 0.438 0.554
+    ## 2 hand_made_b_negemot_z 0.495 0.0290 0.438 0.554
 
 So our summary confirms that we can apply Hayes's formula to a `posterior_samples()` column in order to get fuller summary statistics for a hand-converted standardized coefficient. This would be in full compliance with, say, APA recommendations to include 95% intervals with all effect sizes--the standardized regression coefficient being the effect size, here.
 
 2.5 Measures of model fit
 -------------------------
 
-In the Bayesian world, we don't tend to appeal to the *S**S*<sub>*r**e**s**i**d**u**a**l*</sub>, the *M**S*<sub>*r**e**s**i**d**u**a**l*</sub>, or the standard error of estimate. We do sometimes, however, appeal to the *R*<sup>2</sup>. I'm not going to go into the technical details here, but you should be aware that the Bayesian *R*<sup>2</sup> is not calculated the same as the OLS *R*<sup>2</sup> is. If you want to dive in, check out the paper by [Gelman, Goodrich, Gabry, and Ali](https://github.com/jgabry/bayes_R2/blob/master/bayes_R2.pdf). Here's how to get it in brms.
+In the Bayesian world, we don't tend to appeal to the *SS<sub>residual</sub>*, the *MS<sub>residual</sub>*, or the standard error of estimate. We do sometimes, however, appeal to the *R*<sup>2</sup>. I'm not going to go into the technical details here, but you should be aware that the Bayesian *R*<sup>2</sup> is not calculated the same as the OLS *R*<sup>2</sup> is. If you want to dive in, check out the paper by [Gelman, Goodrich, Gabry, and Ali](https://github.com/jgabry/bayes_R2/blob/master/bayes_R2.pdf). Here's how to get it in brms.
 
 ``` r
 bayes_R2(fit3, summary = T) %>% round(digits = 3)
 ```
 
     ##    Estimate Est.Error  Q2.5 Q97.5
-    ## R2    0.389      0.02 0.349 0.426
+    ## R2    0.388     0.021 0.347 0.427
 
 Happily, it comes with 95% intervals, which will make the editors at APA journals happy. If you want to go beyond summary statistics and take a look at the full posterior, just set `summary = F` and data wrangle and plot as usual.
 
@@ -966,7 +965,7 @@ posterior_samples(fit3) %>%
   scale_x_continuous(breaks = posterior_interval(fit3)["b_negemot", ] %>% as.double(),
                      labels = posterior_interval(fit3)["b_negemot", ] %>% as.double() %>% round(digits = 2) %>% as.character()) +
   scale_y_continuous(NULL, breaks = NULL) +
-  labs(subtitle = "The most probable values for our b_negemot parameter are the ones around the peak of the\ndensity. For convenience, the dashed lines denote the 95% credible intervals. Sure, you could\nask yourself, 'Is zero within those intervals?' But with such rich output, that's such an\nimpoverished question to ask.") +
+  labs(subtitle = "The most probable values for our b_negemot parameter are the ones around the peak of the\ndensity. For convenience, the dashed lines denote the 95% credible intervals. Sure, you could\nask yourself, 'Is zero within those intervals?' But with such rich output, that seems like an\nimpoverished question to ask.") +
   theme_bw()
 ```
 
@@ -974,14 +973,14 @@ posterior_samples(fit3) %>%
 
 ### Interval estimation.
 
-Within the Bayesian paradigm, we don't typically use 95% intervals based on *b*<sub>*i*</sub> ± *t*<sub>*c*%</sub>*s**e*<sub>*b*<sub>*i*</sub></sub>. With the brms package, we typically use percentile-based intervals. Take the 95% credible intervals for the `negemot` coefficient from model `fit3`:
+Within the Bayesian paradigm, we don't typically use 95% intervals based on the typical frequentist formula. With the brms package, we typically use percentile-based intervals. Take the 95% credible intervals for the `negemot` coefficient from model `fit3`:
 
 ``` r
 posterior_interval(fit3)["b_negemot", ]
 ```
 
     ##      2.5%     97.5% 
-    ## 0.3889769 0.4919195
+    ## 0.3899310 0.4929679
 
 We actually get those intervals with the simple use of the base R `quantile()` function.
 
@@ -992,11 +991,11 @@ posterior_samples(fit3) %>%
 ```
 
     ##   the_2.5_percentile the_97.5_percentile
-    ## 1          0.3889769           0.4919195
+    ## 1           0.389931           0.4929679
 
 The consequence of this is that our Bayesian credible intervals aren't necessarily symmetric. Which is fine because the posterior distribution for a given parameter isn't always symmetric.
 
-But not all Bayesian intervals are percentile-based. John Kruschke, for example, often recommends highest posterior density intervals in [his work](http://www.indiana.edu/~kruschke/DoingBayesianDataAnalysis/). The brms package doesn't have a convenience function for these, but you can compute them with help from the [HDInterval package](https://cran.r-project.org/web/packages/HDInterval/index.html).
+But not all Bayesian intervals are percentile based. John Kruschke, for example, often recommends highest posterior density intervals in [his work](http://www.indiana.edu/~kruschke/DoingBayesianDataAnalysis/). The brms package doesn't have a convenience function for these, but you can compute them with help from the [HDInterval package](https://cran.r-project.org/web/packages/HDInterval/index.html).
 
 ``` r
 library(HDInterval)
@@ -1005,7 +1004,7 @@ hdi(posterior_samples(fit3)[ , "b_negemot"], credMass = .95)
 ```
 
     ##     lower     upper 
-    ## 0.3889853 0.4920029 
+    ## 0.3895891 0.4924305 
     ## attr(,"credMass")
     ## [1] 0.95
 
@@ -1024,16 +1023,16 @@ print(fit3, prob = .8)
     ## 
     ## Population-Level Effects: 
     ##           Estimate Est.Error l-80% CI u-80% CI Eff.Sample Rhat
-    ## Intercept     4.06      0.21     3.79     4.32       4000 1.00
-    ## negemot       0.44      0.03     0.41     0.48       4000 1.00
+    ## Intercept     4.06      0.20     3.80     4.31       4000 1.00
+    ## negemot       0.44      0.03     0.41     0.47       4000 1.00
     ## posemot      -0.03      0.03    -0.06     0.01       4000 1.00
     ## ideology     -0.22      0.03    -0.25    -0.18       4000 1.00
-    ## sex          -0.01      0.08    -0.11     0.08       4000 1.00
+    ## sex          -0.01      0.08    -0.11     0.09       4000 1.00
     ## age          -0.00      0.00    -0.00     0.00       4000 1.00
     ## 
     ## Family Specific Parameters: 
     ##       Estimate Est.Error l-80% CI u-80% CI Eff.Sample Rhat
-    ## sigma     1.07      0.03     1.03     1.10       4000 1.00
+    ## sigma     1.07      0.03     1.04     1.10       4000 1.00
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -1049,14 +1048,14 @@ posterior_summary(fit3, probs = c(.9, .8, .7, .6, .4, .3, .2, .1)) %>%
 ```
 
     ##             Estimate Est.Error      Q90      Q80      Q70      Q60      Q40      Q30      Q20      Q10
-    ## b_Intercept     4.06      0.21     4.32     4.23     4.17     4.11     4.01     3.95     3.89     3.79
-    ## b_negemot       0.44      0.03     0.48     0.46     0.45     0.45     0.43     0.43     0.42     0.41
-    ## b_posemot      -0.03      0.03     0.01     0.00    -0.01    -0.02    -0.03    -0.04    -0.05    -0.06
-    ## b_ideology     -0.22      0.03    -0.18    -0.19    -0.20    -0.21    -0.23    -0.23    -0.24    -0.25
-    ## b_sex          -0.01      0.08     0.08     0.05     0.03     0.01    -0.03    -0.05    -0.07    -0.11
+    ## b_Intercept     4.06      0.20     4.31     4.23     4.17     4.12     4.02     3.96     3.90     3.80
+    ## b_negemot       0.44      0.03     0.47     0.46     0.45     0.45     0.43     0.43     0.42     0.41
+    ## b_posemot      -0.03      0.03     0.01     0.00    -0.01    -0.02    -0.04    -0.04    -0.05    -0.06
+    ## b_ideology     -0.22      0.03    -0.18    -0.20    -0.20    -0.21    -0.22    -0.23    -0.24    -0.25
+    ## b_sex          -0.01      0.08     0.09     0.06     0.03     0.01    -0.03    -0.05    -0.07    -0.11
     ## b_age           0.00      0.00     0.00     0.00     0.00     0.00     0.00     0.00     0.00     0.00
-    ## sigma           1.07      0.03     1.10     1.09     1.08     1.07     1.06     1.05     1.05     1.03
-    ## lp__        -1215.86      1.88 -1213.75 -1214.25 -1214.69 -1215.09 -1216.02 -1216.58 -1217.27 -1218.33
+    ## sigma           1.07      0.03     1.10     1.09     1.08     1.07     1.06     1.05     1.05     1.04
+    ## lp__        -1215.82      1.86 -1213.76 -1214.23 -1214.66 -1215.07 -1215.95 -1216.54 -1217.21 -1218.32
 
 And of course, you can use multiple interval summaries when you `summarize()` the output from `posterior_samples()`. E.g.,
 
@@ -1077,10 +1076,10 @@ posterior_samples(fit3) %>%
     ##   <chr>            <dbl>      <dbl>      <dbl>      <dbl>
     ## 1 b_age          -0.0100     0          0          0     
     ## 2 b_ideology     -0.270     -0.160     -0.240     -0.200 
-    ## 3 b_Intercept     3.65       4.46       3.92       4.20  
+    ## 3 b_Intercept     3.67       4.46       3.93       4.20  
     ## 4 b_negemot       0.390      0.490      0.420      0.460 
     ## 5 b_posemot      -0.0800     0.0300    -0.0500    -0.0100
-    ## 6 b_sex          -0.160      0.140     -0.0600     0.0400
+    ## 6 b_sex          -0.160      0.150     -0.0600     0.0400
 
 Throughout this project, I'm going to be lazy and default to conventional 95% intervals, with occasional appearances of 50% intervals.
 
@@ -1130,12 +1129,12 @@ head(R2s)
     ## # A tibble: 6 x 2
     ##   R2_fit3 R2_fit4
     ##     <dbl>   <dbl>
-    ## 1   0.393   0.191
-    ## 2   0.358   0.142
-    ## 3   0.394   0.199
-    ## 4   0.375   0.140
-    ## 5   0.363   0.189
-    ## 6   0.420   0.172
+    ## 1   0.418   0.166
+    ## 2   0.387   0.180
+    ## 3   0.377   0.154
+    ## 4   0.383   0.200
+    ## 5   0.382   0.165
+    ## 6   0.407   0.185
 
 With our `R2s` tibble in hand, we're ready to plot.
 
@@ -1190,9 +1189,9 @@ l_fit3
     ## Computed from 4000 by 815 log-likelihood matrix
     ## 
     ##          Estimate   SE
-    ## elpd_loo  -1213.9 22.7
-    ## p_loo         7.7  0.6
-    ## looic      2427.8 45.5
+    ## elpd_loo  -1213.8 22.7
+    ## p_loo         7.6  0.6
+    ## looic      2427.7 45.5
     ## ------
     ## Monte Carlo SE of elpd_loo is 0.0.
     ## 
@@ -1211,16 +1210,16 @@ l_fit3$diagnostics %>%
     ## # A tibble: 815 x 2
     ##    pareto_k n_eff
     ##       <dbl> <dbl>
-    ##  1 -0.0186   3972
-    ##  2 -0.0835   3992
-    ##  3  0.0588   3886
-    ##  4  0.181    2429
-    ##  5 -0.00311  3996
-    ##  6  0.00702  3964
-    ##  7 -0.0792   3936
-    ##  8 -0.0902   3993
-    ##  9 -0.0321   3994
-    ## 10 -0.118    3987
+    ##  1   0.0570  3971
+    ##  2   0.0519  3992
+    ##  3   0.0984  3883
+    ##  4   0.0650  2422
+    ##  5  -0.0952  3996
+    ##  6   0.0188  3965
+    ##  7  -0.0551  3937
+    ##  8  -0.0131  3993
+    ##  9   0.0444  3994
+    ## 10  -0.0264  3987
     ## # ... with 805 more rows
 
 The `pareto_k` values can be used to examine cases that are overly-influential on the model parameters, something akin to a Cook's *D*<sub>*i*</sub>. See, for example [this discussion on stackoverflow.com](https://stackoverflow.com/questions/39578834/linear-model-diagnostics-for-bayesian-models-using-rstan/39595436) in which several members of the [Stan team](http://mc-stan.org) weighed in. The issue is also discussed in [this paper](https://arxiv.org/abs/1507.04544) and in [this lecture by Aki Vehtari](https://www.youtube.com/watch?v=FUROJM3u5HQ&feature=youtu.be&a=).
@@ -1234,9 +1233,9 @@ compare_ic(l_fit3, l_fit4)
 ```
 
     ##               LOOIC    SE
-    ## fit3        2427.80 45.50
-    ## fit4        2665.17 41.10
-    ## fit3 - fit4 -237.37 31.83
+    ## fit3        2427.68 45.46
+    ## fit4        2664.83 41.06
+    ## fit3 - fit4 -237.15 31.75
 
 We also get a standard error. Here it looks like `fit3` was substantially better, in terms of LOO-values, than `fit4`.
 
@@ -1294,10 +1293,10 @@ fit5 <-
 fixef(fit5)
 ```
 
-    ##              Estimate  Est.Error      Q2.5      Q97.5
-    ## Intercept   4.6047397 0.09192306  4.421902  4.7837561
-    ## Democrat    0.4602426 0.11525769  0.229980  0.6863669
-    ## Republican -0.6810575 0.12166362 -0.919737 -0.4472906
+    ##              Estimate  Est.Error       Q2.5      Q97.5
+    ## Intercept   4.6061369 0.09282498  4.4221073  4.7884125
+    ## Democrat    0.4589819 0.11401725  0.2342135  0.6817536
+    ## Republican -0.6797834 0.12227651 -0.9209589 -0.4440390
 
 The intercept is the stand-in for Independents and the other two coefficients are difference scores.
 
@@ -1308,9 +1307,9 @@ bayes_R2(fit5) %>% round(digits = 3)
 ```
 
     ##    Estimate Est.Error  Q2.5 Q97.5
-    ## R2    0.133     0.021 0.093 0.174
+    ## R2    0.132      0.02 0.094 0.171
 
-There's no need to compute an *F* test on our *R*<sup>2</sup>. The posterior mean and it's 95% intervals are well away from zero. But you could use your `bayes_R2(fit5, summary = F)` plotting skills from above to more fully inspect the posterior if you'd like.
+There's no need to compute an *F*-test on our *R*<sup>2</sup>. The posterior mean and it's 95% intervals are well away from zero. But you could use your `bayes_R2(fit5, summary = F)` plotting skills from above to more fully inspect the posterior if you'd like.
 
 We could also use information criteria. One method would be to compare the WAIC or LOO value of `fit5` with an intercept-only model. First, we'll need to fit that model.
 
@@ -1328,9 +1327,9 @@ waic(fit5, fit6)
 ```
 
     ##                WAIC    SE
-    ## fit5        2707.24 40.14
-    ## fit6        2817.68 42.69
-    ## fit5 - fit6 -110.44 20.81
+    ## fit5        2707.19 40.21
+    ## fit6        2817.79 42.70
+    ## fit5 - fit6 -110.60 20.75
 
 The WAIC comparison suggests `fit5`, the one with the `partyid` dummies, is an improvement over the simple intercept-only model. Another way to compare the information criteria is with AIC-type weighting. The brms package offers a variety of weighting methods via the `model_weights()` function.
 
@@ -1341,7 +1340,7 @@ MWs
 ```
 
     ##         fit5         fit6 
-    ## 1.000000e+00 1.044231e-24
+    ## 1.000000e+00 9.622496e-25
 
 If you're not a fan of scientific notation, you can put the results in a tibble and look at them on a plot.
 
@@ -1385,8 +1384,7 @@ Note. The analyses in this document were done with:
 -   readr 1.1.1
 -   tidyverse 1.2.1
 -   rstan 2.17.3
--   rethinking 1.59
--   brms 2.3.1
+-   brms 2.3.2
 -   broom 0.4.3
 -   HDInterval 0.1.3
 -   loo 2.0.0

@@ -496,7 +496,7 @@ post %>%
 
 Note how nicely that distribution corresponds to the output in the lower left corner of Hayes's Figure 7.8. If we wanted the values for other values of `skeptic` (e.g., 2.8 and 5.2 as in the text), we'd just rinse, wash, and repeat. A nice quality of this method is it requires you to work explicitly with the model formula. But it's also clunky if you want to do this over many values. The `fitted()` function offers an alternative.
 
-Recall how the default `fitted()` settings are to return summaries of a model's $Y$-variable given values of the predictor variables. In the previous section, we put our prefered `frame` and `skeptic` values into a data object named `nd` and used the `newdata` argument to push those values through `fitted()`. Buy default, this yielded the typical posterior mean, *SD*s, and 95% intervals. However, if one sets `summary = F`, the output will differ. First. Let's revisit what `nd` looks like.
+Recall how the default `fitted()` settings are to return summaries of a model's $Y$-variable given values of the predictor variables. In the previous section we put our prefered `frame` and `skeptic` values into a data object named `nd` and used the `newdata` argument to push those values through `fitted()`. Buy default, this yielded the typical posterior means, *SD*s, and 95% intervals for the predictions. However, if one sets `summary = F`, the output will differ. First. Let's revisit what `nd` looks like.
 
 ```{r}
 (
@@ -577,7 +577,7 @@ The JN technique generalizes this approach over many values of $W$ (i.e., `skept
 
 #### Implementation in ~~PROCESS~~ brms.
 
-Since Figure 7.9 had `skeptic` values ranging from 1 to 6 with ticks on the 0.5s, we’ll use a similar approach for our version. We’ll estimate posterior samples with `fitted()` for `skeptic` values ranging from .5 to 6.5, one for each 0.5—13 in total. But since we have to levels of `frame` (i.e., 0 and 1), that really gives us 26. And we don’t just want 26 summaries; we want full posterior distributions for each of those 26. 
+Since Figure 7.9 had `skeptic` values ranging from 1 to 6 with ticks on the 0.5s, we’ll use a similar approach for our version. We’ll estimate posterior samples with `fitted()` for `skeptic` values ranging from .5 to 6.5, one for each 0.5—13 in total. But since we have two levels of `frame` (i.e., 0 and 1), that really gives us 26. And we don’t just want 26 summaries; we want full posterior distributions for each of those 26. 
 
 We've got a lot of moving parts in the code, below. To help make sure everything adds up, we'll save several important values as R objects.
 
@@ -623,7 +623,7 @@ f_model3 %>%
 
 [Note. I got the `atop()` trick for the label for the y-axis from [Drew Steen's answer to this stackoverflow question](https://stackoverflow.com/questions/13223846/ggplot2-two-line-label-with-expression?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa).]
 
-This isn’t quite our version of Figure 7.9, but I’m hoping it’ll add some pedagogical value for what we’re doing. Since we used `summary = F` in `fitted()`, we got full posterior distributions for each of our 26 conditions. ~Because Figure 7.9 is all about differences between each `frame` pair across the various values of `skeptic`~, we needed to make a `difference` score for each pair; this is what we did with the last `mutate()` line before the plot code. This initial version of the plot shows the full posterior distribution for each `difference` score. The posteriors are depicted with violin plots, which are density plots set on their side and symmetrically reflected as if by a mirror to give a pleasing leaf- or violin-like shape (though [beware](https://twitter.com/naomicaselli/status/973601256609599488?lang=en)). The light dots and vertical lines are the posterior medians and 95% intervals for each. 
+This isn’t quite our version of Figure 7.9, but I’m hoping it’ll add some pedagogical value for what we’re doing. Since we used `summary = F` in `fitted()`, we got full posterior distributions for each of our 26 conditions. *Because Figure 7.9 is all about differences between each `frame` pair across the various values of `skeptic`*, we needed to make a `difference` score for each pair; this is what we did with the last `mutate()` line before the plot code. This initial version of the plot shows the full posterior distribution for each `difference` score. The posteriors are depicted with violin plots, which are density plots set on their side and symmetrically reflected as if by a mirror to give a pleasing leaf- or violin-like shape (though [beware](https://twitter.com/naomicaselli/status/973601256609599488?lang=en)). The light dots and vertical lines are the posterior medians and 95% intervals for each. 
 
 Going from left to right, it appears we have a clearly emerging trend. We can more simply express the trend by summarizing each posterior with medians and 95% intervals.
 
@@ -920,7 +920,7 @@ Note. The analyses in this document were done with:
 * directlabels 2017.03.31
 * readr        1.1.1
 * rstan        2.17.3
-* brms         2.3.1
+* brms         2.3.2
 
 ## Reference
 

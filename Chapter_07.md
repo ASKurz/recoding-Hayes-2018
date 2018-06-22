@@ -1,7 +1,7 @@
 Chapter 07
 ================
 A Solomon Kurz
-2018-06-10
+2018-06-22
 
 7.1 Conditional and unconditional effects
 -----------------------------------------
@@ -165,12 +165,12 @@ print(model1)
     ## 
     ## Population-Level Effects: 
     ##           Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-    ## Intercept     2.80      0.09     2.63     2.98       4000 1.00
-    ## frame         0.14      0.13    -0.12     0.39       4000 1.00
+    ## Intercept     2.80      0.09     2.63     2.97       3703 1.00
+    ## frame         0.14      0.13    -0.11     0.38       3835 1.00
     ## 
     ## Family Specific Parameters: 
     ##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
-    ## sigma     0.93      0.05     0.85     1.03       4000 1.00
+    ## sigma     0.94      0.05     0.85     1.03       3200 1.00
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -182,7 +182,7 @@ The 'Estimate' (i.e., posterior mean) of the model intercept is the expected `ju
 fixef(model1)["Intercept", 1] + fixef(model1)["frame", 1]
 ```
 
-    ## [1] 2.938276
+    ## [1] 2.936849
 
 which matches up nicely with the equation on page 233. But this wouldn't be very Bayesian of us. It'd be more satisfying if we had an expression of the uncertainty in the value. For that, we'll follow our usual practice of extracting the posterior samples, making nicely-named vectors, and summarizing a bit.
 
@@ -204,8 +204,8 @@ post %>%
     ## # A tibble: 2 x 3
     ##   key          mean     sd
     ##   <chr>       <dbl>  <dbl>
-    ## 1 when_x_is_0  2.80 0.0900
-    ## 2 when_x_is_1  2.94 0.0930
+    ## 1 when_x_is_0  2.80 0.0880
+    ## 2 when_x_is_1  2.94 0.0920
 
 Hayes referenced a *t*-test and accompanying *p*-value in the lower part of page 233. We, of course, aren't going to do that. But we do have the 95% intervals in our `print()` output, above, which we can also look at like so.
 
@@ -214,7 +214,7 @@ posterior_interval(model1)["b_frame", ]
 ```
 
     ##       2.5%      97.5% 
-    ## -0.1161303  0.3891349
+    ## -0.1072256  0.3848130
 
 And we can always plot.
 
@@ -262,23 +262,23 @@ posterior_summary(model2)
 ```
 
     ##                 Estimate  Est.Error         Q2.5        Q97.5
-    ## b_Intercept    2.1335389 0.12644547    1.8756624    2.3822521
-    ## b_frame        0.1149532 0.11779687   -0.1151141    0.3477120
-    ## b_skeptic      0.2007450 0.02888547    0.1445789    0.2586466
-    ## sigma          0.8415370 0.04201087    0.7647312    0.9293922
-    ## lp__        -268.3888441 1.43509061 -271.9151520 -266.5944128
+    ## b_Intercept    2.1297453 0.12674223    1.8758036    2.3773340
+    ## b_frame        0.1169772 0.11527257   -0.1089582    0.3475533
+    ## b_skeptic      0.2011187 0.02901132    0.1437881    0.2588916
+    ## sigma          0.8413488 0.04147550    0.7647096    0.9286239
+    ## lp__        -268.3342433 1.41351265 -271.8987410 -266.5615502
 
 ``` r
 posterior_summary(model3)
 ```
 
     ##                     Estimate  Est.Error          Q2.5        Q97.5
-    ## b_Intercept        2.4448924 0.14666882    2.15714846    2.7313527
-    ## b_frame           -0.5560463 0.21601327   -0.98755724   -0.1319012
-    ## b_skeptic          0.1066954 0.03750713    0.03049575    0.1801389
-    ## b_frame:skeptic    0.1996030 0.05483132    0.09010363    0.3082022
-    ## sigma              0.8174598 0.04097002    0.74097162    0.9015029
-    ## lp__            -262.3302517 1.60425064 -266.37919839 -260.1915584
+    ## b_Intercept        2.4482452 0.15064352    2.15246315    2.7381083
+    ## b_frame           -0.5599632 0.21757385   -0.98250197   -0.1362767
+    ## b_skeptic          0.1062929 0.03796850    0.03206428    0.1814175
+    ## b_frame:skeptic    0.2003722 0.05460647    0.09482385    0.3064694
+    ## sigma              0.8168505 0.03979656    0.74393922    0.8986886
+    ## lp__            -262.3431410 1.59135215 -266.31283479 -260.2405235
 
 Just focusing on our primary model, `model3`, here's another way to look at the coefficients.
 
@@ -359,12 +359,12 @@ loo(model1, model2, model3)
 ```
 
     ##                  LOOIC    SE
-    ## model1          572.30 24.02
-    ## model2          529.54 22.42
-    ## model3          518.16 21.73
-    ## model1 - model2  42.76 16.08
-    ## model1 - model3  54.14 18.92
-    ## model2 - model3  11.38  8.20
+    ## model1          572.23 24.00
+    ## model2          529.29 22.41
+    ## model3          518.21 21.74
+    ## model1 - model2  42.94 16.12
+    ## model1 - model3  54.02 18.93
+    ## model2 - model3  11.08  8.21
 
 The point estimate for both multivariable models were clearly lower than that for `model1`. The point estimate for the moderation model, `model3`, was within the double-digit range lower than that for `model2`, which typically suggests better fit. But notice how wide the standard error was. There's a lot of uncertainty, there. Hopefully this isn't surprising. Our *R*<sup>2</sup> difference was small and uncertain, too. We can also compare them with AIC-type model weighting, which you can learn more about [starting at this point in this lecture](https://www.youtube.com/watch?v=t0pRuy1_190) or [this related vignette for the loo package](https://cran.r-project.org/web/packages/loo/vignettes/loo2-weights.html). Here we'll keep things simple and weight with the LOO.
 
@@ -374,7 +374,7 @@ model_weights(model1, model2, model3,
 ```
 
     ##       model1       model2       model3 
-    ## 1.749585e-12 3.368025e-03 9.966320e-01
+    ## 1.857423e-12 3.909679e-03 9.960903e-01
 
 The `model_weights()` results put almost all the relative weight on `model3`. This doesn't mean `model3` is the "true model" or anything like that. It just suggests that it's the better of the three with respect to the data.
 
@@ -397,8 +397,8 @@ post %>%
     ## # A tibble: 3 x 3
     ##   key      mean    sd
     ##   <chr>   <dbl> <dbl>
-    ## 1 if_2   -0.157 0.135
-    ## 2 if_3.5  0.143 0.113
+    ## 1 if_2   -0.159 0.137
+    ## 2 if_3.5  0.141 0.114
     ## 3 if_5    0.442 0.144
 
 ### Estimation using ~~PROCESS~~ brms.
@@ -431,10 +431,10 @@ fixef(model4)
 ```
 
     ##                  Estimate  Est.Error        Q2.5     Q97.5
-    ## Intercept       2.8050548 0.07884645  2.65282672 2.9601400
-    ## frame           0.1174404 0.11047703 -0.09681649 0.3321827
-    ## skeptic_c       0.1056663 0.03923251  0.03049274 0.1829100
-    ## frame:skeptic_c 0.1998455 0.05593978  0.09026228 0.3092418
+    ## Intercept       2.8059195 0.07632625  2.65883374 2.9577305
+    ## frame           0.1181463 0.11218339 -0.10164186 0.3331780
+    ## skeptic_c       0.1041926 0.03850465  0.02850405 0.1778857
+    ## frame:skeptic_c 0.2013191 0.05519692  0.09082900 0.3101923
 
 Here are the *R*<sup>2</sup> distributions for `model3` and `model4`. They're the same within simulaiton variance.
 
@@ -442,15 +442,15 @@ Here are the *R*<sup>2</sup> distributions for `model3` and `model4`. They're th
 bayes_R2(model3) %>% round(digits = 3)
 ```
 
-    ##    Estimate Est.Error  Q2.5 Q97.5
-    ## R2     0.25     0.044 0.163  0.33
+    ##    Estimate Est.Error Q2.5 Q97.5
+    ## R2     0.25     0.045 0.16 0.336
 
 ``` r
 bayes_R2(model4) %>% round(digits = 3)
 ```
 
-    ##    Estimate Est.Error  Q2.5 Q97.5
-    ## R2    0.249     0.043 0.162 0.331
+    ##    Estimate Est.Error Q2.5 Q97.5
+    ## R2    0.248     0.044 0.16 0.333
 
 If you're bothered by the differences resulting from sampling variation, you might increase the number of HMC iterations from the 2000-per-chain default. Doing so might look something like this:
 
@@ -488,10 +488,10 @@ fixef(model5)
 ```
 
     ##                     Estimate  Est.Error        Q2.5     Q97.5
-    ## Intercept          2.8640519 0.05620612  2.75215498 2.9731624
-    ## frame_.5           0.1182232 0.11158585 -0.09957677 0.3404219
-    ## skeptic_c          0.2055159 0.02836415  0.15109033 0.2602847
-    ## frame_.5:skeptic_c 0.1998748 0.05529945  0.09105178 0.3068571
+    ## Intercept          2.8661017 0.05645704  2.75494255 2.9764390
+    ## frame_.5           0.1161641 0.11324763 -0.10467364 0.3353905
+    ## skeptic_c          0.2067376 0.02749946  0.15243027 0.2614596
+    ## frame_.5:skeptic_c 0.2007378 0.05670146  0.08877061 0.3112123
 
 7.3 Visualizing moderation
 --------------------------
@@ -544,12 +544,12 @@ fitted(model3, newdata = nd)
 ```
 
     ##      Estimate  Est.Error     Q2.5    Q97.5
-    ## [1,] 2.615605 0.10131519 2.414102 2.815509
-    ## [2,] 2.378923 0.10699801 2.170384 2.584912
-    ## [3,] 2.743639 0.08097119 2.582782 2.905581
-    ## [4,] 2.746481 0.08387377 2.581205 2.907169
-    ## [5,] 2.999708 0.10627363 2.798242 3.209254
-    ## [6,] 3.481597 0.10927310 3.265435 3.696920
+    ## [1,] 2.618314 0.10355414 2.413240 2.819588
+    ## [2,] 2.378946 0.11042785 2.157919 2.596982
+    ## [3,] 2.745865 0.08117728 2.590282 2.907255
+    ## [4,] 2.746944 0.08590411 2.582107 2.916037
+    ## [5,] 3.000968 0.10381626 2.801510 3.204494
+    ## [6,] 3.482940 0.11040603 3.273791 3.697742
 
 When using the default `summary = TRUE` settings in `fitted()`, the function returns posterior means, *SD*s and 95% intervals for *Y* based on each row in the `nd` data we specified in the `newdata = nd` argument. You don't have to name your newdata `nd` or anything like that; it's just my convention.
 
@@ -648,7 +648,7 @@ post %>%
 
 Note how nicely that distribution corresponds to the output in the lower left corner of Hayes's Figure 7.8. If we wanted the values for other values of `skeptic` (e.g., 2.8 and 5.2 as in the text), we'd just rinse, wash, and repeat. A nice quality of this method is it requires you to work explicitly with the model formula. But it's also clunky if you want to do this over many values. The `fitted()` function offers an alternative.
 
-Recall how the default `fitted()` settings are to return summaries of a model's *Y*-variable given values of the predictor variables. In the previous section, we put our prefered `frame` and `skeptic` values into a data object named `nd` and used the `newdata` argument to push those values through `fitted()`. Buy default, this yielded the typical posterior mean, *SD*s, and 95% intervals. However, if one sets `summary = F`, the output will differ. First. Let's revisit what `nd` looks like.
+Recall how the default `fitted()` settings are to return summaries of a model's *Y*-variable given values of the predictor variables. In the previous section we put our prefered `frame` and `skeptic` values into a data object named `nd` and used the `newdata` argument to push those values through `fitted()`. Buy default, this yielded the typical posterior means, *SD*s, and 95% intervals for the predictions. However, if one sets `summary = F`, the output will differ. First. Let's revisit what `nd` looks like.
 
 ``` r
 (
@@ -681,19 +681,19 @@ f_model3 <-
 f_model3 %>% str()
 ```
 
-    ##  num [1:4000, 1:6] 2.62 2.51 2.67 2.6 2.44 ...
+    ##  num [1:4000, 1:6] 2.54 2.7 2.58 2.56 2.59 ...
 
 ``` r
 f_model3 %>% head()
 ```
 
     ##          [,1]     [,2]     [,3]     [,4]     [,5]     [,6]
-    ## [1,] 2.621827 2.762152 3.042802 2.451918 2.825106 3.571484
-    ## [2,] 2.507961 2.655178 2.949611 2.515939 2.894691 3.652196
-    ## [3,] 2.672695 2.759409 2.932836 2.264829 2.642955 3.399207
-    ## [4,] 2.601574 2.699800 2.896250 2.218775 2.658776 3.538779
-    ## [5,] 2.436474 2.621518 2.991608 2.386915 2.770403 3.537379
-    ## [6,] 2.637949 2.795058 3.109276 2.451253 2.758186 3.372052
+    ## [1,] 2.540620 2.726064 3.096953 2.206470 2.598397 3.382250
+    ## [2,] 2.697328 2.793916 2.987093 2.542054 2.823841 3.387414
+    ## [3,] 2.579388 2.670600 2.853024 2.338277 2.725825 3.500920
+    ## [4,] 2.562202 2.695336 2.961605 2.426720 2.782196 3.493149
+    ## [5,] 2.594305 2.720035 2.971497 2.491998 2.765151 3.311455
+    ## [6,] 2.534319 2.660602 2.913167 2.395666 2.753366 3.468766
 
 With `summary = F`, `fitted()` returned a matrix of 4000 rows (i.e., one for each posterior iteration) and 6 vectors (i.e., one for each row in our `nd` data). So now instead of summary information, we have a full expression of the uncertainty in terms of 4000 draws. If you prefer working within the tidyverse and plotting with ggplot2, matrices aren't the most useful data type. Let's wrangle a bit.
 
@@ -723,12 +723,12 @@ f_model3 %>% head()
     ## # A tibble: 6 x 5
     ##   skeptic        iter   `0`   `1` difference
     ##   <chr>         <int> <dbl> <dbl>      <dbl>
-    ## 1 skeptic = 1.6     1  2.62  2.45   -0.170  
-    ## 2 skeptic = 1.6     2  2.51  2.52    0.00798
-    ## 3 skeptic = 1.6     3  2.67  2.26   -0.408  
-    ## 4 skeptic = 1.6     4  2.60  2.22   -0.383  
-    ## 5 skeptic = 1.6     5  2.44  2.39   -0.0496 
-    ## 6 skeptic = 1.6     6  2.64  2.45   -0.187
+    ## 1 skeptic = 1.6     1  2.54  2.21     -0.334
+    ## 2 skeptic = 1.6     2  2.70  2.54     -0.155
+    ## 3 skeptic = 1.6     3  2.58  2.34     -0.241
+    ## 4 skeptic = 1.6     4  2.56  2.43     -0.135
+    ## 5 skeptic = 1.6     5  2.59  2.49     -0.102
+    ## 6 skeptic = 1.6     6  2.53  2.40     -0.139
 
 And here's a plot of what we've done.
 
@@ -761,9 +761,9 @@ f_model3  %>%
     ## # A tibble: 3 x 4
     ##   skeptic         median     ll     ul
     ##   <chr>            <dbl>  <dbl>  <dbl>
-    ## 1 skeptic = 1.6 -0.237   -0.528 0.0590
-    ## 2 skeptic = 2.8  0.00300 -0.225 0.228 
-    ## 3 skeptic = 5.2  0.481    0.190 0.774
+    ## 1 skeptic = 1.6 -0.236   -0.533 0.0560
+    ## 2 skeptic = 2.8  0.00100 -0.232 0.233 
+    ## 3 skeptic = 5.2  0.483    0.187 0.780
 
 ### The Johnson-Neyman technique.
 
@@ -771,7 +771,7 @@ The JN technique generalizes this approach over many values of *W* (i.e., `skept
 
 #### Implementation in ~~PROCESS~~ brms.
 
-Since Figure 7.9 had `skeptic` values ranging from 1 to 6 with ticks on the 0.5s, we’ll use a similar approach for our version. We’ll estimate posterior samples with `fitted()` for `skeptic` values ranging from .5 to 6.5, one for each 0.5—13 in total. But since we have to levels of `frame` (i.e., 0 and 1), that really gives us 26. And we don’t just want 26 summaries; we want full posterior distributions for each of those 26.
+Since Figure 7.9 had `skeptic` values ranging from 1 to 6 with ticks on the 0.5s, we’ll use a similar approach for our version. We’ll estimate posterior samples with `fitted()` for `skeptic` values ranging from .5 to 6.5, one for each 0.5—13 in total. But since we have two levels of `frame` (i.e., 0 and 1), that really gives us 26. And we don’t just want 26 summaries; we want full posterior distributions for each of those 26.
 
 We've got a lot of moving parts in the code, below. To help make sure everything adds up, we'll save several important values as R objects.
 
@@ -819,7 +819,7 @@ f_model3 %>%
 
 \[Note. I got the `atop()` trick for the label for the y-axis from [Drew Steen's answer to this stackoverflow question](https://stackoverflow.com/questions/13223846/ggplot2-two-line-label-with-expression?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa).\]
 
-This isn’t quite our version of Figure 7.9, but I’m hoping it’ll add some pedagogical value for what we’re doing. Since we used `summary = F` in `fitted()`, we got full posterior distributions for each of our 26 conditions. ~Because Figure 7.9 is all about differences between each `frame` pair across the various values of `skeptic`~, we needed to make a `difference` score for each pair; this is what we did with the last `mutate()` line before the plot code. This initial version of the plot shows the full posterior distribution for each `difference` score. The posteriors are depicted with violin plots, which are density plots set on their side and symmetrically reflected as if by a mirror to give a pleasing leaf- or violin-like shape (though [beware](https://twitter.com/naomicaselli/status/973601256609599488?lang=en)). The light dots and vertical lines are the posterior medians and 95% intervals for each.
+This isn’t quite our version of Figure 7.9, but I’m hoping it’ll add some pedagogical value for what we’re doing. Since we used `summary = F` in `fitted()`, we got full posterior distributions for each of our 26 conditions. *Because Figure 7.9 is all about differences between each `frame` pair across the various values of `skeptic`*, we needed to make a `difference` score for each pair; this is what we did with the last `mutate()` line before the plot code. This initial version of the plot shows the full posterior distribution for each `difference` score. The posteriors are depicted with violin plots, which are density plots set on their side and symmetrically reflected as if by a mirror to give a pleasing leaf- or violin-like shape (though [beware](https://twitter.com/naomicaselli/status/973601256609599488?lang=en)). The light dots and vertical lines are the posterior medians and 95% intervals for each.
 
 Going from left to right, it appears we have a clearly emerging trend. We can more simply express the trend by summarizing each posterior with medians and 95% intervals.
 
@@ -1080,16 +1080,16 @@ fixef(model6_low) %>% round(digits = 3)
 ```
 
     ##           Estimate Est.Error   Q2.5 Q97.5
-    ## Intercept    2.626     0.101  2.426 2.818
-    ## frame       -0.108     0.143 -0.385 0.172
+    ## Intercept    2.621     0.101  2.424 2.819
+    ## frame       -0.101     0.144 -0.391 0.180
 
 ``` r
 fixef(model6_high) %>% round(digits = 3)
 ```
 
     ##           Estimate Est.Error  Q2.5 Q97.5
-    ## Intercept    3.073     0.141 2.797 3.344
-    ## frame        0.476     0.208 0.052 0.890
+    ## Intercept    3.072     0.145 2.783 3.360
+    ## frame        0.472     0.203 0.063 0.867
 
 You can use `fitted()` to get the posterior means and other summaries for the two `frame` groups, by model.
 
@@ -1100,8 +1100,8 @@ fitted(model6_low,
 ```
 
     ##      Estimate Est.Error  Q2.5 Q97.5
-    ## [1,]    2.626     0.101 2.426 2.818
-    ## [2,]    2.518     0.103 2.322 2.719
+    ## [1,]    2.621     0.101 2.424 2.819
+    ## [2,]    2.520     0.104 2.315 2.716
 
 ``` r
 fitted(model6_high, 
@@ -1110,8 +1110,8 @@ fitted(model6_high,
 ```
 
     ##      Estimate Est.Error  Q2.5 Q97.5
-    ## [1,]    3.073     0.141 2.797 3.344
-    ## [2,]    3.549     0.147 3.255 3.853
+    ## [1,]    3.072     0.145 2.783 3.360
+    ## [2,]    3.545     0.146 3.266 3.839
 
 Do note that though brms 'Est.Error' is the posterior *SD* for the coefficient, it is not the same thing as descriptive statistic *SD* of a subset of the data. Thus, although our 'Estimates' correspond nicely to the mean values Hayes reported in the middle of page 264, his *SD*s will not match up with our 'Est.Error' values, and nor should they.
 
@@ -1151,7 +1151,7 @@ Note. The analyses in this document were done with:
 -   directlabels 2017.03.31
 -   readr 1.1.1
 -   rstan 2.17.3
--   brms 2.3.1
+-   brms 2.3.2
 
 Reference
 ---------

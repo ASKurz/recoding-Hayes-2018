@@ -1,0 +1,766 @@
+---
+title: "Chapter 10"
+author: "A Solomon Kurz"
+date: "`r format(Sys.Date())`"
+output:
+  github_document
+---
+
+```{r set-options, echo = FALSE, cache = FALSE}
+options(width = 100)
+```
+
+## 10.2 An example from the sex disrimination in the workplace study
+
+Here we load a couple necessary packages, load the data, and take a `glimpse()`.
+
+```{r, warning = F, message = F}
+library(readr)
+library(tidyverse)
+
+protest <- read_csv("data/protest/protest.csv")
+
+glimpse(protest)
+```
+
+With a little `ifelse()`, computing the dummies `D1` and `D2` is easy enough.
+
+```{r}
+protest <-
+  protest %>% 
+  mutate(D1 = ifelse(protest == 1, 1, 0),
+         D2 = ifelse(protest == 2, 1, 0))
+```
+
+With `model1` and `model2` we fit the multicategorical multivariable model and the multicategorical moderation models, respectively.
+
+```{r, message = F, warning = F}
+library(brms)
+
+model1 <-
+  brm(data = protest, family = gaussian,
+      liking ~ 1 + D1 + D2 + sexism,
+      chains = 4, cores = 4)
+
+model2 <-
+  update(model1,
+         newdata = protest,
+         liking ~ 1 + D1 + D2 + sexism + D1:sexism + D2:sexism,
+         chains = 4, cores = 4)
+```
+
+```{r}
+r2s <-
+  bayes_R2(model1, summary = F) %>% 
+  as_tibble() %>% 
+  rename(`Model 1` = R2) %>% 
+  bind_cols(
+    bayes_R2(model2, summary = F) %>% 
+      as_tibble() %>% 
+      rename(`Model 2` = R2)
+  ) %>% 
+  mutate(`The R2 difference` = `Model 2` - `Model 1`)
+  
+r2s %>% 
+  gather()  %>% 
+  # This line isn't necessary, but it sets the order the summaries appear in
+  mutate(key = factor(key, levels = c("Model 1", "Model 2", "The R2 difference"))) %>% 
+  group_by(key) %>% 
+  summarize(mean = mean(value),
+            median = median(value),
+            ll = quantile(value, probs = .025),
+            ul = quantile(value,  probs = .975)) %>% 
+  mutate_if(is.double, round, digits = 3)
+```
+
+Interestingly, even though our posterior means and medians for the model-specific $R^2$ values differed some from the OLS estimates in the text, their difference corresponded quite nicely to the one in the text. Let's take a look at their values.
+
+```{r, fig.width = 8, fig.height = 2.25}
+r2s %>% 
+  gather() %>% 
+  ggplot(aes(x = value)) +
+  geom_density(size = 0, fill = "grey33") +
+  scale_y_continuous(NULL, breaks = NULL) +
+  facet_wrap(~key, scales = "free_y") +
+  theme_minimal()
+```
+
+The coefficient summaries cohere well with those in Table 10.1. 
+
+```{r}
+print(model1, digits = 3)
+print(model2, digits = 3)
+```
+
+## 10.3 Visualizing the model
+
+To get our version of the values in Table 10.2, we'll first recreate columns *D~1~* through *W* (SEXISM) and save then as a tibble, `nd`.
+
+```{r}
+(
+  nd <-
+  tibble(D1 = rep(c(0, 1, 0), each = 3),
+         D2 = rep(c(0, 0, 1), each = 3),
+         sexism = rep(quantile(protest$sexism, probs = c(.16, .5, .84)), 
+                      times = 3))
+  )
+```
+
+With `nd` in hand, we'll feed the predictor values into `fitted()` for the typical posterior summaries. 
+
+```{r}
+fitted(model2, newdata = nd) %>% round(digits = 3)
+```
+
+But is we want to make a decent line plot, we'll need many more values for `sexism`, which will appear on the x-axis.
+
+```{r}
+nd <-
+  tibble(sexism = rep(seq(from = 3.5, to = 6.5, length.out = 30), 
+                      times = 9),
+         D1 = rep(rep(c(0, 1, 0), each = 3),
+                  each = 30),
+         D2 = rep(rep(c(0, 0, 1), each = 3),
+                  each = 30))
+```
+
+This time we'll save the results from `fitted()` as a tlbble and wrangle a bit to get ready for Figure 10.3.
+
+```{r}
+model2_fitted <- 
+  fitted(model2, newdata = nd, probs = c(.025, .25, .75, .975)) %>% 
+  as_tibble() %>% 
+  bind_cols(nd) %>% 
+  mutate(condition = rep(c("No Protest", "Individual Protest", "Collective Protest"),
+                         each = 3*30)) %>% 
+  # This line is not necessary, but it will help order the facets of the plot
+  mutate(condition = factor(condition, levels = c("No Protest", "Individual Protest", "Collective Protest"))) 
+
+glimpse(model2_fitted)
+```
+
+For Figure 10.3 and many to follow for this chapter, we'll superimpose 50% intervals on top of 95% intervals.
+
+```{r, fig.width = 10, fig.height = 3}
+# This will help us add the original data points to the plot
+protest <-
+  protest %>% 
+  mutate(condition = ifelse(protest == 0, "No Protest",
+                            ifelse(protest == 1, "Individual Protest", 
+                                   "Collective Protest"))) %>% 
+  mutate(condition = factor(condition, levels = c("No Protest", "Individual Protest", "Collective Protest"))) 
+  
+
+# This will help us with the x-axis
+breaks <-
+  tibble(values = quantile(protest$sexism, probs = c(.16, .5, .84))) %>% 
+  mutate(labels = values %>% round(2) %>% as.character())
+
+# Here we plot
+model2_fitted %>% 
+  ggplot(aes(x = sexism)) +
+  geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5),
+              alpha = 1/3) +
+  geom_ribbon(aes(ymin = Q25, ymax = Q75),
+              alpha = 1/3) +
+  geom_line(aes(y = Estimate)) +
+  geom_point(data = protest,
+             aes(y = liking),
+             size = 2/3) +
+  scale_x_continuous(breaks = breaks$values,
+                     labels = breaks$labels) +
+  coord_cartesian(xlim = 4:6,
+                  ylim = c(2.5, 7.2)) +
+  labs(x = expression(paste("Perceived Pervasiveness of Sex Discrimination in Society (", italic(W), ")")),
+       y = "Evaluation of the Attorney") +
+  facet_wrap(~condition) +
+  theme_minimal()
+```
+
+By adding the data to the plots, they are both more informative and now serve as a posterior predictive check.
+
+## Probing the interaction
+
+### The pick-a-point approach.
+
+#### Omnibus inference.
+
+Hayes used the omnibus testing framework to assess how important coefficients *b*~1~ and *b*~2~ were to our interaction model, `model1`. Before fitting the models, he discussed why he preferred to fit models after centering `sexism` (i.e., $W$) to 4.25. Here we'll call our centered variable `sexism_p`, where `_p` stands in for "prime".
+
+```{r}
+protest <-
+  protest %>% 
+  mutate(sexism_p = sexism - 4.25)
+```
+
+From here on, `model3` is the moderation model without the lower-order `D1` and `D2` terms; `model4` is the full moderation model.
+
+```{r, message = F, warning = F}
+# The model without D1 + D2
+model3 <-
+  update(model2,
+         newdata = protest,
+         liking ~ 1 + sexism_p + D1:sexism_p + D2:sexism_p,
+         chains = 4, cores = 4)
+
+# The full model with D1 + D2
+model4 <-
+  update(model2,
+         newdata = protest,
+         liking ~ 1 + D1 + D2 + sexism_p + D1:sexism_p + D2:sexism_p,
+         chains = 4, cores = 4)
+```
+
+The coefficient summaries for `model4` correspond to the top section of Table 10.3 (p. 373).
+
+```{r}
+fixef(model4) %>% round(digits = 3)
+```
+
+We can compare their Bayesian $R^2$ distributions like we usually do.
+
+```{r}
+r2s <-
+  bayes_R2(model3, summary = F) %>% 
+  as_tibble() %>% 
+  rename(`Model without D1 + D2` = R2) %>% 
+  bind_cols(
+    bayes_R2(model4, summary = F) %>% 
+      as_tibble() %>% 
+      rename(`Model with D1 + D2` = R2)
+  ) %>% 
+  mutate(`The R2 difference` = `Model with D1 + D2` - `Model without D1 + D2`)
+  
+r2s %>% 
+  gather() %>% 
+  mutate(key = factor(key, levels = c("Model without D1 + D2", "Model with D1 + D2", "The R2 difference"))) %>% 
+  group_by(key) %>% 
+  summarize(median = median(value),
+            ll = quantile(value, probs = .025),
+            ul = quantile(value,  probs = .975)) %>% 
+  mutate_if(is.double, round, digits = 3)
+```
+
+Our results differ a bit from those in the text, but the substantive interpretation is the same. The `D1` and `D2` parameters added little predictive power to the model in terms of $R^2$. We can also use information criteria to compare the models. Here are the results from using the LOO-CV.
+
+```{r, warning = F, message = F}
+loo(model3, model4,
+    reloo = T)
+```
+
+[When I ran the `loo()` without the `reloo` argument, I got a warning message about an observation with an overly-large pareto $k$ value. Setting `reloo = T` fixed the problem.]
+
+The LOO-CV difference between the two models was pretty small and its standard error was of about the same magnitude of its difference. Thus, the LOO-CV gives the same general message as the $R^2$. The `D1` and `D2` parameters were sufficiently small and uncertain enough that constraining them to zero did little in terms of reducing the explanatory power of the statistical model. 
+
+Here's the same thing all over again, but this time after centering `sexism` on 5.120.
+
+```{r, message = F, warning = F}
+protest <-
+  protest %>% 
+  mutate(sexism_p = sexism - 5.120)
+
+# The model without D1 + D2
+model3 <-
+  update(model2,
+         newdata = protest,
+         liking ~ 1 + sexism_p + D1:sexism_p + D2:sexism_p,
+         chains = 4, cores = 4)
+
+# The full model with D1 + D2
+model4 <-
+  update(model2,
+         newdata = protest,
+         liking ~ 1 + D1 + D2 + sexism_p + D1:sexism_p + D2:sexism_p,
+         chains = 4, cores = 4)
+```
+
+These coefficient summaries correspond to the middle section of Table 10.3 (p. 373).
+
+```{r}
+fixef(model4) %>% round(digits = 3)
+```
+
+Here are the Bayesian $R^2$ summaries and the summary for their difference. 
+
+```{r}
+r2s <-
+  bayes_R2(model3, summary = F) %>% 
+  as_tibble() %>% 
+  rename(`Model without D1 + D2` = R2) %>% 
+  bind_cols(
+    bayes_R2(model4, summary = F) %>% 
+      as_tibble() %>% 
+      rename(`Model with D1 + D2` = R2)
+  ) %>% 
+  mutate(`The R2 difference` = `Model with D1 + D2` - `Model without D1 + D2`)
+  
+r2s %>% 
+  gather() %>% 
+  mutate(key = factor(key, levels = c("Model without D1 + D2", "Model with D1 + D2", "The R2 difference"))) %>% 
+  group_by(key) %>% 
+  summarize(median = median(value),
+            ll = quantile(value, probs = .025),
+            ul = quantile(value,  probs = .975)) %>% 
+  mutate_if(is.double, round, digits = 3)
+```
+
+```{r}
+loo(model3, model4)
+```
+
+Here again our Bayesian $R^2$ and `loo()` results cohere, both suggesting the `D1` and `D2` parameters were of little predictive utility. Note how this differs a little from the second $F$-test on page 370. 
+
+Here's what happens when we center `sexism` on 5.896.
+
+```{r, message = F, warning = F}
+protest <-
+  protest %>% 
+  mutate(sexism_p = sexism - 5.896)
+
+# The model without D1 + D2
+model3 <-
+  update(model2,
+         newdata = protest,
+         liking ~ 1 + sexism_p + D1:sexism_p + D2:sexism_p,
+         chains = 4, cores = 4)
+
+# The full model with D1 + D2
+model4 <-
+  update(model2,
+         newdata = protest,
+         liking ~ 1 + D1 + D2 + sexism_p + D1:sexism_p + D2:sexism_p,
+         chains = 4, cores = 4)
+```
+
+These coefficient summaries correspond to the lower section of Table 10.3 (p. 373).
+
+```{r}
+fixef(model4) %>% round(digits = 3)
+```
+
+Again, the $R^2$ distributions and their difference-score distribution.
+
+```{r}
+r2s <-
+  bayes_R2(model3, summary = F) %>% 
+  as_tibble() %>% 
+  rename(`Model without D1 + D2` = R2) %>% 
+  bind_cols(
+    bayes_R2(model4, summary = F) %>% 
+      as_tibble() %>% 
+      rename(`Model with D1 + D2` = R2)
+  ) %>% 
+  mutate(`The R2 difference` = `Model with D1 + D2` - `Model without D1 + D2`)
+  
+r2s %>% 
+  gather() %>% 
+  mutate(key = factor(key, levels = c("Model without D1 + D2", "Model with D1 + D2", "The R2 difference"))) %>% 
+  group_by(key) %>% 
+  summarize(median = median(value),
+            ll = quantile(value, probs = .025),
+            ul = quantile(value,  probs = .975)) %>% 
+  mutate_if(is.double, round, digits = 3)
+```
+
+```{r}
+loo(model3, model4)
+```
+
+Although our Bayesian $R^2$ difference is now predominantly positive, the LOO-CV difference for the two models remains uncertain. Here's a look at the two parameters in question using a handmade coefficient plot.
+
+```{r, fig.width = 6, fig.height = 1}
+posterior_samples(model4) %>% 
+  select(b_D1:b_D2) %>% 
+  gather() %>% 
+  mutate(key = str_remove(key, "b_")) %>% 
+  
+  ggplot(aes(key, y = value)) +
+  stat_summary(fun.y = median,
+               fun.ymin = function(i){quantile(i, probs = .025)},
+               fun.ymax = function(i){quantile(i, probs = .975)},
+               color = "grey33") +
+  stat_summary(geom = "linerange",
+               fun.ymin = function(i){quantile(i, probs = .25)},
+               fun.ymax = function(i){quantile(i, probs = .75)},
+               color = "grey33",
+               size = 1.25) +
+  xlab(NULL) +
+  coord_flip(ylim = 0:2) +
+  theme_minimal()
+```
+
+For Figure 10.4, we'll drop our faceting approach and just make one big plot. Heads up: I'm going to drop the 50% intervals from this plot. They'd just make it too busy.
+
+```{r, fig.width = 6, fig.height = 5}
+model2_fitted %>% 
+  ggplot(aes(x = sexism, alpha = condition)) +
+  geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5),
+              size = 0) +
+  geom_line(aes(y = Estimate)) +
+  scale_alpha_manual(values = c(.2, .5, .8)) +
+  scale_x_continuous(breaks = breaks$values,
+                     labels = breaks$labels) +
+  coord_cartesian(xlim = 4:6,
+                  ylim = c(4.5, 6.7)) +
+  labs(x = expression(paste("Perceived Pervasiveness of Sex Discrimination in Society (", italic(W), ")")),
+       y = "Evaluation of the Attorney") +
+  theme_minimal() +
+  theme(legend.title = element_blank(),
+        legend.position = "top",
+        legend.direction = "vertical")
+```
+
+#### Pairwise inference.
+
+To "consider the effect of Catherine's behavior on how she is perceived among people who are relatively high in their perceptions of the pervasiveness of sex discrimination in society (p. 372)", we'll use `fitted()`. Since the number of unique predictor values is small for this example, we'll just plug them directly into the `newdata` argument rather than first saving them as a `nd` object.
+
+```{r}
+fitted(model2,
+       newdata = tibble(D1 = c(0, 1, 0),
+                        D2 = c(0, 0, 1),
+                        sexism = 5.896)) %>% 
+  round(digits = 3)
+```
+
+Note that for these analyses, we just used `model2`, the model based on the un-centered `sexism` variable. We can also continue using `fitted()` in conjunction with the original `model2` to get the group comparisons for when $W$ = 4.250. Since these involve computing difference scores, we'll have to use `summary = F` and do some wrangling.
+
+```{r}
+fitted(model2,
+       newdata = tibble(D1 = c(0, 1, 0),
+                        D2 = c(0, 0, 1),
+                        sexism = 4.25),
+       summary = F) %>% 
+  as_tibble() %>% 
+  rename(`No Protest` = V1, 
+         `Individual Protest` = V2,
+         `Collective Protest` = V3) %>% 
+  mutate(difference_a = `Individual Protest` - `No Protest`,
+         difference_b = `Collective Protest` - `No Protest`) %>% 
+  gather() %>% 
+  mutate(key = factor(key, levels = c("No Protest", "Individual Protest", "Collective Protest", 
+                                      "difference_a", "difference_b"))) %>% 
+  group_by(key) %>% 
+  summarize(mean = mean(value),
+            sd = sd(value),
+            ll = quantile(value, probs = .025),
+            ul = quantile(value, probs = .975)) %>% 
+  mutate_if(is.double, round, digits = 3)
+```
+
+Here's the same thing for when $W$ = 5.120.
+
+```{r}
+fitted(model2,
+       newdata = tibble(D1 = c(0, 1, 0),
+                        D2 = c(0, 0, 1),
+                        sexism = 5.120),
+       summary = F) %>% 
+  as_tibble() %>% 
+  rename(`No Protest` = V1, 
+         `Individual Protest` = V2,
+         `Collective Protest` = V3) %>% 
+  mutate(difference_a = `Individual Protest` - `No Protest`,
+         difference_b = `Collective Protest` - `No Protest`) %>% 
+  gather() %>% 
+  mutate(key = factor(key, levels = c("No Protest", "Individual Protest", "Collective Protest", 
+                                      "difference_a", "difference_b"))) %>% 
+  group_by(key) %>% 
+  summarize(mean = mean(value),
+            sd = sd(value),
+            ll = quantile(value, probs = .025),
+            ul = quantile(value, probs = .975)) %>% 
+  mutate_if(is.double, round, digits = 3)
+```
+
+Finally, here it is for when $W$ = 5.986.
+
+```{r}
+fitted(model2,
+       newdata = tibble(D1 = c(0, 1, 0),
+                        D2 = c(0, 0, 1),
+                        sexism = 5.986),
+       summary = F) %>% 
+  as_tibble() %>% 
+  rename(`No Protest` = V1, 
+         `Individual Protest` = V2,
+         `Collective Protest` = V3) %>% 
+  mutate(difference_a = `Individual Protest` - `No Protest`,
+         difference_b = `Collective Protest` - `No Protest`) %>% 
+  gather() %>% 
+  mutate(key = factor(key, levels = c("No Protest", "Individual Protest", "Collective Protest", 
+                                      "difference_a", "difference_b"))) %>% 
+  group_by(key) %>% 
+  summarize(mean = mean(value),
+            sd = sd(value),
+            ll = quantile(value, probs = .025),
+            ul = quantile(value, probs = .975)) %>% 
+  mutate_if(is.double, round, digits = 3)
+```
+
+### The Johnson-Neyman technique.
+
+#### Omnibus inference.
+
+Consider the first sentence of the section:
+
+>Applied to probing an interaction between a multicategorical $X$ and a continuous $W$, an omnibus version of the JM technique involves finding the value or values of $W$ where their $F$-ratio comparing the $g$ estimated values of $Y$ is just statistically significant.
+
+Since we're not using $F$-tests with our approach to Bayesian modeling, the closest we might have is a series of $R^2$ difference tests, which would require refitting the model multiple times over many ways of centering the $W$-variable, `sexism`. I suppose you could do this if you wanted, but it just seems silly, to me. I'll leave this one up to the interested reader.
+
+#### Pairwise inference.
+
+Hayes didn't make plots for this section, but if you're careful constructing your `nd` and with the subsequent wrangling, you can make the usual plots. Since we have two conditions we'd like to compare with *No Protest*, we'll make two plots. Here's the comparison using *Individual Protest*, first.
+
+```{r, fig.width = 6, fig.height = 4}
+# the transition value Hayes identified in the text
+Hayes_value <- 5.065
+
+nd <-
+  tibble(D1 = rep(0:1, each = 30),
+         D2 = rep(0, times = 30*2),
+         sexism = rep(seq(from = 3.5, to = 6.5, length.out = 30), 
+                      times = 2))
+
+# we need some new data
+fitted(model2,
+       newdata = nd,
+       summary = F) %>% 
+  as_tibble() %>% 
+  gather() %>% 
+  mutate(sexism = rep(rep(seq(from = 3.5, to = 6.5, length.out = 30), 
+                          each = 4000),
+                      times = 2)) %>% 
+  mutate(condition = rep(c("No Protest", "Individual Protest"),
+                         each = 4000*30)) %>% 
+  mutate(iter = rep(1:4000, times = 30*2)) %>% 
+  select(-key) %>% 
+  rename(estimate = value) %>% 
+  spread(key = condition, value = estimate) %>% 
+  mutate(difference = `Individual Protest` - `No Protest`) %>% 
+  
+  # the plot
+  ggplot(aes(x = sexism, y = difference)) +
+  stat_summary(geom = "ribbon",
+               fun.ymin = function(i){quantile(i, probs = .025)},
+               fun.ymax = function(i){quantile(i, probs = .975)},
+               alpha = 1/3) +
+  stat_summary(geom = "ribbon",
+               fun.ymin = function(i){quantile(i, probs = .25)},
+               fun.ymax = function(i){quantile(i, probs = .75)},
+               alpha = 1/3) +
+  stat_summary(geom = "line",
+               fun.y = median) +
+  scale_x_continuous(breaks = c(4, Hayes_value, 6),
+                     labels = c("4", Hayes_value, "6")) +
+  coord_cartesian(xlim = 4:6) +
+  labs(subtitle = expression(paste("Our JN-technique plot for ", italic("Individual Protest"), " compared with ", italic("No Protest")))) +
+  theme_minimal()
+```
+
+Now we're ready to compare *No Protest* to *Collective Protest*. The main difference is with the `rep()` code in the `D1` and `D2` columns in `nd`. Other than that, we just switched out a few "Individual" labels with "Collective".
+
+```{r, fig.width = 6, fig.height = 4}
+# the transition value Hayes identified in the text
+Hayes_value <- 5.036
+
+nd <-
+  tibble(D1 = rep(0, times = 30*2),
+         D2 = rep(0:1, each = 30),
+         sexism = rep(seq(from = 3.5, to = 6.5, length.out = 30), 
+                      times = 2))
+
+fitted(model2,
+       newdata = nd,
+       summary = F) %>% 
+  as_tibble() %>% 
+  gather() %>% 
+  mutate(sexism = rep(rep(seq(from = 3.5, to = 6.5, length.out = 30), 
+                          each = 4000),
+                      times = 2)) %>% 
+  mutate(condition = rep(c("No Protest", "Collective Protest"),
+                         each = 4000*30)) %>% 
+  mutate(iter = rep(1:4000, times = 30*2)) %>% 
+  select(-key) %>% 
+  rename(estimate = value) %>% 
+  spread(key = condition, value = estimate) %>% 
+  mutate(difference = `Collective Protest` - `No Protest`) %>% 
+
+  ggplot(aes(x = sexism, y = difference)) +
+  stat_summary(geom = "ribbon",
+               fun.ymin = function(i){quantile(i, probs = .025)},
+               fun.ymax = function(i){quantile(i, probs = .975)},
+               alpha = 1/3) +
+  stat_summary(geom = "ribbon",
+               fun.ymin = function(i){quantile(i, probs = .25)},
+               fun.ymax = function(i){quantile(i, probs = .75)},
+               alpha = 1/3) +
+  stat_summary(geom = "line",
+               fun.y = median) +
+  scale_x_continuous(breaks = c(4, Hayes_value, 6),
+                     labels = c("4", Hayes_value, "6")) +
+  coord_cartesian(xlim = 4:6) +
+  labs(subtitle = expression(paste("Our JN-technique plot for ", italic("Collective Protest"), " compared with ", italic("No Protest")))) +
+  theme_minimal()
+```
+
+And here we do it one last time between the two active protest conditions.
+
+```{r, fig.width = 6, fig.height = 4}
+nd <-
+  tibble(D1 = rep(1:0, each = 30),
+         D2 = rep(0:1, each = 30),
+         sexism = rep(seq(from = 3.5, to = 6.5, length.out = 30), 
+                      times = 2))
+
+fitted(model2,
+       newdata = nd,
+       summary = F) %>% 
+  as_tibble() %>% 
+  gather() %>% 
+  mutate(sexism = rep(rep(seq(from = 3.5, to = 6.5, length.out = 30), 
+                          each = 4000),
+                      times = 2)) %>% 
+  mutate(condition = rep(c("Individual Protest", "Collective Protest"),
+                         each = 4000*30)) %>% 
+  mutate(iter = rep(1:4000, times = 30*2)) %>% 
+  select(-key) %>% 
+  rename(estimate = value) %>% 
+  spread(key = condition, value = estimate) %>% 
+  mutate(difference = `Collective Protest` - `Individual Protest`) %>% 
+  
+  ggplot(aes(x = sexism, y = difference)) +
+  stat_summary(geom = "ribbon",
+               fun.ymin = function(i){quantile(i, probs = .025)},
+               fun.ymax = function(i){quantile(i, probs = .975)},
+               alpha = 1/3) +
+  stat_summary(geom = "ribbon",
+               fun.ymin = function(i){quantile(i, probs = .25)},
+               fun.ymax = function(i){quantile(i, probs = .75)},
+               alpha = 1/3) +
+  stat_summary(geom = "line",
+               fun.y = median) +
+  coord_cartesian(xlim = 4:6) +
+  labs(subtitle = expression(paste("Our JN-technique plot for ", italic("Collective Protest"), " compared with ", italic("Individual Protest")))) +
+  theme_minimal()
+```
+
+Not much difference there. 
+
+## When the moderator is multicategorical
+
+Just as a refresher, here's the `print()` output for `model2`.
+
+```{r}
+print(model2, digits = 3)
+```
+
+The Bayesian $R^2$:
+
+```{r}
+bayes_R2(model2) %>% round(digits = 3)
+```
+
+And the $R^2$ difference between this and the model excluding the interaction terms:
+
+```{r}
+bayes_R2(model1, summary = F) %>% 
+  as_tibble() %>% 
+  rename(`Model 1` = R2) %>% 
+  bind_cols(
+    bayes_R2(model2, summary = F) %>% 
+      as_tibble() %>% 
+      rename(`Model 2` = R2)
+  ) %>% 
+  transmute(difference = `Model 2` - `Model 1`) %>% 
+  summarize(mean = mean(difference),
+            ll = quantile(difference, probs = .025),
+            ul = quantile(difference,  probs = .975)) %>% 
+  mutate_if(is.double, round, digits = 3)
+```
+
+Much like in the text, our Figure 10.7 is just a little different from what we did with Figure 10.3.
+
+```{r, fig.width = 10, fig.height = 3}
+# This will help us with the `geom_text()` annotation
+slopes <-
+  tibble(slope = c(fixef(model2)["sexism", "Estimate"] + fixef(model2)["D1:sexism", "Estimate"],
+                   fixef(model2)["sexism", "Estimate"] + fixef(model2)["D2:sexism", "Estimate"],
+                   fixef(model2)["sexism", "Estimate"]),
+         x = c(4.8, 4.6, 5),
+         y = c(6.37, 6.25, 4.5),
+         condition = c("Individual Protest", "Collective Protest", "No Protest")) %>% 
+  mutate(label = str_c("This slope is about ", slope %>% round(digits = 3)),
+         condition = factor(condition, levels = c("No Protest", "Individual Protest", "Collective Protest")))
+
+# Here we plot
+model2_fitted %>% 
+  ggplot(aes(x = sexism)) +
+  geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5),
+              alpha = 1/3) +
+  geom_ribbon(aes(ymin = Q25, ymax = Q75),
+              alpha = 1/3) +
+  geom_line(aes(y = Estimate)) +
+  geom_text(data = slopes,
+            aes(x = x,
+                y = y,
+                label = label)) +
+  coord_cartesian(xlim = 4:6) +
+  labs(x = expression(paste("Perceived Pervasiveness of Sex Discrimination in Society (", italic(X), ")")),
+       y = "Evaluation of the Attorney") +
+  facet_wrap(~condition) +
+  theme_minimal()
+```
+
+### Probing the interaction and interpreting the regression coefficients.
+
+We computed the posterior means for the slopes when prepping for the figure, above. Here's how we might get more complete posterior summaries. Much like in the text, our Figure 10.7 is just a little different from what we did with Figure 10.3.
+
+```{r}
+post <- 
+  posterior_samples(model2) %>% 
+  transmute(`No Protest` = b_sexism + `b_D1:sexism`*0 + `b_D2:sexism`*0,
+            `Individual Protest` = b_sexism + `b_D1:sexism`*1 + `b_D2:sexism`*0,
+            `Collective Protest` = b_sexism + `b_D1:sexism`*0 + `b_D2:sexism`*1)
+
+post %>% 
+  gather() %>% 
+  mutate(key = factor(key, levels = c("No Protest", "Individual Protest", "Collective Protest"))) %>% 
+  group_by(key) %>% 
+  summarise(mean = mean(value),
+            sd = sd(value),
+            ll = quantile(value, probs = .025),
+            ul = quantile(value, probs = .975)) %>% 
+  mutate_if(is.double, round, digits = 3)
+```
+
+Here are the differences among the three protest groups.
+
+```{r}
+post %>% 
+  transmute(`Individual Protest - No Protest` = `Individual Protest` - `No Protest`,
+            `Collective Protest - No Protest` = `Collective Protest` - `No Protest`,
+            `Individual Protest - Collective Protest` = `Individual Protest` - `Collective Protest`) %>% 
+  gather() %>% 
+  # again, not necessary, but useful for reordering the summaries
+  mutate(key = factor(key, levels = c("Individual Protest - No Protest", "Collective Protest - No Protest", "Individual Protest - Collective Protest"))) %>% 
+  group_by(key) %>% 
+  summarise(mean = mean(value),
+            sd = sd(value),
+            ll = quantile(value, probs = .025),
+            ul = quantile(value, probs = .975)) %>% 
+  mutate_if(is.double, round, digits = 3)
+```
+
+Note. The analyses in this document were done with:
+
+* R            3.4.4
+* RStudio      1.1.442
+* rmarkdown    1.9
+* tidyverse    1.2.1
+* readr        1.1.1
+* rstan        2.17.3
+* brms         2.3.2
+
+## Reference
+
+Hayes, A. F. (2018). *Introduction to mediation, moderation, and conditional process analysis: A regression-based approach.* (2nd ed.). New York, NY, US: The Guilford Press.

@@ -51,14 +51,14 @@ print(model1, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##               Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## Intercept        5.033     0.234    4.574    5.480       2317 1.000
-    ## frame            0.672     0.334    0.023    1.347       2112 1.001
-    ## skeptic         -0.141     0.058   -0.256   -0.026       2356 1.001
-    ## frame:skeptic   -0.168     0.083   -0.329   -0.003       1928 1.001
+    ## Intercept        5.026     0.229    4.583    5.481       2404 1.000
+    ## frame            0.677     0.328    0.036    1.314       2154 1.001
+    ## skeptic         -0.139     0.058   -0.252   -0.025       2195 1.001
+    ## frame:skeptic   -0.170     0.084   -0.329   -0.007       2040 1.001
     ## 
     ## Family Specific Parameters: 
     ##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma    1.243     0.060    1.130    1.370       2674 1.000
+    ## sigma    1.242     0.062    1.124    1.369       3122 1.001
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -156,16 +156,16 @@ print(model2, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##                   Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## justify_Intercept    2.801     0.087    2.633    2.973       4000 0.999
-    ## donate_Intercept     7.228     0.235    6.767    7.694       4000 1.001
-    ## justify_frame        0.137     0.126   -0.116    0.386       4000 1.000
-    ## donate_frame         0.214     0.136   -0.050    0.480       4000 1.000
-    ## donate_justify      -0.951     0.076   -1.099   -0.802       4000 1.001
+    ## justify_Intercept    2.803     0.090    2.627    2.978       4000 1.000
+    ## donate_Intercept     7.236     0.233    6.791    7.695       4000 1.000
+    ## justify_frame        0.135     0.131   -0.127    0.385       4000 1.001
+    ## donate_frame         0.215     0.137   -0.056    0.479       4000 0.999
+    ## donate_justify      -0.954     0.074   -1.100   -0.810       4000 1.000
     ## 
     ## Family Specific Parameters: 
     ##               Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma_justify    0.935     0.047    0.849    1.034       4000 1.000
-    ## sigma_donate     0.987     0.049    0.897    1.089       4000 0.999
+    ## sigma_justify    0.935     0.045    0.851    1.025       4000 1.000
+    ## sigma_donate     0.986     0.048    0.895    1.086       4000 0.999
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -183,7 +183,7 @@ posterior_samples(model2) %>%
 ```
 
     ##     mean     ll   ul
-    ## 1 -0.131 -0.367 0.11
+    ## 1 -0.129 -0.378 0.12
 
 12.2 Moderation of the direct and indirect effects in a conditional process model
 ---------------------------------------------------------------------------------
@@ -216,20 +216,20 @@ print(model3, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##                       Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## justify_Intercept        2.453     0.149    2.167    2.739       3425 1.000
-    ## donate_Intercept         7.296     0.280    6.747    7.841       4000 1.001
-    ## justify_frame           -0.563     0.217   -0.976   -0.141       2994 1.000
-    ## justify_skeptic          0.105     0.038    0.029    0.179       3501 1.000
-    ## justify_frame:skeptic    0.202     0.055    0.093    0.308       2921 1.000
-    ## donate_frame             0.148     0.269   -0.383    0.667       3498 1.000
-    ## donate_justify          -0.921     0.085   -1.088   -0.746       4000 1.000
-    ## donate_skeptic          -0.045     0.048   -0.139    0.047       3700 1.001
-    ## donate_frame:skeptic     0.018     0.069   -0.119    0.155       3348 1.001
+    ## justify_Intercept        2.453     0.149    2.159    2.739       3900 0.999
+    ## donate_Intercept         7.292     0.272    6.744    7.834       4000 0.999
+    ## justify_frame           -0.565     0.219   -0.999   -0.133       3545 1.000
+    ## justify_skeptic          0.105     0.038    0.032    0.181       3590 0.999
+    ## justify_frame:skeptic    0.201     0.055    0.089    0.309       3270 1.000
+    ## donate_frame             0.155     0.267   -0.350    0.676       3240 1.001
+    ## donate_justify          -0.923     0.085   -1.092   -0.756       4000 0.999
+    ## donate_skeptic          -0.043     0.047   -0.133    0.050       3565 1.000
+    ## donate_frame:skeptic     0.016     0.068   -0.120    0.150       2974 1.001
     ## 
     ## Family Specific Parameters: 
     ##               Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma_justify    0.818     0.042    0.742    0.903       4000 1.000
-    ## sigma_donate     0.988     0.050    0.898    1.089       4000 1.001
+    ## sigma_justify    0.818     0.040    0.742    0.902       4000 1.000
+    ## sigma_donate     0.989     0.049    0.901    1.092       4000 1.000
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -244,9 +244,9 @@ fixef(model3)[c(3:5), ] %>% round(digits = 3)
 ```
 
     ##                       Estimate Est.Error   Q2.5  Q97.5
-    ## justify_frame           -0.563     0.217 -0.976 -0.141
-    ## justify_skeptic          0.105     0.038  0.029  0.179
-    ## justify_frame:skeptic    0.202     0.055  0.093  0.308
+    ## justify_frame           -0.565     0.219 -0.999 -0.133
+    ## justify_skeptic          0.105     0.038  0.032  0.181
+    ## justify_frame:skeptic    0.201     0.055  0.089  0.309
 
 This is *b*.
 
@@ -255,7 +255,7 @@ fixef(model3)[7, ] %>% round(digits = 3)
 ```
 
     ##  Estimate Est.Error      Q2.5     Q97.5 
-    ##    -0.921     0.085    -1.088    -0.746
+    ##    -0.923     0.085    -1.092    -0.756
 
 We'll need to employ `posterior_samples()` to compute (*a*<sub>1</sub> + *a*<sub>3</sub>*W*)*b*.
 
@@ -279,9 +279,9 @@ post %>%
     ## # A tibble: 3 x 4
     ##   key                             median     ll     ul
     ##   <chr>                            <dbl>  <dbl>  <dbl>
-    ## 1 indirect effect when W is 1.592  0.221 -0.043  0.503
-    ## 2 indirect effect when W is 2.800 -0.001 -0.22   0.207
-    ## 3 indirect effect when W is 5.200 -0.447 -0.738 -0.16
+    ## 1 indirect effect when W is 1.592  0.227 -0.045  0.504
+    ## 2 indirect effect when W is 2.800  0.003 -0.211  0.211
+    ## 3 indirect effect when W is 5.200 -0.444 -0.73  -0.173
 
 ### The conditional direct effect of X.
 
@@ -307,9 +307,9 @@ post %>%
     ## # A tibble: 3 x 4
     ##   key                           median     ll    ul
     ##   <chr>                          <dbl>  <dbl> <dbl>
-    ## 1 direct effect when W is 1.592  0.179 -0.181 0.532
-    ## 2 direct effect when W is 2.800  0.199 -0.082 0.489
-    ## 3 direct effect when W is 5.200  0.245 -0.133 0.601
+    ## 1 direct effect when W is 1.592  0.179 -0.169 0.534
+    ## 2 direct effect when W is 2.800  0.202 -0.072 0.482
+    ## 3 direct effect when W is 5.200  0.235 -0.116 0.618
 
 ### Visualizing the direct and indirect effects.
 
@@ -349,9 +349,9 @@ glimpse(justify_effects)
     ## Observations: 30
     ## Variables: 4
     ## $ skeptic <dbl> 0.0000000, 0.2068966, 0.4137931, 0.6206897, 0.8275862, 1.0344828, 1.2413793, 1....
-    ## $ median  <dbl> 0.51600473, 0.47720779, 0.43845486, 0.39994772, 0.36144413, 0.32294851, 0.28512...
-    ## $ ll      <dbl> 0.1279416301, 0.1063256379, 0.0851893763, 0.0646302222, 0.0458969973, 0.0231076...
-    ## $ ul      <dbl> 0.919137435, 0.867386214, 0.811783797, 0.757519082, 0.703389572, 0.649280158, 0...
+    ## $ median  <dbl> 0.51994437, 0.48122918, 0.44308125, 0.40480865, 0.36744617, 0.32995722, 0.29189...
+    ## $ ll      <dbl> 0.120363185, 0.102272788, 0.083276892, 0.065407997, 0.042008590, 0.021865977, -...
+    ## $ ul      <dbl> 0.933347495, 0.878190871, 0.822235540, 0.764233193, 0.705737438, 0.650791681, 0...
 
 ``` r
 glimpse(donate_effects)
@@ -360,9 +360,9 @@ glimpse(donate_effects)
     ## Observations: 30
     ## Variables: 4
     ## $ skeptic <dbl> 0.0000000, 0.2068966, 0.4137931, 0.6206897, 0.8275862, 1.0344828, 1.2413793, 1....
-    ## $ median  <dbl> 0.1500977, 0.1530567, 0.1566963, 0.1609158, 0.1636586, 0.1670788, 0.1715529, 0....
-    ## $ ll      <dbl> -0.38318682, -0.35413623, -0.32547469, -0.29907364, -0.27524015, -0.24853507, -...
-    ## $ ul      <dbl> 0.6667583, 0.6436804, 0.6244298, 0.6058612, 0.5854480, 0.5664686, 0.5499802, 0....
+    ## $ median  <dbl> 0.1512183, 0.1544502, 0.1581665, 0.1621030, 0.1653814, 0.1676131, 0.1710118, 0....
+    ## $ ll      <dbl> -0.35010589, -0.32419515, -0.30001969, -0.27399908, -0.25086959, -0.22986830, -...
+    ## $ ul      <dbl> 0.6760396, 0.6608650, 0.6405930, 0.6219335, 0.6020020, 0.5852079, 0.5604962, 0....
 
 Here we'll combine those two tibbles by stacking `donate_effects` underneath `justify_effects` and then indexing them by `effect`. Then we're ready to plot.
 
@@ -462,12 +462,12 @@ head(tidyverse_style_tibble)
     ## # Groups:   skeptic [1]
     ##   skeptic `indirect effect` `direct effect`
     ##     <dbl>             <dbl>           <dbl>
-    ## 1       0             0.516          0.354 
-    ## 2       0             0.437         -0.146 
-    ## 3       0             0.487         -0.0891
-    ## 4       0             0.524          0.424 
-    ## 5       0             0.442          0.0303
-    ## 6       0             0.142          0.392
+    ## 1       0             0.613         0.0267 
+    ## 2       0             0.794        -0.254  
+    ## 3       0             0.707        -0.336  
+    ## 4       0             0.637         0.00447
+    ## 5       0             0.477        -0.510  
+    ## 6       0             0.286         0.590
 
 After un-nesting, the tibble is now 4000\*30 = 120,000 rows long. With just a little more wrangling, we'll have our familiar summaries for each level of `skeptic`.
 
@@ -489,12 +489,12 @@ head(tidyverse_style_tibble)
     ## # Groups:   effect [1]
     ##   effect        skeptic median     ll    ul
     ##   <chr>           <dbl>  <dbl>  <dbl> <dbl>
-    ## 1 direct effect   0      0.150 -0.383 0.667
-    ## 2 direct effect   0.207  0.153 -0.354 0.644
-    ## 3 direct effect   0.414  0.157 -0.325 0.624
-    ## 4 direct effect   0.621  0.161 -0.299 0.606
-    ## 5 direct effect   0.828  0.164 -0.275 0.585
-    ## 6 direct effect   1.03   0.167 -0.249 0.566
+    ## 1 direct effect   0      0.151 -0.350 0.676
+    ## 2 direct effect   0.207  0.154 -0.324 0.661
+    ## 3 direct effect   0.414  0.158 -0.300 0.641
+    ## 4 direct effect   0.621  0.162 -0.274 0.622
+    ## 5 direct effect   0.828  0.165 -0.251 0.602
+    ## 6 direct effect   1.03   0.168 -0.230 0.585
 
 Now we have 60 row, 30 for `direct effect` and another 30 for `indirect effect`. Each has the typical summary values for all 30 levels of `skeptic`. Now we're ready to plot.
 
@@ -569,7 +569,7 @@ post %>%
 ```
 
     ##   median    sd     ll     ul
-    ## 1 -0.184 0.054 -0.293 -0.084
+    ## 1 -0.185 0.054 -0.293 -0.081
 
 We might visualize with a coefficient plot.
 
@@ -647,19 +647,19 @@ print(model4, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##                       Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## justify_Intercept        2.454     0.150    2.171    2.742       3137 1.000
-    ## donate_Intercept         7.261     0.224    6.819    7.705       4000 1.000
-    ## justify_frame           -0.566     0.221   -1.004   -0.129       2745 1.000
-    ## justify_skeptic          0.104     0.038    0.030    0.179       2746 1.000
-    ## justify_frame:skeptic    0.203     0.056    0.093    0.313       2254 1.000
-    ## donate_frame             0.211     0.138   -0.065    0.482       4000 0.999
-    ## donate_justify          -0.918     0.080   -1.073   -0.762       4000 1.000
-    ## donate_skeptic          -0.037     0.037   -0.109    0.034       4000 1.000
+    ## justify_Intercept        2.452     0.148    2.158    2.739       3801 0.999
+    ## donate_Intercept         7.261     0.228    6.825    7.718       4000 1.000
+    ## justify_frame           -0.564     0.218   -0.993   -0.138       3523 0.999
+    ## justify_skeptic          0.105     0.038    0.031    0.179       3567 0.999
+    ## justify_frame:skeptic    0.201     0.055    0.094    0.312       3179 0.999
+    ## donate_frame             0.208     0.136   -0.058    0.476       4000 1.000
+    ## donate_justify          -0.919     0.081   -1.080   -0.763       4000 1.000
+    ## donate_skeptic          -0.036     0.036   -0.106    0.034       4000 1.000
     ## 
     ## Family Specific Parameters: 
     ##               Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma_justify    0.818     0.040    0.745    0.901       4000 1.000
-    ## sigma_donate     0.985     0.049    0.890    1.086       4000 1.000
+    ## sigma_justify    0.818     0.040    0.746    0.898       4000 1.000
+    ## sigma_donate     0.987     0.049    0.897    1.085       4000 1.000
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -672,9 +672,9 @@ loo(model3, model4)
 ```
 
     ##                   LOOIC    SE
-    ## model3          1117.76 33.26
-    ## model4          1115.41 33.15
-    ## model3 - model4    2.35  0.58
+    ## model3          1117.42 33.15
+    ## model4          1115.03 33.04
+    ## model3 - model4    2.39  0.53
 
 The difference in LOO-CV values for the two models was modest. There's little predictive reason to choose one over the other. You could argue that `model4` is simpler than `model3`. Since we've got a complex model either way, one might also consider which one was of primary theoretical interest.
 
@@ -700,20 +700,20 @@ print(model3, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##                       Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## justify_Intercept        2.453     0.149    2.167    2.739       3425 1.000
-    ## donate_Intercept         7.296     0.280    6.747    7.841       4000 1.001
-    ## justify_frame           -0.563     0.217   -0.976   -0.141       2994 1.000
-    ## justify_skeptic          0.105     0.038    0.029    0.179       3501 1.000
-    ## justify_frame:skeptic    0.202     0.055    0.093    0.308       2921 1.000
-    ## donate_frame             0.148     0.269   -0.383    0.667       3498 1.000
-    ## donate_justify          -0.921     0.085   -1.088   -0.746       4000 1.000
-    ## donate_skeptic          -0.045     0.048   -0.139    0.047       3700 1.001
-    ## donate_frame:skeptic     0.018     0.069   -0.119    0.155       3348 1.001
+    ## justify_Intercept        2.453     0.149    2.159    2.739       3900 0.999
+    ## donate_Intercept         7.292     0.272    6.744    7.834       4000 0.999
+    ## justify_frame           -0.565     0.219   -0.999   -0.133       3545 1.000
+    ## justify_skeptic          0.105     0.038    0.032    0.181       3590 0.999
+    ## justify_frame:skeptic    0.201     0.055    0.089    0.309       3270 1.000
+    ## donate_frame             0.155     0.267   -0.350    0.676       3240 1.001
+    ## donate_justify          -0.923     0.085   -1.092   -0.756       4000 0.999
+    ## donate_skeptic          -0.043     0.047   -0.133    0.050       3565 1.000
+    ## donate_frame:skeptic     0.016     0.068   -0.120    0.150       2974 1.001
     ## 
     ## Family Specific Parameters: 
     ##               Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma_justify    0.818     0.042    0.742    0.903       4000 1.000
-    ## sigma_donate     0.988     0.050    0.898    1.089       4000 1.001
+    ## sigma_justify    0.818     0.040    0.742    0.902       4000 1.000
+    ## sigma_donate     0.989     0.049    0.901    1.092       4000 1.000
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 

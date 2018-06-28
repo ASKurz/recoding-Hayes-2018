@@ -239,7 +239,7 @@ glimpse(donate_effects)
 
 Here we'll combine those two tibbles by stacking `donate_effects` underneath `justify_effects` and then indexing them by `effect`. Then we're ready to plot.
 
-```{r, fig.width = 6, fig.height = 5}
+```{r, fig.width = 6, fig.height = 4}
 # combining the tibbles
 figure_12.7 <-
   justify_effects %>% 
@@ -331,7 +331,7 @@ head(tidyverse_style_tibble)
 
 Now we have 60 row, 30 for `direct effect` and another 30 for `indirect effect`. Each has the typical summary values for all 30 levels of `skeptic`. Now we're ready to plot.
 
-```{r, fig.width = 6, fig.height = 5}
+```{r, fig.width = 6, fig.height = 4}
 tidyverse_style_tibble %>% 
  ggplot(aes(x = skeptic, group = effect)) +
   geom_ribbon(aes(ymin = ll, ymax = ul, fill = effect),
@@ -354,7 +354,7 @@ To learn more about nested data and using the `map()` function, check out [this 
 
 We've already computed the 95% intervals for these. Here they are as pointrange plots.
 
-```{r}
+```{r, fig.width = 6, fig.height = 4}
 post %>% 
   select(starts_with("direct")) %>% 
   gather() %>% 

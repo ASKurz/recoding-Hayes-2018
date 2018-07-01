@@ -34,7 +34,7 @@ Recall that if you want the correlations with Bayesian estimation and those swee
 ```{r, message = F, warning = F}
 library(brms)
 
-fit0 <- 
+model1 <- 
   brm(data = estress, family = gaussian,
       cbind(ese, estress, affect, withdraw) ~ 1,
       chains = 4, cores = 4)
@@ -43,7 +43,7 @@ fit0 <-
 The summary:
 
 ```{r}
-print(fit0, digits = 3)
+print(model1, digits = 3)
 ```
 
 Since we have posteriors for the correlations, why not plot them? Here we use the `theme_black()` from brms and a color scheme from the [viridis package](https://cran.r-project.org/web/packages/viridis/index.html).
@@ -51,7 +51,7 @@ Since we have posteriors for the correlations, why not plot them? Here we use th
 ```{r, message = F, warning = F, fig.width = 10, fig.height = 1.75}
 library(viridis)
 
-posterior_samples(fit0) %>% 
+posterior_samples(model1) %>% 
   select(rescor__ese__estress, rescor__ese__affect, rescor__estress__withdraw) %>% 
   gather() %>% 
   
@@ -73,7 +73,7 @@ posterior_samples(fit0) %>%
         axis.ticks.y = element_blank())
 ```
 
-### Accounting for confounding and epiphenomenal association
+### Accounting for confounding and epiphenomenal association.
 
 ```{r}
 y_model <- bf(withdraw ~ 1 + estress + affect + ese + sex + tenure)
@@ -83,7 +83,7 @@ m_model <- bf(affect ~ 1 + estress + ese + sex + tenure)
 With our `y_model` and `m_model` defined, we're ready to fit.
 
 ```{r, message = F, warning = F}
-fit1 <-
+model2 <-
   brm(data = estress, family = gaussian,
       y_model + m_model + set_rescor(FALSE),
       chains = 4, cores = 4)
@@ -92,7 +92,7 @@ fit1 <-
 Here's the summary:
 
 ```{r}
-print(fit1, digits = 3)
+print(model2, digits = 3)
 ```
 
 In the printout, notice how first within intercepts and then with covariates and sigma, the coefficients are presented as for `withdraw` first and then `affect`. Also notice how the coefficients for the covariates are presented in the same order for each criterions. Hopefully that'll make it easier to sift through the printout. Happily, our coefficients are quite similar to those in Table 4.1 
@@ -100,13 +100,13 @@ In the printout, notice how first within intercepts and then with covariates and
 Here are the $R^2$ values.
 
 ```{r}
-bayes_R2(fit1) %>% round(digits = 3)
+bayes_R2(model2) %>% round(digits = 3)
 ```
 
 These are also in the same ballpark, but a little higher. Why not glance at their densities?
 
 ```{r, fig.width = 6, fig.height = 2}
-bayes_R2(fit1, summary = F) %>% 
+bayes_R2(model2, summary = F) %>% 
   as_tibble() %>% 
   gather() %>% 
   
@@ -117,7 +117,7 @@ bayes_R2(fit1, summary = F) %>%
                     guide = guide_legend(title.theme = element_blank())) +
   scale_y_continuous(NULL, breaks = NULL) +
   coord_cartesian(xlim = 0:1) +
-  labs(title = expression(paste("The ", italic("R")^{2}, " distributions for fit1")),
+  labs(title = expression(paste("The ", italic("R")^{2}, " distributions for model2")),
        x = NULL) +
   theme_black() +
   theme(panel.grid = element_blank())
@@ -127,14 +127,14 @@ Here we retrieve the posterior samples, compute the indirect effect, and summari
 
 ```{r}
 post <-
-  posterior_samples(fit1) %>% 
+  posterior_samples(model2) %>% 
   mutate(ab = b_affect_estress*b_withdraw_affect)
 
 quantile(post$ab, probs = c(.5, .025, .975)) %>% 
   round(digits = 3)
 ```
 
-Similar results to the text (p. 127). Here's what it looks like.
+The results are similar to those in the text (p. 127). Here's what it looks like.
 
 ```{r, fig.width = 4, fig.height = 3.5}
 post %>% 
@@ -223,29 +223,29 @@ post %>%
 On page 135, Hayes revisited the model from section 3.3. We'll have to reload the data and refit that model to follow along.
 
 ```{r, message = F, warning = F}
-p <- read_csv("data/pmi/pmi.csv")
+pmi <- read_csv("data/pmi/pmi.csv")
 
 y_model <- bf(reaction ~ 1 + pmi + cond)
 m_model <- bf(pmi ~ 1 + cond)
 
-fit_3.3 <-
-  brm(data = p, family = gaussian,
+model3 <-
+  brm(data = pmi, family = gaussian,
       y_model + m_model + set_rescor(FALSE),
       chains = 4, cores = 4)
 ```
 
-The partially-standardized parameters require some posterior samples wrangling.
+The partially-standardized parameters require some `posterior_samples()` wrangling.
 
 ```{r}
-post_3.3 <- posterior_samples(fit_3.3)
+post <- posterior_samples(model3)
 
-SD_y_3.3 <- sd(p$reaction)
+SD_y <- sd(pmi$reaction)
 
-post_3.3 %>% 
+post %>% 
   mutate(ab = b_pmi_cond * b_reaction_pmi,
          c_prime = b_reaction_cond) %>% 
-  mutate(ab_ps = ab/SD_y_3.3,
-         c_prime_ps = c_prime/SD_y_3.3) %>% 
+  mutate(ab_ps = ab/SD_y,
+         c_prime_ps = c_prime/SD_y) %>% 
   mutate(c_ps = c_prime_ps + ab_ps) %>% 
   select(c_prime_ps, ab_ps, c_ps) %>% 
   gather() %>%
@@ -259,11 +259,11 @@ post_3.3 %>%
 
 Happily, these results are closer to those in the text than with the previous example.
 
-### The completely standardized effect
+### The completely standardized effect.
 
-**Note**. Hayes could have made this more clear in the text, but the `estress` model he referred to in this section was the one from way back in section 3.5, _not_ the one from earlier in this chapter.
+**Note**. Hayes could have made this clearer in the text, but the `estress` model he referred to in this section was the one from way back in section 3.5, _not_ the one from earlier in this chapter.
 
-One way to get a sandardized sollution is to standardize the variables in the data and then fit the model with those standardized variables. To do so, we'll revisit our custom `standardize()`, put it to work, and fit the standardized version of the model from section 3.5, which we'll call `fit1_z`.
+One way to get a standardized solution is to standardize the variables in the data and then fit the model with those standardized variables. To do so, we'll revisit our custom `standardize()`, put it to work, and fit the standardized version of the model from section 3.5, which we'll call `model4`.With our `y_model` and `m_model` defined, we're ready to fit.
 
 ```{r, message = F, warning = F}
 sandardize <- function(x){
@@ -279,7 +279,7 @@ estress <-
 y_model <- bf(withdraw_z ~ 1 + estress_z + affect_z)
 m_model <- bf(affect_z ~ 1 + estress_z)
 
-fit_3.5_z <-
+model4 <-
   brm(data = estress, family = gaussian,
       y_model + m_model + set_rescor(FALSE),
       chains = 4, cores = 4)
@@ -288,15 +288,15 @@ fit_3.5_z <-
 Here they are, our newly standardized coefficients:
 
 ```{r}
-fixef(fit_3.5_z) %>% round(digits = 3)
+fixef(model4) %>% round(digits = 3)
 ```
 
 Here we do the wrangling necessary to spell out the standardized effects for *ab*, $c^\prime$, and $c$.
 
 ```{r}
-post_3.5 <- posterior_samples(fit_3.5_z)
+post <- posterior_samples(model4)
 
-post_3.5 %>% 
+post %>% 
   mutate(ab_s = b_affectz_estress_z * b_withdrawz_affect_z,
          c_prime_s = b_withdrawz_estress_z) %>%
   mutate(c_s = ab_s + c_prime_s) %>% 
@@ -310,13 +310,13 @@ post_3.5 %>%
   mutate_if(is_double, round, digits = 3)
 ```
 
-Let's confirm that we can recover these values by applying the formulas on page 135 to the unstandardized model, which we'll call `fit_3.5`. First, we'll have to fit that model (recall, we haven't fit that one since chapter 3).
+Let's confirm that we can recover these values by applying the formulas on page 135 to the unstandardized model, which we'll call `model5`. First, we'll have to fit that model since we haven't fit that one since Chapter 3.
 
 ```{r, message = F, warning = F}
 y_model <- bf(withdraw ~ 1 + estress + affect)
 m_model <- bf(affect ~ 1 + estress)
 
-fit_3.5 <-
+model5 <-
   brm(data = estress, family = gaussian,
       y_model + m_model + set_rescor(FALSE),
       chains = 4, cores = 4)
@@ -325,18 +325,18 @@ fit_3.5 <-
 Here are the unstandardized coefficients:
 
 ```{r}
-fixef(fit_3.5) %>% round(digits = 3)
+fixef(model5) %>% round(digits = 3)
 ```
 
 And here we hand compute the standardized effects by applying Hayes's formulas to the unstandardized results:
 
 ```{r}
-post_3.5 <- posterior_samples(fit_3.5)
+post <- posterior_samples(model5)
 
 SD_x <- sd(estress$estress)
 SD_y <- sd(estress$withdraw)
 
-post_3.5 %>% 
+post %>% 
   mutate(ab = b_affect_estress * b_withdraw_affect,
          c_prime = b_withdraw_estress) %>% 
   mutate(ab_s = (SD_x*ab)/SD_y,
@@ -360,7 +360,7 @@ Hayes recommended against these, so I'm not going to bother working any examples
 
 ## 4.4 Statistical power
 
-As Hayed discussed, power is an important but thorny issue within the frequentist paradigm. Given that we’re not particularly interested in rejecting the point-null hypothesis as Bayesians and that we bring in priors (which we’ve largely avoided explicitly mentioning in his project but have been quietly using all along), the issue is even more difficult for Bayesians. To learn more on the topic, check out [Miočević, MacKinnon, and Levy's paper](https://www.tandfonline.com/doi/abs/10.1080/10705511.2017.1312407?src=recsys&journalCode=hsem20) on power in small-sample Bayesian analyses or [Gelman and Carlin's paper](http://journals.sagepub.com/doi/pdf/10.1177/1745691614551642) offering an alternative to the power paradigm. 
+As Hayed discussed, power is an important but thorny issue within the frequentist paradigm. Given that we’re not particularly interested in rejecting the point-null hypothesis as Bayesians and that we bring in priors (which we’ve largely avoided explicitly mentioning in his project but have been quietly using all along), the issue is even more difficult for Bayesians. To learn more on the topic, check out [Miočević, MacKinnon, and Levy's paper](https://www.tandfonline.com/doi/abs/10.1080/10705511.2017.1312407?src=recsys&journalCode=hsem20) on power in small-sample Bayesian analyses or [Gelman and Carlin's paper](http://journals.sagepub.com/doi/pdf/10.1177/1745691614551642) offering an alternative to the power paradigm. You might also look at Matti Vuorre's [Sample size planning with brms project](https://gitlab.com/vuorre/bayesplan).
 
 ## 4.5 Multiple $X$s or $Y$s: Analyze separately or simultaneously?
 
@@ -376,7 +376,7 @@ Hayes discussed the limitation that his PROCESS program may only handle a single
 y_model <- bf(dv ~ 1 + iv1 + iv2 + iv3 + med)
 m_model <- bf(med ~ 1 + iv1 + iv2 + iv3)
 
-fit <-
+model6 <-
   brm(data = data, family = gaussian,
       y_model + m_model + set_rescor(FALSE),
       chains = 4, cores = 4)
@@ -406,7 +406,7 @@ Here's the model.
 y_model <- bf(dv ~ 1 + iv1 + iv2 + iv3 + med)
 m_model <- bf(med ~ 1 + iv1 + iv2 + iv3)
 
-fit_4.5_simulation_mx <-
+model7 <-
   brm(data = d, family = gaussian,
       y_model + m_model + set_rescor(FALSE),
       chains = 4, cores = 4)
@@ -415,7 +415,7 @@ fit_4.5_simulation_mx <-
 And the results:
 
 ```{r}
-print(fit_4.5_simulation_mx)
+print(model7)
 ```
 
 brms came through just fine. If you wanted to simulate data with a particular correlation structure for the `iv` variables, you might use the `mvnorm()` function from the [MASS package](https://cran.r-project.org/web/packages/MASS/index.html), which you can learn more about [here](http://blog.revolutionanalytics.com/2016/02/multivariate_data_with_r.html).
@@ -446,14 +446,14 @@ y_model_2 <- bf(dv2 ~ 1 + iv + med)
 y_model_3 <- bf(dv3 ~ 1 + iv + med)
 m_model <- bf(med ~ 1 + iv)
 
-fit_4.5_simulation_my <-
+model8 <-
   brm(data = d, family = gaussian,
       y_model_1 + y_model_2 + y_model_3 + m_model + set_rescor(FALSE),
       chains = 4, cores = 4)
 ```
 
 ```{r}
-print(fit_4.5_simulation_my)
+print(model8)
 ```
 
 brms to the rescue once again!
@@ -467,7 +467,7 @@ Note. The analyses in this document were done with:
 * tidyverse   1.2.1
 * psych       1.7.3.21
 * rstan       2.17.3
-* brms        2.3.1
+* brms        2.3.2
 * viridis     0.4.0
 
 ## Reference

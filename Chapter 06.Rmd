@@ -65,31 +65,29 @@ This is the first time we've had a simple univariate regression model in a while
 ```{r, message = F, warning = F}
 library(brms)
 
-fit0 <-
+model1 <-
   brm(data = protest, family = gaussian,
       liking ~ 1 + D1 + D2,
       chains = 4, cores = 4)
 ```
 
 ```{r}
-fixef(fit0)
+fixef(model1)
 ```
 
 Our $R^2$ differes a bit from the OLS version in the text. This shouldn't be surprising when it's near the boundary. 
 
 ```{r}
-bayes_R2(fit0)
+bayes_R2(model1)
 ```
 
-Here's it's shape. For the plots in this chapter, we'll take a few formatting cues from [Edward Tufte](https://www.edwardtufte.com/tufte/books_vdqi), curtesy of the [ggthemes package](https://cran.r-project.org/web/packages/ggthemes/index.html). The `theme_tufte()` function will change the default font and remove some chart junk. We will take our color palette from [Pokemon](http://pokemonbyreview.blogspot.com/2017/02/311-312-plusle-minun.html) via the [palettetown package](https://cran.r-project.org/web/packages/palettetown/index.html).
+Here's its shape. For the plots in this chapter, we'll take a few formatting cues from [Edward Tufte](https://www.edwardtufte.com/tufte/books_vdqi), curtesy of the [ggthemes package](https://cran.r-project.org/web/packages/ggthemes/index.html). The `theme_tufte()` function will change the default font and remove some chart junk. We will take our color palette from [Pokemon](http://pokemonbyreview.blogspot.com/2017/02/311-312-plusle-minun.html) via the [palettetown package](https://cran.r-project.org/web/packages/palettetown/index.html).
 
 ```{r, fig.width = 4, fig.height = 2.5}
 library(ggthemes)
 library(palettetown)
 
-# pokepal(pokemon = "plusle")[1]
-
-bayes_R2(fit0, summary = F) %>% 
+bayes_R2(model1, summary = F) %>% 
   as_tibble() %>% 
   
   ggplot(aes(x = R2)) +
@@ -105,7 +103,7 @@ bayes_R2(fit0, summary = F) %>%
 To use the model-implied equations to compute the means for each group on the criterion, we'll extract the posterior samples.
 
 ```{r}
-post <- posterior_samples(fit0)
+post <- posterior_samples(model1)
 
 post %>% 
   transmute(Y_np = b_Intercept + b_D1*0 + b_D2*0,
@@ -119,7 +117,7 @@ post %>%
             sd = sd(value))
 ```
 
-What Hayes called the "relative total effects" *c*~1~ and *c*~2~ are the 'D1' and 'D2' lines in our `fixef()` output, above.
+What Hayes called the "relative total effects" *c*~1~ and *c*~2~ are the `D1` and `D2` lines in our `fixef()` output, above.
 
 Here's the mediation model.
 
@@ -127,20 +125,20 @@ Here's the mediation model.
 m_model <- bf(respappr ~ 1 + D1 + D2)
 y_model <- bf(liking   ~ 1 + D1 + D2 + respappr)
 
-fit1 <-
+model2 <-
   brm(data = protest, family = gaussian,
       m_model + y_model + set_rescor(FALSE),
       chains = 4, cores = 4)
 ```
 
 ```{r}
-print(fit1)
+print(model2)
 ```
 
 The Bayesian $R^2$ posteriors:
 
 ```{r, fig.width = 6, fig.height = 2.5}
-bayes_R2(fit1, summary = F) %>% 
+bayes_R2(model2, summary = F) %>% 
   as_tibble() %>% 
   gather() %>% 
   
@@ -162,7 +160,7 @@ To get the model summaries as presented in the second two columns in Table 6.2, 
 
 ```{r}
 post <-
-  posterior_samples(fit1) %>% 
+  posterior_samples(model2) %>% 
   mutate(a1 = b_respappr_D1,
          a2 = b_respappr_D2,
          b = b_liking_respappr,
@@ -217,7 +215,7 @@ post %>%
 
 Note, these are where the adjusted $Y$ values came from in Table 6.1.
 
-This is as fine a spot as any to introduce coefficient plots. Both brms and the [bayesplot package](https://github.com/stan-dev/bayesplot) offer convenience funtions for coefficient plots. It's good to know how to make them by hand. Here's ours for those last three $Y$-values.
+This is as fine a spot as any to introduce coefficient plots. Both brms and the [bayesplot package](https://github.com/stan-dev/bayesplot) offer convenience functions for coefficient plots. It's good to know how to make them by hand. Here's ours for those last three $Y$-values.
 
 ```{r, fig.width = 6, fig.height = 1}
 post %>% 
@@ -248,7 +246,7 @@ The points are the posterior medians, the thick inner lines the 50% intervals, a
 If we want to examine $R^2$ change for dropping the dummy variables, we'll first fit a model that omits them.
 
 ```{r, message = F, warning = F}
-fit2 <-
+model3 <-
   brm(data = protest, family = gaussian,
       liking ~ 1 + respappr,
       chains = 4, cores = 4)
@@ -258,21 +256,21 @@ Here are the competing $R^2$ distributions.
 
 ```{r, fig.width = 6, fig.height = 2.5}
 R2s <-
-  bayes_R2(fit1, resp = "liking", summary = F) %>%
+  bayes_R2(model2, resp = "liking", summary = F) %>%
   as_tibble() %>% 
   rename(R2 = R2_liking) %>% 
   bind_rows(
-    bayes_R2(fit2, summary = F) %>% 
+    bayes_R2(model3, summary = F) %>% 
       as_tibble()
   ) %>% 
-  mutate(fit = rep(c("fit1", "fit2"), each = 4000))
+  mutate(fit = rep(c("model2", "model3"), each = 4000))
 
 R2s %>% 
   ggplot(aes(x = R2, fill = fit)) +
   geom_density(size = 0, alpha = 2/3) +
   scale_fill_manual(values = pokepal(pokemon = "plusle")[c(6, 7)]) +
-  annotate("text", x = .19, y = 6.75, label = "fit2", color = pokepal(pokemon = "plusle")[7], family = "Times") +
-  annotate("text", x = .31, y = 6.75, label = "fit1", color = pokepal(pokemon = "plusle")[6], family = "Times") +
+  annotate("text", x = .15, y = 6.75, label = "model3", color = pokepal(pokemon = "plusle")[7], family = "Times") +
+  annotate("text", x = .35, y = 6.75, label = "model2", color = pokepal(pokemon = "plusle")[6], family = "Times") +
   scale_y_continuous(NULL, breaks = NULL) +
   coord_cartesian(xlim = 0:1) +
   labs(title = expression(paste("The ", italic(R)^{2}, " densities for LIKING substantially overlap.")),
@@ -288,7 +286,7 @@ If you want to compare then with a change score, do something like this.
 R2s %>%
   mutate(iter = rep(1:4000, times = 2)) %>% 
   spread(key = fit, value = R2) %>% 
-  mutate(difference = fit1 - fit2) %>% 
+  mutate(difference = model2 - model3) %>% 
   
   ggplot(aes(x = difference)) +
   geom_density(size = 0, fill = pokepal(pokemon = "plusle")[4]) +
@@ -336,7 +334,7 @@ Here's the model.
 m_model <- bf(respappr ~ 1 + D_1 + D_2)
 y_model <- bf(liking   ~ 1 + D_1 + D_2 + respappr)
 
-fit3 <-
+model4 <-
   brm(data = protest, family = gaussian,
       m_model + y_model + set_rescor(FALSE),
       chains = 4, cores = 4)
@@ -345,21 +343,21 @@ fit3 <-
 Here are our intercepts and regression coefficient summaries.
 
 ```{r}
-fixef(fit3)
+fixef(model4)
 ```
 
-It's important to note that these will not correspond to the "TOTAL EFFECT MODEL" section of the PROCESS output of Figure 6.3. Hayes's PROCESS has the `mcx=3` command which tells the program to reparameterize the orthogonal contrasts. brms doesn't have such a command.
+It's important to note that these will not correspond to the "TOTAL EFFECT MODEL" section of the PROCESS output of Figure 6.3. Hayes's PROCESS has the `mcx=3` command which tells the program to reparametrize the orthogonal contrasts. brms doesn't have such a command.
 
 For now, we'll have to jump to equation 6.8 towards the bottom of page 207. Those parameters are evident in our output.
 
 ```{r}
-fixef(fit3)[c(1, 3:4) , ] %>% round(digits = 3)
+fixef(model4)[c(1, 3:4) , ] %>% round(digits = 3)
 ```
 
 Thus it's easy to get the $M$-bar means with a little posterior manipulation.
 
 ```{r}
-post <- posterior_samples(fit3)
+post <- posterior_samples(model4)
 
 post <-
   post %>% 
@@ -472,7 +470,7 @@ Note. The analyses in this document were done with:
 * readr       1.1.1
 * tidyverse   1.2.1
 * rstan       2.17.3
-* brms        2.3.1
+* brms        2.3.2
 * ggthemes    3.5.0
 * palettetown 0.1.1
 

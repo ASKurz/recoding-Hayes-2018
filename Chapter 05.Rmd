@@ -28,7 +28,7 @@ Bayesian correlations, recall, just take an intercepts-only multivariate model.
 ```{r, message = F, warning = F}
 library(brms)
 
-fit0 <- 
+model1 <- 
   brm(data = pmi, family = gaussian,
       cbind(pmi, import) ~ 1,
       chains = 4, cores = 4)
@@ -37,7 +37,7 @@ fit0 <-
 A little indexing with the `posterior_summary()` function will get us the Bayesian correlation with its posterior *SD* and intervals.
 
 ```{r}
-posterior_summary(fit0)["rescor__pmi__import", ] %>% round(digits = 3)
+posterior_summary(model1)["rescor__pmi__import", ] %>% round(digits = 3)
 ```
 
 As with single mediation models, the multiple mediation model requires we carefully construct the formula for each criterion. We'll continue to use the multiple `bf()` approach.
@@ -51,14 +51,14 @@ y_model  <- bf(reaction ~ 1 + import + pmi + cond)
 And now we fit the model.
 
 ```{r, message = F, warning = F}
-fit1 <-
+model2 <-
   brm(data = pmi, family = gaussian,
       y_model + m1_model + m2_model + set_rescor(FALSE),
       chains = 4, cores = 4)
 ```
 
 ```{r}
-print(fit1)
+print(model2, digits = 3)
 ```
 
 Because we have three criteria, we'll have three Bayesian $R^2$ posteriors.
@@ -66,7 +66,7 @@ Because we have three criteria, we'll have three Bayesian $R^2$ posteriors.
 ```{r, fig.width = 8, fig.height = 2}
 library(ggthemes)
 
-bayes_R2(fit1, summary = F) %>% 
+bayes_R2(model2, summary = F) %>% 
   as_tibble() %>% 
   gather() %>% 
   mutate(key = str_remove(key, "R2_")) %>% 
@@ -87,7 +87,7 @@ bayes_R2(fit1, summary = F) %>%
 It'll take a bit of data wrangling to rename our model parameters to the $a$, $b$... configuration. We'll compute the indirect effects and *c*, too.
 
 ```{r}
-post <- posterior_samples(fit1)
+post <- posterior_samples(model2)
 
 post<-
   post %>% 
@@ -143,10 +143,10 @@ Here we follow the formula in the last sentence of the paragraph and then compar
 
 ```{r}
 post %>% 
-  # Using his formula to make our new vector, `hand_made_a1b1` 
-  mutate(hand_made_a1b1 = (cond_1_import_mean - cond_0_import_mean)*b1) %>% 
+  # Using his formula to make our new vector, `handmade a1b1` 
+  mutate(`handmade a1b1` = (cond_1_import_mean - cond_0_import_mean)*b1) %>% 
   # Here's all the usual data wrangling
-  select(a1b1, hand_made_a1b1) %>% 
+  select(a1b1, `handmade a1b1`) %>% 
   gather() %>% 
   group_by(key) %>% 
   summarize(mean = mean(value), 
@@ -156,7 +156,7 @@ post %>%
   mutate_if(is_double, round, digits = 3)
 ```
 
-Yep, at the mean, Hayes's formula is spot on. But the distributions are distinct. They differ slightly at the median and vastly in the widths of the posterior intervals. I’m no mathematician, so take this with a grain of salt, but I suspect this has to do with how we used fixed values (i.e., the difference of the subsample means) to compute `hand_made_a1b1`, but all the components in `a1b1` were estimated.
+Yep, at the mean, Hayes's formula is spot on. But the distributions are distinct. They differ slightly at the median and vastly in the widths of the posterior intervals. I’m no mathematician, so take this with a grain of salt, but I suspect this has to do with how we used fixed values (i.e., the difference of the subsample means) to compute `handmade a1b1`, but all the components in `a1b1` were estimated.
 
 Here we'll follow the same protocol for `a2b2`.
 
@@ -174,8 +174,8 @@ cond_1_pmi_mean <- pmi_means[2, 2] %>% pull()
 
 ```{r}
 post %>% 
-  mutate(hand_made_a2b2 = (cond_1_pmi_mean - cond_0_pmi_mean)*b2) %>% 
-  select(a2b2, hand_made_a2b2) %>% 
+  mutate(`handmade a2b2` = (cond_1_pmi_mean - cond_0_pmi_mean)*b2) %>% 
+  select(a2b2, `handmade a2b2`) %>% 
   gather() %>% 
   group_by(key) %>% 
   summarize(mean = mean(value), 
@@ -207,8 +207,8 @@ To use the equations on the top of page 161, we'll just work directly with the o
 post %>% 
   mutate(Y_bar_given_X_1 = b_import_Intercept + b_reaction_cond*1 + b_reaction_import*b_import_Intercept + b_reaction_pmi*b_pmi_Intercept,
          Y_bar_given_X_0 = b_import_Intercept + b_reaction_cond*0 + b_reaction_import*b_import_Intercept + b_reaction_pmi*b_pmi_Intercept) %>% 
-  mutate(c_prime_by_hand = Y_bar_given_X_1 - Y_bar_given_X_0) %>% 
-  select(c_prime, c_prime_by_hand) %>% 
+  mutate(`c_prime by hand` = Y_bar_given_X_1 - Y_bar_given_X_0) %>% 
+  select(c_prime, `c_prime by hand`) %>% 
   gather() %>% 
   group_by(key) %>% 
   summarize(mean = mean(value), 
@@ -231,11 +231,11 @@ And `c` minus `c_prime` is straight subtraction.
 
 ```{r}
 post %>% 
-  mutate(c_minus_c_prime = c - c_prime) %>% 
-  summarize(mean = mean(c_minus_c_prime), 
-            median = median(c_minus_c_prime), 
-            ll = quantile(c_minus_c_prime, probs = .025),
-            ul = quantile(c_minus_c_prime, probs = .975))
+  mutate(`c minus c_prime` = c - c_prime) %>% 
+  summarize(mean = mean(`c minus c_prime`), 
+            median = median(`c minus c_prime`), 
+            ll = quantile(`c minus c_prime`, probs = .025),
+            ul = quantile(`c minus c_prime`, probs = .975))
 ```
 
 ## 5.3 Statistical inference
@@ -339,20 +339,20 @@ m1_model <- bf(import   ~ 1 + cond)
 m2_model <- bf(pmi      ~ 1 + import + cond)
 y_model  <- bf(reaction ~ 1 + import + pmi + cond)
 
-fit2 <-
+model3 <-
   brm(data = pmi, family = gaussian,
       y_model + m1_model + m2_model + set_rescor(FALSE),
       chains = 4, cores = 4)
 ```
 
 ```{r}
-print(fit2)
+print(model3)
 ```
 
 The $R^2$ posterior densities:
 
 ```{r, fig.width = 8, fig.height = 2}
-bayes_R2(fit2, summary = F) %>% 
+bayes_R2(model3, summary = F) %>% 
   as_tibble() %>% 
   gather() %>% 
   mutate(key = str_remove(key, "R2_")) %>% 
@@ -363,8 +363,8 @@ bayes_R2(fit2, summary = F) %>%
   scale_fill_ptol() +
   scale_y_continuous(NULL, breaks = NULL) +
   coord_cartesian(xlim = 0:1) +
-  labs(title = expression(paste("The ", italic("R")^{2}, " distributions for fit2, the serial multiple mediator model")),
-       subtitle = "The density for reaction hasn't changed from fit1. However, look how the pmi density is starting to separate from import.",
+  labs(title = expression(paste("The ", italic("R")^{2}, " distributions for model3, the serial multiple mediator model")),
+       subtitle = "The density for reaction hasn't changed from model2. However, look how the pmi density is starting to separate from import.",
        x = NULL) +
   theme_minimal() +
   theme(legend.title = element_blank())
@@ -373,7 +373,7 @@ bayes_R2(fit2, summary = F) %>%
 As before, here we'll save the posterior samples into a data frame and rename the parameters a bit to match Hayes's nomenclature.
 
 ```{r}
-post <- posterior_samples(fit2)
+post <- posterior_samples(model3)
 
 post <-
   post %>% 
@@ -489,7 +489,7 @@ Note. The analyses in this document were done with:
 * readr       1.1.1
 * tidyverse   1.2.1
 * rstan       2.17.3
-* brms        2.3.1
+* brms        2.3.2
 * ggthemes    3.5.0
 
 ## Reference

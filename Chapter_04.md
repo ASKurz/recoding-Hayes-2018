@@ -1,7 +1,7 @@
 Chapter 04
 ================
 A Solomon Kurz
-2018-05-30
+2018-07-01
 
 4.2. Confounding and causal order
 ---------------------------------
@@ -47,7 +47,7 @@ Recall that if you want the correlations with Bayesian estimation and those swee
 ``` r
 library(brms)
 
-fit0 <- 
+model1 <- 
   brm(data = estress, family = gaussian,
       cbind(ese, estress, affect, withdraw) ~ 1,
       chains = 4, cores = 4)
@@ -56,7 +56,7 @@ fit0 <-
 The summary:
 
 ``` r
-print(fit0, digits = 3)
+print(model1, digits = 3)
 ```
 
     ##  Family: MV(gaussian, gaussian, gaussian, gaussian) 
@@ -74,23 +74,23 @@ print(fit0, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##                    Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## ese_Intercept         5.606     0.059    5.488    5.720       4000 1.001
-    ## estress_Intercept     4.621     0.087    4.447    4.795       4000 1.000
-    ## affect_Intercept      1.599     0.045    1.509    1.685       4000 0.999
-    ## withdraw_Intercept    2.322     0.079    2.166    2.473       4000 1.000
+    ## ese_Intercept         5.608     0.060    5.493    5.725       4000 0.999
+    ## estress_Intercept     4.620     0.088    4.450    4.799       4000 1.000
+    ## affect_Intercept      1.598     0.046    1.507    1.686       4000 1.000
+    ## withdraw_Intercept    2.320     0.079    2.167    2.473       4000 0.999
     ## 
     ## Family Specific Parameters: 
     ##                          Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma_ese                   0.953     0.042    0.875    1.038       4000 0.999
-    ## sigma_estress               1.436     0.062    1.323    1.563       4000 1.000
-    ## sigma_affect                0.730     0.032    0.670    0.796       4000 0.999
-    ## sigma_withdraw              1.258     0.056    1.151    1.373       4000 1.001
-    ## rescor(ese,estress)        -0.154     0.059   -0.265   -0.038       4000 1.001
-    ## rescor(ese,affect)         -0.240     0.058   -0.353   -0.122       4000 1.000
-    ## rescor(estress,affect)      0.334     0.054    0.224    0.436       4000 1.000
-    ## rescor(ese,withdraw)       -0.238     0.059   -0.348   -0.120       4000 0.999
-    ## rescor(estress,withdraw)    0.061     0.061   -0.057    0.178       4000 1.000
-    ## rescor(affect,withdraw)     0.411     0.052    0.304    0.507       4000 1.000
+    ## sigma_ese                   0.953     0.043    0.874    1.039       4000 0.999
+    ## sigma_estress               1.434     0.062    1.315    1.563       4000 0.999
+    ## sigma_affect                0.729     0.032    0.670    0.794       4000 0.999
+    ## sigma_withdraw              1.257     0.054    1.158    1.373       4000 0.999
+    ## rescor(ese,estress)        -0.154     0.060   -0.271   -0.034       4000 1.000
+    ## rescor(ese,affect)         -0.239     0.058   -0.350   -0.126       4000 1.000
+    ## rescor(estress,affect)      0.333     0.054    0.225    0.438       4000 1.000
+    ## rescor(ese,withdraw)       -0.237     0.060   -0.350   -0.112       4000 1.000
+    ## rescor(estress,withdraw)    0.060     0.060   -0.055    0.177       4000 0.999
+    ## rescor(affect,withdraw)     0.409     0.052    0.300    0.506       4000 1.000
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -101,7 +101,7 @@ Since we have posteriors for the correlations, why not plot them? Here we use th
 ``` r
 library(viridis)
 
-posterior_samples(fit0) %>% 
+posterior_samples(model1) %>% 
   select(rescor__ese__estress, rescor__ese__affect, rescor__estress__withdraw) %>% 
   gather() %>% 
   
@@ -125,7 +125,7 @@ posterior_samples(fit0) %>%
 
 ![](Chapter_04_files/figure-markdown_github/unnamed-chunk-5-1.png)
 
-### Accounting for confounding and epiphenomenal association
+### Accounting for confounding and epiphenomenal association.
 
 ``` r
 y_model <- bf(withdraw ~ 1 + estress + affect + ese + sex + tenure)
@@ -135,7 +135,7 @@ m_model <- bf(affect ~ 1 + estress + ese + sex + tenure)
 With our `y_model` and `m_model` defined, we're ready to fit.
 
 ``` r
-fit1 <-
+model2 <-
   brm(data = estress, family = gaussian,
       y_model + m_model + set_rescor(FALSE),
       chains = 4, cores = 4)
@@ -144,7 +144,7 @@ fit1 <-
 Here's the summary:
 
 ``` r
-print(fit1, digits = 3)
+print(model2, digits = 3)
 ```
 
     ##  Family: MV(gaussian, gaussian) 
@@ -158,22 +158,22 @@ print(fit1, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##                    Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## withdraw_Intercept    2.746     0.562    1.625    3.865       4000 0.999
-    ## affect_Intercept      1.784     0.315    1.160    2.382       4000 0.999
-    ## withdraw_estress     -0.092     0.053   -0.194    0.015       4000 1.000
-    ## withdraw_affect       0.706     0.101    0.504    0.903       4000 0.999
-    ## withdraw_ese         -0.212     0.077   -0.365   -0.059       4000 0.999
-    ## withdraw_sex          0.125     0.142   -0.144    0.403       4000 1.000
-    ## withdraw_tenure      -0.002     0.011   -0.023    0.019       4000 0.999
-    ## affect_estress        0.160     0.030    0.101    0.219       4000 0.999
-    ## affect_ese           -0.155     0.045   -0.242   -0.066       4000 0.999
-    ## affect_sex            0.016     0.086   -0.151    0.182       4000 0.999
-    ## affect_tenure        -0.011     0.006   -0.023    0.001       4000 0.999
+    ## withdraw_Intercept    2.746     0.547    1.673    3.845       4000 0.999
+    ## affect_Intercept      1.788     0.304    1.188    2.392       4000 1.000
+    ## withdraw_estress     -0.094     0.052   -0.197    0.011       4000 0.999
+    ## withdraw_affect       0.709     0.105    0.503    0.917       4000 1.000
+    ## withdraw_ese         -0.212     0.077   -0.363   -0.062       4000 0.999
+    ## withdraw_sex          0.127     0.148   -0.156    0.421       4000 1.000
+    ## withdraw_tenure      -0.002     0.011   -0.023    0.020       4000 0.999
+    ## affect_estress        0.159     0.030    0.100    0.218       4000 1.000
+    ## affect_ese           -0.155     0.044   -0.241   -0.070       4000 1.000
+    ## affect_sex            0.014     0.089   -0.161    0.187       4000 0.999
+    ## affect_tenure        -0.011     0.006   -0.023    0.002       4000 0.999
     ## 
     ## Family Specific Parameters: 
     ##                Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma_withdraw    1.127     0.050    1.037    1.225       4000 1.000
-    ## sigma_affect      0.671     0.030    0.616    0.731       4000 0.999
+    ## sigma_withdraw    1.127     0.050    1.035    1.229       4000 1.000
+    ## sigma_affect      0.670     0.030    0.613    0.731       4000 1.000
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -184,17 +184,17 @@ In the printout, notice how first within intercepts and then with covariates and
 Here are the *R*<sup>2</sup> values.
 
 ``` r
-bayes_R2(fit1) %>% round(digits = 3)
+bayes_R2(model2) %>% round(digits = 3)
 ```
 
     ##             Estimate Est.Error  Q2.5 Q97.5
-    ## R2_withdraw    0.212     0.038 0.138 0.286
-    ## R2_affect      0.170     0.037 0.099 0.244
+    ## R2_withdraw    0.214     0.039 0.137 0.289
+    ## R2_affect      0.169     0.037 0.100 0.243
 
 These are also in the same ballpark, but a little higher. Why not glance at their densities?
 
 ``` r
-bayes_R2(fit1, summary = F) %>% 
+bayes_R2(model2, summary = F) %>% 
   as_tibble() %>% 
   gather() %>% 
   
@@ -205,7 +205,7 @@ bayes_R2(fit1, summary = F) %>%
                     guide = guide_legend(title.theme = element_blank())) +
   scale_y_continuous(NULL, breaks = NULL) +
   coord_cartesian(xlim = 0:1) +
-  labs(title = expression(paste("The ", italic("R")^{2}, " distributions for fit1")),
+  labs(title = expression(paste("The ", italic("R")^{2}, " distributions for model2")),
        x = NULL) +
   theme_black() +
   theme(panel.grid = element_blank())
@@ -217,7 +217,7 @@ Here we retrieve the posterior samples, compute the indirect effect, and summari
 
 ``` r
 post <-
-  posterior_samples(fit1) %>% 
+  posterior_samples(model2) %>% 
   mutate(ab = b_affect_estress*b_withdraw_affect)
 
 quantile(post$ab, probs = c(.5, .025, .975)) %>% 
@@ -225,9 +225,9 @@ quantile(post$ab, probs = c(.5, .025, .975)) %>%
 ```
 
     ##   50%  2.5% 97.5% 
-    ## 0.111 0.065 0.169
+    ## 0.111 0.063 0.169
 
-Similar results to the text (p. 127). Here's what it looks like.
+The results are similar to those in the text (p. 127). Here's what it looks like.
 
 ``` r
 post %>% 
@@ -263,10 +263,10 @@ post %>%
 ```
 
     ## # A tibble: 2 x 4
-    ##   key        mean      ll     ul
-    ##   <chr>     <dbl>   <dbl>  <dbl>
-    ## 1 c        0.0200 -0.0860 0.128 
-    ## 2 c_prime -0.0920 -0.194  0.0150
+    ##   key       mean     ll    ul
+    ##   <chr>    <dbl>  <dbl> <dbl>
+    ## 1 c        0.018 -0.09  0.125
+    ## 2 c_prime -0.094 -0.197 0.011
 
 Both appear pretty small. Which leads us to the next section...
 
@@ -303,11 +303,11 @@ post %>%
 ```
 
     ## # A tibble: 3 x 5
-    ##   key           mean  median      ll     ul
-    ##   <chr>        <dbl>   <dbl>   <dbl>  <dbl>
-    ## 1 ab_ps       0.0900  0.0890  0.0520 0.136 
-    ## 2 c_prime_ps -0.0740 -0.0750 -0.156  0.0120
-    ## 3 c_ps        0.0160  0.0160 -0.0690 0.103
+    ##   key          mean median     ll    ul
+    ##   <chr>       <dbl>  <dbl>  <dbl> <dbl>
+    ## 1 ab_ps       0.09   0.089  0.051 0.136
+    ## 2 c_prime_ps -0.076 -0.076 -0.158 0.008
+    ## 3 c_ps        0.015  0.015 -0.072 0.1
 
 The results are similar, though not identical, to those in the text. Here we have both rounding error and estimation differences at play. The plots:
 
@@ -336,29 +336,29 @@ post %>%
 On page 135, Hayes revisited the model from section 3.3. We'll have to reload the data and refit that model to follow along.
 
 ``` r
-p <- read_csv("data/pmi/pmi.csv")
+pmi <- read_csv("data/pmi/pmi.csv")
 
 y_model <- bf(reaction ~ 1 + pmi + cond)
 m_model <- bf(pmi ~ 1 + cond)
 
-fit_3.3 <-
-  brm(data = p, family = gaussian,
+model3 <-
+  brm(data = pmi, family = gaussian,
       y_model + m_model + set_rescor(FALSE),
       chains = 4, cores = 4)
 ```
 
-The partially-standardized parameters require some posterior samples wrangling.
+The partially-standardized parameters require some `posterior_samples()` wrangling.
 
 ``` r
-post_3.3 <- posterior_samples(fit_3.3)
+post <- posterior_samples(model3)
 
-SD_y_3.3 <- sd(p$reaction)
+SD_y <- sd(pmi$reaction)
 
-post_3.3 %>% 
+post %>% 
   mutate(ab = b_pmi_cond * b_reaction_pmi,
          c_prime = b_reaction_cond) %>% 
-  mutate(ab_ps = ab/SD_y_3.3,
-         c_prime_ps = c_prime/SD_y_3.3) %>% 
+  mutate(ab_ps = ab/SD_y,
+         c_prime_ps = c_prime/SD_y) %>% 
   mutate(c_ps = c_prime_ps + ab_ps) %>% 
   select(c_prime_ps, ab_ps, c_ps) %>% 
   gather() %>%
@@ -371,19 +371,19 @@ post_3.3 %>%
 ```
 
     ## # A tibble: 3 x 5
-    ##   key         mean median       ll    ul
-    ##   <chr>      <dbl>  <dbl>    <dbl> <dbl>
-    ## 1 ab_ps      0.154  0.151  0.00400 0.334
-    ## 2 c_prime_ps 0.164  0.162 -0.167   0.495
-    ## 3 c_ps       0.318  0.317 -0.0480  0.691
+    ##   key         mean median     ll    ul
+    ##   <chr>      <dbl>  <dbl>  <dbl> <dbl>
+    ## 1 ab_ps      0.157  0.151  0.006 0.336
+    ## 2 c_prime_ps 0.166  0.165 -0.159 0.489
+    ## 3 c_ps       0.322  0.322 -0.034 0.674
 
 Happily, these results are closer to those in the text than with the previous example.
 
-### The completely standardized effect
+### The completely standardized effect.
 
-**Note**. Hayes could have made this more clear in the text, but the `estress` model he referred to in this section was the one from way back in section 3.5, *not* the one from earlier in this chapter.
+**Note**. Hayes could have made this clearer in the text, but the `estress` model he referred to in this section was the one from way back in section 3.5, *not* the one from earlier in this chapter.
 
-One way to get a sandardized sollution is to standardize the variables in the data and then fit the model with those standardized variables. To do so, we'll revisit our custom `standardize()`, put it to work, and fit the standardized version of the model from section 3.5, which we'll call `fit1_z`.
+One way to get a standardized solution is to standardize the variables in the data and then fit the model with those standardized variables. To do so, we'll revisit our custom `standardize()`, put it to work, and fit the standardized version of the model from section 3.5, which we'll call `model4`.With our `y_model` and `m_model` defined, we're ready to fit.
 
 ``` r
 sandardize <- function(x){
@@ -399,7 +399,7 @@ estress <-
 y_model <- bf(withdraw_z ~ 1 + estress_z + affect_z)
 m_model <- bf(affect_z ~ 1 + estress_z)
 
-fit_3.5_z <-
+model4 <-
   brm(data = estress, family = gaussian,
       y_model + m_model + set_rescor(FALSE),
       chains = 4, cores = 4)
@@ -408,22 +408,22 @@ fit_3.5_z <-
 Here they are, our newly standardized coefficients:
 
 ``` r
-fixef(fit_3.5_z) %>% round(digits = 3)
+fixef(model4) %>% round(digits = 3)
 ```
 
     ##                     Estimate Est.Error   Q2.5 Q97.5
-    ## withdrawz_Intercept   -0.001     0.055 -0.110 0.107
-    ## affectz_Intercept      0.001     0.060 -0.118 0.118
-    ## withdrawz_estress_z   -0.086     0.059 -0.201 0.030
-    ## withdrawz_affect_z     0.445     0.059  0.325 0.558
-    ## affectz_estress_z      0.340     0.058  0.228 0.453
+    ## withdrawz_Intercept    0.001     0.057 -0.110 0.114
+    ## affectz_Intercept      0.001     0.058 -0.113 0.115
+    ## withdrawz_estress_z   -0.087     0.060 -0.206 0.033
+    ## withdrawz_affect_z     0.446     0.060  0.328 0.564
+    ## affectz_estress_z      0.340     0.059  0.225 0.457
 
 Here we do the wrangling necessary to spell out the standardized effects for *ab*, *c*<sup>′</sup>, and *c*.
 
 ``` r
-post_3.5 <- posterior_samples(fit_3.5_z)
+post <- posterior_samples(model4)
 
-post_3.5 %>% 
+post %>% 
   mutate(ab_s = b_affectz_estress_z * b_withdrawz_affect_z,
          c_prime_s = b_withdrawz_estress_z) %>%
   mutate(c_s = ab_s + c_prime_s) %>% 
@@ -438,19 +438,19 @@ post_3.5 %>%
 ```
 
     ## # A tibble: 3 x 5
-    ##   key          mean  median      ll     ul
-    ##   <chr>       <dbl>   <dbl>   <dbl>  <dbl>
-    ## 1 ab_s       0.151   0.150   0.0910 0.220 
-    ## 2 c_prime_s -0.0860 -0.0860 -0.201  0.0300
-    ## 3 c_s        0.0650  0.0640 -0.0610 0.189
+    ##   key         mean median     ll    ul
+    ##   <chr>      <dbl>  <dbl>  <dbl> <dbl>
+    ## 1 ab_s       0.151  0.15   0.092 0.222
+    ## 2 c_prime_s -0.087 -0.087 -0.206 0.033
+    ## 3 c_s        0.064  0.063 -0.061 0.187
 
-Let's confirm that we can recover these values by applying the formulas on page 135 to the unstandardized model, which we'll call `fit_3.5`. First, we'll have to fit that model (recall, we haven't fit that one since chapter 3).
+Let's confirm that we can recover these values by applying the formulas on page 135 to the unstandardized model, which we'll call `model5`. First, we'll have to fit that model since we haven't fit that one since Chapter 3.
 
 ``` r
 y_model <- bf(withdraw ~ 1 + estress + affect)
 m_model <- bf(affect ~ 1 + estress)
 
-fit_3.5 <-
+model5 <-
   brm(data = estress, family = gaussian,
       y_model + m_model + set_rescor(FALSE),
       chains = 4, cores = 4)
@@ -459,25 +459,25 @@ fit_3.5 <-
 Here are the unstandardized coefficients:
 
 ``` r
-fixef(fit_3.5) %>% round(digits = 3)
+fixef(model5) %>% round(digits = 3)
 ```
 
     ##                    Estimate Est.Error   Q2.5 Q97.5
-    ## withdraw_Intercept    1.444     0.254  0.945 1.942
-    ## affect_Intercept      0.799     0.142  0.527 1.076
-    ## withdraw_estress     -0.077     0.052 -0.179 0.023
-    ## withdraw_affect       0.770     0.106  0.559 0.979
-    ## affect_estress        0.173     0.029  0.116 0.230
+    ## withdraw_Intercept    1.444     0.249  0.964 1.913
+    ## affect_Intercept      0.804     0.143  0.529 1.076
+    ## withdraw_estress     -0.075     0.051 -0.175 0.024
+    ## withdraw_affect       0.767     0.105  0.564 0.969
+    ## affect_estress        0.172     0.029  0.115 0.228
 
 And here we hand compute the standardized effects by applying Hayes's formulas to the unstandardized results:
 
 ``` r
-post_3.5 <- posterior_samples(fit_3.5)
+post <- posterior_samples(model5)
 
 SD_x <- sd(estress$estress)
 SD_y <- sd(estress$withdraw)
 
-post_3.5 %>% 
+post %>% 
   mutate(ab = b_affect_estress * b_withdraw_affect,
          c_prime = b_withdraw_estress) %>% 
   mutate(ab_s = (SD_x*ab)/SD_y,
@@ -494,11 +494,11 @@ post_3.5 %>%
 ```
 
     ## # A tibble: 3 x 5
-    ##   key          mean  median      ll     ul
-    ##   <chr>       <dbl>   <dbl>   <dbl>  <dbl>
-    ## 1 ab_s       0.152   0.150   0.0920 0.222 
-    ## 2 c_prime_s -0.0880 -0.0880 -0.205  0.0260
-    ## 3 c_s        0.0650  0.0640 -0.0560 0.185
+    ##   key         mean median     ll    ul
+    ##   <chr>      <dbl>  <dbl>  <dbl> <dbl>
+    ## 1 ab_s       0.151  0.149  0.093 0.218
+    ## 2 c_prime_s -0.086 -0.085 -0.2   0.027
+    ## 3 c_s        0.065  0.064 -0.056 0.185
 
 Success!
 
@@ -509,7 +509,7 @@ Hayes recommended against these, so I'm not going to bother working any examples
 4.4 Statistical power
 ---------------------
 
-As Hayed discussed, power is an important but thorny issue within the frequentist paradigm. Given that we’re not particularly interested in rejecting the point-null hypothesis as Bayesians and that we bring in priors (which we’ve largely avoided explicitly mentioning in his project but have been quietly using all along), the issue is even more difficult for Bayesians. To learn more on the topic, check out [Miočević, MacKinnon, and Levy's paper](https://www.tandfonline.com/doi/abs/10.1080/10705511.2017.1312407?src=recsys&journalCode=hsem20) on power in small-sample Bayesian analyses or [Gelman and Carlin's paper](http://journals.sagepub.com/doi/pdf/10.1177/1745691614551642) offering an alternative to the power paradigm.
+As Hayed discussed, power is an important but thorny issue within the frequentist paradigm. Given that we’re not particularly interested in rejecting the point-null hypothesis as Bayesians and that we bring in priors (which we’ve largely avoided explicitly mentioning in his project but have been quietly using all along), the issue is even more difficult for Bayesians. To learn more on the topic, check out [Miočević, MacKinnon, and Levy's paper](https://www.tandfonline.com/doi/abs/10.1080/10705511.2017.1312407?src=recsys&journalCode=hsem20) on power in small-sample Bayesian analyses or [Gelman and Carlin's paper](http://journals.sagepub.com/doi/pdf/10.1177/1745691614551642) offering an alternative to the power paradigm. You might also look at Matti Vuorre's [Sample size planning with brms project](https://gitlab.com/vuorre/bayesplan).
 
 4.5 Multiple *X*s or *Y*s: Analyze separately or simultaneously?
 ----------------------------------------------------------------
@@ -526,7 +526,7 @@ Hayes discussed the limitation that his PROCESS program may only handle a single
 y_model <- bf(dv ~ 1 + iv1 + iv2 + iv3 + med)
 m_model <- bf(med ~ 1 + iv1 + iv2 + iv3)
 
-fit <-
+model6 <-
   brm(data = data, family = gaussian,
       y_model + m_model + set_rescor(FALSE),
       chains = 4, cores = 4)
@@ -566,7 +566,7 @@ Here's the model.
 y_model <- bf(dv ~ 1 + iv1 + iv2 + iv3 + med)
 m_model <- bf(med ~ 1 + iv1 + iv2 + iv3)
 
-fit_4.5_simulation_mx <-
+model7 <-
   brm(data = d, family = gaussian,
       y_model + m_model + set_rescor(FALSE),
       chains = 4, cores = 4)
@@ -575,7 +575,7 @@ fit_4.5_simulation_mx <-
 And the results:
 
 ``` r
-print(fit_4.5_simulation_mx)
+print(model7)
 ```
 
     ##  Family: MV(gaussian, gaussian) 
@@ -591,13 +591,13 @@ print(fit_4.5_simulation_mx)
     ##               Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
     ## dv_Intercept     -0.01      0.03    -0.07     0.05       4000 1.00
     ## med_Intercept     0.00      0.03    -0.06     0.06       4000 1.00
-    ## dv_iv1            0.02      0.04    -0.06     0.11       3046 1.00
-    ## dv_iv2            0.56      0.03     0.50     0.62       4000 1.00
-    ## dv_iv3            1.01      0.05     0.92     1.10       2907 1.00
-    ## dv_med            0.46      0.03     0.40     0.53       2394 1.00
-    ## med_iv1          -0.93      0.03    -1.00    -0.87       4000 1.00
+    ## dv_iv1            0.02      0.04    -0.06     0.11       2645 1.00
+    ## dv_iv2            0.56      0.03     0.50     0.63       4000 1.00
+    ## dv_iv3            1.01      0.05     0.92     1.10       2738 1.00
+    ## dv_med            0.46      0.03     0.40     0.53       2217 1.00
+    ## med_iv1          -0.93      0.03    -0.99    -0.87       4000 1.00
     ## med_iv2           0.03      0.03    -0.03     0.09       4000 1.00
-    ## med_iv3           0.98      0.03     0.92     1.04       4000 1.00
+    ## med_iv3           0.98      0.03     0.91     1.04       4000 1.00
     ## 
     ## Family Specific Parameters: 
     ##           Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
@@ -646,14 +646,14 @@ y_model_2 <- bf(dv2 ~ 1 + iv + med)
 y_model_3 <- bf(dv3 ~ 1 + iv + med)
 m_model <- bf(med ~ 1 + iv)
 
-fit_4.5_simulation_my <-
+model8 <-
   brm(data = d, family = gaussian,
       y_model_1 + y_model_2 + y_model_3 + m_model + set_rescor(FALSE),
       chains = 4, cores = 4)
 ```
 
 ``` r
-print(fit_4.5_simulation_my)
+print(model8)
 ```
 
     ##  Family: MV(gaussian, gaussian, gaussian, gaussian) 
@@ -672,9 +672,9 @@ print(fit_4.5_simulation_my)
     ## Population-Level Effects: 
     ##               Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
     ## dv1_Intercept     0.01      0.03    -0.05     0.08       4000 1.00
-    ## dv2_Intercept     0.00      0.03    -0.06     0.06       4000 1.00
+    ## dv2_Intercept     0.00      0.03    -0.06     0.07       4000 1.00
     ## dv3_Intercept    -0.01      0.03    -0.07     0.05       4000 1.00
-    ## med_Intercept     0.03      0.03    -0.04     0.09       4000 1.00
+    ## med_Intercept     0.03      0.03    -0.03     0.09       4000 1.00
     ## dv1_iv           -1.05      0.04    -1.12    -0.98       4000 1.00
     ## dv1_med           0.05      0.03    -0.01     0.11       4000 1.00
     ## dv2_iv            0.05      0.04    -0.02     0.12       4000 1.00
@@ -705,7 +705,7 @@ Note. The analyses in this document were done with:
 -   tidyverse 1.2.1
 -   psych 1.7.3.21
 -   rstan 2.17.3
--   brms 2.3.1
+-   brms 2.3.2
 -   viridis 0.4.0
 
 Reference

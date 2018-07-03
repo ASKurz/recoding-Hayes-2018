@@ -70,21 +70,63 @@ However, notice the 'Eff.Sample' columns. The values for `model2` were substanti
 
 The [bayesplot package](https://github.com/stan-dev/bayesplot) offers a variety of [diagnostic plots](https://cran.r-project.org/web/packages/bayesplot/vignettes/visual-mcmc-diagnostics.html#effective-sample-size). Here we'll use the `mcmc_acf()` function to make autocorrelation plots for all model parameters. Note that when we add `add_chain = T` to `brms::posterior_samples()`, we add an index to the data that allows us to keep track of which iteration comes from which chain. That index will come in handy for our `mcmc_acf()` plots.
 
+But before we get there, we'll be using an [xkcd](https://xkcd.com)-inspired theme with help from the [xkcd package](https://cran.r-project.org/web/packages/xkcd/index.html) for our plots in this chapter.
+
+```{r, warning = F, message = F}
+# install.packages("xkcd", dependencies = F)
+
+library(xkcd)
+```
+
+If you haven't used the xkcd package, before, you might also need to take a few extra steps outlined [here](https://cran.r-project.org/web/packages/xkcd/vignettes/xkcd-intro.pdf), part of which requires help from the [extrafont package](https://cran.r-project.org/web/packages/extrafont/README.html),
+
+```{r, eval = F}
+library(extrafont)
+
+download.file("http://simonsoftware.se/other/xkcd.ttf",
+              dest = "xkcd.ttf", mode = "wb")
+ 
+system("mkdir ~/.fonts")
+system("cp xkcd.ttf  ~/.fonts")
+# This line of code returned an error message
+# font_import(pattern = "[X/x]kcd", prompt = FALSE)
+
+# This line from (https://stackoverflow.com/questions/49221040/error-in-font-import-while-installing-xkcd-font) fixed the problem
+font_import(path = "~/.fonts", pattern = "[X/x]kcd", prompt=FALSE)
+fonts()
+fonttable()
+ if(.Platform$OS.type != "unix") {
+   ## Register fonts for Windows bitmap output
+   loadfonts(device="win")
+ } else {
+   loadfonts()
+ }
+```
+
+
+After installing, I still experienced error messages, which were alleviated after I followed [these steps outlined by Remi.b](https://stackoverflow.com/questions/48553545/polygon-edge-not-found-with-the-xkcd-package). You may or may not need them.
+
+But anyways, here are our `mcmc_acf()` plots.
+
 ```{r, fig.width = 8, fig.height = 4, message = F, warning = F}
 library(bayesplot)
 
 post1 <- posterior_samples(model1, add_chain = T)
 mcmc_acf(post1, 
          pars = c("b_Intercept", "b_negemot", "b_age", "b_negemot:age", "sigma"),
-         lags = 4) 
+         lags = 4) +
+  theme_xkcd()
 
 post2 <- posterior_samples(model2, add_chain = T)
 mcmc_acf(post2, 
          pars = c("b_Intercept", "b_negemot_c", "b_age_c", "b_negemot_c:age_c", "sigma"),
-         lags = 4) 
+         lags = 4) +
+  theme_xkcd() 
 ```
 
-So again, high autocorrelations in the HMC chains have consequences for the effective sample size. In the [Visual MCMC diagnostics using the bayesplot package](https://cran.r-project.org/web/packages/bayesplot/vignettes/visual-mcmc-diagnostics.html#effective-sample-size) vignette, Gabry wrote:
+As it turns out, `theme_xkcd()` can't handle special characters like "_", so it returns rectangles instead. So it goes...
+
+But again, high autocorrelations in the HMC chains have consequences for the effective sample size. In the [Visual MCMC diagnostics using the bayesplot package](https://cran.r-project.org/web/packages/bayesplot/vignettes/visual-mcmc-diagnostics.html#effective-sample-size) vignette, Gabry wrote:
 
 >The effective sample size is an estimate of the number of independent draws from the posterior distribution of the estimand of interest. Because the draws within a Markov chain are *not* independent if there is autocorrelation, the effective sample size, $n$~eff~, will be smaller than the total sample size, $N$. The larger the ratio of $n$~eff~ to $N$ the better.
 
@@ -100,8 +142,13 @@ ratios_model2 <-
   neff_ratio(model2,
              pars = c("b_Intercept", "b_negemot_c", "b_age_c", "b_negemot_c:age_c", "sigma"))
 
-mcmc_neff(ratios_model1) + yaxis_text(hjust = 0)
-mcmc_neff(ratios_model2) + yaxis_text(hjust = 0)
+mcmc_neff(ratios_model1) + 
+  yaxis_text(hjust = 0) +
+  theme_xkcd()
+
+mcmc_neff(ratios_model2) + 
+  yaxis_text(hjust = 0) +
+  theme_xkcd()
 ```
 
 Although none of the $n$~eff~ to $N$ ratios were in the shockingly-low range for either model, there were substantially closer to 1 for `model2`.
@@ -112,6 +159,7 @@ In addition to autocorrelations and $n$~eff~ to $N$ ratios, there is also the is
 pairs(model1,
       off_diag_args = list(size = 1/10,
                            alpha = 1/5))
+
 pairs(model2,
       off_diag_args = list(size = 1/10,
                            alpha = 1/5))
@@ -134,11 +182,12 @@ head(post)
 
 Now we've put our posterior iterations into a data object, `post`, we can make a scatter plot of two parameters. Here we'll choose `b_negemot` and the interaction coefficient, `b_negemot:age`.
 
-```{r, fig.width = 4, fig.height = 4.25}
+```{r, fig.width = 4, fig.height = 4.5}
 post %>% 
   ggplot(aes(x = b_negemot, y = `b_negemot:age`)) +
   geom_point(size = 1/10, alpha = 1/5) +
-  labs(subtitle = "Each dot is of the parameter pair from a single\niteration. Across the 4,000 total posterior iterations,\nit becomes clear the two parameters are highly\nnegatively correlated.")
+  labs(subtitle = "Each dot is of the parameter pair from\na single iteration. Across the 4,000\ntotal posterior iterations, it becomes\nclear the two parameters are highly\nnegatively correlated.") +
+  theme_xkcd()
 ```
 
 And indeed, the Pearson's correlation is:
@@ -215,7 +264,7 @@ VarCorr(correlations1)$residual__$cov[3, , "negemotxage"] %>% round(digits = 3)
 
 And if you're like totally lost with all this indexing, you might code `VarCorr(correlations1) %>% str()` and spend a little time looking at what `VarCorr()` produces.
 
-On page 309, Hayes explanied why the OLS variance for *b*~3~ is unaffected by mean-centering. The story was similar for our HMC model, too:
+On page 309, Hayes explained why the OLS variance for *b*~3~ is unaffected by mean-centering. The story was similar for our HMC model, too:
 
 ```{r}
 fixef(model1)["negemot:age", "Est.Error"]
@@ -307,7 +356,7 @@ The results correspond nicely to those in Table 9.1.
 
 ## 9.3 A caution on manual centering and standardization
 
-It's worthwhile considering the issue of listwise deletion when data are partially missing. The brms default is to delete rows with missingness, "NA" in R, for the predictors. However, [brms allows users to perform one-step Bayesian imputation for missing values using the `mi()` syntax](https://cran.r-project.org/web/packages/brms/vignettes/brms_missings.html). First we'll firt see what happens when you fit a model in brms when some of the `negemot_z` values are missing, but without using the `mi()` syntax. And of course before we do that, we'll make a `negemot_z_missing` variable, which is identical to `negemot_z`, but about 10% of the values are missing.
+It's worthwhile considering the issue of listwise deletion when data are partially missing. The brms default is to delete rows with missingness, "NA" in R, for the predictors. However, [brms allows users to perform one-step Bayesian imputation for missing values using the `mi()` syntax](https://cran.r-project.org/web/packages/brms/vignettes/brms_missings.html). First we'll fit see what happens when you fit a model in brms when some of the `negemot_z` values are missing, but without using the `mi()` syntax. And of course before we do that, we'll make a `negemot_z_missing` variable, which is identical to `negemot_z`, but about 10% of the values are missing.
 
 ```{r}
 set.seed(815)
@@ -317,7 +366,7 @@ glbwarm <-
   mutate(negemot_z_missing = ifelse(missing == 1, NA, negemot_z))
 ```
 
-If you've never used `rbinom()` before, code `?rbinom` or look it up in your favorite web search engine. Here's our listwise deletion model, which corresponds to what you'd get from a tpical OLS-based program.
+If you've never used `rbinom()` before, code `?rbinom` or look it up in your favorite web search engine. Here's our listwise deletion model, which corresponds to what you'd get from a typical OLS-based program.
 
 ```{r, warning = F, message = F}
 model5 <- 
@@ -489,10 +538,10 @@ fitted(model7, newdata = nd) %>%
   as_tibble() %>% 
   bind_cols(nd) %>% 
   # These lines will make the strip text match with those with Hayes's Figure
-  mutate(sex = ifelse(sex == 0, str_c("Females (W = ", sex, ")"),
-                      str_c("Males (W = ", sex, ")")),
-         age = str_c("Age (Z) = ", age)) %>% 
-  
+  mutate(sex = ifelse(sex == 0, str_c("Females, W = ", sex),
+                      str_c("Males, W = ", sex)),
+         age = str_c("Age, Z, = ", age)) %>% 
+
   # finally, the plot!
   ggplot(aes(x = negemot, group = sex)) +
   geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5, fill = sex),
@@ -502,8 +551,9 @@ fitted(model7, newdata = nd) %>%
   scale_x_continuous(breaks = 1:6) +
   coord_cartesian(xlim = 1:6,
                   ylim = 3:6) +
-  labs(x = expression(paste("Negative Emotions about Climate Change (", italic(X), ")")),
-       y = expression(paste("Support for Government Action to Mitigate Climate Change (", italic(Y), ")"))) +
+  labs(x = expression(paste("Negative Emotions about Climate Change, ", italic(X))),
+       y = expression(paste("Support for Government Action to Mitigate Climate Change, ", italic(Y)))) +
+  theme_xkcd() +
   theme(legend.position = "top",
         legend.title = element_blank()) +
   facet_grid(age ~ .)
@@ -526,7 +576,7 @@ model10 <-
 print(model10, digits = 3)
 ```
 
-Our `print()` output matches farily well with the OLS results on pages 332 and 333. Our new Bayesian $R^2$ is:
+Our `print()` output matches fairly well with the OLS results on pages 332 and 333. Our new Bayesian $R^2$ is:
 
 ```{r}
 bayes_R2(model10) %>% round(digits = 3)
@@ -539,9 +589,9 @@ fitted(model10, newdata = nd) %>%
   as_tibble() %>% 
   bind_cols(nd) %>% 
   # These lines will make the strip text match with those with Hayes's Figure
-  mutate(sex = ifelse(sex == 0, str_c("Females (W = ", sex, ")"),
-                      str_c("Males (W = ", sex, ")")),
-         age = str_c("Age (Z) = ", age)) %>% 
+  mutate(sex = ifelse(sex == 0, str_c("Females, W = ", sex),
+                      str_c("Males, W = ", sex)),
+         age = str_c("Age, Z, = ", age)) %>% 
   
   # behold, Figure 9.6!
   ggplot(aes(x = negemot, group = sex)) +
@@ -552,8 +602,9 @@ fitted(model10, newdata = nd) %>%
   scale_x_continuous(breaks = 1:6) +
   coord_cartesian(xlim = 1:6,
                   ylim = 3:6) +
-  labs(x = expression(paste("Negative Emotions about Climate Change (", italic(X), ")")),
-       y = expression(paste("Support for Government Action to Mitigate Climate Change (", italic(Y), ")"))) +
+  labs(x = expression(paste("Negative Emotions about Climate Change, ", italic(X))),
+       y = expression(paste("Support for Government Action to Mitigate Climate Change, ", italic(Y)))) +
+  theme_xkcd() +
   theme(legend.position = "top",
         legend.title = element_blank()) +
   facet_grid(age ~ .)
@@ -586,13 +637,14 @@ post %>%
             `age = 50` = `b_negemot:sex` + `b_negemot:sex:age`*50, 
             `age = 70` = `b_negemot:sex` + `b_negemot:sex:age`*70) %>% 
   gather(theta_XW_on_Y_given, value) %>%
-  mutate(theta_XW_on_Y_given = str_extract(theta_XW_on_Y_given, "\\d+") %>% as.double()) %>% 
-  group_by(theta_XW_on_Y_given) %>%
+  mutate(`theta XW on Y given` = str_extract(theta_XW_on_Y_given, "\\d+") %>% as.double()) %>% 
+  group_by(`theta XW on Y given`) %>%
   summarize(mean = mean(value),
             ll = quantile(value, probs = .025),
-            ul = quantile(value, probs = .975)) %>% 
+            ul = quantile(value, probs = .975)) %>%
   
-  ggplot(aes(x = theta_XW_on_Y_given)) +
+  # the plot
+  ggplot(aes(x = `theta XW on Y given`)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 38.114) +
   geom_ribbon(aes(ymin = ll, ymax = ul),
@@ -600,10 +652,11 @@ post %>%
   geom_line(aes(y = mean), 
             size = 1) +
   coord_cartesian(xlim = 20:85,
-                  ylim = c(-.25, .75))
+                  ylim = c(-.25, .75)) +
+  theme_xkcd()
 ```
 
-Notice how we just took the code from our pick-a-point analysis, left out the `mutate_if()` rounding part, and dumped it into a plot. So one obvious approach would be to pick like 30 or 50 `age` values to plug into `transmute()` and just do the same thing. If you're super afraid of coding, that'd be one intuitive but extremely verbose attempt. And I've done stuff like that earlier in my R career. There's no shame in being extremely verbose and redundant if that's what makes sense. Another way is to think in terms of functions. When we made `age = 30` within `transmute()`, we took a specific `age` value (i.e., 30) and plugged it into the formula `b_negemot:sex + b_negemot:sex:age*i` where i = 30. And when we made `age = 50` we did exacly the same thing but switched out the 30 for a 50. So what we need is a function that will take a range of values for i, plug them into our `b_negemot:sex + b_negemot:sex:age*i` formula, and then neatly return the output. A nice base R function for that is `sapply()`.
+Notice how we just took the code from our pick-a-point analysis, left out the `mutate_if()` rounding part, and dumped it into a plot. So one obvious approach would be to pick like 30 or 50 `age` values to plug into `transmute()` and just do the same thing. If you're super afraid of coding, that'd be one intuitive but extremely verbose attempt. And I've done stuff like that earlier in my R career. There's no shame in being extremely verbose and redundant if that's what makes sense. Another way is to think in terms of functions. When we made `age = 30` within `transmute()`, we took a specific `age` value (i.e., 30) and plugged it into the formula `b_negemot:sex + b_negemot:sex:age*i` where i = 30. And when we made `age = 50` we did exactly the same thing but switched out the 30 for a 50. So what we need is a function that will take a range of values for i, plug them into our `b_negemot:sex + b_negemot:sex:age*i` formula, and then neatly return the output. A nice base R function for that is `sapply()`.
 
 ```{r}
 sapply(15:90, function(i){
@@ -638,8 +691,9 @@ sapply(15:90, function(i){
             size = 1) +
   coord_cartesian(xlim = 20:85,
                   ylim = c(-.25, .75)) +
-  labs(x = expression(paste("Age (", italic(Z), ")")),
-       y = "Conditional Two-way Interaction Between\nNegative Emotions and Sex")
+  labs(x = expression(paste("Age, ", italic(Z))),
+       y = "Conditional Two-way Interaction Between\nNegative Emotions and Sex") +
+  theme_xkcd()
 ```
 
 Or for kicks and giggles, another way to get a clearer sense of how our data informed the shape of the plot, here we replace our `geom_ribbon() + geom_line()` code with `geom_pointrange()`.
@@ -663,8 +717,9 @@ sapply(15:90, function(i){
                   shape = 16, size = 1/3) +
   coord_cartesian(xlim = 20:85,
                   ylim = c(-.25, .75)) +
-  labs(x = expression(paste("Age (", italic(Z), ")")),
-       y = "Conditional Two-way Interaction Between\nNegative Emotions and Sex")
+  labs(x = expression(paste("Age, ", italic(Z))),
+       y = "Conditional Two-way Interaction Between\nNegative Emotions and Sex") +
+  theme_xkcd()
 ```
 
 Although I probably wouldn’t try to use a plot like this in a manuscript, I hope it makes clear how the way we’ve been implementing the JN technique is just the pick-a-point approach in bulk. No magic. 
@@ -702,6 +757,9 @@ Note. The analyses in this document were done with:
 * readr        1.1.1
 * rstan        2.17.3
 * brms         2.3.2
+* xkcd         0.0.5
+* extrafont    0.17
+* bayesplot    1.5.0
 
 ## Reference
 

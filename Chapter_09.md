@@ -1,7 +1,7 @@
 Chapter 09
 ================
 A Solomon Kurz
-2018-06-21
+2018-07-03
 
 9.1 Truths and myths about mean-centering
 -----------------------------------------
@@ -62,15 +62,15 @@ As with Hayes's OLS models, our HMC models yield the same Bayesian *R*<sup>2</su
 bayes_R2(model1) %>% round(digits = 3)
 ```
 
-    ##    Estimate Est.Error Q2.5 Q97.5
-    ## R2    0.354     0.022 0.31 0.395
+    ##    Estimate Est.Error  Q2.5 Q97.5
+    ## R2    0.354     0.022 0.309 0.396
 
 ``` r
 bayes_R2(model2) %>% round(digits = 3)
 ```
 
-    ##    Estimate Est.Error Q2.5 Q97.5
-    ## R2    0.353     0.022 0.31 0.395
+    ##    Estimate Est.Error  Q2.5 Q97.5
+    ## R2    0.354     0.022 0.309 0.395
 
 Our model summaries also correspond nicely with those in Table 9.1.
 
@@ -87,14 +87,14 @@ print(model1, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##             Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## Intercept      4.337     0.330    3.678    4.993       1628 1.001
-    ## negemot        0.147     0.085   -0.025    0.313       1610 1.001
-    ## age           -0.031     0.006   -0.043   -0.019       1621 1.001
-    ## negemot:age    0.007     0.002    0.004    0.010       1557 1.002
+    ## Intercept      4.335     0.327    3.708    4.983       1415 1.001
+    ## negemot        0.147     0.084   -0.017    0.313       1500 1.001
+    ## age           -0.031     0.006   -0.043   -0.019       1415 1.001
+    ## negemot:age    0.007     0.002    0.004    0.010       1769 1.001
     ## 
     ## Family Specific Parameters: 
     ##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma    1.096     0.028    1.042    1.153       2498 1.002
+    ## sigma    1.098     0.027    1.047    1.152       2691 1.000
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -113,14 +113,14 @@ print(model2, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##                 Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## Intercept          4.596     0.038    4.519    4.672       3332 1.000
-    ## negemot_c          0.500     0.025    0.451    0.549       3515 0.999
-    ## age_c             -0.005     0.002   -0.010   -0.001       4000 0.999
+    ## Intercept          4.597     0.038    4.525    4.671       3543 1.000
+    ## negemot_c          0.501     0.026    0.449    0.551       3247 0.999
+    ## age_c             -0.005     0.002   -0.010   -0.001       4000 1.000
     ## negemot_c:age_c    0.007     0.002    0.004    0.010       4000 1.000
     ## 
     ## Family Specific Parameters: 
     ##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma    1.097     0.027    1.047    1.154       3267 1.000
+    ## sigma    1.097     0.027    1.044    1.151       3599 1.000
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -130,27 +130,68 @@ However, notice the 'Eff.Sample' columns. The values for `model2` were substanti
 
 The [bayesplot package](https://github.com/stan-dev/bayesplot) offers a variety of [diagnostic plots](https://cran.r-project.org/web/packages/bayesplot/vignettes/visual-mcmc-diagnostics.html#effective-sample-size). Here we'll use the `mcmc_acf()` function to make autocorrelation plots for all model parameters. Note that when we add `add_chain = T` to `brms::posterior_samples()`, we add an index to the data that allows us to keep track of which iteration comes from which chain. That index will come in handy for our `mcmc_acf()` plots.
 
+But before we get there, we'll be using an [xkcd](https://xkcd.com)-inspired theme with help from the [xkcd package](https://cran.r-project.org/web/packages/xkcd/index.html) for our plots in this chapter.
+
+``` r
+# install.packages("xkcd", dependencies = F)
+
+library(xkcd)
+```
+
+If you haven't used the xkcd package, before, you might also need to take a few extra steps outlined [here](https://cran.r-project.org/web/packages/xkcd/vignettes/xkcd-intro.pdf), part of which requires help from the [extrafont package](https://cran.r-project.org/web/packages/extrafont/README.html),
+
+``` r
+library(extrafont)
+
+download.file("http://simonsoftware.se/other/xkcd.ttf",
+              dest = "xkcd.ttf", mode = "wb")
+ 
+system("mkdir ~/.fonts")
+system("cp xkcd.ttf  ~/.fonts")
+# This line of code returned an error message
+# font_import(pattern = "[X/x]kcd", prompt = FALSE)
+
+# This line from (https://stackoverflow.com/questions/49221040/error-in-font-import-while-installing-xkcd-font) fixed the problem
+font_import(path = "~/.fonts", pattern = "[X/x]kcd", prompt=FALSE)
+fonts()
+fonttable()
+ if(.Platform$OS.type != "unix") {
+   ## Register fonts for Windows bitmap output
+   loadfonts(device="win")
+ } else {
+   loadfonts()
+ }
+```
+
+After installing, I still experienced error messages, which were alleviated after I followed [these steps outlined by Remi.b](https://stackoverflow.com/questions/48553545/polygon-edge-not-found-with-the-xkcd-package). You may or may not need them.
+
+But anyways, here are our `mcmc_acf()` plots.
+
 ``` r
 library(bayesplot)
 
 post1 <- posterior_samples(model1, add_chain = T)
 mcmc_acf(post1, 
          pars = c("b_Intercept", "b_negemot", "b_age", "b_negemot:age", "sigma"),
-         lags = 4) 
+         lags = 4) +
+  theme_xkcd()
 ```
 
-![](Chapter_09_files/figure-markdown_github/unnamed-chunk-6-1.png)
+![](Chapter_09_files/figure-markdown_github/unnamed-chunk-8-1.png)
 
 ``` r
 post2 <- posterior_samples(model2, add_chain = T)
 mcmc_acf(post2, 
          pars = c("b_Intercept", "b_negemot_c", "b_age_c", "b_negemot_c:age_c", "sigma"),
-         lags = 4) 
+         lags = 4) +
+  theme_xkcd() 
 ```
 
-![](Chapter_09_files/figure-markdown_github/unnamed-chunk-6-2.png)
+![](Chapter_09_files/figure-markdown_github/unnamed-chunk-8-2.png)
 
-So again, high autocorrelations in the HMC chains have consequences for the effective sample size. In the [Visual MCMC diagnostics using the bayesplot package](https://cran.r-project.org/web/packages/bayesplot/vignettes/visual-mcmc-diagnostics.html#effective-sample-size) vignette, Gabry wrote:
+As it turns out, `theme_xkcd()` can't handle special characters like "\_", so it returns rectangles instead. So it goes...
+
+But again, high autocorrelations in the HMC chains have consequences for the effective sample size. In the [Visual MCMC diagnostics using the bayesplot package](https://cran.r-project.org/web/packages/bayesplot/vignettes/visual-mcmc-diagnostics.html#effective-sample-size) vignette, Gabry wrote:
 
 > The effective sample size is an estimate of the number of independent draws from the posterior distribution of the estimand of interest. Because the draws within a Markov chain are *not* independent if there is autocorrelation, the effective sample size, *n*<sub>eff</sub>, will be smaller than the total sample size, *N*. The larger the ratio of *n*<sub>eff</sub> to *N* the better.
 
@@ -166,16 +207,20 @@ ratios_model2 <-
   neff_ratio(model2,
              pars = c("b_Intercept", "b_negemot_c", "b_age_c", "b_negemot_c:age_c", "sigma"))
 
-mcmc_neff(ratios_model1) + yaxis_text(hjust = 0)
+mcmc_neff(ratios_model1) + 
+  yaxis_text(hjust = 0) +
+  theme_xkcd()
 ```
 
-![](Chapter_09_files/figure-markdown_github/unnamed-chunk-7-1.png)
+![](Chapter_09_files/figure-markdown_github/unnamed-chunk-9-1.png)
 
 ``` r
-mcmc_neff(ratios_model2) + yaxis_text(hjust = 0)
+mcmc_neff(ratios_model2) + 
+  yaxis_text(hjust = 0) +
+  theme_xkcd()
 ```
 
-![](Chapter_09_files/figure-markdown_github/unnamed-chunk-7-2.png)
+![](Chapter_09_files/figure-markdown_github/unnamed-chunk-9-2.png)
 
 Although none of the *n*<sub>eff</sub> to *N* ratios were in the shockingly-low range for either model, there were substantially closer to 1 for `model2`.
 
@@ -187,7 +232,7 @@ pairs(model1,
                            alpha = 1/5))
 ```
 
-![](Chapter_09_files/figure-markdown_github/unnamed-chunk-8-1.png)
+![](Chapter_09_files/figure-markdown_github/unnamed-chunk-10-1.png)
 
 ``` r
 pairs(model2,
@@ -195,7 +240,7 @@ pairs(model2,
                            alpha = 1/5))
 ```
 
-![](Chapter_09_files/figure-markdown_github/unnamed-chunk-8-2.png)
+![](Chapter_09_files/figure-markdown_github/unnamed-chunk-10-2.png)
 
 When fitting models with HMC, centering can make a difference for the parameter correlations. If you prefer a more numeric approach, `vcov()` will yield the variance/covariance matrix--or correlation matrix when using `correlation = T`--for the parameters in a model.
 
@@ -204,20 +249,20 @@ vcov(model1, correlation = T) %>% round(digits = 2)
 ```
 
     ##             Intercept negemot   age negemot:age
-    ## Intercept        1.00   -0.93 -0.95        0.88
-    ## negemot         -0.93    1.00  0.88       -0.95
+    ## Intercept        1.00   -0.92 -0.95        0.87
+    ## negemot         -0.92    1.00  0.88       -0.95
     ## age             -0.95    0.88  1.00       -0.92
-    ## negemot:age      0.88   -0.95 -0.92        1.00
+    ## negemot:age      0.87   -0.95 -0.92        1.00
 
 ``` r
 vcov(model2, correlation = T) %>% round(digits = 2)
 ```
 
     ##                 Intercept negemot_c age_c negemot_c:age_c
-    ## Intercept            1.00     -0.03  0.03            0.05
-    ## negemot_c           -0.03      1.00  0.06           -0.09
-    ## age_c                0.03      0.06  1.00           -0.01
-    ## negemot_c:age_c      0.05     -0.09 -0.01            1.00
+    ## Intercept            1.00     -0.02  0.00            0.05
+    ## negemot_c           -0.02      1.00  0.07           -0.09
+    ## age_c                0.00      0.07  1.00            0.01
+    ## negemot_c:age_c      0.05     -0.09  0.01            1.00
 
 *And so wait, what does that even mean for a parameter to correlate with another parameter?* you might ask. Fair enough. Let's compute a correlation step by step. First, `posterior_samples()`:
 
@@ -227,13 +272,13 @@ post <- posterior_samples(model1)
 head(post)
 ```
 
-    ##   b_Intercept b_negemot       b_age b_negemot:age    sigma      lp__
-    ## 1    4.403728 0.1114640 -0.03003817   0.007396204 1.088235 -1235.441
-    ## 2    4.500435 0.1666328 -0.03455496   0.007141672 1.102326 -1237.037
-    ## 3    4.291949 0.1461668 -0.02926550   0.007125883 1.097990 -1234.971
-    ## 4    4.114642 0.1695000 -0.02447830   0.006388947 1.103440 -1236.583
-    ## 5    4.583618 0.0979061 -0.03309017   0.007752180 1.055650 -1237.391
-    ## 6    3.990672 0.2072579 -0.02670000   0.006373618 1.167371 -1239.838
+    ##   b_Intercept  b_negemot       b_age b_negemot:age    sigma      lp__
+    ## 1    4.709518 0.07254779 -0.03854443   0.008666569 1.094695 -1235.730
+    ## 2    4.372799 0.07168528 -0.03076259   0.008395105 1.117717 -1237.188
+    ## 3    4.191396 0.12993450 -0.02828150   0.007452796 1.109616 -1236.236
+    ## 4    4.179044 0.16478308 -0.03069087   0.007405382 1.128229 -1236.928
+    ## 5    4.527298 0.11159879 -0.03068122   0.006911079 1.116318 -1236.914
+    ## 6    4.112334 0.25186594 -0.02888752   0.005542823 1.097013 -1237.576
 
 Now we've put our posterior iterations into a data object, `post`, we can make a scatter plot of two parameters. Here we'll choose `b_negemot` and the interaction coefficient, `b_negemot:age`.
 
@@ -241,10 +286,11 @@ Now we've put our posterior iterations into a data object, `post`, we can make a
 post %>% 
   ggplot(aes(x = b_negemot, y = `b_negemot:age`)) +
   geom_point(size = 1/10, alpha = 1/5) +
-  labs(subtitle = "Each dot is of the parameter pair from a single\niteration. Across the 4,000 total posterior iterations,\nit becomes clear the two parameters are highly\nnegatively correlated.")
+  labs(subtitle = "Each dot is of the parameter pair from\na single iteration. Across the 4,000\ntotal posterior iterations, it becomes\nclear the two parameters are highly\nnegatively correlated.") +
+  theme_xkcd()
 ```
 
-![](Chapter_09_files/figure-markdown_github/unnamed-chunk-11-1.png)
+![](Chapter_09_files/figure-markdown_github/unnamed-chunk-13-1.png)
 
 And indeed, the Pearson's correlation is:
 
@@ -252,7 +298,7 @@ And indeed, the Pearson's correlation is:
 cor(post$b_negemot, post$`b_negemot:age`)
 ```
 
-    ## [1] -0.95462
+    ## [1] -0.9535904
 
 And what was that part from the `vcov()` output, again?
 
@@ -260,7 +306,7 @@ And what was that part from the `vcov()` output, again?
 vcov(model1, correlation = T)["negemot", "negemot:age"]
 ```
 
-    ## [1] -0.95462
+    ## [1] -0.9535904
 
 Boom! That's where the correlations come from.
 
@@ -318,18 +364,18 @@ print(correlations1, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##                       Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## negemot_Intercept        3.557     0.055    3.448    3.661       3342 1.000
-    ## age_Intercept           49.529     0.544   48.427   50.598       4000 1.000
-    ## negemotxage_Intercept  174.750     3.454  167.918  181.580       3160 1.001
+    ## negemot_Intercept        3.559     0.053    3.457    3.663       2882 1.000
+    ## age_Intercept           49.550     0.572   48.420   50.676       3663 1.001
+    ## negemotxage_Intercept  174.930     3.366  168.490  181.610       3173 1.000
     ## 
     ## Family Specific Parameters: 
     ##                             Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma_negemot                  1.530     0.037    1.458    1.605       3598 1.002
-    ## sigma_age                     16.359     0.397   15.617   17.152       3393 1.000
-    ## sigma_negemotxage             97.374     2.426   92.659  102.307       2943 1.001
-    ## rescor(negemot,age)           -0.060     0.035   -0.127    0.009       3160 1.002
-    ## rescor(negemot,negemotxage)    0.765     0.014    0.735    0.792       2729 1.001
-    ## rescor(age,negemotxage)        0.547     0.024    0.498    0.593       4000 1.001
+    ## sigma_negemot                  1.530     0.037    1.459    1.604       2981 1.000
+    ## sigma_age                     16.361     0.409   15.579   17.176       2933 1.001
+    ## sigma_negemotxage             97.412     2.370   92.899  102.182       2331 1.001
+    ## rescor(negemot,age)           -0.059     0.034   -0.125    0.007       2643 1.001
+    ## rescor(negemot,negemotxage)    0.765     0.014    0.735    0.792       2277 1.001
+    ## rescor(age,negemotxage)        0.547     0.024    0.499    0.594       3259 1.001
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -352,18 +398,18 @@ print(correlations2, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##                         Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## negemotc_Intercept         0.000     0.054   -0.106    0.103       4000 0.999
-    ## agec_Intercept             0.009     0.566   -1.089    1.081       4000 0.999
-    ## negemotcxagec_Intercept   -1.422     0.863   -3.078    0.259       4000 1.000
+    ## negemotc_Intercept         0.001     0.053   -0.100    0.104       4000 0.999
+    ## agec_Intercept             0.008     0.572   -1.137    1.124       4000 1.001
+    ## negemotcxagec_Intercept   -1.429     0.830   -3.056    0.162       4000 1.000
     ## 
     ## Family Specific Parameters: 
     ##                                Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma_negemotc                    1.533     0.038    1.461    1.611       4000 1.000
-    ## sigma_agec                       16.375     0.404   15.617   17.185       4000 1.000
-    ## sigma_negemotcxagec              24.246     0.609   23.077   25.484       4000 1.000
-    ## rescor(negemotc,agec)            -0.057     0.035   -0.127    0.013       4000 0.999
-    ## rescor(negemotc,negemotcxagec)    0.092     0.035    0.023    0.159       4000 0.999
-    ## rescor(agec,negemotcxagec)       -0.015     0.036   -0.084    0.056       4000 0.999
+    ## sigma_negemotc                    1.533     0.039    1.460    1.612       4000 0.999
+    ## sigma_agec                       16.359     0.407   15.580   17.167       4000 1.000
+    ## sigma_negemotcxagec              24.226     0.600   23.092   25.456       4000 1.000
+    ## rescor(negemotc,agec)            -0.057     0.035   -0.126    0.010       4000 1.000
+    ## rescor(negemotc,negemotcxagec)    0.092     0.035    0.023    0.159       4000 1.000
+    ## rescor(agec,negemotcxagec)       -0.015     0.034   -0.081    0.053       4000 1.000
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -386,18 +432,18 @@ print(correlations3, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##                         Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## negemotz_Intercept         0.000     0.036   -0.070    0.070       4000 1.000
-    ## agez_Intercept            -0.000     0.034   -0.069    0.066       4000 1.000
-    ## negemotzxagez_Intercept   -0.057     0.034   -0.123    0.008       4000 0.999
+    ## negemotz_Intercept        -0.000     0.035   -0.070    0.068       4000 0.999
+    ## agez_Intercept             0.000     0.034   -0.066    0.070       4000 1.000
+    ## negemotzxagez_Intercept   -0.057     0.033   -0.122    0.005       4000 0.999
     ## 
     ## Family Specific Parameters: 
     ##                                Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma_negemotz                    1.002     0.025    0.956    1.053       4000 0.999
-    ## sigma_agez                        1.003     0.025    0.956    1.053       4000 1.000
-    ## sigma_negemotzxagez               0.972     0.024    0.927    1.021       4000 0.999
-    ## rescor(negemotz,agez)            -0.057     0.035   -0.124    0.012       4000 0.999
-    ## rescor(negemotz,negemotzxagez)    0.092     0.036    0.020    0.161       4000 0.999
-    ## rescor(agez,negemotzxagez)       -0.016     0.035   -0.084    0.053       4000 0.999
+    ## sigma_negemotz                    1.003     0.025    0.956    1.054       4000 0.999
+    ## sigma_agez                        1.003     0.025    0.957    1.053       4000 0.999
+    ## sigma_negemotzxagez               0.972     0.024    0.924    1.020       4000 1.000
+    ## rescor(negemotz,agez)            -0.056     0.035   -0.124    0.014       4000 0.999
+    ## rescor(negemotz,negemotzxagez)    0.092     0.034    0.027    0.159       4000 0.999
+    ## rescor(agez,negemotzxagez)       -0.014     0.035   -0.082    0.054       4000 1.000
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -414,21 +460,21 @@ VarCorr(correlations1)$residual__$cor %>%
     ## 
     ##             Estimate Est.Error   Q2.5 Q97.5
     ## negemot        1.000     0.000  1.000 1.000
-    ## age           -0.060     0.035 -0.127 0.009
+    ## age           -0.059     0.034 -0.125 0.007
     ## negemotxage    0.765     0.014  0.735 0.792
     ## 
     ## , , age
     ## 
     ##             Estimate Est.Error   Q2.5 Q97.5
-    ## negemot       -0.060     0.035 -0.127 0.009
+    ## negemot       -0.059     0.034 -0.125 0.007
     ## age            1.000     0.000  1.000 1.000
-    ## negemotxage    0.547     0.024  0.498 0.593
+    ## negemotxage    0.547     0.024  0.499 0.594
     ## 
     ## , , negemotxage
     ## 
     ##             Estimate Est.Error  Q2.5 Q97.5
     ## negemot        0.765     0.014 0.735 0.792
-    ## age            0.547     0.024 0.498 0.593
+    ## age            0.547     0.024 0.499 0.594
     ## negemotxage    1.000     0.000 1.000 1.000
 
 For the sake of space, I'll let you check that out for `correlations2` and `correlations3`. If you're tricky with your `VarCorr()` indexing, you can also get the model-implied variances.
@@ -438,37 +484,37 @@ VarCorr(correlations1)$residual__$cov[1, , "negemot"] %>% round(digits = 3)
 ```
 
     ##  Estimate Est.Error      Q2.5     Q97.5 
-    ##     2.341     0.114     2.127     2.575
+    ##     2.342     0.113     2.128     2.573
 
 ``` r
 VarCorr(correlations1)$residual__$cov[2, , "age"] %>% round(digits = 3)
 ```
 
     ##  Estimate Est.Error      Q2.5     Q97.5 
-    ##   267.767    13.011   243.895   294.196
+    ##   267.860    13.391   242.696   295.019
 
 ``` r
 VarCorr(correlations1)$residual__$cov[3, , "negemotxage"] %>% round(digits = 3)
 ```
 
     ##  Estimate Est.Error      Q2.5     Q97.5 
-    ##  9487.516   473.152  8585.761 10466.822
+    ##  9494.682   462.250  8630.179 10441.166
 
 And if you're like totally lost with all this indexing, you might code `VarCorr(correlations1) %>% str()` and spend a little time looking at what `VarCorr()` produces.
 
-On page 309, Hayes explanied why the OLS variance for *b*<sub>3</sub> is unaffected by mean-centering. The story was similar for our HMC model, too:
+On page 309, Hayes explained why the OLS variance for *b*<sub>3</sub> is unaffected by mean-centering. The story was similar for our HMC model, too:
 
 ``` r
 fixef(model1)["negemot:age", "Est.Error"]
 ```
 
-    ## [1] 0.001604113
+    ## [1] 0.001588544
 
 ``` r
 fixef(model2)["negemot_c:age_c", "Est.Error"]
 ```
 
-    ## [1] 0.001577777
+    ## [1] 0.001567008
 
 For more details, you might also see the [28.11. Standardizing Predictors and Outputs subsection of the Stan Modeling Language User’s Guide and Reference Manual, 2.17.0](http://mc-stan.org/users/documentation/)--[Stan](http://mc-stan.org), of course, being the computational engine underneath our brms hood.
 
@@ -481,7 +527,7 @@ fixef(model1)["negemot", 1] +
   fixef(model1)["negemot:age", 1]*mean(glbwarm$age)
 ```
 
-    ## [1] 0.5006701
+    ## [1] 0.5007338
 
 But we're proper Bayesians and like a summary of the spread in the posterior. So we'll evoke `posterior_samples()` and the other usual steps.
 
@@ -496,7 +542,7 @@ post %>%
 ```
 
     ##    mean    sd
-    ## 1 0.501 0.026
+    ## 1 0.501 0.025
 
 And note how the standard error Hayes computed at the top of page 311 corresponds nicely with the posterior *SD* we just computed. Hayes employed a fancy formula; we just used `sd()`.
 
@@ -527,7 +573,7 @@ bayes_R2(model3) %>% round(digits = 3)
 ```
 
     ##    Estimate Est.Error  Q2.5 Q97.5
-    ## R2    0.354     0.021 0.311 0.395
+    ## R2    0.354     0.022 0.309 0.396
 
 ``` r
 print(model3, digits = 3)
@@ -542,14 +588,14 @@ print(model3, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##                 Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## Intercept          0.007     0.029   -0.050    0.063       4000 1.000
-    ## negemot_z          0.562     0.028    0.508    0.618       4000 0.999
-    ## age_z             -0.064     0.028   -0.119   -0.009       4000 1.000
-    ## negemot_z:age_z    0.132     0.029    0.076    0.189       4000 1.000
+    ## Intercept          0.008     0.028   -0.048    0.063       4000 0.999
+    ## negemot_z          0.562     0.029    0.503    0.622       4000 1.001
+    ## age_z             -0.063     0.028   -0.119   -0.008       4000 0.999
+    ## negemot_z:age_z    0.131     0.029    0.072    0.189       4000 1.000
     ## 
     ## Family Specific Parameters: 
     ##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma    0.807     0.020    0.769    0.846       4000 1.002
+    ## sigma    0.806     0.020    0.768    0.846       4000 1.000
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -579,7 +625,7 @@ bayes_R2(model4) %>% round(digits = 3)
 ```
 
     ##    Estimate Est.Error  Q2.5 Q97.5
-    ## R2    0.354     0.021 0.311 0.394
+    ## R2    0.354     0.021 0.312 0.395
 
 ``` r
 print(model4, digits = 3)
@@ -594,14 +640,14 @@ print(model4, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##                 Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## Intercept          0.000     0.028   -0.054    0.053       2766 1.002
-    ## negemot_z          0.168     0.095   -0.014    0.357       1174 1.002
-    ## age_z             -0.366     0.073   -0.507   -0.223       1074 1.002
-    ## negemot_x_age_z    0.508     0.114    0.284    0.722       1120 1.002
+    ## Intercept         -0.000     0.028   -0.056    0.054       2702 1.001
+    ## negemot_z          0.164     0.098   -0.039    0.355       1442 1.002
+    ## age_z             -0.370     0.075   -0.522   -0.224       1337 1.001
+    ## negemot_x_age_z    0.514     0.117    0.288    0.748       1422 1.002
     ## 
     ## Family Specific Parameters: 
     ##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma    0.807     0.020    0.768    0.848       2508 1.001
+    ## sigma    0.807     0.020    0.769    0.847       2982 1.000
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -612,7 +658,7 @@ The results correspond nicely to those in Table 9.1.
 9.3 A caution on manual centering and standardization
 -----------------------------------------------------
 
-It's worthwhile considering the issue of listwise deletion when data are partially missing. The brms default is to delete rows with missingness, "NA" in R, for the predictors. However, [brms allows users to perform one-step Bayesian imputation for missing values using the `mi()` syntax](https://cran.r-project.org/web/packages/brms/vignettes/brms_missings.html). First we'll firt see what happens when you fit a model in brms when some of the `negemot_z` values are missing, but without using the `mi()` syntax. And of course before we do that, we'll make a `negemot_z_missing` variable, which is identical to `negemot_z`, but about 10% of the values are missing.
+It's worthwhile considering the issue of listwise deletion when data are partially missing. The brms default is to delete rows with missingness, "NA" in R, for the predictors. However, [brms allows users to perform one-step Bayesian imputation for missing values using the `mi()` syntax](https://cran.r-project.org/web/packages/brms/vignettes/brms_missings.html). First we'll fit see what happens when you fit a model in brms when some of the `negemot_z` values are missing, but without using the `mi()` syntax. And of course before we do that, we'll make a `negemot_z_missing` variable, which is identical to `negemot_z`, but about 10% of the values are missing.
 
 ``` r
 set.seed(815)
@@ -622,7 +668,7 @@ glbwarm <-
   mutate(negemot_z_missing = ifelse(missing == 1, NA, negemot_z))
 ```
 
-If you've never used `rbinom()` before, code `?rbinom` or look it up in your favorite web search engine. Here's our listwise deletion model, which corresponds to what you'd get from a tpical OLS-based program.
+If you've never used `rbinom()` before, code `?rbinom` or look it up in your favorite web search engine. Here's our listwise deletion model, which corresponds to what you'd get from a typical OLS-based program.
 
 ``` r
 model5 <- 
@@ -647,9 +693,9 @@ print(model3)
     ## Population-Level Effects: 
     ##                 Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
     ## Intercept           0.01      0.03    -0.05     0.06       4000 1.00
-    ## negemot_z           0.56      0.03     0.51     0.62       4000 1.00
+    ## negemot_z           0.56      0.03     0.50     0.62       4000 1.00
     ## age_z              -0.06      0.03    -0.12    -0.01       4000 1.00
-    ## negemot_z:age_z     0.13      0.03     0.08     0.19       4000 1.00
+    ## negemot_z:age_z     0.13      0.03     0.07     0.19       4000 1.00
     ## 
     ## Family Specific Parameters: 
     ##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
@@ -674,7 +720,7 @@ print(model5)
     ##                         Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
     ## Intercept                   0.00      0.03    -0.06     0.06       4000 1.00
     ## negemot_z_missing           0.56      0.03     0.50     0.62       4000 1.00
-    ## age_z                      -0.05      0.03    -0.11     0.00       4000 1.00
+    ## age_z                      -0.05      0.03    -0.11     0.01       4000 1.00
     ## negemot_z_missing:age_z     0.12      0.03     0.06     0.18       4000 1.00
     ## 
     ## Family Specific Parameters: 
@@ -724,9 +770,9 @@ print(model6)
     ## Population-Level Effects: 
     ##                                   Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat
     ## govactz_Intercept                     0.00      0.03    -0.05     0.06       4000 1.00
-    ## negemotzmissing_Intercept             0.00      0.04    -0.07     0.08       4000 1.00
+    ## negemotzmissing_Intercept             0.00      0.04    -0.07     0.07       4000 1.00
     ## govactz_age_z                        -0.07      0.03    -0.12    -0.01       4000 1.00
-    ## govactz_minegemot_z_missing           0.56      0.03     0.50     0.61       4000 1.00
+    ## govactz_minegemot_z_missing           0.56      0.03     0.50     0.62       3841 1.00
     ## govactz_minegemot_z_missing:age_z     0.13      0.03     0.07     0.19       4000 1.00
     ## 
     ## Family Specific Parameters: 
@@ -753,26 +799,26 @@ post[, 1:20] %>%
 
     ## Observations: 4,000
     ## Variables: 20
-    ## $ b_govactz_Intercept                     <dbl> 0.0181383302, -0.0157326422, 0.0541318227, -0.034953...
-    ## $ b_negemotzmissing_Intercept             <dbl> -0.0307637493, -0.0576830166, -0.0456627319, 0.03928...
-    ## $ b_govactz_age_z                         <dbl> -0.097128166, -0.078661301, -0.083013163, -0.0640657...
-    ## $ bsp_govactz_minegemot_z_missing         <dbl> 0.4922146, 0.5356537, 0.5646695, 0.5716735, 0.572536...
-    ## $ `bsp_govactz_minegemot_z_missing:age_z` <dbl> 0.13762695, 0.14981250, 0.15308656, 0.09964480, 0.10...
-    ## $ sigma_govactz                           <dbl> 0.8110994, 0.8215303, 0.7763660, 0.8493301, 0.856560...
-    ## $ sigma_negemotzmissing                   <dbl> 0.9753204, 1.0090418, 1.0279405, 0.9557356, 0.969063...
-    ## $ `Ymi_negemotzmissing[7]`                <dbl> 1.74991761, 1.09547254, 0.73468761, 1.10011759, 1.47...
-    ## $ `Ymi_negemotzmissing[22]`               <dbl> 0.17423965, 0.64322923, 0.90150105, -0.05036961, 0.5...
-    ## $ `Ymi_negemotzmissing[31]`               <dbl> -0.324453965, -0.437521581, 0.292070674, -0.36131765...
-    ## $ `Ymi_negemotzmissing[55]`               <dbl> -2.295059382, -1.076011699, 0.159550899, -0.46651615...
-    ## $ `Ymi_negemotzmissing[60]`               <dbl> 0.02262024, 0.05999956, 1.34228118, -0.24186362, 0.0...
-    ## $ `Ymi_negemotzmissing[66]`               <dbl> -0.12286084, -0.49384017, -0.11129494, -0.45227533, ...
-    ## $ `Ymi_negemotzmissing[72]`               <dbl> -1.35785668, -0.41280703, 0.51579125, 0.22405164, 0....
-    ## $ `Ymi_negemotzmissing[86]`               <dbl> -0.11296394, -0.17204023, 0.72675978, -1.29127972, -...
-    ## $ `Ymi_negemotzmissing[87]`               <dbl> -0.467488859, 0.025624740, -0.116221060, -1.29201106...
-    ## $ `Ymi_negemotzmissing[98]`               <dbl> -0.69646520, -1.77535027, -0.99531982, 0.59370055, 0...
-    ## $ `Ymi_negemotzmissing[103]`              <dbl> 0.03547854, 0.17929884, 1.22315695, -0.03041375, 0.6...
-    ## $ `Ymi_negemotzmissing[107]`              <dbl> -2.157201115, -1.897721053, -0.863650535, -0.2811301...
-    ## $ `Ymi_negemotzmissing[131]`              <dbl> 0.40998377, -0.41145431, -0.93377592, 0.04128900, 0....
+    ## $ b_govactz_Intercept                     <dbl> 0.003574490, 0.014874716, -0.035726558, 0.012186404,...
+    ## $ b_negemotzmissing_Intercept             <dbl> 0.0103516537, 0.0025714530, -0.0271925979, 0.0979463...
+    ## $ b_govactz_age_z                         <dbl> -0.10293185, -0.08506592, -0.08714004, -0.06398920, ...
+    ## $ bsp_govactz_minegemot_z_missing         <dbl> 0.5739021, 0.5093743, 0.5377512, 0.5665437, 0.555503...
+    ## $ `bsp_govactz_minegemot_z_missing:age_z` <dbl> 0.10919278, 0.18197021, 0.12707801, 0.12895237, 0.12...
+    ## $ sigma_govactz                           <dbl> 0.7971189, 0.7866350, 0.7906205, 0.8262685, 0.831839...
+    ## $ sigma_negemotzmissing                   <dbl> 0.9947861, 1.0213122, 1.0514727, 1.0026996, 0.983750...
+    ## $ `Ymi_negemotzmissing[7]`                <dbl> -0.46927246, 0.56270929, 2.09277345, -0.25184726, 0....
+    ## $ `Ymi_negemotzmissing[22]`               <dbl> 0.14950946, 0.60161496, 1.17228813, -0.46157907, -0....
+    ## $ `Ymi_negemotzmissing[31]`               <dbl> 1.08576455, -0.74951646, 0.72054367, -0.14247657, 0....
+    ## $ `Ymi_negemotzmissing[55]`               <dbl> -0.47671103, -0.82260422, -0.86583470, 0.28494429, -...
+    ## $ `Ymi_negemotzmissing[60]`               <dbl> 0.8775006, 2.0939391, 1.7756923, -0.7991225, 0.42155...
+    ## $ `Ymi_negemotzmissing[66]`               <dbl> 0.16904943, -0.23780259, -1.33647578, 0.64392640, 0....
+    ## $ `Ymi_negemotzmissing[72]`               <dbl> 0.28194632, 0.13491146, 0.99305436, 0.65183479, 0.57...
+    ## $ `Ymi_negemotzmissing[86]`               <dbl> -1.01181075, -0.40330024, -0.72492705, -0.13525310, ...
+    ## $ `Ymi_negemotzmissing[87]`               <dbl> -1.41260464, 0.61794174, -0.31377681, -0.50065686, -...
+    ## $ `Ymi_negemotzmissing[98]`               <dbl> -1.13279967, -1.33098961, -1.99908373, 2.41252915, 0...
+    ## $ `Ymi_negemotzmissing[103]`              <dbl> 1.33872810, 1.24756291, 1.62308091, -0.65712808, -0....
+    ## $ `Ymi_negemotzmissing[107]`              <dbl> -0.67179840, 0.07666515, 0.76462982, -1.26161304, -1...
+    ## $ `Ymi_negemotzmissing[131]`              <dbl> 0.14996058, -0.45505783, 0.16912008, -0.48703444, -1...
 
 Columns `b_govactz_Intercept` through `sigma_negemotzmissing` were business as usual. But notice all the `Ymi_negemotzmissing[i]` columns. In each of these we see 4,000 posterior draws for the missing `negemot_z_missing` values. The `[i]` part of the column names indexes which row number the iterations correspond to. Since we made a lot of missing values in the data, I won't go through them all. But we can focus on a few to get a sense of the results.
 
@@ -791,21 +837,21 @@ post %>%
 ```
 
     ## # A tibble: 13 x 5
-    ##      row   mean    sd     ll    ul
-    ##    <int>  <dbl> <dbl>  <dbl> <dbl>
-    ##  1   103  0.650 0.820 -0.940 2.27 
-    ##  2   107 -0.590 0.810 -2.15  0.970
-    ##  3   131 -0.480 0.710 -1.84  0.900
-    ##  4    22  0.390 0.770 -1.12  1.92 
-    ##  5    31 -0.150 0.760 -1.64  1.38 
-    ##  6    55 -0.250 0.840 -1.87  1.36 
-    ##  7    60  0.480 0.760 -1.02  1.97 
-    ##  8    66 -0.350 0.870 -2.11  1.35 
-    ##  9     7  0.910 0.810 -0.680 2.51 
-    ## 10    72  0.330 0.740 -1.13  1.79 
-    ## 11    86 -0.330 0.780 -1.85  1.20 
-    ## 12    87 -0.670 0.760 -2.19  0.840
-    ## 13    98 -0.190 0.860 -1.90  1.46
+    ##      row  mean    sd    ll    ul
+    ##    <int> <dbl> <dbl> <dbl> <dbl>
+    ##  1   103  0.67  0.85 -1     2.42
+    ##  2   107 -0.56  0.8  -2.17  1.01
+    ##  3   131 -0.48  0.73 -1.87  0.92
+    ##  4    22  0.39  0.77 -1.1   1.91
+    ##  5    31 -0.11  0.76 -1.62  1.39
+    ##  6    55 -0.26  0.85 -1.94  1.38
+    ##  7    60  0.49  0.77 -1     1.97
+    ##  8    66 -0.33  0.84 -1.95  1.31
+    ##  9     7  0.91  0.86 -0.73  2.59
+    ## 10    72  0.31  0.73 -1.14  1.72
+    ## 11    86 -0.35  0.81 -1.92  1.21
+    ## 12    87 -0.67  0.76 -2.14  0.78
+    ## 13    98 -0.17  0.84 -1.79  1.45
 
 In conventional mean-imputation, you just plug the sample mean into the missing value slot (which is a sin against data; don't do this). With multiple imputation, you create a small number of alternative data sets, typically 5, into which you impute plausible values into the missing value slots. With one-step Bayesian imputation using the `mi()` syntax, you get an entire posterior distribution for each missing value. And if you have variables in the data set that might help predict what those missing values are, you’d just plug that into the model. For more on the topic, see Bürkner’s [vignette](https://cran.r-project.org/web/packages/brms/vignettes/brms_missings.html), McElreath’s [lecture on the topic](https://www.youtube.com/watch?v=Yi0EqAu043A), or my [effort to translate the chapter 14 code in McElreath’s text into brms](https://github.com/ASKurz/Statistical_Rethinking_with_brms_ggplot2_and_the_tidyverse/blob/master/Ch._14_Missing_Data_and_Other_Opportunities.md).
 
@@ -842,18 +888,18 @@ print(model7, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##             Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## Intercept      5.277     0.339    4.623    5.940       2451 1.000
-    ## negemot        0.091     0.081   -0.064    0.251       2168 1.001
-    ## sex           -0.734     0.191   -1.108   -0.356       2099 1.001
-    ## age           -0.018     0.006   -0.030   -0.007       2114 1.000
-    ## posemot       -0.023     0.028   -0.078    0.032       4000 0.999
-    ## ideology      -0.207     0.027   -0.260   -0.155       4000 1.001
-    ## negemot:sex    0.203     0.049    0.110    0.299       2105 1.001
-    ## negemot:age    0.005     0.002    0.002    0.008       2024 1.000
+    ## Intercept      5.277     0.331    4.647    5.930       2741 1.000
+    ## negemot        0.091     0.083   -0.072    0.250       2418 0.999
+    ## sex           -0.743     0.196   -1.127   -0.351       1924 1.003
+    ## age           -0.018     0.006   -0.030   -0.006       2374 1.000
+    ## posemot       -0.024     0.028   -0.078    0.030       3453 1.000
+    ## ideology      -0.206     0.027   -0.260   -0.152       3509 0.999
+    ## negemot:sex    0.205     0.050    0.106    0.306       1938 1.003
+    ## negemot:age    0.005     0.002    0.002    0.008       2360 1.000
     ## 
     ## Family Specific Parameters: 
     ##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma    1.048     0.025    1.001    1.099       3512 1.000
+    ## sigma    1.048     0.027    0.997    1.102       4000 1.000
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -898,10 +944,10 @@ r2s %>%
 ```
 
     ## # A tibble: 2 x 4
-    ##   key                                mean      ll     ul
-    ##   <chr>                             <dbl>   <dbl>  <dbl>
-    ## 1 delta_r2_due_to_age_interaction 0.00700 -0.0490 0.0630
-    ## 2 delta_r2_due_to_sex_interaction 0.0130  -0.0430 0.0680
+    ##   key                              mean     ll    ul
+    ##   <chr>                           <dbl>  <dbl> <dbl>
+    ## 1 delta_r2_due_to_age_interaction 0.006 -0.051 0.061
+    ## 2 delta_r2_due_to_sex_interaction 0.011 -0.045 0.068
 
 Recall that *R*<sup>2</sup> is in a 0-to-1 metric. It's a proportion. If you want to convert that to a percentage, as in percent of variance explained, you'd just multiply by 100. To make it explicit, let's do that.
 
@@ -919,8 +965,8 @@ r2s %>%
     ## # A tibble: 2 x 4
     ##   key                              mean    ll    ul
     ##   <chr>                           <dbl> <dbl> <dbl>
-    ## 1 delta_r2_due_to_age_interaction 0.688 -4.87  6.32
-    ## 2 delta_r2_due_to_sex_interaction 1.27  -4.32  6.78
+    ## 1 delta_r2_due_to_age_interaction 0.623 -5.14  6.09
+    ## 2 delta_r2_due_to_sex_interaction 1.14  -4.49  6.85
 
 Hopefully it's clear how our proportions turned percentages correspond to the figures on page 325. However, note how our 95% credible intervals do not cohere with the *p*-values from Hayes's *F*-tests.
 
@@ -942,12 +988,12 @@ head(nd)
     ## # A tibble: 6 x 5
     ##   negemot   sex   age posemot ideology
     ##     <dbl> <int> <dbl>   <dbl>    <dbl>
-    ## 1   0.500     0  30.0    3.13     4.08
-    ## 2   0.707     0  30.0    3.13     4.08
-    ## 3   0.914     0  30.0    3.13     4.08
-    ## 4   1.12      0  30.0    3.13     4.08
-    ## 5   1.33      0  30.0    3.13     4.08
-    ## 6   1.53      0  30.0    3.13     4.08
+    ## 1   0.5       0    30    3.13     4.08
+    ## 2   0.707     0    30    3.13     4.08
+    ## 3   0.914     0    30    3.13     4.08
+    ## 4   1.12      0    30    3.13     4.08
+    ## 5   1.33      0    30    3.13     4.08
+    ## 6   1.53      0    30    3.13     4.08
 
 With our `nd` values in hand, we're ready to make our version of Figure 9.3.
 
@@ -956,10 +1002,10 @@ fitted(model7, newdata = nd) %>%
   as_tibble() %>% 
   bind_cols(nd) %>% 
   # These lines will make the strip text match with those with Hayes's Figure
-  mutate(sex = ifelse(sex == 0, str_c("Females (W = ", sex, ")"),
-                      str_c("Males (W = ", sex, ")")),
-         age = str_c("Age (Z) = ", age)) %>% 
-  
+  mutate(sex = ifelse(sex == 0, str_c("Females, W = ", sex),
+                      str_c("Males, W = ", sex)),
+         age = str_c("Age, Z, = ", age)) %>% 
+
   # finally, the plot!
   ggplot(aes(x = negemot, group = sex)) +
   geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5, fill = sex),
@@ -969,14 +1015,15 @@ fitted(model7, newdata = nd) %>%
   scale_x_continuous(breaks = 1:6) +
   coord_cartesian(xlim = 1:6,
                   ylim = 3:6) +
-  labs(x = expression(paste("Negative Emotions about Climate Change (", italic(X), ")")),
-       y = expression(paste("Support for Government Action to Mitigate Climate Change (", italic(Y), ")"))) +
+  labs(x = expression(paste("Negative Emotions about Climate Change, ", italic(X))),
+       y = expression(paste("Support for Government Action to Mitigate Climate Change, ", italic(Y)))) +
+  theme_xkcd() +
   theme(legend.position = "top",
         legend.title = element_blank()) +
   facet_grid(age ~ .)
 ```
 
-![](Chapter_09_files/figure-markdown_github/unnamed-chunk-44-1.png)
+![](Chapter_09_files/figure-markdown_github/unnamed-chunk-46-1.png)
 
 ### Moderated moderation.
 
@@ -1004,33 +1051,33 @@ print(model10, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##                 Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## Intercept          4.560     0.488    3.602    5.483       1394 1.003
-    ## negemot            0.273     0.119    0.046    0.511       1340 1.004
-    ## sex                0.534     0.651   -0.706    1.808       1123 1.005
-    ## age               -0.003     0.010   -0.022    0.016       1353 1.003
-    ## posemot           -0.020     0.027   -0.073    0.035       2913 1.000
-    ## ideology          -0.206     0.027   -0.261   -0.155       3672 1.001
-    ## negemot:sex       -0.132     0.168   -0.464    0.192       1089 1.005
-    ## negemot:age        0.001     0.002   -0.004    0.006       1361 1.004
-    ## sex:age           -0.025     0.012   -0.051   -0.002       1126 1.004
-    ## negemot:sex:age    0.007     0.003    0.000    0.013       1147 1.004
+    ## Intercept          4.543     0.488    3.595    5.479       1182 1.002
+    ## negemot            0.276     0.119    0.039    0.506       1203 1.002
+    ## sex                0.549     0.641   -0.723    1.789       1110 1.002
+    ## age               -0.003     0.010   -0.022    0.016       1231 1.002
+    ## posemot           -0.021     0.029   -0.075    0.035       3074 1.000
+    ## ideology          -0.205     0.027   -0.258   -0.154       3072 1.001
+    ## negemot:sex       -0.136     0.165   -0.461    0.190       1121 1.002
+    ## negemot:age        0.001     0.002   -0.004    0.006       1229 1.002
+    ## sex:age           -0.026     0.012   -0.050   -0.001       1097 1.003
+    ## negemot:sex:age    0.007     0.003    0.001    0.013       1110 1.002
     ## 
     ## Family Specific Parameters: 
     ##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma    1.048     0.026    0.998    1.100       2880 1.001
+    ## sigma    1.047     0.026    0.997    1.100       3438 0.999
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
     ## scale reduction factor on split chains (at convergence, Rhat = 1).
 
-Our `print()` output matches farily well with the OLS results on pages 332 and 333. Our new Bayesian *R*<sup>2</sup> is:
+Our `print()` output matches fairly well with the OLS results on pages 332 and 333. Our new Bayesian *R*<sup>2</sup> is:
 
 ``` r
 bayes_R2(model10) %>% round(digits = 3)
 ```
 
     ##    Estimate Est.Error  Q2.5 Q97.5
-    ## R2    0.416      0.02 0.376 0.454
+    ## R2    0.416      0.02 0.375 0.454
 
 Because we haven't changed the predictor variables in the model--just added interactions among them--there's no need to redo our `nd` values. Rather, all we need to do is pass them through `fitted()` based on our new `model10` and plot. Without further ado, here our Figure 9.6.
 
@@ -1039,9 +1086,9 @@ fitted(model10, newdata = nd) %>%
   as_tibble() %>% 
   bind_cols(nd) %>% 
   # These lines will make the strip text match with those with Hayes's Figure
-  mutate(sex = ifelse(sex == 0, str_c("Females (W = ", sex, ")"),
-                      str_c("Males (W = ", sex, ")")),
-         age = str_c("Age (Z) = ", age)) %>% 
+  mutate(sex = ifelse(sex == 0, str_c("Females, W = ", sex),
+                      str_c("Males, W = ", sex)),
+         age = str_c("Age, Z, = ", age)) %>% 
   
   # behold, Figure 9.6!
   ggplot(aes(x = negemot, group = sex)) +
@@ -1052,14 +1099,15 @@ fitted(model10, newdata = nd) %>%
   scale_x_continuous(breaks = 1:6) +
   coord_cartesian(xlim = 1:6,
                   ylim = 3:6) +
-  labs(x = expression(paste("Negative Emotions about Climate Change (", italic(X), ")")),
-       y = expression(paste("Support for Government Action to Mitigate Climate Change (", italic(Y), ")"))) +
+  labs(x = expression(paste("Negative Emotions about Climate Change, ", italic(X))),
+       y = expression(paste("Support for Government Action to Mitigate Climate Change, ", italic(Y)))) +
+  theme_xkcd() +
   theme(legend.position = "top",
         legend.title = element_blank()) +
   facet_grid(age ~ .)
 ```
 
-![](Chapter_09_files/figure-markdown_github/unnamed-chunk-48-1.png)
+![](Chapter_09_files/figure-markdown_github/unnamed-chunk-50-1.png)
 
 For the pick-a-point values Hayes covered on page 338, recall that when using `posterior_sample()`, our *b*<sub>4</sub> is `b_negemot:sex` and our *b*<sub>7</sub> is `b_negemot:sex:age`.
 
@@ -1079,11 +1127,11 @@ post %>%
 ```
 
     ## # A tibble: 3 x 4
-    ##   theta_XW_on_Y_given   mean      ll    ul
-    ##   <chr>                <dbl>   <dbl> <dbl>
-    ## 1 age = 30            0.0700 -0.0850 0.225
-    ## 2 age = 50            0.204   0.107  0.303
-    ## 3 age = 70            0.339   0.182  0.496
+    ##   theta_XW_on_Y_given  mean     ll    ul
+    ##   <chr>               <dbl>  <dbl> <dbl>
+    ## 1 age = 30            0.068 -0.091 0.225
+    ## 2 age = 50            0.203  0.103 0.301
+    ## 3 age = 70            0.338  0.18  0.503
 
 The way we made a JN technique plot with `fitted()` way back in chapter 7 isn't going to work, here. At least not as far as I can see. Rather, we're going to have to skillfully manipulate our `post` object. For those new to R, this might be a little confusing at first. So I'm going to make a crude attempt first and then get more sophisticated.
 
@@ -1095,13 +1143,14 @@ post %>%
             `age = 50` = `b_negemot:sex` + `b_negemot:sex:age`*50, 
             `age = 70` = `b_negemot:sex` + `b_negemot:sex:age`*70) %>% 
   gather(theta_XW_on_Y_given, value) %>%
-  mutate(theta_XW_on_Y_given = str_extract(theta_XW_on_Y_given, "\\d+") %>% as.double()) %>% 
-  group_by(theta_XW_on_Y_given) %>%
+  mutate(`theta XW on Y given` = str_extract(theta_XW_on_Y_given, "\\d+") %>% as.double()) %>% 
+  group_by(`theta XW on Y given`) %>%
   summarize(mean = mean(value),
             ll = quantile(value, probs = .025),
-            ul = quantile(value, probs = .975)) %>% 
+            ul = quantile(value, probs = .975)) %>%
   
-  ggplot(aes(x = theta_XW_on_Y_given)) +
+  # the plot
+  ggplot(aes(x = `theta XW on Y given`)) +
   geom_hline(yintercept = 0) +
   geom_vline(xintercept = 38.114) +
   geom_ribbon(aes(ymin = ll, ymax = ul),
@@ -1109,12 +1158,13 @@ post %>%
   geom_line(aes(y = mean), 
             size = 1) +
   coord_cartesian(xlim = 20:85,
-                  ylim = c(-.25, .75))
+                  ylim = c(-.25, .75)) +
+  theme_xkcd()
 ```
 
-![](Chapter_09_files/figure-markdown_github/unnamed-chunk-50-1.png)
+![](Chapter_09_files/figure-markdown_github/unnamed-chunk-52-1.png)
 
-Notice how we just took the code from our pick-a-point analysis, left out the `mutate_if()` rounding part, and dumped it into a plot. So one obvious approach would be to pick like 30 or 50 `age` values to plug into `transmute()` and just do the same thing. If you're super afraid of coding, that'd be one intuitive but extremely verbose attempt. And I've done stuff like that earlier in my R career. There's no shame in being extremely verbose and redundant if that's what makes sense. Another way is to think in terms of functions. When we made `age = 30` within `transmute()`, we took a specific `age` value (i.e., 30) and plugged it into the formula `b_negemot:sex + b_negemot:sex:age*i` where i = 30. And when we made `age = 50` we did exacly the same thing but switched out the 30 for a 50. So what we need is a function that will take a range of values for i, plug them into our `b_negemot:sex + b_negemot:sex:age*i` formula, and then neatly return the output. A nice base R function for that is `sapply()`.
+Notice how we just took the code from our pick-a-point analysis, left out the `mutate_if()` rounding part, and dumped it into a plot. So one obvious approach would be to pick like 30 or 50 `age` values to plug into `transmute()` and just do the same thing. If you're super afraid of coding, that'd be one intuitive but extremely verbose attempt. And I've done stuff like that earlier in my R career. There's no shame in being extremely verbose and redundant if that's what makes sense. Another way is to think in terms of functions. When we made `age = 30` within `transmute()`, we took a specific `age` value (i.e., 30) and plugged it into the formula `b_negemot:sex + b_negemot:sex:age*i` where i = 30. And when we made `age = 50` we did exactly the same thing but switched out the 30 for a 50. So what we need is a function that will take a range of values for i, plug them into our `b_negemot:sex + b_negemot:sex:age*i` formula, and then neatly return the output. A nice base R function for that is `sapply()`.
 
 ``` r
 sapply(15:90, function(i){
@@ -1125,82 +1175,82 @@ sapply(15:90, function(i){
 ```
 
     ## Classes 'tbl_df', 'tbl' and 'data.frame':    4000 obs. of  76 variables:
-    ##  $ V1 : num  -0.173 -0.15 0.205 0.142 0.137 ...
-    ##  $ V2 : num  -0.164 -0.14 0.208 0.142 0.141 ...
-    ##  $ V3 : num  -0.156 -0.129 0.21 0.143 0.146 ...
-    ##  $ V4 : num  -0.147 -0.118 0.213 0.143 0.151 ...
-    ##  $ V5 : num  -0.138 -0.108 0.215 0.144 0.155 ...
-    ##  $ V6 : num  -0.1299 -0.0969 0.218 0.1441 0.1601 ...
-    ##  $ V7 : num  -0.1213 -0.0862 0.2206 0.1445 0.1648 ...
-    ##  $ V8 : num  -0.1127 -0.0755 0.2232 0.1449 0.1695 ...
-    ##  $ V9 : num  -0.1042 -0.0649 0.2258 0.1453 0.1742 ...
-    ##  $ V10: num  -0.0956 -0.0542 0.2284 0.1457 0.1789 ...
-    ##  $ V11: num  -0.087 -0.0435 0.231 0.1462 0.1836 ...
-    ##  $ V12: num  -0.0785 -0.0328 0.2336 0.1466 0.1883 ...
-    ##  $ V13: num  -0.0699 -0.0221 0.2361 0.147 0.1931 ...
-    ##  $ V14: num  -0.0613 -0.0115 0.2387 0.1474 0.1978 ...
-    ##  $ V15: num  -0.052786 -0.000774 0.24135 0.147855 0.202485 ...
-    ##  $ V16: num  -0.04422 0.00991 0.24395 0.14828 0.2072 ...
-    ##  $ V17: num  -0.0357 0.0206 0.2465 0.1487 0.2119 ...
-    ##  $ V18: num  -0.0271 0.0313 0.2491 0.1491 0.2166 ...
-    ##  $ V19: num  -0.0185 0.0419 0.2517 0.1495 0.2213 ...
-    ##  $ V20: num  -0.00997 0.05263 0.25435 0.14997 0.22605 ...
-    ##  $ V21: num  -0.0014 0.0633 0.2569 0.1504 0.2308 ...
-    ##  $ V22: num  0.00716 0.07399 0.25955 0.15081 0.23547 ...
-    ##  $ V23: num  0.0157 0.0847 0.2621 0.1512 0.2402 ...
-    ##  $ V24: num  0.0243 0.0954 0.2647 0.1517 0.2449 ...
-    ##  $ V25: num  0.0329 0.106 0.2673 0.1521 0.2496 ...
-    ##  $ V26: num  0.0414 0.1167 0.2699 0.1525 0.2543 ...
-    ##  $ V27: num  0.05 0.127 0.273 0.153 0.259 ...
-    ##  $ V28: num  0.0585 0.1381 0.2751 0.1533 0.2637 ...
-    ##  $ V29: num  0.0671 0.1488 0.2777 0.1538 0.2685 ...
-    ##  $ V30: num  0.0757 0.1594 0.2803 0.1542 0.2732 ...
-    ##  $ V31: num  0.0842 0.1701 0.2829 0.1546 0.2779 ...
-    ##  $ V32: num  0.0928 0.1808 0.2855 0.155 0.2826 ...
-    ##  $ V33: num  0.101 0.191 0.288 0.155 0.287 ...
-    ##  $ V34: num  0.11 0.202 0.291 0.156 0.292 ...
-    ##  $ V35: num  0.118 0.213 0.293 0.156 0.297 ...
-    ##  $ V36: num  0.127 0.224 0.296 0.157 0.301 ...
-    ##  $ V37: num  0.136 0.234 0.299 0.157 0.306 ...
-    ##  $ V38: num  0.144 0.245 0.301 0.158 0.311 ...
-    ##  $ V39: num  0.153 0.256 0.304 0.158 0.316 ...
-    ##  $ V40: num  0.161 0.266 0.306 0.158 0.32 ...
-    ##  $ V41: num  0.17 0.277 0.309 0.159 0.325 ...
-    ##  $ V42: num  0.178 0.288 0.312 0.159 0.33 ...
-    ##  $ V43: num  0.187 0.298 0.314 0.16 0.334 ...
-    ##  $ V44: num  0.196 0.309 0.317 0.16 0.339 ...
-    ##  $ V45: num  0.204 0.32 0.319 0.161 0.344 ...
-    ##  $ V46: num  0.213 0.33 0.322 0.161 0.349 ...
-    ##  $ V47: num  0.221 0.341 0.325 0.161 0.353 ...
-    ##  $ V48: num  0.23 0.352 0.327 0.162 0.358 ...
-    ##  $ V49: num  0.238 0.362 0.33 0.162 0.363 ...
-    ##  $ V50: num  0.247 0.373 0.332 0.163 0.367 ...
-    ##  $ V51: num  0.256 0.384 0.335 0.163 0.372 ...
-    ##  $ V52: num  0.264 0.394 0.338 0.163 0.377 ...
-    ##  $ V53: num  0.273 0.405 0.34 0.164 0.382 ...
-    ##  $ V54: num  0.281 0.416 0.343 0.164 0.386 ...
-    ##  $ V55: num  0.29 0.426 0.345 0.165 0.391 ...
-    ##  $ V56: num  0.298 0.437 0.348 0.165 0.396 ...
-    ##  $ V57: num  0.307 0.448 0.351 0.166 0.4 ...
-    ##  $ V58: num  0.315 0.459 0.353 0.166 0.405 ...
-    ##  $ V59: num  0.324 0.469 0.356 0.166 0.41 ...
-    ##  $ V60: num  0.333 0.48 0.358 0.167 0.415 ...
-    ##  $ V61: num  0.341 0.491 0.361 0.167 0.419 ...
-    ##  $ V62: num  0.35 0.501 0.364 0.168 0.424 ...
-    ##  $ V63: num  0.358 0.512 0.366 0.168 0.429 ...
-    ##  $ V64: num  0.367 0.523 0.369 0.169 0.433 ...
-    ##  $ V65: num  0.375 0.533 0.371 0.169 0.438 ...
-    ##  $ V66: num  0.384 0.544 0.374 0.169 0.443 ...
-    ##  $ V67: num  0.393 0.555 0.377 0.17 0.448 ...
-    ##  $ V68: num  0.401 0.565 0.379 0.17 0.452 ...
-    ##  $ V69: num  0.41 0.576 0.382 0.171 0.457 ...
-    ##  $ V70: num  0.418 0.587 0.384 0.171 0.462 ...
-    ##  $ V71: num  0.427 0.597 0.387 0.172 0.466 ...
-    ##  $ V72: num  0.435 0.608 0.39 0.172 0.471 ...
-    ##  $ V73: num  0.444 0.619 0.392 0.172 0.476 ...
-    ##  $ V74: num  0.452 0.629 0.395 0.173 0.481 ...
-    ##  $ V75: num  0.461 0.64 0.397 0.173 0.485 ...
-    ##  $ V76: num  0.47 0.651 0.4 0.174 0.49 ...
+    ##  $ V1 : num  0.07091 0.05758 -0.00381 -0.1305 0.11877 ...
+    ##  $ V2 : num  0.07814 0.06383 0.00209 -0.12002 0.12181 ...
+    ##  $ V3 : num  0.0854 0.0701 0.008 -0.1095 0.1249 ...
+    ##  $ V4 : num  0.0926 0.0763 0.0139 -0.0991 0.1279 ...
+    ##  $ V5 : num  0.0998 0.0826 0.0198 -0.0886 0.1309 ...
+    ##  $ V6 : num  0.1071 0.0888 0.0257 -0.0781 0.134 ...
+    ##  $ V7 : num  0.1143 0.0951 0.0316 -0.0676 0.137 ...
+    ##  $ V8 : num  0.1216 0.1013 0.0375 -0.0571 0.1401 ...
+    ##  $ V9 : num  0.1288 0.1076 0.0434 -0.0467 0.1431 ...
+    ##  $ V10: num  0.136 0.1138 0.0493 -0.0362 0.1462 ...
+    ##  $ V11: num  0.1433 0.12 0.0552 -0.0257 0.1492 ...
+    ##  $ V12: num  0.1505 0.1263 0.0611 -0.0152 0.1522 ...
+    ##  $ V13: num  0.15773 0.13254 0.06704 -0.00475 0.15528 ...
+    ##  $ V14: num  0.16497 0.13879 0.07294 0.00573 0.15832 ...
+    ##  $ V15: num  0.1722 0.145 0.0788 0.0162 0.1614 ...
+    ##  $ V16: num  0.1794 0.1513 0.0847 0.0267 0.1644 ...
+    ##  $ V17: num  0.1867 0.1575 0.0907 0.0372 0.1674 ...
+    ##  $ V18: num  0.1939 0.1638 0.0966 0.0476 0.1705 ...
+    ##  $ V19: num  0.2011 0.17 0.1025 0.0581 0.1735 ...
+    ##  $ V20: num  0.2084 0.1763 0.1084 0.0686 0.1766 ...
+    ##  $ V21: num  0.2156 0.1825 0.1143 0.0791 0.1796 ...
+    ##  $ V22: num  0.2228 0.1888 0.1202 0.0896 0.1827 ...
+    ##  $ V23: num  0.23 0.195 0.126 0.1 0.186 ...
+    ##  $ V24: num  0.237 0.201 0.132 0.111 0.189 ...
+    ##  $ V25: num  0.245 0.208 0.138 0.121 0.192 ...
+    ##  $ V26: num  0.252 0.214 0.144 0.131 0.195 ...
+    ##  $ V27: num  0.259 0.22 0.15 0.142 0.198 ...
+    ##  $ V28: num  0.266 0.226 0.156 0.152 0.201 ...
+    ##  $ V29: num  0.273 0.232 0.162 0.163 0.204 ...
+    ##  $ V30: num  0.281 0.239 0.167 0.173 0.207 ...
+    ##  $ V31: num  0.288 0.245 0.173 0.184 0.21 ...
+    ##  $ V32: num  0.295 0.251 0.179 0.194 0.213 ...
+    ##  $ V33: num  0.302 0.257 0.185 0.205 0.216 ...
+    ##  $ V34: num  0.31 0.264 0.191 0.215 0.219 ...
+    ##  $ V35: num  0.317 0.27 0.197 0.226 0.222 ...
+    ##  $ V36: num  0.324 0.276 0.203 0.236 0.225 ...
+    ##  $ V37: num  0.331 0.282 0.209 0.247 0.228 ...
+    ##  $ V38: num  0.339 0.289 0.215 0.257 0.231 ...
+    ##  $ V39: num  0.346 0.295 0.221 0.268 0.234 ...
+    ##  $ V40: num  0.353 0.301 0.226 0.278 0.237 ...
+    ##  $ V41: num  0.36 0.307 0.232 0.289 0.24 ...
+    ##  $ V42: num  0.368 0.314 0.238 0.299 0.244 ...
+    ##  $ V43: num  0.375 0.32 0.244 0.31 0.247 ...
+    ##  $ V44: num  0.382 0.326 0.25 0.32 0.25 ...
+    ##  $ V45: num  0.389 0.332 0.256 0.331 0.253 ...
+    ##  $ V46: num  0.396 0.339 0.262 0.341 0.256 ...
+    ##  $ V47: num  0.404 0.345 0.268 0.352 0.259 ...
+    ##  $ V48: num  0.411 0.351 0.274 0.362 0.262 ...
+    ##  $ V49: num  0.418 0.357 0.28 0.372 0.265 ...
+    ##  $ V50: num  0.425 0.364 0.285 0.383 0.268 ...
+    ##  $ V51: num  0.433 0.37 0.291 0.393 0.271 ...
+    ##  $ V52: num  0.44 0.376 0.297 0.404 0.274 ...
+    ##  $ V53: num  0.447 0.382 0.303 0.414 0.277 ...
+    ##  $ V54: num  0.454 0.389 0.309 0.425 0.28 ...
+    ##  $ V55: num  0.462 0.395 0.315 0.435 0.283 ...
+    ##  $ V56: num  0.469 0.401 0.321 0.446 0.286 ...
+    ##  $ V57: num  0.476 0.407 0.327 0.456 0.289 ...
+    ##  $ V58: num  0.483 0.414 0.333 0.467 0.292 ...
+    ##  $ V59: num  0.491 0.42 0.339 0.477 0.295 ...
+    ##  $ V60: num  0.498 0.426 0.345 0.488 0.298 ...
+    ##  $ V61: num  0.505 0.432 0.35 0.498 0.301 ...
+    ##  $ V62: num  0.512 0.439 0.356 0.509 0.304 ...
+    ##  $ V63: num  0.52 0.445 0.362 0.519 0.307 ...
+    ##  $ V64: num  0.527 0.451 0.368 0.53 0.31 ...
+    ##  $ V65: num  0.534 0.457 0.374 0.54 0.313 ...
+    ##  $ V66: num  0.541 0.464 0.38 0.551 0.317 ...
+    ##  $ V67: num  0.548 0.47 0.386 0.561 0.32 ...
+    ##  $ V68: num  0.556 0.476 0.392 0.572 0.323 ...
+    ##  $ V69: num  0.563 0.482 0.398 0.582 0.326 ...
+    ##  $ V70: num  0.57 0.489 0.404 0.593 0.329 ...
+    ##  $ V71: num  0.577 0.495 0.409 0.603 0.332 ...
+    ##  $ V72: num  0.585 0.501 0.415 0.614 0.335 ...
+    ##  $ V73: num  0.592 0.507 0.421 0.624 0.338 ...
+    ##  $ V74: num  0.599 0.514 0.427 0.634 0.341 ...
+    ##  $ V75: num  0.606 0.52 0.433 0.645 0.344 ...
+    ##  $ V76: num  0.614 0.526 0.439 0.655 0.347 ...
 
 Okay, to that looks a little monstrous. But what we did in the first argument in `sapply()` was tell the function which values we'd like to use in some function. We chose each integer ranging from 15 to 90--which, if you do the math, is 76 values. We then told `sapply()` to plug those values into a custom function, which we defined as `function(i){post$b_negemot:sex + post$b_negemot:sex:age*i}`. In our custom function, `i` was a placeholder for each of those 76 integers. But remember that `post` has 4000 rows, each one corresponding to one of the 4000 posterior iterations. Thus, for each of our 76 `i`-values, we got 4000 results. The `sapply()` function returns a matrix. Since we like to work within the tidyverse and use ggplot2, we just went ahead and put those results in a tibble.
 
@@ -1227,11 +1277,12 @@ sapply(15:90, function(i){
             size = 1) +
   coord_cartesian(xlim = 20:85,
                   ylim = c(-.25, .75)) +
-  labs(x = expression(paste("Age (", italic(Z), ")")),
-       y = "Conditional Two-way Interaction Between\nNegative Emotions and Sex")
+  labs(x = expression(paste("Age, ", italic(Z))),
+       y = "Conditional Two-way Interaction Between\nNegative Emotions and Sex") +
+  theme_xkcd()
 ```
 
-![](Chapter_09_files/figure-markdown_github/unnamed-chunk-52-1.png)
+![](Chapter_09_files/figure-markdown_github/unnamed-chunk-54-1.png)
 
 Or for kicks and giggles, another way to get a clearer sense of how our data informed the shape of the plot, here we replace our `geom_ribbon() + geom_line()` code with `geom_pointrange()`.
 
@@ -1254,11 +1305,12 @@ sapply(15:90, function(i){
                   shape = 16, size = 1/3) +
   coord_cartesian(xlim = 20:85,
                   ylim = c(-.25, .75)) +
-  labs(x = expression(paste("Age (", italic(Z), ")")),
-       y = "Conditional Two-way Interaction Between\nNegative Emotions and Sex")
+  labs(x = expression(paste("Age, ", italic(Z))),
+       y = "Conditional Two-way Interaction Between\nNegative Emotions and Sex") +
+  theme_xkcd()
 ```
 
-![](Chapter_09_files/figure-markdown_github/unnamed-chunk-53-1.png)
+![](Chapter_09_files/figure-markdown_github/unnamed-chunk-55-1.png)
 
 Although I probably wouldn’t try to use a plot like this in a manuscript, I hope it makes clear how the way we’ve been implementing the JN technique is just the pick-a-point approach in bulk. No magic.
 
@@ -1286,11 +1338,11 @@ post %>%
 ```
 
     ## # A tibble: 3 x 5
-    ##   key                 mean     sd      ll    ul
-    ##   <chr>              <dbl>  <dbl>   <dbl> <dbl>
-    ## 1 30-year-old men   0.369  0.0620  0.250  0.491
-    ## 2 50-year-old women 0.317  0.0370  0.244  0.389
-    ## 3 contrast          0.0520 0.0700 -0.0820 0.190
+    ##   key                mean    sd     ll    ul
+    ##   <chr>             <dbl> <dbl>  <dbl> <dbl>
+    ## 1 30-year-old men   0.369 0.061  0.25  0.491
+    ## 2 50-year-old women 0.318 0.037  0.247 0.391
+    ## 3 contrast          0.05  0.071 -0.088 0.188
 
 Notice how our posterior *SD* corresponded nicely to the standard error in Hayes's contrast test. And we didn't even have to worry about using the frightening formula 9.21 on page 345. That information was contained in the posterior distribution all along. All we had to do was combine the parameter iterations with a little algebra and then `summarize()`.
 
@@ -1303,6 +1355,9 @@ Note. The analyses in this document were done with:
 -   readr 1.1.1
 -   rstan 2.17.3
 -   brms 2.3.2
+-   xkcd 0.0.5
+-   extrafont 0.17
+-   bayesplot 1.5.0
 
 Reference
 ---------

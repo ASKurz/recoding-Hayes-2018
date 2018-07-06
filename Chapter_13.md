@@ -1,7 +1,7 @@
 Chapter 13
 ================
 A Solomon Kurz
-2018-06-29
+2018-07-06
 
 13.1 Revisiting sexual discrimination in the workplace
 ------------------------------------------------------
@@ -67,24 +67,24 @@ print(model1, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##                    Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## respappr_Intercept    4.604     0.687    3.291    5.941       4000 1.000
-    ## liking_Intercept      3.489     0.649    2.173    4.728       4000 0.999
-    ## respappr_D1          -2.960     1.481   -5.850   -0.094       3650 1.000
-    ## respappr_D2           1.685     1.630   -1.509    4.909       3717 1.000
-    ## respappr_sexism       0.042     0.133   -0.216    0.298       4000 1.000
-    ## respappr_D1:sexism    0.860     0.287    0.304    1.413       3690 1.000
-    ## respappr_D2:sexism   -0.248     0.313   -0.856    0.368       3726 1.000
-    ## liking_D1            -2.759     1.202   -5.032   -0.418       2990 1.001
-    ## liking_D2             0.040     1.324   -2.628    2.591       3192 1.000
-    ## liking_respappr       0.366     0.073    0.224    0.509       4000 0.999
-    ## liking_sexism         0.070     0.106   -0.139    0.283       4000 0.999
-    ## liking_D1:sexism      0.531     0.237    0.059    0.991       2905 1.001
-    ## liking_D2:sexism     -0.036     0.253   -0.526    0.473       3151 1.000
+    ## respappr_Intercept    4.603     0.669    3.300    5.923       4000 1.000
+    ## liking_Intercept      3.478     0.663    2.178    4.786       4000 1.000
+    ## respappr_D1          -2.901     1.456   -5.759    0.048       3632 0.999
+    ## respappr_D2           1.640     1.694   -1.704    4.975       3280 1.000
+    ## respappr_sexism       0.043     0.130   -0.213    0.301       4000 1.000
+    ## respappr_D1:sexism    0.848     0.283    0.272    1.409       3643 1.000
+    ## respappr_D2:sexism   -0.238     0.325   -0.874    0.395       3385 1.000
+    ## liking_D1            -2.748     1.178   -5.020   -0.426       2761 1.000
+    ## liking_D2             0.007     1.317   -2.644    2.554       3362 1.000
+    ## liking_respappr       0.366     0.074    0.223    0.514       4000 1.000
+    ## liking_sexism         0.073     0.107   -0.138    0.272       4000 1.000
+    ## liking_D1:sexism      0.530     0.234    0.071    0.988       2722 1.000
+    ## liking_D2:sexism     -0.029     0.251   -0.519    0.473       3357 1.000
     ## 
     ## Family Specific Parameters: 
     ##                Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma_respappr    1.149     0.074    1.012    1.307       4000 1.001
-    ## sigma_liking      0.917     0.059    0.811    1.041       4000 1.000
+    ## sigma_respappr    1.149     0.073    1.018    1.302       4000 1.000
+    ## sigma_liking      0.918     0.059    0.812    1.043       4000 1.000
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -129,8 +129,8 @@ bayes_R2(model1) %>% round(digits = 3)
 ```
 
     ##             Estimate Est.Error  Q2.5 Q97.5
-    ## R2_respappr    0.322     0.054 0.211 0.419
-    ## R2_liking      0.297     0.054 0.184 0.398
+    ## R2_respappr    0.321     0.054 0.206 0.419
+    ## R2_liking      0.297     0.054 0.190 0.397
 
 13.2 Looking at the components of the indirect effect of *X*
 ------------------------------------------------------------
@@ -201,7 +201,8 @@ model2 <-
 Now we're ready to compare *R*<sup>2</sup> distributions.
 
 ``` r
-bayes_R2(model1, resp = "respappr", summary = F) %>% 
+R2s <-
+  bayes_R2(model1, resp = "respappr", summary = F) %>% 
   as_tibble() %>% 
   rename(model1 = R2_respappr) %>% 
   bind_cols(
@@ -209,13 +210,15 @@ bayes_R2(model1, resp = "respappr", summary = F) %>%
       as_tibble() %>% 
       rename(model2 = R2_respappr)
   ) %>% 
-  mutate(difference = model1 - model2) %>% 
-  
+  mutate(difference = model1 - model2) 
+
+R2s %>% 
   ggplot(aes(x = difference)) +
-  geom_density(size = 0, fill = "grey50") +
-  geom_vline(xintercept = 0, color = "black") +
+  geom_halfeyeh(aes(y = 0), fill = "grey50", color = "white",
+                point_interval = median_qi, .prob = 0.95) +
+  scale_x_continuous(breaks = median_qi(R2s$difference, .prob = .95)[1, 1:3],
+                     labels = median_qi(R2s$difference, .prob = .95)[1, 1:3] %>% round(2)) +
   scale_y_continuous(NULL, breaks = NULL) +
-  coord_cartesian(xlim = c(-.5, .5)) +
   xlab(expression(paste(Delta, italic(R)^2))) +
   theme_black() +
   theme(panel.grid = element_blank())
@@ -230,18 +233,18 @@ loo(model1, model2)
 ```
 
     ##                  LOOIC    SE
-    ## model1          760.53 29.57
-    ## model2          765.71 29.65
-    ## model1 - model2  -5.18  8.18
+    ## model1          760.24 29.48
+    ## model2          766.03 29.70
+    ## model1 - model2  -5.79  8.06
 
 ``` r
 waic(model1, model2)
 ```
 
     ##                   WAIC    SE
-    ## model1          760.26 29.52
-    ## model2          765.45 29.57
-    ## model1 - model2  -5.19  8.16
+    ## model1          759.97 29.44
+    ## model2          765.64 29.58
+    ## model1 - model2  -5.67  7.98
 
 The Bayesian *R*<sup>2</sup>, the LOO-CV, and the WAIC all suggest there's little difference between the two models with respect to their predictive utility. In such a case, I'd lean on theory to choose between them. If inclined, one could also do Bayesian model averaging.
 
@@ -278,7 +281,8 @@ model1_fitted %>%
   gather(key, value, -sexism) %>% 
   
   ggplot(aes(x = value)) +
-  geom_density(size = 0, fill = "grey50") +
+  geom_halfeyeh(aes(y = 0), fill = "grey50", color = "white",
+                point_interval = median_qi, .prob = 0.95) +
   geom_vline(xintercept = 0, color = "grey25", linetype = 2) +
   scale_y_continuous(NULL, breaks = NULL) +
   facet_grid(sexism~key) +
@@ -305,15 +309,15 @@ model1_fitted %>%
     ## # Groups:   key [3]
     ##   key                                     sexism  mean     ll    ul
     ##   <chr>                                    <dbl> <dbl>  <dbl> <dbl>
-    ## 1 Collective Protest - Individual Protest   4.25 0.632 -0.092 1.36 
-    ## 2 Collective Protest - Individual Protest   5.12 0.416 -0.052 0.894
-    ## 3 Collective Protest - Individual Protest   5.90 0.224 -0.43  0.872
-    ## 4 Collective Protest - No Protest           4.25 1.01   0.325 1.69 
-    ## 5 Collective Protest - No Protest           5.12 1.65   1.17  2.13 
-    ## 6 Collective Protest - No Protest           5.90 2.22   1.52  2.95 
-    ## 7 Individual Protest - No Protest           4.25 0.38  -0.431 1.16 
-    ## 8 Individual Protest - No Protest           5.12 1.24   0.733 1.75 
-    ## 9 Individual Protest - No Protest           5.90 2.00   1.31  2.70
+    ## 1 Collective Protest - Individual Protest   4.25 0.628 -0.146 1.38 
+    ## 2 Collective Protest - Individual Protest   5.12 0.42  -0.087 0.925
+    ## 3 Collective Protest - Individual Protest   5.90 0.235 -0.43  0.91 
+    ## 4 Collective Protest - No Protest           4.25 1.02   0.348 1.73 
+    ## 5 Collective Protest - No Protest           5.12 1.65   1.15  2.15 
+    ## 6 Collective Protest - No Protest           5.90 2.22   1.52  2.93 
+    ## 7 Individual Protest - No Protest           4.25 0.391 -0.366 1.16 
+    ## 8 Individual Protest - No Protest           5.12 1.23   0.745 1.74 
+    ## 9 Individual Protest - No Protest           5.90 1.98   1.26  2.69
 
 The three levels of `Collective Protest - Individual Protest` correspond nicely with some of the analyses Hayes presented on pages 484--486. However, they don't get at the differences Hayes expressed as *θ* D1 to *M*. For those, we'll have to work directly with the `posterior_samples()`.
 
@@ -336,9 +340,9 @@ post %>%
     ## # A tibble: 3 x 4
     ##   key                                                                              mean    ll    ul
     ##   <chr>                                                                           <dbl> <dbl> <dbl>
-    ## 1 Difference in how Catherine's behavior is perceived between being told she pro… 0.696 0.045  1.33
+    ## 1 Difference in how Catherine's behavior is perceived between being told she pro… 0.705 0.096  1.36
     ## 2 Difference in how Catherine's behavior is perceived between being told she pro… 1.44  1.02   1.88
-    ## 3 Difference in how Catherine's behavior is perceived between being told she pro… 2.11  1.49   2.75
+    ## 3 Difference in how Catherine's behavior is perceived between being told she pro… 2.10  1.50   2.72
 
 ### Estimating the second stage of the mediation process.
 
@@ -348,10 +352,11 @@ Here's *b*.
 post %>% 
   
   ggplot(aes(x = b_liking_respappr)) +
-  geom_density(size = 0, fill = "grey50") +
-  scale_x_continuous(breaks = c(-1, fixef(model1)["liking_respappr", 1], 1),
+  geom_halfeyeh(aes(y = 0), fill = "grey50", color = "white",
+                point_interval = median_qi, .prob = 0.95) +
+  scale_x_continuous(breaks = c(-1, median(post$b_liking_respappr), 1),
                      labels = c(-1, 
-                                fixef(model1)["liking_respappr", 1] %>% round(3),
+                                median(post$b_liking_respappr) %>% round(3),
                                 1)) +
   scale_y_continuous(NULL, breaks = NULL) +
   coord_cartesian(xlim = -1:1) +
@@ -407,12 +412,12 @@ head(rcie_tibble)
     ## # A tibble: 6 x 4
     ##   sexism  iter `indirect effect`        value
     ##    <dbl> <int> <fct>                    <dbl>
-    ## 1    3.5     1 Protest vs. No Protest -0.0448
-    ## 2    3.5     2 Protest vs. No Protest  0.159 
-    ## 3    3.5     3 Protest vs. No Protest -0.166 
-    ## 4    3.5     4 Protest vs. No Protest  0.308 
-    ## 5    3.5     5 Protest vs. No Protest -0.231 
-    ## 6    3.5     6 Protest vs. No Protest  0.431
+    ## 1    3.5     1 Protest vs. No Protest -0.274 
+    ## 2    3.5     2 Protest vs. No Protest  0.275 
+    ## 3    3.5     3 Protest vs. No Protest  0.0594
+    ## 4    3.5     4 Protest vs. No Protest -0.107 
+    ## 5    3.5     5 Protest vs. No Protest  0.346 
+    ## 6    3.5     6 Protest vs. No Protest -0.0293
 
 Here is our variant of Figure 13.4, with respect to the relative conditional indirect effects.
 
@@ -468,12 +473,12 @@ rcie_tibble_pick_a_point %>%
     ## # Groups:   sexism [3]
     ##   sexism `indirect effect`                 median     ll    ul
     ##    <dbl> <fct>                              <dbl>  <dbl> <dbl>
-    ## 1   4.25 Protest vs. No Protest             0.245  0.018 0.537
-    ## 2   4.25 Collective vs. Individual Protest  0.222 -0.034 0.552
-    ## 3   5.12 Protest vs. No Protest             0.524  0.289 0.816
-    ## 4   5.12 Collective vs. Individual Protest  0.147 -0.019 0.357
-    ## 5   5.90 Protest vs. No Protest             0.766  0.42  1.18 
-    ## 6   5.90 Collective vs. Individual Protest  0.078 -0.16  0.343
+    ## 1   4.25 Protest vs. No Protest             0.248  0.034 0.542
+    ## 2   4.25 Collective vs. Individual Protest  0.22  -0.049 0.549
+    ## 3   5.12 Protest vs. No Protest             0.523  0.292 0.812
+    ## 4   5.12 Collective vs. Individual Protest  0.144 -0.032 0.377
+    ## 5   5.90 Protest vs. No Protest             0.753  0.425 1.18 
+    ## 6   5.90 Collective vs. Individual Protest  0.082 -0.162 0.362
 
 13.4 Testing and probing moderation of mediation
 ------------------------------------------------
@@ -501,8 +506,8 @@ post %>%
     ## # A tibble: 2 x 4
     ##   key     mean     ll    ul
     ##   <chr>  <dbl>  <dbl> <dbl>
-    ## 1 a4b    0.316  0.097 0.582
-    ## 2 a5b   -0.091 -0.337 0.135
+    ## 1 a4b    0.31   0.094 0.584
+    ## 2 a5b   -0.086 -0.341 0.148
 
 Here they are in a `geom_halfeyeh()` plot.
 
@@ -512,8 +517,9 @@ post %>%
   gather() %>% 
  
   ggplot(aes(x = value, y = key, group = key)) +
-  geom_halfeyeh(.prob = c(0.95, 0.5),
-                color = "white") +
+  geom_halfeyeh(point_interval = median_qi, .prob = c(0.95, 0.5),
+                fill = "grey50", color = "white") +
+  scale_y_discrete(expand = c(.1, .1)) +
   labs(x = NULL, y = NULL) +
   theme_black() +
   theme(axis.ticks.y = element_blank(),
@@ -531,12 +537,11 @@ We already computed the relevant 95% credible intervals at the end of section **
 rcie_tibble_pick_a_point %>%   
   
   ggplot(aes(x = value, y = sexism, group = sexism)) +
-  geom_halfeyeh(.prob = c(0.95, 0.5),
-                color = "white") +
+  geom_halfeyeh(point_interval = median_qi, .prob = c(0.95, 0.5),
+                fill = "grey50", color = "white") +
   labs(x = "Relative Conditional Effect on Liking", y = NULL) +
   theme_black() +
   theme(axis.text.y = element_text(hjust = 0),
-        axis.ticks.y = element_blank(),
         panel.grid.minor.y = element_blank(),
         panel.grid.major.y = element_blank()) +
   facet_wrap(~`indirect effect`)
@@ -562,7 +567,8 @@ model3 <-
 Here's the *R*<sup>2</sup> difference density.
 
 ``` r
-bayes_R2(model1, resp = "liking", summary = F) %>% 
+R2s <-
+  bayes_R2(model1, resp = "liking", summary = F) %>% 
   as_tibble() %>% 
   rename(model1 = R2_liking) %>% 
   bind_cols(
@@ -570,11 +576,14 @@ bayes_R2(model1, resp = "liking", summary = F) %>%
       as_tibble() %>% 
       rename(model3 = R2_liking)
   ) %>% 
-  mutate(difference = model1 - model3) %>% 
+  mutate(difference = model1 - model3) 
+
+R2s %>% 
+  ggplot(aes(x = difference, y = 0)) +
   
-  ggplot(aes(x = difference)) +
-  geom_density(size = 0, fill = "grey50") +
-  geom_vline(xintercept = 0, color = "black") +
+  geom_halfeyeh(point_interval = median_qi, .prob = c(0.95, 0.5),
+                fill = "grey50", color = "white") +
+  scale_x_continuous(breaks = c(-.5, median(R2s$difference) %>% round(2), .5)) +
   scale_y_continuous(NULL, breaks = NULL) +
   coord_cartesian(xlim = c(-.5, .5)) +
   xlab(expression(paste(Delta, italic(R)^2))) +
@@ -591,18 +600,18 @@ loo(model1, model3)
 ```
 
     ##                  LOOIC    SE
-    ## model1          760.53 29.57
-    ## model3          761.92 31.15
-    ## model1 - model3  -1.39  5.67
+    ## model1          760.24 29.48
+    ## model3          761.96 31.15
+    ## model1 - model3  -1.73  5.63
 
 ``` r
 waic(model1, model3)
 ```
 
     ##                   WAIC    SE
-    ## model1          760.26 29.52
-    ## model3          761.63 31.09
-    ## model1 - model3  -1.37  5.68
+    ## model1          759.97 29.44
+    ## model3          761.71 31.08
+    ## model1 - model3  -1.74  5.60
 
 As when we went through these steps for `resp = "respappr"`, above, the Bayesian *R*<sup>2</sup>, the LOO-CV, and the WAIC all suggest there's little difference between the two models with respect to predictive utility. In such a case, I'd lean on theory to choose between them. If inclined, one could also do Bayesian model averaging.
 
@@ -643,12 +652,12 @@ head(rcde_tibble)
     ## # A tibble: 6 x 4
     ##   sexism  iter `direct effect`         value
     ##    <dbl> <int> <fct>                   <dbl>
-    ## 1    3.5     1 Protest vs. No Protest -0.694
-    ## 2    3.5     2 Protest vs. No Protest -1.08 
-    ## 3    3.5     3 Protest vs. No Protest -0.215
-    ## 4    3.5     4 Protest vs. No Protest -1.01 
-    ## 5    3.5     5 Protest vs. No Protest -0.907
-    ## 6    3.5     6 Protest vs. No Protest -1.22
+    ## 1    3.5     1 Protest vs. No Protest -0.488
+    ## 2    3.5     2 Protest vs. No Protest -1.26 
+    ## 3    3.5     3 Protest vs. No Protest -1.44 
+    ## 4    3.5     4 Protest vs. No Protest -0.503
+    ## 5    3.5     5 Protest vs. No Protest -1.43 
+    ## 6    3.5     6 Protest vs. No Protest -0.947
 
 Here is our variant of Figure 13.4, with respect to the relative conditional direct effects.
 
@@ -754,7 +763,8 @@ model1_fitted %>%
   gather(key, value, -sexism) %>% 
   
   ggplot(aes(x = value)) +
-  geom_density(size = 0, fill = "grey50") +
+  geom_halfeyeh(aes(y = 0), fill = "grey50", color = "white",
+                point_interval = median_qi, .prob = 0.95) +
   geom_vline(xintercept = 0, color = "grey25", linetype = 2) +
   scale_y_continuous(NULL, breaks = NULL) +
   facet_grid(sexism~key) +
@@ -781,15 +791,15 @@ model1_fitted %>%
     ## # Groups:   key [3]
     ##   key                                     sexism   mean     ll    ul
     ##   <chr>                                    <dbl>  <dbl>  <dbl> <dbl>
-    ## 1 Collective Protest - Individual Protest   4.25 -0.114 -0.727 0.483
-    ## 2 Collective Protest - Individual Protest   5.12 -0.146 -0.54  0.251
-    ## 3 Collective Protest - Individual Protest   5.90 -0.174 -0.705 0.372
-    ## 4 Collective Protest - No Protest           4.25 -0.559 -1.12  0.03 
-    ## 5 Collective Protest - No Protest           5.12 -0.113 -0.570 0.328
-    ## 6 Collective Protest - No Protest           5.90  0.285 -0.349 0.914
-    ## 7 Individual Protest - No Protest           4.25 -0.445 -1.08  0.179
-    ## 8 Individual Protest - No Protest           5.12  0.032 -0.396 0.462
-    ## 9 Individual Protest - No Protest           5.90  0.458 -0.143 1.07
+    ## 1 Collective Protest - Individual Protest   4.25 -0.119 -0.731 0.474
+    ## 2 Collective Protest - Individual Protest   5.12 -0.144 -0.523 0.266
+    ## 3 Collective Protest - Individual Protest   5.90 -0.167 -0.689 0.36 
+    ## 4 Collective Protest - No Protest           4.25 -0.556 -1.13  0.028
+    ## 5 Collective Protest - No Protest           5.12 -0.108 -0.557 0.346
+    ## 6 Collective Protest - No Protest           5.90  0.292 -0.361 0.956
+    ## 7 Individual Protest - No Protest           4.25 -0.437 -1.06  0.174
+    ## 8 Individual Protest - No Protest           5.12  0.037 -0.418 0.465
+    ## 9 Individual Protest - No Protest           5.90  0.459 -0.177 1.08
 
 We don't have *p*-values, but all the differences are small in magnitude and have wide 95% intervals straddling zero.
 
@@ -816,12 +826,12 @@ post %>%
     ## # A tibble: 6 x 4
     ##   key                                                                             mean     ll    ul
     ##   <chr>                                                                          <dbl>  <dbl> <dbl>
-    ## 1 Difference in liking between being told she protested or not when W is 4.250  -0.502 -1.01  0.037
-    ## 2 Difference in liking between being told she protested or not when W is 5.120  -0.04  -0.442 0.354
-    ## 3 Difference in liking between being told she protested or not when W is 5.896   0.372 -0.2   0.919
-    ## 4 Difference in liking between collective vs. individual protest when W is 4.2… -0.114 -0.727 0.483
-    ## 5 Difference in liking between collective vs. individual protest when W is 5.1… -0.146 -0.54  0.251
-    ## 6 Difference in liking between collective vs. individual protest when W is 5.8… -0.174 -0.705 0.372
+    ## 1 Difference in liking between being told she protested or not when W is 4.250  -0.496 -1.00  0.017
+    ## 2 Difference in liking between being told she protested or not when W is 5.120  -0.036 -0.443 0.354
+    ## 3 Difference in liking between being told she protested or not when W is 5.896   0.375 -0.204 0.959
+    ## 4 Difference in liking between collective vs. individual protest when W is 4.2… -0.119 -0.731 0.474
+    ## 5 Difference in liking between collective vs. individual protest when W is 5.1… -0.144 -0.523 0.266
+    ## 6 Difference in liking between collective vs. individual protest when W is 5.8… -0.167 -0.689 0.36
 
 Note. The analyses in this document were done with:
 

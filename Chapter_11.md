@@ -1,7 +1,7 @@
 Chapter 11
 ================
 A Solomon Kurz
-2018-06-26
+2018-07-06
 
 11.3 Example: Hiding your feelings from your work team
 ------------------------------------------------------
@@ -52,18 +52,18 @@ print(model1, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##                        Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## negtone_Intercept         0.025     0.066   -0.102    0.152       4000 0.999
-    ## perform_Intercept        -0.012     0.059   -0.133    0.104       4000 0.999
-    ## negtone_dysfunc           0.622     0.178    0.277    0.974       4000 0.999
-    ## perform_dysfunc           0.367     0.189   -0.011    0.740       4000 1.000
-    ## perform_negtone          -0.437     0.138   -0.709   -0.173       4000 1.001
-    ## perform_negexp           -0.018     0.121   -0.262    0.214       4000 0.999
-    ## perform_negtone:negexp   -0.518     0.247   -1.004   -0.035       4000 0.999
+    ## negtone_Intercept         0.026     0.063   -0.097    0.152       4000 0.999
+    ## perform_Intercept        -0.012     0.061   -0.135    0.109       4000 1.000
+    ## negtone_dysfunc           0.622     0.172    0.285    0.959       4000 0.999
+    ## perform_dysfunc           0.367     0.184    0.011    0.718       4000 1.000
+    ## perform_negtone          -0.435     0.136   -0.705   -0.166       4000 0.999
+    ## perform_negexp           -0.019     0.123   -0.264    0.214       4000 1.000
+    ## perform_negtone:negexp   -0.524     0.243   -1.010   -0.044       4000 1.000
     ## 
     ## Family Specific Parameters: 
     ##               Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma_negtone    0.487     0.046    0.407    0.586       4000 1.000
-    ## sigma_perform    0.459     0.045    0.380    0.556       4000 1.000
+    ## sigma_negtone    0.487     0.048    0.405    0.590       4000 0.999
+    ## sigma_perform    0.458     0.045    0.382    0.554       4000 1.000
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -76,8 +76,8 @@ bayes_R2(model1) %>% round(digits = 3)
 ```
 
     ##            Estimate Est.Error  Q2.5 Q97.5
-    ## R2_negtone    0.194     0.081 0.042 0.353
-    ## R2_perform    0.322     0.078 0.152 0.458
+    ## R2_negtone    0.194     0.079 0.045 0.347
+    ## R2_perform    0.322     0.077 0.161 0.458
 
 On page 410 we get two sample means. Here they are:
 
@@ -175,14 +175,14 @@ post %>%
 ```
 
     ## # A tibble: 6 x 5
-    ##   key                                            mean    sd     ll      ul
-    ##   <fctr>                                        <dbl> <dbl>  <dbl>   <dbl>
-    ## 1 Conditional effect of M when W is -0.531     -0.162 0.217 -0.601  0.255 
-    ## 2 Conditional effect of M when W is -0.006     -0.406 0.143 -0.695 -0.136 
-    ## 3 Conditional effect of M when W is 0.600      -0.748 0.169 -1.08  -0.406 
-    ## 4 Conditional indirect effect when W is -0.531 -0.102 0.145 -0.429  0.158 
-    ## 5 Conditional indirect effect when W is -0.006 -0.254 0.120 -0.518 -0.0580
-    ## 6 Conditional indirect effect when W is 0.600  -0.466 0.173 -0.842 -0.166
+    ##   key                                            mean    sd     ll     ul
+    ##   <fct>                                         <dbl> <dbl>  <dbl>  <dbl>
+    ## 1 Conditional effect of M when W is -0.531     -0.157 0.214 -0.581  0.261
+    ## 2 Conditional effect of M when W is -0.006     -0.404 0.141 -0.682 -0.131
+    ## 3 Conditional effect of M when W is 0.600      -0.749 0.167 -1.07  -0.421
+    ## 4 Conditional indirect effect when W is -0.531 -0.097 0.141 -0.397  0.174
+    ## 5 Conditional indirect effect when W is -0.006 -0.251 0.114 -0.511 -0.066
+    ## 6 Conditional indirect effect when W is 0.600  -0.467 0.169 -0.84  -0.174
 
 #### The direct effect.
 
@@ -193,7 +193,7 @@ posterior_summary(model1)["b_perform_dysfunc", ] %>% round(digits = 3)
 ```
 
     ##  Estimate Est.Error      Q2.5     Q97.5 
-    ##     0.367     0.189    -0.011     0.740
+    ##     0.367     0.184     0.011     0.718
 
 For Figure 11.7 we'll use the first 400 HMC iterations.
 
@@ -234,18 +234,19 @@ Since the `b_perform_dysfunc` values are constant across *W*, the individual HMC
 
 ### Inference about the direct effect.
 
-We've already seen the 95% crecible intervals for the direct effect, `b_perform_dysfunc`, which we can get with `print()`, `posterior_summary()`, or even `fixef()`. Here we'll go beyond summaries and plot using `geom_histogram()`.
+We've already seen the 95% percentile-based crecible intervals for the direct effect, `b_perform_dysfunc`, which we can get with `print()`, `posterior_summary()`, or even `fixef()`. Here we'll go beyond summaries and plot using `geom_histogram()`.
 
 ``` r
+library(tidybayes)
+
 post %>% 
   ggplot(aes(x = b_perform_dysfunc)) +
   geom_histogram(binwidth = .025, boundary = 0, 
                  color = "white", fill = "skyblue3", size = 1/4) +
-  geom_segment(aes(x = posterior_summary(model1)["b_perform_dysfunc", 3], xend = posterior_summary(model1)["b_perform_dysfunc", 4],
-                   y = 0, yend = 0),
-               size = 1) +
-  scale_x_continuous(breaks = posterior_summary(model1)["b_perform_dysfunc", c(1, 3:4)],
-                     labels = posterior_summary(model1)["b_perform_dysfunc", c(1, 3:4)] %>% round(3)) +
+  stat_pointintervalh(aes(y = 0), 
+                      point_interval = mode_hdi, .prob = .95) +
+  scale_x_continuous(breaks = mode_hdi(post$b_perform_dysfunc, .prob = .95)[1, 1:3],
+                     labels = mode_hdi(post$b_perform_dysfunc, .prob = .95)[1, 1:3] %>% round(3)) +
   scale_y_continuous(NULL, breaks = NULL) +
   xlab("The direct effect (i.e., b_perform_dysfunc)") +
   theme_bw() +
@@ -256,7 +257,7 @@ post %>%
 
 ![](Chapter_11_files/figure-markdown_github/unnamed-chunk-11-1.png)
 
-The thick horizontal line at the bottom helps clarify the 95% credible region.
+Since we're plotting in a style similar to Kruschke, we switched from emphasizing the posterior mean or median to marking off the posterior mode, which is Kruschkes' preferred metric of central tendency. We also ditched our typical percentile-based 95% intervals for highest posterior density intervals. The `stat_pointintervalh()` function from the Matthew Kay's [tidybayes package](https://github.com/mjskay/tidybayes) made it easy to compute those values with the `point_interval = mode_hdi` argument. Note how we also used `tidybayes::mode_hdi()` to compute those values and plug them into `scale_x_continuous()`.
 
 ### Inference about the indirect effect.
 
@@ -271,11 +272,10 @@ post %>%
   ggplot(aes(x = ab_3)) +
   geom_histogram(binwidth = .025, boundary = 0, 
                  color = "white", fill = "skyblue3", size = 1/4) +
-  geom_segment(aes(x = quantile(post$ab_3, probs = .025), xend = quantile(post$ab_3, probs = .975),
-                   y = 0, yend = 0),
-               size = 1) +
-  scale_x_continuous(breaks = quantile(post$ab_3, probs = c(.025, .5, .975)),
-                     labels = quantile(post$ab_3, probs = c(.025, .5, .975)) %>% round(3)) +
+  stat_pointintervalh(aes(y = 0), 
+                      point_interval = mode_hdi, .prob = .95) +
+  scale_x_continuous(breaks = mode_hdi(post$ab_3, .prob = .95)[1, 1:3],
+                     labels = mode_hdi(post$ab_3, .prob = .95)[1, 1:3] %>% round(3)) +
   scale_y_continuous(NULL, breaks = NULL) +
   xlab(expression(paste("The indirect effect, ", italic(ab)[3]))) +
   theme_bw() +
@@ -312,11 +312,33 @@ post %>%
 ```
 
     ## # A tibble: 3 x 5
-    ##   key                                            mean    sd     ll      ul
-    ##   <fctr>                                        <dbl> <dbl>  <dbl>   <dbl>
-    ## 1 Conditional indirect effect when W is -0.531 -0.102 0.145 -0.429  0.158 
-    ## 2 Conditional indirect effect when W is -0.006 -0.254 0.120 -0.518 -0.0580
-    ## 3 Conditional indirect effect when W is 0.600  -0.466 0.173 -0.842 -0.166
+    ##   key                                            mean    sd     ll     ul
+    ##   <fct>                                         <dbl> <dbl>  <dbl>  <dbl>
+    ## 1 Conditional indirect effect when W is -0.531 -0.097 0.141 -0.397  0.174
+    ## 2 Conditional indirect effect when W is -0.006 -0.251 0.114 -0.511 -0.066
+    ## 3 Conditional indirect effect when W is 0.600  -0.467 0.169 -0.84  -0.174
+
+And if we wanted to summarize those same effects with posterior modes and 95% highest posterior density intervals, instead, we’d replace our `summarize()` code with a `mode_hdi()` statement.
+
+``` r
+post %>% 
+  select(starts_with("Conditional indirect")) %>% 
+  gather() %>% 
+  mutate(key = factor(key, levels = c("Conditional indirect effect when W is -0.531", 
+                                      "Conditional indirect effect when W is -0.006",
+                                      "Conditional indirect effect when W is 0.600"))) %>% 
+  group_by(key) %>% 
+  mode_hdi(value, .prob = .95) %>% 
+  mutate_if(is.double, round, digits = 3)
+```
+
+    ## # A tibble: 3 x 5
+    ## # Groups:   key [3]
+    ##   key                                           value conf.low conf.high .prob
+    ##   <fct>                                         <dbl>    <dbl>     <dbl> <dbl>
+    ## 1 Conditional indirect effect when W is -0.531 -0.07    -0.383     0.182  0.95
+    ## 2 Conditional indirect effect when W is -0.006 -0.214   -0.496    -0.059  0.95
+    ## 3 Conditional indirect effect when W is 0.600  -0.418   -0.79     -0.138  0.95
 
 And we might plot these with something like:
 
@@ -327,10 +349,8 @@ post %>%
   mutate(key = str_remove(key, "Conditional indirect effect when W is ") %>% as.double()) %>% 
   
   ggplot(aes(x = key, y = value, group = key)) +
-  stat_summary(fun.y = mean,
-               fun.ymin = function(i){quantile(i, probs = .025)},
-               fun.ymax = function(i){quantile(i, probs = .975)},
-               color = "skyblue3", size = 1) +
+  stat_pointinterval(point_interval = mode_hdi, .prob = c(.95, .5),
+                     color = "skyblue3") +
   scale_x_continuous(breaks = c(-.531, -.006, .6)) +
   coord_cartesian(xlim = c(-.5, .6),
                   ylim = c(-1.25, .75)) +
@@ -340,7 +360,9 @@ post %>%
   theme(panel.grid = element_blank())
 ```
 
-![](Chapter_11_files/figure-markdown_github/unnamed-chunk-14-1.png)
+![](Chapter_11_files/figure-markdown_github/unnamed-chunk-15-1.png)
+
+This time we used the `prob = c(.95, .5)` argument within `stat_pointinterval()` to return both 95% and 50% highest posterior density intervals—which are the outer and inner lines, respectively.
 
 This, of course, leads us right into
 
@@ -371,7 +393,7 @@ post %>%
   theme(panel.grid = element_blank())
 ```
 
-![](Chapter_11_files/figure-markdown_github/unnamed-chunk-15-1.png)
+![](Chapter_11_files/figure-markdown_github/unnamed-chunk-16-1.png)
 
 Note. The analyses in this document were done with:
 
@@ -382,6 +404,7 @@ Note. The analyses in this document were done with:
 -   readr 1.1.1
 -   rstan 2.17.3
 -   brms 2.3.2
+-   tidybayes 0.12.1.9000
 
 Reference
 ---------

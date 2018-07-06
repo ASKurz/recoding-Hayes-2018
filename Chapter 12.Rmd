@@ -40,7 +40,7 @@ Our `model1` summary matches nicely with the text.
 print(model1, digits = 3)
 ```
 
-For the figures in this chapter, we'll take cues from Matthew Kay's [tidybayes package](https://github.com/mjskay/tidybayes). Otherwise, our Figure 12.2 is business as usual at this point.
+For the figures in this chapter, we'll take theme cues from Matthew Kay's [tidybayes package](https://github.com/mjskay/tidybayes). Otherwise, our Figure 12.2 is business as usual at this point.
 
 ```{r, fig.width = 6, fig.height = 5}
 theme_set(theme_light())
@@ -94,7 +94,7 @@ fitted(model1, summary = F,
   mutate(difference = `1` - `0`) %>% 
   
   ggplot(aes(x = difference, y = skeptic, group = skeptic, fill = skeptic %>% as.character())) +
-  geom_halfeyeh(.prob = c(0.95, 0.5)) +
+  geom_halfeyeh(point_interval = median_qi, .prob = c(0.95, 0.5)) +
   scale_fill_brewer() +
   scale_y_continuous(breaks = quantile(disaster$skeptic, probs = c(.16, .5, .86)),
                      labels = quantile(disaster$skeptic, probs = c(.16, .5, .86)) %>% round(2)) +
@@ -127,6 +127,17 @@ posterior_samples(model2) %>%
             ul = quantile(ab, probs = .975)) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
+
+We might also streamline our code a touch using `tidybayes::mean_qi()` in place of `tidyverse::summarize()`.
+  
+```{r}
+posterior_samples(model2) %>% 
+  mutate(ab = b_justify_frame*b_donate_justify) %>% 
+  mean_qi(ab, .prob = .95) %>% 
+  mutate_if(is.double, round, digits = 3)
+```  
+
+Note that the last column explicates what interval level we used.
 
 ## 12.2 Moderation of the direct and indirect effects in a conditional process model
 
@@ -174,9 +185,7 @@ post %>%
   select(starts_with("indirect")) %>% 
   gather() %>% 
   group_by(key) %>% 
-  summarize(median = median(value),
-            ll = quantile(value, probs = .025),
-            ul = quantile(value, probs = .975)) %>% 
+  median_qi(value, .prob = .95) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
 
@@ -195,9 +204,7 @@ post %>%
   select(starts_with("direct")) %>% 
   gather() %>% 
   group_by(key) %>% 
-  summarize(median = median(value),
-            ll = quantile(value, probs = .025),
-            ul = quantile(value, probs = .975)) %>% 
+  median_qi(value, .prob = .95) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
 
@@ -322,10 +329,8 @@ tidyverse_style_tibble <-
   mutate(iter = rep(1:4000, times = 30)) %>% 
   gather(effect, value, -skeptic, -iter) %>% 
   group_by(effect, skeptic) %>% 
-  summarize(median = median(value),
-            ll = quantile(value, probs = .025),
-            ul = quantile(value, probs = .975))
-
+  median_qi(value, .prob = .95)
+  
 head(tidyverse_style_tibble)
 ```
 
@@ -334,9 +339,9 @@ Now we have 60 row, 30 for `direct effect` and another 30 for `indirect effect`.
 ```{r, fig.width = 6, fig.height = 4}
 tidyverse_style_tibble %>% 
  ggplot(aes(x = skeptic, group = effect)) +
-  geom_ribbon(aes(ymin = ll, ymax = ul, fill = effect),
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = effect),
               alpha = 1/3) +
-  geom_line(aes(y = median, color = effect)) +
+  geom_line(aes(y = value, color = effect)) +
   scale_fill_brewer(type = "qual", palette = 2) +
   scale_color_brewer(type = "qual", palette = 2) +
   coord_cartesian(xlim = c(1, 5.5),
@@ -346,35 +351,28 @@ tidyverse_style_tibble %>%
   theme(legend.position = "none")
 ```
 
+Do note how, in our plot above, we used tidybayes terms `value` (i.e., median--the specified measure of central tendency), `conf.low` and `conf.high`, the lower- and upper-levels of the 95% interval.
+
 To learn more about nested data and using the `map()` function, check out [this subsection](http://r4ds.had.co.nz/many-models.html#nested-data) of Grolemund and Wickham's [*R4DS*](http://r4ds.had.co.nz) or [starting from this point on](https://www.youtube.com/watch?v=rz3_FDVt9eg&t=824s&frags=pl%2Cwn) in this video of one of Wickham's workshops.
 
 ## 12.3 Statistical inference
 
 ### Inference about the direct effect.
 
-We've already computed the 95% intervals for these. Here they are as pointrange plots.
+We've already computed the 95% intervals for these. Here they are as `stat_pointinterval()` plots.
 
 ```{r, fig.width = 6, fig.height = 4}
 post %>% 
   select(starts_with("direct")) %>% 
   gather() %>% 
-  group_by(key) %>% 
-  summarize(median = median(value),
-            ll_50 = quantile(value, probs = .25),
-            ul_50 = quantile(value, probs = .75),
-            ll_95 = quantile(value, probs = .025),
-            ul_95 = quantile(value, probs = .975)) %>% 
   mutate(key = str_remove(key, "direct effect when W is ") %>% as.double()) %>% 
   
-  ggplot(aes(x = key)) +
-  geom_pointrange(aes(y = median, ymin = ll_95, ymax = ul_95)) +
-  geom_linerange(aes(ymin = ll_50, ymax = ul_50), size = 1.25) +
+  ggplot(aes(x = key, y = value, group = key)) +
+  stat_pointinterval(point_interval = median_qi, .prob = c(.95, .5)) +
   coord_cartesian(xlim = c(1, 5.5)) +
   labs(x = expression(paste("Climate Change Skepticism (", italic(W), ")")),
        y = "Conditional Direct Effect of Disaster Frame on\nWillingness to Donate")
 ```
-
-If you really wanted our analogue to the standard error, the Bayesian posterior *SD*, you can always use `sd()` in the `summarize()` portion of the code.
 
 ### Inference about the indirect effect.
 
@@ -396,22 +394,16 @@ post %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
-We might visualize with a coefficient plot.
+We might use `stat_pointintervalh()` to visualize *a*~3~*b* with a coefficient plot.
 
 ```{r, fig.width = 6, fig.height = 1}
 post %>% 
-  ggplot(aes(x = factor(0), y = a3b)) +
-  stat_summary(fun.y = median,
-               fun.ymin = function(x){quantile(x, probs = .025)},
-               fun.ymax = function(x){quantile(x, probs = .975)}) +
-  stat_summary(geom = "linerange",
-               fun.ymin = function(x){quantile(x, probs = .25)},
-               fun.ymax = function(x){quantile(x, probs = .75)},
-               size = 1.25) +
-  scale_x_discrete(NULL, breaks = NULL) +
-  coord_flip(ylim = c(-.5, 0)) +
+  ggplot(aes(x = a3b, y = 1)) +
+  stat_pointintervalh(point_interval = median_qi, .prob = c(.95, .5)) +
+  scale_y_discrete(NULL, breaks = NULL) +
+  coord_cartesian(xlim = c(-.5, 0)) +
   labs(title = expression(paste("Coefficient plot for ", italic(a)[3], italic(b), " (i.e., the index of moderated mediation)")),
-       y = NULL)
+       x = NULL)
 ```
 
 #### Probing moderation of mediation.
@@ -429,7 +421,7 @@ post %>%
   
   
   ggplot(aes(x = `indirect effect`, y = W, group = W, fill = W %>% as.character())) +
-  geom_halfeyeh(.prob = c(0.95, 0.5)) +
+  geom_halfeyeh(point_interval = median_qi, .prob = c(0.95, 0.5)) +
   scale_fill_brewer() +
   scale_y_continuous(breaks = c(1.592, 2.8, 5.2),
                      labels = c(1.6, 2.8, 5.2)) +

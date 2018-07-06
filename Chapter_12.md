@@ -1,7 +1,7 @@
 Chapter 12
 ================
 A Solomon Kurz
-2018-06-28
+2018-07-06
 
 11.3 Example: Hiding your feelings from your work team
 ------------------------------------------------------
@@ -51,20 +51,20 @@ print(model1, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##               Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## Intercept        5.026     0.229    4.583    5.481       2404 1.000
-    ## frame            0.677     0.328    0.036    1.314       2154 1.001
-    ## skeptic         -0.139     0.058   -0.252   -0.025       2195 1.001
-    ## frame:skeptic   -0.170     0.084   -0.329   -0.007       2040 1.001
+    ## Intercept        5.028     0.231    4.580    5.484       2240 0.999
+    ## frame            0.681     0.339    0.009    1.321       2020 1.000
+    ## skeptic         -0.140     0.059   -0.259   -0.026       2252 0.999
+    ## frame:skeptic   -0.171     0.086   -0.334   -0.003       1967 1.000
     ## 
     ## Family Specific Parameters: 
     ##       Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma    1.242     0.062    1.124    1.369       3122 1.001
+    ## sigma    1.242     0.061    1.131    1.369       3292 1.000
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
     ## scale reduction factor on split chains (at convergence, Rhat = 1).
 
-For the figures in this chapter, we'll take cues from Matthew Kay's [tidybayes package](https://github.com/mjskay/tidybayes). Otherwise, our Figure 12.2 is business as usual at this point.
+For the figures in this chapter, we'll take theme cues from Matthew Kay's [tidybayes package](https://github.com/mjskay/tidybayes). Otherwise, our Figure 12.2 is business as usual at this point.
 
 ``` r
 theme_set(theme_light())
@@ -120,7 +120,7 @@ fitted(model1, summary = F,
   mutate(difference = `1` - `0`) %>% 
   
   ggplot(aes(x = difference, y = skeptic, group = skeptic, fill = skeptic %>% as.character())) +
-  geom_halfeyeh(.prob = c(0.95, 0.5)) +
+  geom_halfeyeh(point_interval = median_qi, .prob = c(0.95, 0.5)) +
   scale_fill_brewer() +
   scale_y_continuous(breaks = quantile(disaster$skeptic, probs = c(.16, .5, .86)),
                      labels = quantile(disaster$skeptic, probs = c(.16, .5, .86)) %>% round(2)) +
@@ -156,16 +156,16 @@ print(model2, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##                   Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## justify_Intercept    2.803     0.090    2.627    2.978       4000 1.000
-    ## donate_Intercept     7.236     0.233    6.791    7.695       4000 1.000
-    ## justify_frame        0.135     0.131   -0.127    0.385       4000 1.001
-    ## donate_frame         0.215     0.137   -0.056    0.479       4000 0.999
-    ## donate_justify      -0.954     0.074   -1.100   -0.810       4000 1.000
+    ## justify_Intercept    2.801     0.088    2.628    2.971       4000 1.000
+    ## donate_Intercept     7.239     0.228    6.798    7.692       4000 1.000
+    ## justify_frame        0.134     0.126   -0.108    0.380       4000 1.000
+    ## donate_frame         0.212     0.136   -0.055    0.486       4000 1.000
+    ## donate_justify      -0.954     0.074   -1.101   -0.812       4000 1.000
     ## 
     ## Family Specific Parameters: 
     ##               Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma_justify    0.935     0.045    0.851    1.025       4000 1.000
-    ## sigma_donate     0.986     0.048    0.895    1.086       4000 0.999
+    ## sigma_justify    0.935     0.046    0.849    1.030       4000 1.000
+    ## sigma_donate     0.986     0.048    0.896    1.090       4000 1.000
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -182,8 +182,24 @@ posterior_samples(model2) %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
-    ##     mean     ll   ul
-    ## 1 -0.129 -0.378 0.12
+    ##     mean     ll    ul
+    ## 1 -0.128 -0.362 0.107
+
+We might also streamline our code a touch using `tidybayes::mean_qi()` in place of `tidyverse::summarize()`.
+
+``` r
+posterior_samples(model2) %>% 
+  mutate(ab = b_justify_frame*b_donate_justify) %>% 
+  mean_qi(ab, .prob = .95) %>% 
+  mutate_if(is.double, round, digits = 3)
+```
+
+    ## # A tibble: 1 x 4
+    ##       ab conf.low conf.high .prob
+    ##    <dbl>    <dbl>     <dbl> <dbl>
+    ## 1 -0.128   -0.362     0.107  0.95
+
+Note that the last column explicates what interval level we used.
 
 12.2 Moderation of the direct and indirect effects in a conditional process model
 ---------------------------------------------------------------------------------
@@ -216,20 +232,20 @@ print(model3, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##                       Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## justify_Intercept        2.453     0.149    2.159    2.739       3900 0.999
-    ## donate_Intercept         7.292     0.272    6.744    7.834       4000 0.999
-    ## justify_frame           -0.565     0.219   -0.999   -0.133       3545 1.000
-    ## justify_skeptic          0.105     0.038    0.032    0.181       3590 0.999
-    ## justify_frame:skeptic    0.201     0.055    0.089    0.309       3270 1.000
-    ## donate_frame             0.155     0.267   -0.350    0.676       3240 1.001
-    ## donate_justify          -0.923     0.085   -1.092   -0.756       4000 0.999
-    ## donate_skeptic          -0.043     0.047   -0.133    0.050       3565 1.000
-    ## donate_frame:skeptic     0.016     0.068   -0.120    0.150       2974 1.001
+    ## justify_Intercept        2.450     0.146    2.169    2.740       3471 1.000
+    ## donate_Intercept         7.295     0.273    6.761    7.826       4000 1.000
+    ## justify_frame           -0.562     0.218   -0.986   -0.144       3139 1.000
+    ## justify_skeptic          0.105     0.038    0.031    0.178       3543 1.000
+    ## justify_frame:skeptic    0.201     0.056    0.092    0.308       3096 1.000
+    ## donate_frame             0.159     0.270   -0.383    0.678       3139 1.000
+    ## donate_justify          -0.924     0.084   -1.092   -0.762       4000 0.999
+    ## donate_skeptic          -0.042     0.048   -0.134    0.054       4000 1.001
+    ## donate_frame:skeptic     0.015     0.069   -0.120    0.150       2947 1.001
     ## 
     ## Family Specific Parameters: 
     ##               Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma_justify    0.818     0.040    0.742    0.902       4000 1.000
-    ## sigma_donate     0.989     0.049    0.901    1.092       4000 1.000
+    ## sigma_justify    0.818     0.041    0.746    0.905       4000 1.000
+    ## sigma_donate     0.989     0.049    0.899    1.087       4000 0.999
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -244,9 +260,9 @@ fixef(model3)[c(3:5), ] %>% round(digits = 3)
 ```
 
     ##                       Estimate Est.Error   Q2.5  Q97.5
-    ## justify_frame           -0.565     0.219 -0.999 -0.133
-    ## justify_skeptic          0.105     0.038  0.032  0.181
-    ## justify_frame:skeptic    0.201     0.055  0.089  0.309
+    ## justify_frame           -0.562     0.218 -0.986 -0.144
+    ## justify_skeptic          0.105     0.038  0.031  0.178
+    ## justify_frame:skeptic    0.201     0.056  0.092  0.308
 
 This is *b*.
 
@@ -255,7 +271,7 @@ fixef(model3)[7, ] %>% round(digits = 3)
 ```
 
     ##  Estimate Est.Error      Q2.5     Q97.5 
-    ##    -0.923     0.085    -1.092    -0.756
+    ##    -0.924     0.084    -1.092    -0.762
 
 We'll need to employ `posterior_samples()` to compute (*a*<sub>1</sub> + *a*<sub>3</sub>*W*)*b*.
 
@@ -270,18 +286,17 @@ post %>%
   select(starts_with("indirect")) %>% 
   gather() %>% 
   group_by(key) %>% 
-  summarize(median = median(value),
-            ll = quantile(value, probs = .025),
-            ul = quantile(value, probs = .975)) %>% 
+  median_qi(value, .prob = .95) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
 
-    ## # A tibble: 3 x 4
-    ##   key                             median     ll     ul
-    ##   <chr>                            <dbl>  <dbl>  <dbl>
-    ## 1 indirect effect when W is 1.592  0.227 -0.045  0.504
-    ## 2 indirect effect when W is 2.800  0.003 -0.211  0.211
-    ## 3 indirect effect when W is 5.200 -0.444 -0.73  -0.173
+    ## # A tibble: 3 x 5
+    ## # Groups:   key [3]
+    ##   key                              value conf.low conf.high .prob
+    ##   <chr>                            <dbl>    <dbl>     <dbl> <dbl>
+    ## 1 indirect effect when W is 1.592  0.223   -0.043     0.499  0.95
+    ## 2 indirect effect when W is 2.800  0       -0.211     0.21   0.95
+    ## 3 indirect effect when W is 5.200 -0.444   -0.733    -0.168  0.95
 
 ### The conditional direct effect of X.
 
@@ -298,18 +313,17 @@ post %>%
   select(starts_with("direct")) %>% 
   gather() %>% 
   group_by(key) %>% 
-  summarize(median = median(value),
-            ll = quantile(value, probs = .025),
-            ul = quantile(value, probs = .975)) %>% 
+  median_qi(value, .prob = .95) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
 
-    ## # A tibble: 3 x 4
-    ##   key                           median     ll    ul
-    ##   <chr>                          <dbl>  <dbl> <dbl>
-    ## 1 direct effect when W is 1.592  0.179 -0.169 0.534
-    ## 2 direct effect when W is 2.800  0.202 -0.072 0.482
-    ## 3 direct effect when W is 5.200  0.235 -0.116 0.618
+    ## # A tibble: 3 x 5
+    ## # Groups:   key [3]
+    ##   key                           value conf.low conf.high .prob
+    ##   <chr>                         <dbl>    <dbl>     <dbl> <dbl>
+    ## 1 direct effect when W is 1.592 0.183   -0.181     0.533  0.95
+    ## 2 direct effect when W is 2.800 0.2     -0.077     0.468  0.95
+    ## 3 direct effect when W is 5.200 0.237   -0.123     0.583  0.95
 
 ### Visualizing the direct and indirect effects.
 
@@ -349,9 +363,9 @@ glimpse(justify_effects)
     ## Observations: 30
     ## Variables: 4
     ## $ skeptic <dbl> 0.0000000, 0.2068966, 0.4137931, 0.6206897, 0.8275862, 1.0344828, 1.2413793, 1....
-    ## $ median  <dbl> 0.51994437, 0.48122918, 0.44308125, 0.40480865, 0.36744617, 0.32995722, 0.29189...
-    ## $ ll      <dbl> 0.120363185, 0.102272788, 0.083276892, 0.065407997, 0.042008590, 0.021865977, -...
-    ## $ ul      <dbl> 0.933347495, 0.878190871, 0.822235540, 0.764233193, 0.705737438, 0.650791681, 0...
+    ## $ median  <dbl> 0.51674735, 0.47876931, 0.44137940, 0.40397112, 0.36509797, 0.32670971, 0.28745...
+    ## $ ll      <dbl> 0.1273677362, 0.1102148045, 0.0855316463, 0.0623580439, 0.0429606471, 0.0213024...
+    ## $ ul      <dbl> 0.927671789, 0.871825923, 0.815031497, 0.754776962, 0.694773413, 0.640567459, 0...
 
 ``` r
 glimpse(donate_effects)
@@ -360,9 +374,9 @@ glimpse(donate_effects)
     ## Observations: 30
     ## Variables: 4
     ## $ skeptic <dbl> 0.0000000, 0.2068966, 0.4137931, 0.6206897, 0.8275862, 1.0344828, 1.2413793, 1....
-    ## $ median  <dbl> 0.1512183, 0.1544502, 0.1581665, 0.1621030, 0.1653814, 0.1676131, 0.1710118, 0....
-    ## $ ll      <dbl> -0.35010589, -0.32419515, -0.30001969, -0.27399908, -0.25086959, -0.22986830, -...
-    ## $ ul      <dbl> 0.6760396, 0.6608650, 0.6405930, 0.6219335, 0.6020020, 0.5852079, 0.5604962, 0....
+    ## $ median  <dbl> 0.1648400, 0.1681041, 0.1703780, 0.1739510, 0.1763307, 0.1782794, 0.1793318, 0....
+    ## $ ll      <dbl> -0.38309533, -0.35707699, -0.33114537, -0.30110940, -0.27593712, -0.24907860, -...
+    ## $ ul      <dbl> 0.6779338, 0.6563455, 0.6353144, 0.6150369, 0.5936870, 0.5799982, 0.5606131, 0....
 
 Here we'll combine those two tibbles by stacking `donate_effects` underneath `justify_effects` and then indexing them by `effect`. Then we're ready to plot.
 
@@ -401,7 +415,7 @@ figure_12.7 %>%
   theme(legend.position = "none")
 ```
 
-![](Chapter_12_files/figure-markdown_github/unnamed-chunk-16-1.png)
+![](Chapter_12_files/figure-markdown_github/unnamed-chunk-17-1.png)
 
 Note how wide those 95% intervals are relative to the scale of the y-axis. I specifically kept the y-axis within the same range as Figure 12.7 in the text. To me the message is clear: include credible-interval ribbons in your regression slope plots. They help depict how uncertain the posterior is in a way a simple line slopes just don't.
 
@@ -462,12 +476,12 @@ head(tidyverse_style_tibble)
     ## # Groups:   skeptic [1]
     ##   skeptic `indirect effect` `direct effect`
     ##     <dbl>             <dbl>           <dbl>
-    ## 1       0             0.613         0.0267 
-    ## 2       0             0.794        -0.254  
-    ## 3       0             0.707        -0.336  
-    ## 4       0             0.637         0.00447
-    ## 5       0             0.477        -0.510  
-    ## 6       0             0.286         0.590
+    ## 1       0             0.638          0.159 
+    ## 2       0             0.730          0.140 
+    ## 3       0             0.818         -0.0547
+    ## 4       0             0.603         -0.273 
+    ## 5       0             0.763         -0.592 
+    ## 6       0             0.771         -0.666
 
 After un-nesting, the tibble is now 4000\*30 = 120,000 rows long. With just a little more wrangling, we'll have our familiar summaries for each level of `skeptic`.
 
@@ -478,32 +492,30 @@ tidyverse_style_tibble <-
   mutate(iter = rep(1:4000, times = 30)) %>% 
   gather(effect, value, -skeptic, -iter) %>% 
   group_by(effect, skeptic) %>% 
-  summarize(median = median(value),
-            ll = quantile(value, probs = .025),
-            ul = quantile(value, probs = .975))
-
+  median_qi(value, .prob = .95)
+  
 head(tidyverse_style_tibble)
 ```
 
-    ## # A tibble: 6 x 5
-    ## # Groups:   effect [1]
-    ##   effect        skeptic median     ll    ul
-    ##   <chr>           <dbl>  <dbl>  <dbl> <dbl>
-    ## 1 direct effect   0      0.151 -0.350 0.676
-    ## 2 direct effect   0.207  0.154 -0.324 0.661
-    ## 3 direct effect   0.414  0.158 -0.300 0.641
-    ## 4 direct effect   0.621  0.162 -0.274 0.622
-    ## 5 direct effect   0.828  0.165 -0.251 0.602
-    ## 6 direct effect   1.03   0.168 -0.230 0.585
+    ## # A tibble: 6 x 6
+    ## # Groups:   effect, skeptic [6]
+    ##   effect        skeptic value conf.low conf.high .prob
+    ##   <chr>           <dbl> <dbl>    <dbl>     <dbl> <dbl>
+    ## 1 direct effect   0     0.165   -0.383     0.678  0.95
+    ## 2 direct effect   0.207 0.168   -0.357     0.656  0.95
+    ## 3 direct effect   0.414 0.170   -0.331     0.635  0.95
+    ## 4 direct effect   0.621 0.174   -0.301     0.615  0.95
+    ## 5 direct effect   0.828 0.176   -0.276     0.594  0.95
+    ## 6 direct effect   1.03  0.178   -0.249     0.580  0.95
 
 Now we have 60 row, 30 for `direct effect` and another 30 for `indirect effect`. Each has the typical summary values for all 30 levels of `skeptic`. Now we're ready to plot.
 
 ``` r
 tidyverse_style_tibble %>% 
  ggplot(aes(x = skeptic, group = effect)) +
-  geom_ribbon(aes(ymin = ll, ymax = ul, fill = effect),
+  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = effect),
               alpha = 1/3) +
-  geom_line(aes(y = median, color = effect)) +
+  geom_line(aes(y = value, color = effect)) +
   scale_fill_brewer(type = "qual", palette = 2) +
   scale_color_brewer(type = "qual", palette = 2) +
   coord_cartesian(xlim = c(1, 5.5),
@@ -513,7 +525,9 @@ tidyverse_style_tibble %>%
   theme(legend.position = "none")
 ```
 
-![](Chapter_12_files/figure-markdown_github/unnamed-chunk-21-1.png)
+![](Chapter_12_files/figure-markdown_github/unnamed-chunk-22-1.png)
+
+Do note how, in our plot above, we used tidybayes terms `value` (i.e., median--the specified measure of central tendency), `conf.low` and `conf.high`, the lower- and upper-levels of the 95% interval.
 
 To learn more about nested data and using the `map()` function, check out [this subsection](http://r4ds.had.co.nz/many-models.html#nested-data) of Grolemund and Wickham's [*R4DS*](http://r4ds.had.co.nz) or [starting from this point on](https://www.youtube.com/watch?v=rz3_FDVt9eg&t=824s&frags=pl%2Cwn) in this video of one of Wickham's workshops.
 
@@ -522,31 +536,22 @@ To learn more about nested data and using the `map()` function, check out [this 
 
 ### Inference about the direct effect.
 
-We've already computed the 95% intervals for these. Here they are as pointrange plots.
+We've already computed the 95% intervals for these. Here they are as `stat_pointinterval()` plots.
 
 ``` r
 post %>% 
   select(starts_with("direct")) %>% 
   gather() %>% 
-  group_by(key) %>% 
-  summarize(median = median(value),
-            ll_50 = quantile(value, probs = .25),
-            ul_50 = quantile(value, probs = .75),
-            ll_95 = quantile(value, probs = .025),
-            ul_95 = quantile(value, probs = .975)) %>% 
   mutate(key = str_remove(key, "direct effect when W is ") %>% as.double()) %>% 
   
-  ggplot(aes(x = key)) +
-  geom_pointrange(aes(y = median, ymin = ll_95, ymax = ul_95)) +
-  geom_linerange(aes(ymin = ll_50, ymax = ul_50), size = 1.25) +
+  ggplot(aes(x = key, y = value, group = key)) +
+  stat_pointinterval(point_interval = median_qi, .prob = c(.95, .5)) +
   coord_cartesian(xlim = c(1, 5.5)) +
   labs(x = expression(paste("Climate Change Skepticism (", italic(W), ")")),
        y = "Conditional Direct Effect of Disaster Frame on\nWillingness to Donate")
 ```
 
-![](Chapter_12_files/figure-markdown_github/unnamed-chunk-22-1.png)
-
-If you really wanted our analogue to the standard error, the Bayesian posterior *SD*, you can always use `sd()` in the `summarize()` portion of the code.
+![](Chapter_12_files/figure-markdown_github/unnamed-chunk-23-1.png)
 
 ### Inference about the indirect effect.
 
@@ -569,27 +574,21 @@ post %>%
 ```
 
     ##   median    sd     ll     ul
-    ## 1 -0.185 0.054 -0.293 -0.081
+    ## 1 -0.183 0.054 -0.292 -0.083
 
-We might visualize with a coefficient plot.
+We might use `stat_pointintervalh()` to visualize *a*<sub>3</sub>*b* with a coefficient plot.
 
 ``` r
 post %>% 
-  ggplot(aes(x = factor(0), y = a3b)) +
-  stat_summary(fun.y = median,
-               fun.ymin = function(x){quantile(x, probs = .025)},
-               fun.ymax = function(x){quantile(x, probs = .975)}) +
-  stat_summary(geom = "linerange",
-               fun.ymin = function(x){quantile(x, probs = .25)},
-               fun.ymax = function(x){quantile(x, probs = .75)},
-               size = 1.25) +
-  scale_x_discrete(NULL, breaks = NULL) +
-  coord_flip(ylim = c(-.5, 0)) +
+  ggplot(aes(x = a3b, y = 1)) +
+  stat_pointintervalh(point_interval = median_qi, .prob = c(.95, .5)) +
+  scale_y_discrete(NULL, breaks = NULL) +
+  coord_cartesian(xlim = c(-.5, 0)) +
   labs(title = expression(paste("Coefficient plot for ", italic(a)[3], italic(b), " (i.e., the index of moderated mediation)")),
-       y = NULL)
+       x = NULL)
 ```
 
-![](Chapter_12_files/figure-markdown_github/unnamed-chunk-24-1.png)
+![](Chapter_12_files/figure-markdown_github/unnamed-chunk-25-1.png)
 
 #### Probing moderation of mediation.
 
@@ -606,7 +605,7 @@ post %>%
   
   
   ggplot(aes(x = `indirect effect`, y = W, group = W, fill = W %>% as.character())) +
-  geom_halfeyeh(.prob = c(0.95, 0.5)) +
+  geom_halfeyeh(point_interval = median_qi, .prob = c(0.95, 0.5)) +
   scale_fill_brewer() +
   scale_y_continuous(breaks = c(1.592, 2.8, 5.2),
                      labels = c(1.6, 2.8, 5.2)) +
@@ -615,7 +614,7 @@ post %>%
         panel.grid.minor.y = element_blank())
 ```
 
-![](Chapter_12_files/figure-markdown_github/unnamed-chunk-25-1.png)
+![](Chapter_12_files/figure-markdown_github/unnamed-chunk-26-1.png)
 
 ### Pruning the model.
 
@@ -647,19 +646,19 @@ print(model4, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##                       Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## justify_Intercept        2.452     0.148    2.158    2.739       3801 0.999
-    ## donate_Intercept         7.261     0.228    6.825    7.718       4000 1.000
-    ## justify_frame           -0.564     0.218   -0.993   -0.138       3523 0.999
-    ## justify_skeptic          0.105     0.038    0.031    0.179       3567 0.999
-    ## justify_frame:skeptic    0.201     0.055    0.094    0.312       3179 0.999
-    ## donate_frame             0.208     0.136   -0.058    0.476       4000 1.000
-    ## donate_justify          -0.919     0.081   -1.080   -0.763       4000 1.000
-    ## donate_skeptic          -0.036     0.036   -0.106    0.034       4000 1.000
+    ## justify_Intercept        2.456     0.153    2.160    2.749       2919 1.000
+    ## donate_Intercept         7.254     0.227    6.794    7.698       4000 1.001
+    ## justify_frame           -0.569     0.220   -0.997   -0.146       2671 1.000
+    ## justify_skeptic          0.105     0.039    0.026    0.182       3002 1.000
+    ## justify_frame:skeptic    0.202     0.056    0.097    0.314       2548 1.000
+    ## donate_frame             0.214     0.138   -0.056    0.477       4000 1.000
+    ## donate_justify          -0.918     0.084   -1.083   -0.752       3553 1.000
+    ## donate_skeptic          -0.036     0.037   -0.109    0.036       3828 1.000
     ## 
     ## Family Specific Parameters: 
     ##               Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma_justify    0.818     0.040    0.746    0.898       4000 1.000
-    ## sigma_donate     0.987     0.049    0.897    1.085       4000 1.000
+    ## sigma_justify    0.817     0.040    0.744    0.899       4000 1.000
+    ## sigma_donate     0.987     0.049    0.898    1.091       4000 1.001
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 
@@ -672,9 +671,9 @@ loo(model3, model4)
 ```
 
     ##                   LOOIC    SE
-    ## model3          1117.42 33.15
-    ## model4          1115.03 33.04
-    ## model3 - model4    2.39  0.53
+    ## model3          1117.21 33.18
+    ## model4          1115.66 33.08
+    ## model3 - model4    1.55  0.49
 
 The difference in LOO-CV values for the two models was modest. There's little predictive reason to choose one over the other. You could argue that `model4` is simpler than `model3`. Since we've got a complex model either way, one might also consider which one was of primary theoretical interest.
 
@@ -700,20 +699,20 @@ print(model3, digits = 3)
     ## 
     ## Population-Level Effects: 
     ##                       Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## justify_Intercept        2.453     0.149    2.159    2.739       3900 0.999
-    ## donate_Intercept         7.292     0.272    6.744    7.834       4000 0.999
-    ## justify_frame           -0.565     0.219   -0.999   -0.133       3545 1.000
-    ## justify_skeptic          0.105     0.038    0.032    0.181       3590 0.999
-    ## justify_frame:skeptic    0.201     0.055    0.089    0.309       3270 1.000
-    ## donate_frame             0.155     0.267   -0.350    0.676       3240 1.001
-    ## donate_justify          -0.923     0.085   -1.092   -0.756       4000 0.999
-    ## donate_skeptic          -0.043     0.047   -0.133    0.050       3565 1.000
-    ## donate_frame:skeptic     0.016     0.068   -0.120    0.150       2974 1.001
+    ## justify_Intercept        2.450     0.146    2.169    2.740       3471 1.000
+    ## donate_Intercept         7.295     0.273    6.761    7.826       4000 1.000
+    ## justify_frame           -0.562     0.218   -0.986   -0.144       3139 1.000
+    ## justify_skeptic          0.105     0.038    0.031    0.178       3543 1.000
+    ## justify_frame:skeptic    0.201     0.056    0.092    0.308       3096 1.000
+    ## donate_frame             0.159     0.270   -0.383    0.678       3139 1.000
+    ## donate_justify          -0.924     0.084   -1.092   -0.762       4000 0.999
+    ## donate_skeptic          -0.042     0.048   -0.134    0.054       4000 1.001
+    ## donate_frame:skeptic     0.015     0.069   -0.120    0.150       2947 1.001
     ## 
     ## Family Specific Parameters: 
     ##               Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-    ## sigma_justify    0.818     0.040    0.742    0.902       4000 1.000
-    ## sigma_donate     0.989     0.049    0.901    1.092       4000 1.000
+    ## sigma_justify    0.818     0.041    0.746    0.905       4000 1.000
+    ## sigma_donate     0.989     0.049    0.899    1.087       4000 0.999
     ## 
     ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
     ## is a crude measure of effective sample size, and Rhat is the potential 

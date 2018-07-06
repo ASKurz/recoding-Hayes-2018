@@ -151,8 +151,9 @@ model2 <-
 
 Now we're ready to compare $R^2$ distributions.
 
-```{r, fig.width = 6, fig.height = 2}
-bayes_R2(model1, resp = "respappr", summary = F) %>% 
+```{r, fig.width = 4, fig.height = 2}
+R2s <-
+  bayes_R2(model1, resp = "respappr", summary = F) %>% 
   as_tibble() %>% 
   rename(model1 = R2_respappr) %>% 
   bind_cols(
@@ -160,13 +161,15 @@ bayes_R2(model1, resp = "respappr", summary = F) %>%
       as_tibble() %>% 
       rename(model2 = R2_respappr)
   ) %>% 
-  mutate(difference = model1 - model2) %>% 
-  
+  mutate(difference = model1 - model2) 
+
+R2s %>% 
   ggplot(aes(x = difference)) +
-  geom_density(size = 0, fill = "grey50") +
-  geom_vline(xintercept = 0, color = "black") +
+  geom_halfeyeh(aes(y = 0), fill = "grey50", color = "white",
+                point_interval = median_qi, .prob = 0.95) +
+  scale_x_continuous(breaks = median_qi(R2s$difference, .prob = .95)[1, 1:3],
+                     labels = median_qi(R2s$difference, .prob = .95)[1, 1:3] %>% round(2)) +
   scale_y_continuous(NULL, breaks = NULL) +
-  coord_cartesian(xlim = c(-.5, .5)) +
   xlab(expression(paste(Delta, italic(R)^2))) +
   theme_black() +
   theme(panel.grid = element_blank())
@@ -214,7 +217,8 @@ model1_fitted %>%
   gather(key, value, -sexism) %>% 
   
   ggplot(aes(x = value)) +
-  geom_density(size = 0, fill = "grey50") +
+  geom_halfeyeh(aes(y = 0), fill = "grey50", color = "white",
+                point_interval = median_qi, .prob = 0.95) +
   geom_vline(xintercept = 0, color = "grey25", linetype = 2) +
   scale_y_continuous(NULL, breaks = NULL) +
   facet_grid(sexism~key) +
@@ -261,10 +265,11 @@ Here's *b*.
 post %>% 
   
   ggplot(aes(x = b_liking_respappr)) +
-  geom_density(size = 0, fill = "grey50") +
-  scale_x_continuous(breaks = c(-1, fixef(model1)["liking_respappr", 1], 1),
+  geom_halfeyeh(aes(y = 0), fill = "grey50", color = "white",
+                point_interval = median_qi, .prob = 0.95) +
+  scale_x_continuous(breaks = c(-1, median(post$b_liking_respappr), 1),
                      labels = c(-1, 
-                                fixef(model1)["liking_respappr", 1] %>% round(3),
+                                median(post$b_liking_respappr) %>% round(3),
                                 1)) +
   scale_y_continuous(NULL, breaks = NULL) +
   coord_cartesian(xlim = -1:1) +
@@ -392,8 +397,9 @@ post %>%
   gather() %>% 
  
   ggplot(aes(x = value, y = key, group = key)) +
-  geom_halfeyeh(.prob = c(0.95, 0.5),
-                color = "white") +
+  geom_halfeyeh(point_interval = median_qi, .prob = c(0.95, 0.5),
+                fill = "grey50", color = "white") +
+  scale_y_discrete(expand = c(.1, .1)) +
   labs(x = NULL, y = NULL) +
   theme_black() +
   theme(axis.ticks.y = element_blank(),
@@ -409,12 +415,11 @@ We already computed the relevant 95% credible intervals at the end of section **
 rcie_tibble_pick_a_point %>%   
   
   ggplot(aes(x = value, y = sexism, group = sexism)) +
-  geom_halfeyeh(.prob = c(0.95, 0.5),
-                color = "white") +
+  geom_halfeyeh(point_interval = median_qi, .prob = c(0.95, 0.5),
+                fill = "grey50", color = "white") +
   labs(x = "Relative Conditional Effect on Liking", y = NULL) +
   theme_black() +
   theme(axis.text.y = element_text(hjust = 0),
-        axis.ticks.y = element_blank(),
         panel.grid.minor.y = element_blank(),
         panel.grid.major.y = element_blank()) +
   facet_wrap(~`indirect effect`)
@@ -437,7 +442,8 @@ model3 <-
 Here's the $R^2$ difference density.
 
 ```{r, fig.width = 6, fig.height = 2}
-bayes_R2(model1, resp = "liking", summary = F) %>% 
+R2s <-
+  bayes_R2(model1, resp = "liking", summary = F) %>% 
   as_tibble() %>% 
   rename(model1 = R2_liking) %>% 
   bind_cols(
@@ -445,11 +451,14 @@ bayes_R2(model1, resp = "liking", summary = F) %>%
       as_tibble() %>% 
       rename(model3 = R2_liking)
   ) %>% 
-  mutate(difference = model1 - model3) %>% 
+  mutate(difference = model1 - model3) 
+
+R2s %>% 
+  ggplot(aes(x = difference, y = 0)) +
   
-  ggplot(aes(x = difference)) +
-  geom_density(size = 0, fill = "grey50") +
-  geom_vline(xintercept = 0, color = "black") +
+  geom_halfeyeh(point_interval = median_qi, .prob = c(0.95, 0.5),
+                fill = "grey50", color = "white") +
+  scale_x_continuous(breaks = c(-.5, median(R2s$difference) %>% round(2), .5)) +
   scale_y_continuous(NULL, breaks = NULL) +
   coord_cartesian(xlim = c(-.5, .5)) +
   xlab(expression(paste(Delta, italic(R)^2))) +
@@ -600,7 +609,8 @@ model1_fitted %>%
   gather(key, value, -sexism) %>% 
   
   ggplot(aes(x = value)) +
-  geom_density(size = 0, fill = "grey50") +
+  geom_halfeyeh(aes(y = 0), fill = "grey50", color = "white",
+                point_interval = median_qi, .prob = 0.95) +
   geom_vline(xintercept = 0, color = "grey25", linetype = 2) +
   scale_y_continuous(NULL, breaks = NULL) +
   facet_grid(sexism~key) +

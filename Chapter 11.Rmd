@@ -176,18 +176,19 @@ Since the `b_perform_dysfunc` values are constant across $W$, the individual HMC
 
 ### Inference about the direct effect.
 
-We've already seen the 95% crecible intervals for the direct effect, `b_perform_dysfunc`, which we can get with `print()`, `posterior_summary()`, or even `fixef()`. Here we'll go beyond summaries and plot using `geom_histogram()`.
+We've already seen the 95% percentile-based crecible intervals for the direct effect, `b_perform_dysfunc`, which we can get with `print()`, `posterior_summary()`, or even `fixef()`. Here we'll go beyond summaries and plot using `geom_histogram()`.
 
 ```{r, fig.width = 3.5, fig.height = 2.75}
+library(tidybayes)
+
 post %>% 
   ggplot(aes(x = b_perform_dysfunc)) +
   geom_histogram(binwidth = .025, boundary = 0, 
                  color = "white", fill = "skyblue3", size = 1/4) +
-  geom_segment(aes(x = posterior_summary(model1)["b_perform_dysfunc", 3], xend = posterior_summary(model1)["b_perform_dysfunc", 4],
-                   y = 0, yend = 0),
-               size = 1) +
-  scale_x_continuous(breaks = posterior_summary(model1)["b_perform_dysfunc", c(1, 3:4)],
-                     labels = posterior_summary(model1)["b_perform_dysfunc", c(1, 3:4)] %>% round(3)) +
+  stat_pointintervalh(aes(y = 0), 
+                      point_interval = mode_hdi, .prob = .95) +
+  scale_x_continuous(breaks = mode_hdi(post$b_perform_dysfunc, .prob = .95)[1, 1:3],
+                     labels = mode_hdi(post$b_perform_dysfunc, .prob = .95)[1, 1:3] %>% round(3)) +
   scale_y_continuous(NULL, breaks = NULL) +
   xlab("The direct effect (i.e., b_perform_dysfunc)") +
   theme_bw() +
@@ -196,7 +197,7 @@ post %>%
         axis.line.x = element_line(size = 1/4))
 ```
 
-The thick horizontal line at the bottom helps clarify the 95% credible region.
+Since we're plotting in a style similar to Kruschke, we switched from emphasizing the posterior mean or median to marking off the posterior mode, which is Kruschkes' preferred metric of central tendency. We also ditched our typical percentile-based 95% intervals for highest posterior density intervals. The `stat_pointintervalh()` function from the Matthew Kay's [tidybayes package](https://github.com/mjskay/tidybayes) made it easy to compute those values with the `point_interval = mode_hdi` argument. Note how we also used `tidybayes::mode_hdi()` to compute those values and plug them into `scale_x_continuous()`.
 
 ### Inference about the indirect effect.
 
@@ -211,11 +212,10 @@ post %>%
   ggplot(aes(x = ab_3)) +
   geom_histogram(binwidth = .025, boundary = 0, 
                  color = "white", fill = "skyblue3", size = 1/4) +
-  geom_segment(aes(x = quantile(post$ab_3, probs = .025), xend = quantile(post$ab_3, probs = .975),
-                   y = 0, yend = 0),
-               size = 1) +
-  scale_x_continuous(breaks = quantile(post$ab_3, probs = c(.025, .5, .975)),
-                     labels = quantile(post$ab_3, probs = c(.025, .5, .975)) %>% round(3)) +
+  stat_pointintervalh(aes(y = 0), 
+                      point_interval = mode_hdi, .prob = .95) +
+  scale_x_continuous(breaks = mode_hdi(post$ab_3, .prob = .95)[1, 1:3],
+                     labels = mode_hdi(post$ab_3, .prob = .95)[1, 1:3] %>% round(3)) +
   scale_y_continuous(NULL, breaks = NULL) +
   xlab(expression(paste("The indirect effect, ", italic(ab)[3]))) +
   theme_bw() +
@@ -249,6 +249,20 @@ post %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
+And if we wanted to summarize those same effects with posterior modes and 95% highest posterior density intervals, instead, we’d replace our `summarize()` code with a `mode_hdi()` statement.
+
+```{r}
+post %>% 
+  select(starts_with("Conditional indirect")) %>% 
+  gather() %>% 
+  mutate(key = factor(key, levels = c("Conditional indirect effect when W is -0.531", 
+                                      "Conditional indirect effect when W is -0.006",
+                                      "Conditional indirect effect when W is 0.600"))) %>% 
+  group_by(key) %>% 
+  mode_hdi(value, .prob = .95) %>% 
+  mutate_if(is.double, round, digits = 3)
+```
+
 And we might plot these with something like:
 
 ```{r, fig.width = 6, fig.height = 4.5}
@@ -258,10 +272,8 @@ post %>%
   mutate(key = str_remove(key, "Conditional indirect effect when W is ") %>% as.double()) %>% 
   
   ggplot(aes(x = key, y = value, group = key)) +
-  stat_summary(fun.y = mean,
-               fun.ymin = function(i){quantile(i, probs = .025)},
-               fun.ymax = function(i){quantile(i, probs = .975)},
-               color = "skyblue3", size = 1) +
+  stat_pointinterval(point_interval = mode_hdi, .prob = c(.95, .5),
+                     color = "skyblue3") +
   scale_x_continuous(breaks = c(-.531, -.006, .6)) +
   coord_cartesian(xlim = c(-.5, .6),
                   ylim = c(-1.25, .75)) +
@@ -271,6 +283,7 @@ post %>%
   theme(panel.grid = element_blank())
 ```
 
+This time we used the `prob = c(.95, .5)` argument within `stat_pointinterval()` to return both 95% and 50% highest posterior density intervals—which are the outer and inner lines, respectively.
 
 This, of course, leads us right into
 
@@ -310,6 +323,7 @@ Note. The analyses in this document were done with:
 * readr        1.1.1
 * rstan        2.17.3
 * brms         2.3.2
+* tidybayes    0.12.1.9000
 
 ## Reference
 

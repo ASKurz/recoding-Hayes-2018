@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>recoding Introduction to Mediation, Moderation, and Conditional Process Analysis</title>
+  <meta name="description" content="This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s <a href="https://github.com/paul-buerkner/brms">brms</a>. I use syntax based on sensibilities from the <a href="https://www.tidyverse.org">tidyverse</a> and plot with Wickham’s <a href="https://cran.r-project.org/web/packages/ggplot2/index.html">ggplot2</a>.">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+
+  <meta property="og:title" content="recoding Introduction to Mediation, Moderation, and Conditional Process Analysis" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s <a href="https://github.com/paul-buerkner/brms">brms</a>. I use syntax based on sensibilities from the <a href="https://www.tidyverse.org">tidyverse</a> and plot with Wickham’s <a href="https://cran.r-project.org/web/packages/ggplot2/index.html">ggplot2</a>." />
+  <meta name="github-repo" content="ASKURZ/recoding_Introduction_to_Mediation_Moderation_and_Conditional_Process_Analysis" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="recoding Introduction to Mediation, Moderation, and Conditional Process Analysis" />
+  <meta name="twitter:site" content="@SolomonKurz" />
+  <meta name="twitter:description" content="This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s <a href="https://github.com/paul-buerkner/brms">brms</a>. I use syntax based on sensibilities from the <a href="https://www.tidyverse.org">tidyverse</a> and plot with Wickham’s <a href="https://cran.r-project.org/web/packages/ggplot2/index.html">ggplot2</a>." />
+  
+
+<meta name="author" content="A Solomon Kurz">
+
+
+<meta name="date" content="2018-07-14">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="further-examples-of-conditional-process-analysis.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="recoding.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><strong><a href="./">recoding Introduction to Mediation, Moderation, and Conditional Process Analysis</a></strong></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a></li>
+<li class="part"><span><b>I FUNDAMENTALS</b></span></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#references"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#session-info"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html"><i class="fa fa-check"></i><b>2</b> Fundamentals of Linear Regression</a><ul>
+<li class="chapter" data-level="2.1" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#correlation-and-prediction"><i class="fa fa-check"></i><b>2.1</b> Correlation and prediction</a></li>
+<li class="chapter" data-level="2.2" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#the-simple-linear-regression-model"><i class="fa fa-check"></i><b>2.2</b> The simple linear regression model</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#interpretation-of-the-constant-and-regression-coefficient"><i class="fa fa-check"></i><b>2.2.1</b> Interpretation of the constant and regression coefficient</a></li>
+<li class="chapter" data-level="2.2.2" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#the-standardized-regression-model"><i class="fa fa-check"></i><b>2.2.2</b> The standardized regression model</a></li>
+<li class="chapter" data-level="2.2.3" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#simple-linear-regression-with-a-dichotomous-antecedent-variable."><i class="fa fa-check"></i><b>2.2.3</b> Simple linear regression with a dichotomous antecedent variable.</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#alternative-explanations-for-association"><i class="fa fa-check"></i><b>2.3</b> Alternative explanations for association</a></li>
+<li class="chapter" data-level="2.4" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#multiple-linear-regression"><i class="fa fa-check"></i><b>2.4</b> Multiple linear regression</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#the-standardized-regression-model."><i class="fa fa-check"></i><b>2.4.1</b> The standardized regression model.</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#measures-of-model-fit"><i class="fa fa-check"></i><b>2.5</b> Measures of model fit</a></li>
+<li class="chapter" data-level="2.6" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#statistical-inference"><i class="fa fa-check"></i><b>2.6</b> Statistical inference</a><ul>
+<li class="chapter" data-level="2.6.1" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#testing-a-null-hypothesis."><i class="fa fa-check"></i><b>2.6.1</b> Testing a null hypothesis.</a></li>
+<li class="chapter" data-level="2.6.2" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#interval-estimation."><i class="fa fa-check"></i><b>2.6.2</b> Interval estimation.</a></li>
+<li class="chapter" data-level="2.6.3" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#testing-a-hypothesis-about-a-set-of-antecedent-variables."><i class="fa fa-check"></i><b>2.6.3</b> Testing a hypothesis about a set of antecedent variables.</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#multicategorical-antecedent-variables"><i class="fa fa-check"></i><b>2.7</b> Multicategorical antecedent variables</a></li>
+<li class="chapter" data-level="2.8" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#assumptions-for-interpretation-and-statistical-inference"><i class="fa fa-check"></i><b>2.8</b> Assumptions for interpretation and statistical inference</a><ul>
+<li class="chapter" data-level="2.8.1" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#linearity."><i class="fa fa-check"></i><b>2.8.1</b> Linearity.</a></li>
+<li class="chapter" data-level="2.8.2" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#normality."><i class="fa fa-check"></i><b>2.8.2</b> Normality.</a></li>
+<li class="chapter" data-level="2.8.3" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#homoscedasticity."><i class="fa fa-check"></i><b>2.8.3</b> Homoscedasticity.</a></li>
+<li class="chapter" data-level="2.8.4" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#independence."><i class="fa fa-check"></i><b>2.8.4</b> Independence.</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#reference"><i class="fa fa-check"></i>Reference</a></li>
+<li class="chapter" data-level="" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#session-info-1"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="part"><span><b>II MEDIATION ANALYSIS</b></span></li>
+<li class="chapter" data-level="3" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html"><i class="fa fa-check"></i><b>3</b> The Simple Mediation Model</a><ul>
+<li class="chapter" data-level="3.1" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#estimation-of-the-direce-indirect-and-total-effects-of-x"><i class="fa fa-check"></i><b>3.1</b> Estimation of the direce, indirect, and total effects of <span class="math inline">\(X\)</span></a></li>
+<li class="chapter" data-level="3.2" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#example-with-dichotomous-x-the-influence-of-presumed-media-influence"><i class="fa fa-check"></i><b>3.2</b> Example with dichotomous <span class="math inline">\(X\)</span>: The influence of presumed media influence</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#estimation-of-the-model-in-process-for-spss-and-sas."><i class="fa fa-check"></i><b>3.2.1</b> <del>Estimation of the model in PROCESS for SPSS and SAS.</del></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#statistical-inference-1"><i class="fa fa-check"></i><b>3.3</b> Statistical inference</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#inference-about-the-total-effect-of-x-on-y."><i class="fa fa-check"></i><b>3.3.1</b> Inference about the total effect of <span class="math inline">\(X\)</span> on <span class="math inline">\(Y\)</span>.</a></li>
+<li class="chapter" data-level="3.3.2" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#inference-about-the-direct-effect-of-x-on-y."><i class="fa fa-check"></i><b>3.3.2</b> Inference about the direct effect of <span class="math inline">\(X\)</span> on <span class="math inline">\(Y\)</span>.</a></li>
+<li class="chapter" data-level="3.3.3" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#inference-about-the-indirect-of-x-on-y-through-m."><i class="fa fa-check"></i><b>3.3.3</b> Inference about the indirect of <span class="math inline">\(X\)</span> on <span class="math inline">\(Y\)</span> through <span class="math inline">\(M\)</span>.</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#an-example-with-continuous-x-economic-stress-among-small-business-owners"><i class="fa fa-check"></i><b>3.4</b> An example with continuous <span class="math inline">\(X\)</span>: Economic stress among small-business owners</a></li>
+<li class="chapter" data-level="" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#reference-1"><i class="fa fa-check"></i>Reference</a></li>
+<li class="chapter" data-level="" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#session-info-2"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html"><i class="fa fa-check"></i><b>4</b> Causal Steps, Confounding, and Causal Order</a><ul>
+<li class="chapter" data-level="4.1" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#what-about-barron-and-kenny"><i class="fa fa-check"></i><b>4.1</b> What about Barron and Kenny?</a></li>
+<li class="chapter" data-level="4.2" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#confounding-and-causal-order"><i class="fa fa-check"></i><b>4.2</b> Confounding and causal order</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#accounting-for-confounding-and-epiphenomenal-association."><i class="fa fa-check"></i><b>4.2.1</b> Accounting for confounding and epiphenomenal association.</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#effect-size"><i class="fa fa-check"></i><b>4.3</b> Effect size</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#the-partially-standardized-effect."><i class="fa fa-check"></i><b>4.3.1</b> The partially standardized effect.</a></li>
+<li class="chapter" data-level="4.3.2" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#the-completely-standardized-effect."><i class="fa fa-check"></i><b>4.3.2</b> The completely standardized effect.</a></li>
+<li class="chapter" data-level="4.3.3" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#some-problematic-measures-only-for-indirect-effects."><i class="fa fa-check"></i><b>4.3.3</b> Some (problematic) measures only for indirect effects.</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#statistical-power"><i class="fa fa-check"></i><b>4.4</b> Statistical power</a></li>
+<li class="chapter" data-level="4.5" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#multiple-xs-or-ys-analyze-separately-or-simultaneously"><i class="fa fa-check"></i><b>4.5</b> Multiple <span class="math inline">\(X\)</span>s or <span class="math inline">\(Y\)</span>s: Analyze separately or simultaneously?</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#multiple-x-variables."><i class="fa fa-check"></i><b>4.5.1</b> Multiple <span class="math inline">\(X\)</span> variables.</a></li>
+<li class="chapter" data-level="4.5.2" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#estimation-of-a-model-with-multiple-x-variables-in-process-brms."><i class="fa fa-check"></i><b>4.5.2</b> Estimation of a model with multiple <span class="math inline">\(X\)</span> variables in <del>PROCESS</del> brms.</a></li>
+<li class="chapter" data-level="4.5.3" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#multiple-y-variables."><i class="fa fa-check"></i><b>4.5.3</b> Multiple <span class="math inline">\(Y\)</span> variables.</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#references-1"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#session-info-3"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html"><i class="fa fa-check"></i><b>5</b> More Than One Mediator</a><ul>
+<li class="chapter" data-level="5.1" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#the-parallel-multiple-mediator-model"><i class="fa fa-check"></i><b>5.1</b> The parallel multiple mediator model</a></li>
+<li class="chapter" data-level="5.2" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#example-using-the-presumed-media-influence-study"><i class="fa fa-check"></i><b>5.2</b> Example using the presumed media influence study</a></li>
+<li class="chapter" data-level="5.3" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#statistical-inference-2"><i class="fa fa-check"></i><b>5.3</b> Statistical inference</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#inference-about-the-direct-and-total-effects."><i class="fa fa-check"></i><b>5.3.1</b> Inference about the direct and total effects.</a></li>
+<li class="chapter" data-level="5.3.2" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#inference-about-specific-indirect-effects."><i class="fa fa-check"></i><b>5.3.2</b> Inference about specific indirect effects.</a></li>
+<li class="chapter" data-level="5.3.3" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#pairwise-comparisons-between-specific-indirect-effects."><i class="fa fa-check"></i><b>5.3.3</b> Pairwise comparisons between specific indirect effects.</a></li>
+<li class="chapter" data-level="5.3.4" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#inference-about-the-total-indirect-effect."><i class="fa fa-check"></i><b>5.3.4</b> Inference about the total indirect effect.</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#the-serial-multiple-mediator-model"><i class="fa fa-check"></i><b>5.4</b> The serial multiple mediator model</a><ul>
+<li class="chapter" data-level="5.4.1" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#direct-and-indirect-effects-in-a-serial-multiple-mediator-model."><i class="fa fa-check"></i><b>5.4.1</b> Direct and indirect effects in a serial multiple mediator model.</a></li>
+<li class="chapter" data-level="5.4.2" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#statistical-inference."><i class="fa fa-check"></i><b>5.4.2</b> Statistical inference.</a></li>
+<li class="chapter" data-level="5.4.3" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#example-from-the-presumed-media-influence-study."><i class="fa fa-check"></i><b>5.4.3</b> Example from the presumed media influence study.</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#references-2"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#session-info-4"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html"><i class="fa fa-check"></i><b>6</b> Mediation Analysis with a Multicategorical Antecedent</a><ul>
+<li class="chapter" data-level="6.1" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#relative-total-direct-and-indirect-effects"><i class="fa fa-check"></i><b>6.1</b> Relative total, direct, and indirect effects</a></li>
+<li class="chapter" data-level="6.2" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#an-example-sex-discrimination-in-the-workplace"><i class="fa fa-check"></i><b>6.2</b> An example: Sex discrimination in the workplace</a></li>
+<li class="chapter" data-level="6.3" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#using-a-different-group-coding-system"><i class="fa fa-check"></i><b>6.3</b> Using a different group coding system</a></li>
+<li class="chapter" data-level="" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#references-3"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#session-info-5"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="part"><span><b>III MODERATION ANALYSIS</b></span></li>
+<li class="chapter" data-level="7" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html"><i class="fa fa-check"></i><b>7</b> Fundamentals of Moderation Analysis</a><ul>
+<li class="chapter" data-level="7.1" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#conditional-and-unconditional-effects"><i class="fa fa-check"></i><b>7.1</b> Conditional and unconditional effects</a></li>
+<li class="chapter" data-level="7.2" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#an-example-climate-change-disasters-and-humanitarianism"><i class="fa fa-check"></i><b>7.2</b> An example: Climate change disasters and humanitarianism</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#estimation-using-process-brms."><i class="fa fa-check"></i><b>7.2.1</b> Estimation using <del>PROCESS</del> brms.</a></li>
+<li class="chapter" data-level="7.2.2" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#interpreting-the-regression-coefficients."><i class="fa fa-check"></i><b>7.2.2</b> Interpreting the regression coefficients.</a></li>
+<li class="chapter" data-level="7.2.3" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#variable-scaling-and-the-interpretation-of-b_1-and-b_3."><i class="fa fa-check"></i><b>7.2.3</b> Variable scaling and the interpretation of <span class="math inline">\(b_{1}\)</span> and <span class="math inline">\(b_{3}\)</span>.</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#visualizing-moderation"><i class="fa fa-check"></i><b>7.3</b> Visualizing moderation</a></li>
+<li class="chapter" data-level="7.4" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#probing-an-interaction"><i class="fa fa-check"></i><b>7.4</b> Probing an interaction</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#the-pick-a-point-approach."><i class="fa fa-check"></i><b>7.4.1</b> The pick-a-point approach.</a></li>
+<li class="chapter" data-level="7.4.2" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#the-johnson-neyman-technique."><i class="fa fa-check"></i><b>7.4.2</b> The Johnson-Neyman technique.</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#the-difference-between-testing-for-moderation-and-probing-it"><i class="fa fa-check"></i><b>7.5</b> The difference between testing for moderation and probing it</a></li>
+<li class="chapter" data-level="7.6" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#artificial-categorization-and-subgroups"><i class="fa fa-check"></i><b>7.6</b> Artificial categorization and subgroups</a></li>
+<li class="chapter" data-level="" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#references-4"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#session-info-6"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html"><i class="fa fa-check"></i><b>8</b> Extending the Fundamental Principles of Moderation Analysis</a><ul>
+<li class="chapter" data-level="8.1" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#moderation-with-a-dichotomous-moderator"><i class="fa fa-check"></i><b>8.1</b> Moderation with a dichotomous moderator</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#visualizing-and-probing-the-interaction."><i class="fa fa-check"></i><b>8.1.1</b> Visualizing and probing the interaction.</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#interaction-between-two-quantitative-variables"><i class="fa fa-check"></i><b>8.2</b> Interaction between two quantitative variables</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#visualizing-and-probing-the-interaction.-1"><i class="fa fa-check"></i><b>8.2.1</b> Visualizing and probing the interaction.</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#hierarchical-versus-simultaneous-entry"><i class="fa fa-check"></i><b>8.3</b> Hierarchical versus simultaneous entry</a></li>
+<li class="chapter" data-level="8.4" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#the-equivalence-between-moderated-regression-analysis-and-a-2-x-2-factorial-analysis-of-variance"><i class="fa fa-check"></i><b>8.4</b> The equivalence between moderated regression analysis and a 2 X 2 factorial analysis of variance</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#simple-effects-parameterization."><i class="fa fa-check"></i><b>8.4.1</b> Simple effects parameterization.</a></li>
+<li class="chapter" data-level="8.4.2" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#main-effects-parameterization."><i class="fa fa-check"></i><b>8.4.2</b> Main effects parameterization.</a></li>
+<li class="chapter" data-level="8.4.3" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#conducting-a-2-x-2-between-participants-factorial-anova-using-process-another-regression-model-with-brms."><i class="fa fa-check"></i><b>8.4.3</b> Conducting <del>a 2 X 2 between-participants factorial ANOVA using PROCESS</del> another regression model with brms.</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#references-5"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#session-info-7"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html"><i class="fa fa-check"></i><b>9</b> Some Myths and Additional Extensions of Moderation Analysis</a><ul>
+<li class="chapter" data-level="9.1" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#truths-and-myths-about-mean-centering"><i class="fa fa-check"></i><b>9.1</b> Truths and myths about mean-centering</a><ul>
+<li class="chapter" data-level="9.1.1" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-effect-of-mean-centering-on-multicollinearity-and-the-standard-error-of-b_3."><i class="fa fa-check"></i><b>9.1.1</b> The effect of mean-centering on multicollinearity and the standard error of <span class="math inline">\(b_{3}\)</span>.</a></li>
+<li class="chapter" data-level="9.1.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-effect-of-mean-centering-on-b_1-b_2-and-their-standard-errors-posterior-sds."><i class="fa fa-check"></i><b>9.1.2</b> The effect of mean-centering on <span class="math inline">\(b_{1}\)</span>, <span class="math inline">\(b_{2}\)</span>, and their <del>standard errors</del> posterior <span class="math inline">\(SD\)</span>s.</a></li>
+<li class="chapter" data-level="9.1.3" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-centering-option-in-process."><i class="fa fa-check"></i><b>9.1.3</b> The <del>centering option in PROCESS</del>.</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-estimation-and-interpretation-of-standardized-regression-coefficients-in-a-moderation-analysis"><i class="fa fa-check"></i><b>9.2</b> The estimation and interpretation of standardized regression coefficients in a moderation analysis</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#variant-1."><i class="fa fa-check"></i><b>9.2.1</b> Variant 1.</a></li>
+<li class="chapter" data-level="9.2.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#variant-2."><i class="fa fa-check"></i><b>9.2.2</b> Variant 2.</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#a-caution-on-manual-centering-and-standardization"><i class="fa fa-check"></i><b>9.3</b> A caution on manual centering and standardization</a></li>
+<li class="chapter" data-level="9.4" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#more-than-one-moderator"><i class="fa fa-check"></i><b>9.4</b> More than one moderator</a><ul>
+<li class="chapter" data-level="9.4.1" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#additive-multiple-moderation."><i class="fa fa-check"></i><b>9.4.1</b> Additive multiple moderation.</a></li>
+<li class="chapter" data-level="9.4.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#moderated-moderation."><i class="fa fa-check"></i><b>9.4.2</b> Moderated moderation.</a></li>
+</ul></li>
+<li class="chapter" data-level="9.5" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#comparing-conditional-effects"><i class="fa fa-check"></i><b>9.5</b> Comparing conditional effects</a><ul>
+<li class="chapter" data-level="9.5.1" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#comparing-conditional-effects-in-the-additive-multiple-moderation-model."><i class="fa fa-check"></i><b>9.5.1</b> Comparing conditional effects in the additive multiple moderation model.</a></li>
+<li class="chapter" data-level="9.5.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#comparing-conditional-effects-in-the-moderated-moderation-model."><i class="fa fa-check"></i><b>9.5.2</b> Comparing conditional effects in the moderated moderation model.</a></li>
+<li class="chapter" data-level="9.5.3" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#implementation-in-process-brms.-1"><i class="fa fa-check"></i><b>9.5.3</b> Implementation in <del>PROCESS</del> brms.</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#references-6"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#session-info-8"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html"><i class="fa fa-check"></i><b>10</b> Multicategorical Focal Antecedents and Moderators</a><ul>
+<li class="chapter" data-level="10.1" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#moderation-of-the-effect-of-a-multicategorical-antecedent-variable"><i class="fa fa-check"></i><b>10.1</b> Moderation of the effect of a multicategorical antecedent variable</a></li>
+<li class="chapter" data-level="10.2" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#an-example-from-the-sex-disrimination-in-the-workplace-study"><i class="fa fa-check"></i><b>10.2</b> An example from the sex disrimination in the workplace study</a></li>
+<li class="chapter" data-level="10.3" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#visualizing-the-model"><i class="fa fa-check"></i><b>10.3</b> Visualizing the model</a></li>
+<li class="chapter" data-level="10.4" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#probing-the-interaction"><i class="fa fa-check"></i><b>10.4</b> Probing the interaction</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#the-pick-a-point-approach.-1"><i class="fa fa-check"></i><b>10.4.1</b> The pick-a-point approach.</a></li>
+<li class="chapter" data-level="10.4.2" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#the-johnson-neyman-technique.-1"><i class="fa fa-check"></i><b>10.4.2</b> The Johnson-Neyman technique.</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#when-the-moderator-is-multicategorical"><i class="fa fa-check"></i><b>10.5</b> When the moderator is multicategorical</a><ul>
+<li class="chapter" data-level="10.5.1" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#an-example."><i class="fa fa-check"></i><b>10.5.1</b> An example.</a></li>
+<li class="chapter" data-level="10.5.2" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#probing-the-interaction-and-interpreting-the-regression-coefficients."><i class="fa fa-check"></i><b>10.5.2</b> Probing the interaction and interpreting the regression coefficients.</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#references-7"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#session-info-9"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="part"><span><b>IV CONDITIONAL PROCESS ANALYSIS</b></span></li>
+<li class="chapter" data-level="11" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html"><i class="fa fa-check"></i><b>11</b> Fundamentals of Conditional Process Analysis</a><ul>
+<li class="chapter" data-level="11.1" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#examples-of-conditional-process-models-in-the-literature"><i class="fa fa-check"></i><b>11.1</b> Examples of conditional process models in the literature</a></li>
+<li class="chapter" data-level="11.2" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#conditional-direct-and-indirect-effects"><i class="fa fa-check"></i><b>11.2</b> Conditional direct and indirect effects</a></li>
+<li class="chapter" data-level="11.3" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#example-hiding-your-feelings-from-your-work-team"><i class="fa fa-check"></i><b>11.3</b> Example: Hiding your feelings from your work team</a></li>
+<li class="chapter" data-level="11.4" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#estimation-of-a-conditional-process-model-using-process"><i class="fa fa-check"></i><b>11.4</b> <del>Estimation of a conditional process model using PROCESS</del></a></li>
+<li class="chapter" data-level="11.5" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#quantifying-and-visualizing-conditional-indirect-and-direct-effects."><i class="fa fa-check"></i><b>11.5</b> Quantifying and visualizing (conditional) indirect and direct effects.</a><ul>
+<li class="chapter" data-level="11.5.1" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#visualizing-the-direct-and-indirect-effects."><i class="fa fa-check"></i><b>11.5.1</b> Visualizing the direct and indirect effects.</a></li>
+</ul></li>
+<li class="chapter" data-level="11.6" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#statistical-inference-3"><i class="fa fa-check"></i><b>11.6</b> Statistical inference</a><ul>
+<li class="chapter" data-level="11.6.1" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#inference-about-the-direct-effect."><i class="fa fa-check"></i><b>11.6.1</b> Inference about the direct effect.</a></li>
+<li class="chapter" data-level="11.6.2" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#inference-about-the-indirect-effect."><i class="fa fa-check"></i><b>11.6.2</b> Inference about the indirect effect.</a></li>
+<li class="chapter" data-level="11.6.3" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#probing-moderation-of-mediation."><i class="fa fa-check"></i><b>11.6.3</b> Probing moderation of mediation.</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#references-8"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#session-info-10"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html"><i class="fa fa-check"></i><b>12</b> Further Examples of Conditional Process Analysis</a><ul>
+<li class="chapter" data-level="12.1" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#revisiting-the-disaster-framing-study"><i class="fa fa-check"></i><b>12.1</b> Revisiting the disaster framing study</a></li>
+<li class="chapter" data-level="12.2" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#moderation-of-the-direct-and-indirect-effects-in-a-conditional-process-model"><i class="fa fa-check"></i><b>12.2</b> Moderation of the direct and indirect effects in a conditional process model</a><ul>
+<li class="chapter" data-level="12.2.1" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#estimation-using-process."><i class="fa fa-check"></i><b>12.2.1</b> <del>Estimation using PROCESS</del>.</a></li>
+<li class="chapter" data-level="12.2.2" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#quantifying-direct-and-indirect-effects."><i class="fa fa-check"></i><b>12.2.2</b> Quantifying direct and indirect effects.</a></li>
+<li class="chapter" data-level="12.2.3" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#visualizing-the-direct-and-indirect-effects.-1"><i class="fa fa-check"></i><b>12.2.3</b> Visualizing the direct and indirect effects.</a></li>
+<li class="chapter" data-level="12.2.4" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#bonus-lets-replace-sapply-with-map."><i class="fa fa-check"></i><b>12.2.4</b> <strong>Bonus</strong>: Let’s replace <code>sapply()</code> with <code>map()</code>.</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#statistical-inference-4"><i class="fa fa-check"></i><b>12.3</b> Statistical inference</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#inference-about-the-direct-effect.-1"><i class="fa fa-check"></i><b>12.3.1</b> Inference about the direct effect.</a></li>
+<li class="chapter" data-level="12.3.2" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#inference-about-the-indirect-effect.-1"><i class="fa fa-check"></i><b>12.3.2</b> Inference about the indirect effect.</a></li>
+<li class="chapter" data-level="12.3.3" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#pruning-the-model."><i class="fa fa-check"></i><b>12.3.3</b> Pruning the model.</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#mediated-moderation"><i class="fa fa-check"></i><b>12.4</b> Mediated moderation</a><ul>
+<li class="chapter" data-level="12.4.1" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#mediated-moderation-as-the-indirect-effect-of-a-product."><i class="fa fa-check"></i><b>12.4.1</b> Mediated moderation as the indirect effect of a product.</a></li>
+<li class="chapter" data-level="12.4.2" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#why-mediated-moderation-is-neither-interesting-nor-meaningful."><i class="fa fa-check"></i><b>12.4.2</b> Why mediated moderation is neither interesting nor meaningful.</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#references-9"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#session-info-11"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html"><i class="fa fa-check"></i><b>13</b> Conditional Process Analysis with a Multicategorical Antecedent</a><ul>
+<li class="chapter" data-level="13.1" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#revisiting-sexual-discrimination-in-the-workplace"><i class="fa fa-check"></i><b>13.1</b> Revisiting sexual discrimination in the workplace</a></li>
+<li class="chapter" data-level="13.2" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#looking-at-the-components-of-the-indirect-effect-of-x"><i class="fa fa-check"></i><b>13.2</b> Looking at the components of the indirect effect of <span class="math inline">\(X\)</span></a><ul>
+<li class="chapter" data-level="13.2.1" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#examiing-the-first-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.1</b> Examiing the first stage of the mediation process.</a></li>
+<li class="chapter" data-level="13.2.2" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#estimating-the-second-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.2</b> Estimating the second stage of the mediation process.</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#relative-conditional-indirect-effects"><i class="fa fa-check"></i><b>13.3</b> Relative conditional indirect effects</a></li>
+<li class="chapter" data-level="13.4" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#testing-and-probing-moderation-of-mediation"><i class="fa fa-check"></i><b>13.4</b> Testing and probing moderation of mediation</a><ul>
+<li class="chapter" data-level="13.4.1" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#a-test-of-moderation-of-the-relative-indirect-effect."><i class="fa fa-check"></i><b>13.4.1</b> A test of moderation of the relative indirect effect.</a></li>
+<li class="chapter" data-level="13.4.2" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#probing-moderation-of-mediation.-2"><i class="fa fa-check"></i><b>13.4.2</b> Probing moderation of mediation.</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#relative-conditional-direct-effects"><i class="fa fa-check"></i><b>13.5</b> Relative conditional direct effects</a></li>
+<li class="chapter" data-level="" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#references-10"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#session-info-12"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">recoding <em>Introduction to Mediation, Moderation, and Conditional Process Analysis</em></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="conditional-process-analysis-with-a-multicategorical-antecedent" class="section level1">
+<h1><span class="header-section-number">13</span> Conditional Process Analysis with a Multicategorical Antecedent</h1>
+<div id="revisiting-sexual-discrimination-in-the-workplace" class="section level2">
+<h2><span class="header-section-number">13.1</span> Revisiting sexual discrimination in the workplace</h2>
+<p>Here we load a couple necessary packages, load the data, and take a <code>glimpse()</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
+
+protest &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/protest/protest.csv&quot;</span>)
+
+<span class="kw">glimpse</span>(protest)
+<span class="co">#&gt; Observations: 129</span>
+<span class="co">#&gt; Variables: 6</span>
+<span class="co">#&gt; $ subnum   &lt;int&gt; 209, 44, 124, 232, 30, 140, 27, 64, 67, 182, 85, 109,...</span>
+<span class="co">#&gt; $ protest  &lt;int&gt; 2, 0, 2, 2, 2, 1, 2, 0, 0, 0, 2, 2, 0, 1, 1, 0, 1, 2,...</span>
+<span class="co">#&gt; $ sexism   &lt;dbl&gt; 4.87, 4.25, 5.00, 5.50, 5.62, 5.75, 5.12, 6.62, 5.75,...</span>
+<span class="co">#&gt; $ angry    &lt;int&gt; 2, 1, 3, 1, 1, 1, 2, 1, 6, 1, 2, 5, 2, 1, 1, 1, 2, 1,...</span>
+<span class="co">#&gt; $ liking   &lt;dbl&gt; 4.83, 4.50, 5.50, 5.66, 6.16, 6.00, 4.66, 6.50, 1.00,...</span>
+<span class="co">#&gt; $ respappr &lt;dbl&gt; 4.25, 5.75, 4.75, 7.00, 6.75, 5.50, 5.00, 6.25, 3.00,...</span></code></pre></div>
+<p>With a little <code>ifelse()</code>, we can make the <code>D1</code> and <code>D2</code> contrast-coded dummies.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">protest &lt;-
+<span class="st">  </span>protest <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">D1 =</span> <span class="kw">ifelse</span>(protest <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="op">-</span><span class="dv">2</span><span class="op">/</span><span class="dv">3</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>),
+         <span class="dt">D2 =</span> <span class="kw">ifelse</span>(protest <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="dv">0</span>,
+                     <span class="kw">ifelse</span>(protest <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span><span class="op">/</span><span class="dv">2</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">2</span>)))</code></pre></div>
+<p>Load brms.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(brms)</code></pre></div>
+<p>Here are the sub-model formulas.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_model &lt;-<span class="st"> </span><span class="kw">bf</span>(respappr <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>D1 <span class="op">+</span><span class="st"> </span>D2 <span class="op">+</span><span class="st"> </span>sexism <span class="op">+</span><span class="st"> </span>D1<span class="op">:</span>sexism <span class="op">+</span><span class="st"> </span>D2<span class="op">:</span>sexism)
+y_model &lt;-<span class="st"> </span><span class="kw">bf</span>(liking   <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>D1 <span class="op">+</span><span class="st"> </span>D2 <span class="op">+</span><span class="st"> </span>respappr <span class="op">+</span><span class="st"> </span>sexism <span class="op">+</span><span class="st"> </span>D1<span class="op">:</span>sexism <span class="op">+</span><span class="st"> </span>D2<span class="op">:</span>sexism)</code></pre></div>
+<p>Now we’re ready to fit our primary model, the conditional process model with a multicategorical antecedent.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model1 &lt;-
+<span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> protest, <span class="dt">family =</span> gaussian,
+      m_model <span class="op">+</span><span class="st"> </span>y_model <span class="op">+</span><span class="st"> </span><span class="kw">set_rescor</span>(<span class="ot">FALSE</span>),
+      <span class="dt">chains =</span> <span class="dv">4</span>, <span class="dt">cores =</span> <span class="dv">4</span>)</code></pre></div>
+<p>Here’s the model summary, which coheres reasonably well with the output in Table 13.1.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(model1, <span class="dt">digits =</span> <span class="dv">3</span>)
+<span class="co">#&gt;  Family: MV(gaussian, gaussian) </span>
+<span class="co">#&gt;   Links: mu = identity; sigma = identity</span>
+<span class="co">#&gt;          mu = identity; sigma = identity </span>
+<span class="co">#&gt; Formula: respappr ~ 1 + D1 + D2 + sexism + D1:sexism + D2:sexism </span>
+<span class="co">#&gt;          liking ~ 1 + D1 + D2 + respappr + sexism + D1:sexism + D2:sexism </span>
+<span class="co">#&gt;    Data: protest (Number of observations: 129) </span>
+<span class="co">#&gt; Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;</span>
+<span class="co">#&gt;          total post-warmup samples = 4000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Population-Level Effects: </span>
+<span class="co">#&gt;                    Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat</span>
+<span class="co">#&gt; respappr_Intercept    4.617     0.688    3.245    5.961       4000 1.000</span>
+<span class="co">#&gt; liking_Intercept      3.479     0.633    2.233    4.682       4000 1.000</span>
+<span class="co">#&gt; respappr_D1          -2.949     1.460   -5.859   -0.099       2529 1.001</span>
+<span class="co">#&gt; respappr_D2           1.706     1.667   -1.574    4.976       3382 0.999</span>
+<span class="co">#&gt; respappr_sexism       0.039     0.134   -0.221    0.307       4000 1.000</span>
+<span class="co">#&gt; respappr_D1:sexism    0.857     0.284    0.304    1.419       2544 1.001</span>
+<span class="co">#&gt; respappr_D2:sexism   -0.251     0.320   -0.886    0.382       3395 0.999</span>
+<span class="co">#&gt; liking_D1            -2.720     1.237   -5.099   -0.333       3208 1.000</span>
+<span class="co">#&gt; liking_D2             0.043     1.329   -2.531    2.669       3196 1.000</span>
+<span class="co">#&gt; liking_respappr       0.367     0.073    0.229    0.510       4000 0.999</span>
+<span class="co">#&gt; liking_sexism         0.071     0.106   -0.131    0.277       4000 1.000</span>
+<span class="co">#&gt; liking_D1:sexism      0.524     0.244    0.047    0.983       3221 1.000</span>
+<span class="co">#&gt; liking_D2:sexism     -0.037     0.254   -0.527    0.467       3214 1.000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Family Specific Parameters: </span>
+<span class="co">#&gt;                Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat</span>
+<span class="co">#&gt; sigma_respappr    1.148     0.073    1.016    1.301       4000 1.000</span>
+<span class="co">#&gt; sigma_liking      0.918     0.059    0.814    1.046       4000 1.000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample </span>
+<span class="co">#&gt; is a crude measure of effective sample size, and Rhat is the potential </span>
+<span class="co">#&gt; scale reduction factor on split chains (at convergence, Rhat = 1).</span></code></pre></div>
+<p>The <code>tidybayes::geom_halfeyeh()</code> function gives us a nice way to look at the output with a coefficient plot.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidybayes)
+
+post &lt;-<span class="st"> </span><span class="kw">posterior_samples</span>(model1)
+
+post <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(<span class="kw">starts_with</span>(<span class="st">&quot;b_&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">criterion =</span> <span class="kw">ifelse</span>(<span class="kw">str_detect</span>(key, <span class="st">&quot;respappr&quot;</span>), <span class="st">&quot;criterion: respappr&quot;</span>, <span class="st">&quot;criterion: liking&quot;</span>),
+         <span class="dt">criterion =</span> <span class="kw">factor</span>(criterion, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;criterion: respappr&quot;</span>, <span class="st">&quot;criterion: liking&quot;</span>)),
+         <span class="dt">key =</span> <span class="kw">str_remove</span>(key, <span class="st">&quot;b_respappr_&quot;</span>),
+         <span class="dt">key =</span> <span class="kw">str_remove</span>(key, <span class="st">&quot;b_liking_&quot;</span>),
+         <span class="dt">key =</span> <span class="kw">factor</span>(key, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;Intercept&quot;</span>, <span class="st">&quot;respappr&quot;</span>, <span class="st">&quot;D2:sexism&quot;</span>, <span class="st">&quot;D1:sexism&quot;</span>, <span class="st">&quot;sexism&quot;</span>, <span class="st">&quot;D2&quot;</span>, <span class="st">&quot;D1&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">y =</span> key, <span class="dt">group =</span> key)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_halfeyeh</span>(<span class="dt">.prob =</span> <span class="kw">c</span>(<span class="fl">0.95</span>, <span class="fl">0.5</span>), 
+                <span class="dt">scale =</span> <span class="st">&quot;width&quot;</span>, <span class="dt">relative_scale =</span> .<span class="dv">75</span>,
+                <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">7</span>, <span class="dv">6</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="ot">NULL</span>, <span class="dt">y =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_black</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.y =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="dv">0</span>),
+        <span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>(),
+        <span class="dt">panel.grid.minor =</span> <span class="kw">element_blank</span>(),
+        <span class="dt">panel.grid.major =</span> <span class="kw">element_line</span>(<span class="dt">color =</span> <span class="st">&quot;grey20&quot;</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>criterion)</code></pre></div>
+<p><img src="13_files/figure-html/unnamed-chunk-7-1.png" width="960" /></p>
+<p>The Bayesian <span class="math inline">\(R^2\)</span> distributions are reasonably close to the estimates in the text.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bayes_R2</span>(model1) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">3</span>)
+<span class="co">#&gt;             Estimate Est.Error  Q2.5 Q97.5</span>
+<span class="co">#&gt; R2_respappr    0.321     0.054 0.211 0.420</span>
+<span class="co">#&gt; R2_liking      0.297     0.054 0.188 0.399</span></code></pre></div>
+</div>
+<div id="looking-at-the-components-of-the-indirect-effect-of-x" class="section level2">
+<h2><span class="header-section-number">13.2</span> Looking at the components of the indirect effect of <span class="math inline">\(X\)</span></h2>
+<div id="examiing-the-first-stage-of-the-mediation-process." class="section level3">
+<h3><span class="header-section-number">13.2.1</span> Examiing the first stage of the mediation process.</h3>
+<p>When making a <code>newdata</code> object to feed into <code>fitted()</code> with more complicated models, it can be useful to review the model formula like so:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model1<span class="op">$</span>formula
+<span class="co">#&gt; respappr ~ 1 + D1 + D2 + sexism + D1:sexism + D2:sexism </span>
+<span class="co">#&gt; liking ~ 1 + D1 + D2 + respappr + sexism + D1:sexism + D2:sexism</span></code></pre></div>
+<p>Now we’ll prep for and make our version of Figure 13.3.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nd &lt;-
+<span class="st">  </span><span class="kw">tibble</span>(<span class="dt">D1 =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="op">-</span><span class="dv">2</span><span class="op">/</span><span class="dv">3</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>), <span class="dt">each =</span> <span class="dv">30</span>),
+         <span class="dt">D2 =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span><span class="op">/</span><span class="dv">2</span>), <span class="dt">each =</span> <span class="dv">30</span>),
+         <span class="dt">sexism =</span> <span class="kw">rep</span>(<span class="kw">seq</span>(<span class="dt">from =</span> <span class="fl">3.5</span>, <span class="dt">to =</span> <span class="fl">6.5</span>, <span class="dt">length.out =</span> <span class="dv">30</span>),
+                      <span class="dt">times =</span> <span class="dv">3</span>))
+
+model1_fitted &lt;-
+<span class="st">  </span><span class="kw">fitted</span>(model1, 
+       <span class="dt">newdata =</span> nd,
+       <span class="dt">resp =</span> <span class="st">&quot;respappr&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">bind_cols</span>(nd) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition =</span> <span class="kw">ifelse</span>(D2 <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="st">&quot;No Protest&quot;</span>,
+                            <span class="kw">ifelse</span>(D2 <span class="op">==</span><span class="st"> </span><span class="op">-</span><span class="dv">1</span><span class="op">/</span><span class="dv">2</span>, <span class="st">&quot;Individual Protest&quot;</span>, <span class="st">&quot;Collective Protest&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition =</span> <span class="kw">factor</span>(condition, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;No Protest&quot;</span>, <span class="st">&quot;Individual Protest&quot;</span>, <span class="st">&quot;Collective Protest&quot;</span>)))
+
+protest &lt;-
+<span class="st">  </span>protest <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition =</span> <span class="kw">ifelse</span>(protest <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="st">&quot;No Protest&quot;</span>,
+                            <span class="kw">ifelse</span>(protest <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="st">&quot;Individual Protest&quot;</span>, <span class="st">&quot;Collective Protest&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition =</span> <span class="kw">factor</span>(condition, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;No Protest&quot;</span>, <span class="st">&quot;Individual Protest&quot;</span>, <span class="st">&quot;Collective Protest&quot;</span>)))
+
+model1_fitted <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> sexism, <span class="dt">group =</span> condition)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> Q2.<span class="dv">5</span>, <span class="dt">ymax =</span> Q97.<span class="dv">5</span>),
+              <span class="dt">linetype =</span> <span class="dv">3</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;transparent&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> Estimate), <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> protest, <span class="kw">aes</span>(<span class="dt">x =</span> sexism, <span class="dt">y =</span> respappr),
+             <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span><span class="op">/</span><span class="dv">3</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="dv">4</span><span class="op">:</span><span class="dv">6</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Perceived Pervasiveness of Sex Discrimination in Society (&quot;</span>, <span class="kw">italic</span>(W), <span class="st">&quot;)&quot;</span>)),
+       <span class="dt">y =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Perceived Appropriateness of Response (&quot;</span>, <span class="kw">italic</span>(M), <span class="st">&quot;)&quot;</span>))) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_black</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid =</span> <span class="kw">element_blank</span>()) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>condition)</code></pre></div>
+<p><img src="13_files/figure-html/unnamed-chunk-10-1.png" width="960" /></p>
+<p>In order to get the <span class="math inline">\(\Delta R^2\)</span> distribution analogous to the change in <span class="math inline">\(R^2\)</span> <span class="math inline">\(F\)</span>-test Hayes discussed on page 482, we’ll have to first refit the model without the interaction for the <span class="math inline">\(M\)</span> criterion. Here are the sub-models.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_model &lt;-<span class="st"> </span><span class="kw">bf</span>(respappr <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>D1 <span class="op">+</span><span class="st"> </span>D2 <span class="op">+</span><span class="st"> </span>sexism)
+y_model &lt;-<span class="st"> </span><span class="kw">bf</span>(liking   <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>D1 <span class="op">+</span><span class="st"> </span>D2 <span class="op">+</span><span class="st"> </span>respappr <span class="op">+</span><span class="st"> </span>sexism <span class="op">+</span><span class="st"> </span>D1<span class="op">:</span>sexism <span class="op">+</span><span class="st"> </span>D2<span class="op">:</span>sexism)</code></pre></div>
+<p>Now we fit <code>model2</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model2 &lt;-
+<span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> protest, <span class="dt">family =</span> gaussian,
+      m_model <span class="op">+</span><span class="st"> </span>y_model <span class="op">+</span><span class="st"> </span><span class="kw">set_rescor</span>(<span class="ot">FALSE</span>),
+      <span class="dt">chains =</span> <span class="dv">4</span>, <span class="dt">cores =</span> <span class="dv">4</span>)</code></pre></div>
+<p>Now we’re ready to compare <span class="math inline">\(R^2\)</span> distributions.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">R2s &lt;-
+<span class="st">  </span><span class="kw">bayes_R2</span>(model1, <span class="dt">resp =</span> <span class="st">&quot;respappr&quot;</span>, <span class="dt">summary =</span> F) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">model1 =</span> R2_respappr) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">bind_cols</span>(
+    <span class="kw">bayes_R2</span>(model2, <span class="dt">resp =</span> <span class="st">&quot;respappr&quot;</span>, <span class="dt">summary =</span> F) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">      </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">      </span><span class="kw">rename</span>(<span class="dt">model2 =</span> R2_respappr)
+  ) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">difference =</span> model1 <span class="op">-</span><span class="st"> </span>model2) 
+
+R2s <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> difference)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_halfeyeh</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="dv">0</span>), <span class="dt">fill =</span> <span class="st">&quot;grey50&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>,
+                <span class="dt">point_interval =</span> median_qi, <span class="dt">.prob =</span> <span class="fl">0.95</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">median_qi</span>(R2s<span class="op">$</span>difference, <span class="dt">.prob =</span> .<span class="dv">95</span>)[<span class="dv">1</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>],
+                     <span class="dt">labels =</span> <span class="kw">median_qi</span>(R2s<span class="op">$</span>difference, <span class="dt">.prob =</span> .<span class="dv">95</span>)[<span class="dv">1</span>, <span class="dv">1</span><span class="op">:</span><span class="dv">3</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">2</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="ot">NULL</span>, <span class="dt">breaks =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">xlab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(Delta, <span class="kw">italic</span>(R)<span class="op">^</span><span class="dv">2</span>))) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_black</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid =</span> <span class="kw">element_blank</span>())</code></pre></div>
+<p><img src="13_files/figure-html/unnamed-chunk-12-1.png" width="384" /></p>
+<p>And we might also compare the models by their information criteria.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">loo</span>(model1, model2)
+<span class="co">#&gt;                  LOOIC    SE</span>
+<span class="co">#&gt; model1          761.20 29.63</span>
+<span class="co">#&gt; model2          765.84 29.77</span>
+<span class="co">#&gt; model1 - model2  -4.64  8.18</span>
+<span class="kw">waic</span>(model1, model2)
+<span class="co">#&gt;                   WAIC    SE</span>
+<span class="co">#&gt; model1          760.71 29.51</span>
+<span class="co">#&gt; model2          765.46 29.66</span>
+<span class="co">#&gt; model1 - model2  -4.74  8.11</span></code></pre></div>
+<p>The Bayesian <span class="math inline">\(R^2\)</span>, the LOO-CV, and the WAIC all suggest there’s little difference between the two models with respect to their predictive utility. In such a case, I’d lean on theory to choose between them. If inclined, one could also do Bayesian model averaging.</p>
+<p>Within our Bayesian modeling paradigm, we don’t have a direct analogue to the <span class="math inline">\(F\)</span>-tests Hayes presented on page 483. But a little <code>fitted()</code> and follow-up wrangling will give us some difference scores.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># we need new `nd` data</span>
+nd &lt;-
+<span class="st">  </span><span class="kw">tibble</span>(<span class="dt">D1 =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="op">-</span><span class="dv">2</span><span class="op">/</span><span class="dv">3</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>), <span class="dt">each =</span> <span class="dv">3</span>),
+         <span class="dt">D2 =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span><span class="op">/</span><span class="dv">2</span>), <span class="dt">each =</span> <span class="dv">3</span>),
+         <span class="dt">sexism =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="fl">4.250</span>, <span class="fl">5.120</span>, <span class="fl">5.896</span>), <span class="dt">times =</span> <span class="dv">3</span>))
+
+<span class="co"># this time we&#39;ll use `summary = F`</span>
+model1_fitted &lt;-
+<span class="st">  </span><span class="kw">fitted</span>(model1, 
+       <span class="dt">newdata =</span> nd,
+       <span class="dt">resp =</span> <span class="st">&quot;respappr&quot;</span>, 
+       <span class="dt">summary =</span> F) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;Collective Protest&quot;</span>, <span class="st">&quot;No Protest&quot;</span>, <span class="st">&quot;Individual Protest&quot;</span>),
+                         <span class="dt">each =</span> <span class="dv">3</span><span class="op">*</span><span class="dv">4000</span>),
+         <span class="dt">sexism =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="fl">4.250</span>, <span class="fl">5.120</span>, <span class="fl">5.896</span>), <span class="dt">times =</span> <span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rep</span>(., <span class="dt">each =</span> <span class="dv">4000</span>),
+         <span class="dt">iter =</span> <span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4000</span>, <span class="dt">times =</span> <span class="dv">9</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>key) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> condition, <span class="dt">value =</span> value) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">Individual Protest - No Protest</span><span class="st">`</span> =<span class="st"> `</span><span class="dt">Individual Protest</span><span class="st">`</span> <span class="op">-</span><span class="st"> `</span><span class="dt">No Protest</span><span class="st">`</span>,
+         <span class="st">`</span><span class="dt">Collective Protest - No Protest</span><span class="st">`</span> =<span class="st"> `</span><span class="dt">Collective Protest</span><span class="st">`</span> <span class="op">-</span><span class="st"> `</span><span class="dt">No Protest</span><span class="st">`</span>,
+         <span class="st">`</span><span class="dt">Collective Protest - Individual Protest</span><span class="st">`</span> =<span class="st"> `</span><span class="dt">Collective Protest</span><span class="st">`</span> <span class="op">-</span><span class="st"> `</span><span class="dt">Individual Protest</span><span class="st">`</span>)
+
+<span class="co"># a tiny bit more wrangling and we&#39;re ready to plot the difference distributions</span>
+model1_fitted <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(sexism, <span class="kw">contains</span>(<span class="st">&quot;-&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>(key, value, <span class="op">-</span>sexism) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_halfeyeh</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="dv">0</span>), <span class="dt">fill =</span> <span class="st">&quot;grey50&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>,
+                <span class="dt">point_interval =</span> median_qi, <span class="dt">.prob =</span> <span class="fl">0.95</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">color =</span> <span class="st">&quot;grey25&quot;</span>, <span class="dt">linetype =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="ot">NULL</span>, <span class="dt">breaks =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_grid</span>(sexism<span class="op">~</span>key) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_black</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid =</span> <span class="kw">element_blank</span>())</code></pre></div>
+<p><img src="13_files/figure-html/unnamed-chunk-13-1.png" width="960" /></p>
+<p>Now we have <code>model1_fitted</code>, it’s easy to get the typical numeric summaries for the differences.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model1_fitted <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(sexism, <span class="kw">contains</span>(<span class="st">&quot;-&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>(key, value, <span class="op">-</span>sexism) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(key, sexism) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(value),
+            <span class="dt">ll =</span> <span class="kw">quantile</span>(value, <span class="dt">probs =</span> .<span class="dv">025</span>),
+            <span class="dt">ul =</span> <span class="kw">quantile</span>(value, <span class="dt">probs =</span> .<span class="dv">975</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate_if</span>(is.double, round, <span class="dt">digits =</span> <span class="dv">3</span>)
+<span class="co">#&gt; # A tibble: 9 x 5</span>
+<span class="co">#&gt; # Groups:   key [3]</span>
+<span class="co">#&gt;   key                                     sexism  mean     ll    ul</span>
+<span class="co">#&gt;   &lt;chr&gt;                                    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 Collective Protest - Individual Protest   4.25 0.639 -0.112 1.38 </span>
+<span class="co">#&gt; 2 Collective Protest - Individual Protest   5.12 0.421 -0.073 0.91 </span>
+<span class="co">#&gt; 3 Collective Protest - Individual Protest   5.90 0.226 -0.473 0.898</span>
+<span class="co">#&gt; 4 Collective Protest - No Protest           4.25 1.01   0.317 1.70 </span>
+<span class="co">#&gt; 5 Collective Protest - No Protest           5.12 1.65   1.17  2.15 </span>
+<span class="co">#&gt; 6 Collective Protest - No Protest           5.90 2.22   1.48  2.94 </span>
+<span class="co">#&gt; # ... with 3 more rows</span></code></pre></div>
+<p>The three levels of <code>Collective Protest - Individual Protest</code> correspond nicely with some of the analyses Hayes presented on pages 484–486. However, they don’t get at the differences Hayes expressed as <span class="math inline">\(\theta_{D_{1}\rightarrow M}\)</span> to . For those, we’ll have to work directly with the <code>posterior_samples()</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">post &lt;-<span class="st"> </span><span class="kw">posterior_samples</span>(model1)
+
+post <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">Difference in how Catherine&#39;s behavior is perceived between being told she protested or not when W is 4.250</span><span class="st">`</span> =<span class="st"> </span>b_respappr_D1 <span class="op">+</span><span class="st"> `</span><span class="dt">b_respappr_D1:sexism</span><span class="st">`</span><span class="op">*</span><span class="fl">4.250</span>,
+         <span class="st">`</span><span class="dt">Difference in how Catherine&#39;s behavior is perceived between being told she protested or not when W is 5.210</span><span class="st">`</span> =<span class="st"> </span>b_respappr_D1 <span class="op">+</span><span class="st"> `</span><span class="dt">b_respappr_D1:sexism</span><span class="st">`</span><span class="op">*</span><span class="fl">5.120</span>,
+         <span class="st">`</span><span class="dt">Difference in how Catherine&#39;s behavior is perceived between being told she protested or not when W is 5.896</span><span class="st">`</span> =<span class="st"> </span>b_respappr_D1 <span class="op">+</span><span class="st"> `</span><span class="dt">b_respappr_D1:sexism</span><span class="st">`</span><span class="op">*</span><span class="fl">5.896</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(<span class="kw">contains</span>(<span class="st">&quot;Difference&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(key) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(value),
+            <span class="dt">ll =</span> <span class="kw">quantile</span>(value, <span class="dt">probs =</span> .<span class="dv">025</span>),
+            <span class="dt">ul =</span> <span class="kw">quantile</span>(value, <span class="dt">probs =</span> .<span class="dv">975</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate_if</span>(is.double, round, <span class="dt">digits =</span> <span class="dv">3</span>)
+<span class="co">#&gt; # A tibble: 3 x 4</span>
+<span class="co">#&gt;   key                                                     mean    ll    ul</span>
+<span class="co">#&gt;   &lt;chr&gt;                                                  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 Difference in how Catherine&#39;s behavior is perceived b… 0.695 0.057  1.33</span>
+<span class="co">#&gt; 2 Difference in how Catherine&#39;s behavior is perceived b… 1.44  1.02   1.86</span>
+<span class="co">#&gt; 3 Difference in how Catherine&#39;s behavior is perceived b… 2.11  1.48   2.73</span></code></pre></div>
+</div>
+<div id="estimating-the-second-stage-of-the-mediation-process." class="section level3">
+<h3><span class="header-section-number">13.2.2</span> Estimating the second stage of the mediation process.</h3>
+<p>Here’s <span class="math inline">\(b\)</span>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">post <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> b_liking_respappr)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_halfeyeh</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="dv">0</span>), <span class="dt">fill =</span> <span class="st">&quot;grey50&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>,
+                <span class="dt">point_interval =</span> median_qi, <span class="dt">.prob =</span> <span class="fl">0.95</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>, <span class="kw">median</span>(post<span class="op">$</span>b_liking_respappr), <span class="dv">1</span>),
+                     <span class="dt">labels =</span> <span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>, 
+                                <span class="kw">median</span>(post<span class="op">$</span>b_liking_respappr) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">3</span>),
+                                <span class="dv">1</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="ot">NULL</span>, <span class="dt">breaks =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="op">-</span><span class="dv">1</span><span class="op">:</span><span class="dv">1</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">xlab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;b_liking_respappr (i.e., &quot;</span>, <span class="kw">italic</span>(b), <span class="st">&quot;)&quot;</span>))) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_black</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid =</span> <span class="kw">element_blank</span>())</code></pre></div>
+<p><img src="13_files/figure-html/unnamed-chunk-16-1.png" width="576" /></p>
+</div>
+</div>
+<div id="relative-conditional-indirect-effects" class="section level2">
+<h2><span class="header-section-number">13.3</span> Relative conditional indirect effects</h2>
+<p>Before we use Hayes’s formulas at the top of pate 488 to re-express the posterior in terms of the relative conditional indirect effects, we might want to clarify which of the <code>post</code> columns correspond to the relevant parameters.</p>
+<ul>
+<li><span class="math inline">\(a_{1}\)</span> = <code>b_respappr_D1</code></li>
+<li><span class="math inline">\(a_{2}\)</span> = <code>b_respappr_D2</code></li>
+<li><span class="math inline">\(a_{4}\)</span> = <code>b_respappr_D1:sexism</code></li>
+<li><span class="math inline">\(a_{5}\)</span> = <code>b_respappr_D2:sexism</code></li>
+<li><span class="math inline">\(b\)</span> = <code>b_liking_respappr</code></li>
+</ul>
+<p>To get our posterior transformations, we’ll use the <code>tidyverse::map()</code> approach, which first requires we define two custom functions.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># (a1 + a4W)*b</span>
+D1_function &lt;-<span class="st"> </span><span class="cf">function</span>(w){
+  (post<span class="op">$</span>b_respappr_D1 <span class="op">+</span><span class="st"> </span>post<span class="op">$</span><span class="st">`</span><span class="dt">b_respappr_D1:sexism</span><span class="st">`</span><span class="op">*</span>w)<span class="op">*</span>post<span class="op">$</span>b_liking_respappr
+  }
+
+<span class="co"># (a2 + a5W)*b</span>
+D2_function &lt;-<span class="st"> </span><span class="cf">function</span>(w){
+  (post<span class="op">$</span>b_respappr_D2 <span class="op">+</span><span class="st"> </span>post<span class="op">$</span><span class="st">`</span><span class="dt">b_respappr_D2:sexism</span><span class="st">`</span><span class="op">*</span>w)<span class="op">*</span>post<span class="op">$</span>b_liking_respappr
+  }</code></pre></div>
+<p>Next, we’ll make a 30-row tibble with each row a value for <code>sexism</code>, ranging from 3.5 to 6.5. We’ll then apply our two custom functions to the <code>sexism</code> values and wrangle the results a bit to make them useful for our purposes.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rcie_tibble &lt;-
+<span class="st">  </span><span class="kw">tibble</span>(<span class="dt">sexism =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="fl">3.5</span>, <span class="dt">to =</span> <span class="fl">6.5</span>, <span class="dt">length.out =</span> <span class="dv">30</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(sexism) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">Protest vs. No Protest</span><span class="st">`</span> =<span class="st"> </span><span class="kw">map</span>(sexism, D1_function),
+         <span class="st">`</span><span class="dt">Collective vs. Individual Protest</span><span class="st">`</span> =<span class="st"> </span><span class="kw">map</span>(sexism, D2_function)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">iter =</span> <span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4000</span>, <span class="dt">times =</span> <span class="dv">30</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>(<span class="st">`</span><span class="dt">indirect effect</span><span class="st">`</span>, value, <span class="op">-</span>sexism, <span class="op">-</span>iter) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">indirect effect</span><span class="st">`</span> =<span class="st"> </span><span class="kw">factor</span>(<span class="st">`</span><span class="dt">indirect effect</span><span class="st">`</span>, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;Protest vs. No Protest&quot;</span>, <span class="st">&quot;Collective vs. Individual Protest&quot;</span>)))
+
+<span class="kw">head</span>(rcie_tibble)
+<span class="co">#&gt; # A tibble: 6 x 4</span>
+<span class="co">#&gt;   sexism  iter `indirect effect`        value</span>
+<span class="co">#&gt;    &lt;dbl&gt; &lt;int&gt; &lt;fct&gt;                    &lt;dbl&gt;</span>
+<span class="co">#&gt; 1    3.5     1 Protest vs. No Protest  0.271 </span>
+<span class="co">#&gt; 2    3.5     2 Protest vs. No Protest  0.294 </span>
+<span class="co">#&gt; 3    3.5     3 Protest vs. No Protest  0.186 </span>
+<span class="co">#&gt; 4    3.5     4 Protest vs. No Protest  0.181 </span>
+<span class="co">#&gt; 5    3.5     5 Protest vs. No Protest -0.0172</span>
+<span class="co">#&gt; 6    3.5     6 Protest vs. No Protest -0.0435</span></code></pre></div>
+<p>Here is our variant of Figure 13.4, with respect to the relative conditional indirect effects.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rcie_tibble <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(<span class="st">`</span><span class="dt">indirect effect</span><span class="st">`</span>, sexism) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">median =</span> <span class="kw">median</span>(value),
+            <span class="dt">ll =</span> <span class="kw">quantile</span>(value, <span class="dt">probs =</span> .<span class="dv">025</span>),
+            <span class="dt">ul =</span> <span class="kw">quantile</span>(value, <span class="dt">probs =</span> .<span class="dv">975</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> sexism, <span class="dt">group =</span> <span class="st">`</span><span class="dt">indirect effect</span><span class="st">`</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> ll, <span class="dt">ymax =</span> ul),
+              <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;transparent&quot;</span>, <span class="dt">linetype =</span> <span class="dv">3</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> median),
+            <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="dv">4</span><span class="op">:</span><span class="dv">6</span>,
+                  <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="op">-</span>.<span class="dv">6</span>, .<span class="dv">8</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Perceived Pervasiveness of Sex Discrimination in Society (&quot;</span>, <span class="kw">italic</span>(W), <span class="st">&quot;)&quot;</span>)),
+       <span class="dt">y =</span> <span class="st">&quot;Relative Conditional Effect on Liking&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_black</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid =</span> <span class="kw">element_blank</span>(),
+        <span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_grid</span>(<span class="op">~</span><span class="st"> `</span><span class="dt">indirect effect</span><span class="st">`</span>)</code></pre></div>
+<p><img src="13_files/figure-html/unnamed-chunk-19-1.png" width="960" /></p>
+<p>Here are the indirect effect summaries relevant to the contents of Table 13.2.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rcie_tibble_pick_a_point &lt;-
+<span class="st">  </span><span class="co"># notice how we&#39;ve restricted ourselves to only 3 values for `sexism`</span>
+<span class="st">  </span><span class="kw">tibble</span>(<span class="dt">sexism =</span> <span class="kw">c</span>(<span class="fl">4.25</span>, <span class="fl">5.125</span>, <span class="fl">5.896</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(sexism) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">Protest vs. No Protest</span><span class="st">`</span> =<span class="st"> </span><span class="kw">map</span>(sexism, D1_function),
+         <span class="st">`</span><span class="dt">Collective vs. Individual Protest</span><span class="st">`</span> =<span class="st"> </span><span class="kw">map</span>(sexism, D2_function)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># because we only have 3 `sexism` values, we only need to repeat `times = 3`</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">iter =</span> <span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4000</span>, <span class="dt">times =</span> <span class="dv">3</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>(<span class="st">`</span><span class="dt">indirect effect</span><span class="st">`</span>, value, <span class="op">-</span>sexism, <span class="op">-</span>iter) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">indirect effect</span><span class="st">`</span> =<span class="st"> </span><span class="kw">factor</span>(<span class="st">`</span><span class="dt">indirect effect</span><span class="st">`</span>, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;Protest vs. No Protest&quot;</span>, <span class="st">&quot;Collective vs. Individual Protest&quot;</span>)))
+
+rcie_tibble_pick_a_point <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(sexism, <span class="st">`</span><span class="dt">indirect effect</span><span class="st">`</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">median =</span> <span class="kw">median</span>(value),
+            <span class="dt">ll =</span> <span class="kw">quantile</span>(value, <span class="dt">probs =</span> .<span class="dv">025</span>),
+            <span class="dt">ul =</span> <span class="kw">quantile</span>(value, <span class="dt">probs =</span> .<span class="dv">975</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate_if</span>(is.double, round, <span class="dt">digits =</span> <span class="dv">3</span>)
+<span class="co">#&gt; # A tibble: 6 x 5</span>
+<span class="co">#&gt; # Groups:   sexism [3]</span>
+<span class="co">#&gt;   sexism `indirect effect`                 median     ll    ul</span>
+<span class="co">#&gt;    &lt;dbl&gt; &lt;fct&gt;                              &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1   4.25 Protest vs. No Protest             0.243  0.02  0.536</span>
+<span class="co">#&gt; 2   4.25 Collective vs. Individual Protest  0.223 -0.04  0.555</span>
+<span class="co">#&gt; 3   5.12 Protest vs. No Protest             0.522  0.289 0.821</span>
+<span class="co">#&gt; 4   5.12 Collective vs. Individual Protest  0.148 -0.026 0.365</span>
+<span class="co">#&gt; 5   5.90 Protest vs. No Protest             0.762  0.422 1.18 </span>
+<span class="co">#&gt; 6   5.90 Collective vs. Individual Protest  0.08  -0.167 0.348</span></code></pre></div>
+</div>
+<div id="testing-and-probing-moderation-of-mediation" class="section level2">
+<h2><span class="header-section-number">13.4</span> Testing and probing moderation of mediation</h2>
+<div id="a-test-of-moderation-of-the-relative-indirect-effect." class="section level3">
+<h3><span class="header-section-number">13.4.1</span> A test of moderation of the relative indirect effect.</h3>
+<p>To get the slopes of <code>Protest vs. No Protest</code> and <code>Collective vs. Individual Protest</code> (i.e., <span class="math inline">\(a_{4}b\)</span> and <span class="math inline">\(a_{5}b\)</span>, respectively), we just work directly with the <code>posterior_samples()</code>, which we’ve saved as <code>post</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">post &lt;-
+<span class="st">  </span>post <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">a4b =</span> <span class="st">`</span><span class="dt">b_respappr_D1:sexism</span><span class="st">`</span><span class="op">*</span>b_liking_respappr,
+         <span class="dt">a5b =</span> <span class="st">`</span><span class="dt">b_respappr_D2:sexism</span><span class="st">`</span><span class="op">*</span>b_liking_respappr) 
+
+post <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(a4b<span class="op">:</span>a5b) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">gather</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(key) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(value),
+            <span class="dt">ll =</span> <span class="kw">quantile</span>(value, <span class="dt">probs =</span> .<span class="dv">025</span>),
+            <span class="dt">ul =</span> <span class="kw">quantile</span>(value, <span class="dt">probs =</span> .<span class="dv">975</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate_if</span>(is.double, round, <span class="dt">digits =</span> <span class="dv">3</span>)
+<span class="co">#&gt; # A tibble: 2 x 4</span>
+<span class="co">#&gt;   key     mean     ll    ul</span>
+<span class="co">#&gt;   &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 a4b    0.314  0.1   0.589</span>
+<span class="co">#&gt; 2 a5b   -0.091 -0.341 0.14</span></code></pre></div>
+<p>Here they are in a <code>geom_halfeyeh()</code> plot.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">post <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(a4b<span class="op">:</span>a5b) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">gather</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">y =</span> key, <span class="dt">group =</span> key)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_halfeyeh</span>(<span class="dt">point_interval =</span> median_qi, <span class="dt">.prob =</span> <span class="kw">c</span>(<span class="fl">0.95</span>, <span class="fl">0.5</span>),
+                <span class="dt">fill =</span> <span class="st">&quot;grey50&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_discrete</span>(<span class="dt">expand =</span> <span class="kw">c</span>(.<span class="dv">1</span>, .<span class="dv">1</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="ot">NULL</span>, <span class="dt">y =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_black</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>(),
+        <span class="dt">panel.grid.minor.y =</span> <span class="kw">element_blank</span>(),
+        <span class="dt">panel.grid.major.y =</span> <span class="kw">element_blank</span>()) </code></pre></div>
+<p><img src="13_files/figure-html/unnamed-chunk-22-1.png" width="576" /></p>
+</div>
+<div id="probing-moderation-of-mediation.-2" class="section level3">
+<h3><span class="header-section-number">13.4.2</span> Probing moderation of mediation.</h3>
+<p>We already computed the relevant 95% credible intervals at the end of section <strong>13.3 Relative conditional indirect effects</strong>. We could inspect those in a <code>geom_halfeyeh()</code> plot, too.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rcie_tibble_pick_a_point <span class="op">%&gt;%</span><span class="st">   </span>
+<span class="st">  </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">y =</span> sexism, <span class="dt">group =</span> sexism)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_halfeyeh</span>(<span class="dt">point_interval =</span> median_qi, <span class="dt">.prob =</span> <span class="kw">c</span>(<span class="fl">0.95</span>, <span class="fl">0.5</span>),
+                <span class="dt">fill =</span> <span class="st">&quot;grey50&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Relative Conditional Effect on Liking&quot;</span>, <span class="dt">y =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_black</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.text.y =</span> <span class="kw">element_text</span>(<span class="dt">hjust =</span> <span class="dv">0</span>),
+        <span class="dt">panel.grid.minor.y =</span> <span class="kw">element_blank</span>(),
+        <span class="dt">panel.grid.major.y =</span> <span class="kw">element_blank</span>()) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st">`</span><span class="dt">indirect effect</span><span class="st">`</span>)</code></pre></div>
+<p><img src="13_files/figure-html/unnamed-chunk-23-1.png" width="768" /></p>
+</div>
+</div>
+<div id="relative-conditional-direct-effects" class="section level2">
+<h2><span class="header-section-number">13.5</span> Relative conditional direct effects</h2>
+<p>In order to get the <span class="math inline">\(R^2\)</span> difference distribution analogous to the change in <span class="math inline">\(R^2\)</span> <span class="math inline">\(F\)</span>-test Hayes discussed on pages 495–496, we’ll have to first refit the model without the interaction for the <span class="math inline">\(Y\)</span> criterion, <code>liking</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">m_model &lt;-<span class="st"> </span><span class="kw">bf</span>(respappr <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>D1 <span class="op">+</span><span class="st"> </span>D2 <span class="op">+</span><span class="st"> </span>sexism <span class="op">+</span><span class="st"> </span>D1<span class="op">:</span>sexism <span class="op">+</span><span class="st"> </span>D2<span class="op">:</span>sexism)
+y_model &lt;-<span class="st"> </span><span class="kw">bf</span>(liking   <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>D1 <span class="op">+</span><span class="st"> </span>D2 <span class="op">+</span><span class="st"> </span>respappr <span class="op">+</span><span class="st"> </span>sexism)
+
+model3 &lt;-
+<span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> protest, <span class="dt">family =</span> gaussian,
+      m_model <span class="op">+</span><span class="st"> </span>y_model <span class="op">+</span><span class="st"> </span><span class="kw">set_rescor</span>(<span class="ot">FALSE</span>),
+      <span class="dt">chains =</span> <span class="dv">4</span>, <span class="dt">cores =</span> <span class="dv">4</span>)</code></pre></div>
+<p>Here’s the <span class="math inline">\(\Delta R^2\)</span> density.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">R2s &lt;-
+<span class="st">  </span><span class="kw">bayes_R2</span>(model1, <span class="dt">resp =</span> <span class="st">&quot;liking&quot;</span>, <span class="dt">summary =</span> F) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">model1 =</span> R2_liking) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">bind_cols</span>(
+    <span class="kw">bayes_R2</span>(model3, <span class="dt">resp =</span> <span class="st">&quot;liking&quot;</span>, <span class="dt">summary =</span> F) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">      </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">      </span><span class="kw">rename</span>(<span class="dt">model3 =</span> R2_liking)
+  ) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">difference =</span> model1 <span class="op">-</span><span class="st"> </span>model3) 
+
+R2s <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> difference, <span class="dt">y =</span> <span class="dv">0</span>)) <span class="op">+</span>
+<span class="st">  </span>
+<span class="st">  </span><span class="kw">geom_halfeyeh</span>(<span class="dt">point_interval =</span> median_qi, <span class="dt">.prob =</span> <span class="kw">c</span>(<span class="fl">0.95</span>, <span class="fl">0.5</span>),
+                <span class="dt">fill =</span> <span class="st">&quot;grey50&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">c</span>(<span class="op">-</span>.<span class="dv">5</span>, <span class="kw">median</span>(R2s<span class="op">$</span>difference) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">2</span>), .<span class="dv">5</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="ot">NULL</span>, <span class="dt">breaks =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">c</span>(<span class="op">-</span>.<span class="dv">5</span>, .<span class="dv">5</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">xlab</span>(<span class="kw">expression</span>(<span class="kw">paste</span>(Delta, <span class="kw">italic</span>(R)<span class="op">^</span><span class="dv">2</span>))) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_black</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid =</span> <span class="kw">element_blank</span>())</code></pre></div>
+<p><img src="13_files/figure-html/unnamed-chunk-25-1.png" width="576" /></p>
+<p>We’ll also compare the models by their information criteria.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">loo</span>(model1, model3)
+<span class="co">#&gt;                  LOOIC    SE</span>
+<span class="co">#&gt; model1          761.20 29.63</span>
+<span class="co">#&gt; model3          761.73 31.21</span>
+<span class="co">#&gt; model1 - model3  -0.53  5.67</span>
+<span class="kw">waic</span>(model1, model3)
+<span class="co">#&gt;                   WAIC   SE</span>
+<span class="co">#&gt; model1          760.71 29.5</span>
+<span class="co">#&gt; model3          761.34 31.1</span>
+<span class="co">#&gt; model1 - model3  -0.62  5.6</span></code></pre></div>
+<p>As when we went through these steps for <code>resp = &quot;respappr&quot;</code>, above, the Bayesian <span class="math inline">\(R^2\)</span>, the LOO-CV, and the WAIC all suggest there’s little difference between the two models with respect to predictive utility. In such a case, I’d lean on theory to choose between them. If inclined, one could also do Bayesian model averaging.</p>
+<p>Our approach to plotting the relative conditional <em>direct</em> effects will mirror what we did for the relative conditional <em>indirect</em> effects, above. Here are the <code>brm()</code> parameters that correspond to the parameter names of Hayes’s notation.</p>
+<ul>
+<li><span class="math inline">\(c_{1}\)</span> = <code>b_liking_D1</code></li>
+<li><span class="math inline">\(c_{2}\)</span> = <code>b_liking_D2</code></li>
+<li><span class="math inline">\(c_{4}\)</span> = <code>b_liking_D1:sexism</code></li>
+<li><span class="math inline">\(c_{5}\)</span> = <code>b_liking_D2:sexism</code></li>
+</ul>
+<p>With all clear, we’re off to the races.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># c1 + c4W</span>
+D1_function &lt;-<span class="st"> </span><span class="cf">function</span>(w){
+  post<span class="op">$</span>b_liking_D1 <span class="op">+</span><span class="st"> </span>post<span class="op">$</span><span class="st">`</span><span class="dt">b_liking_D1:sexism</span><span class="st">`</span><span class="op">*</span>w
+  }
+
+<span class="co"># c2 + c5W</span>
+D2_function &lt;-<span class="st"> </span><span class="cf">function</span>(w){
+  post<span class="op">$</span>b_liking_D2 <span class="op">+</span><span class="st"> </span>post<span class="op">$</span><span class="st">`</span><span class="dt">b_liking_D2:sexism</span><span class="st">`</span><span class="op">*</span>w
+  }
+
+rcde_tibble &lt;-
+<span class="st">  </span><span class="kw">tibble</span>(<span class="dt">sexism =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="fl">3.5</span>, <span class="dt">to =</span> <span class="fl">6.5</span>, <span class="dt">length.out =</span> <span class="dv">30</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(sexism) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">Protest vs. No Protest</span><span class="st">`</span>            =<span class="st"> </span><span class="kw">map</span>(sexism, D1_function),
+         <span class="st">`</span><span class="dt">Collective vs. Individual Protest</span><span class="st">`</span> =<span class="st"> </span><span class="kw">map</span>(sexism, D2_function)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">unnest</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">iter =</span> <span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4000</span>, <span class="dt">times =</span> <span class="dv">30</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>(<span class="st">`</span><span class="dt">direct effect</span><span class="st">`</span>, value, <span class="op">-</span>sexism, <span class="op">-</span>iter) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">direct effect</span><span class="st">`</span> =<span class="st"> </span><span class="kw">factor</span>(<span class="st">`</span><span class="dt">direct effect</span><span class="st">`</span>, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;Protest vs. No Protest&quot;</span>, <span class="st">&quot;Collective vs. Individual Protest&quot;</span>)))
+
+<span class="kw">head</span>(rcde_tibble)
+<span class="co">#&gt; # A tibble: 6 x 4</span>
+<span class="co">#&gt;   sexism  iter `direct effect`         value</span>
+<span class="co">#&gt;    &lt;dbl&gt; &lt;int&gt; &lt;fct&gt;                   &lt;dbl&gt;</span>
+<span class="co">#&gt; 1    3.5     1 Protest vs. No Protest -0.752</span>
+<span class="co">#&gt; 2    3.5     2 Protest vs. No Protest -0.794</span>
+<span class="co">#&gt; 3    3.5     3 Protest vs. No Protest -0.339</span>
+<span class="co">#&gt; 4    3.5     4 Protest vs. No Protest -0.527</span>
+<span class="co">#&gt; 5    3.5     5 Protest vs. No Protest -0.913</span>
+<span class="co">#&gt; 6    3.5     6 Protest vs. No Protest -0.824</span></code></pre></div>
+<p>Here is our variant of Figure 13.4, with respect to the relative conditional direct effects.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rcde_tibble <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(<span class="st">`</span><span class="dt">direct effect</span><span class="st">`</span>, sexism) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">median =</span> <span class="kw">median</span>(value),
+            <span class="dt">ll =</span> <span class="kw">quantile</span>(value, <span class="dt">probs =</span> .<span class="dv">025</span>),
+            <span class="dt">ul =</span> <span class="kw">quantile</span>(value, <span class="dt">probs =</span> .<span class="dv">975</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> sexism, <span class="dt">group =</span> <span class="st">`</span><span class="dt">direct effect</span><span class="st">`</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> ll, <span class="dt">ymax =</span> ul),
+              <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;transparent&quot;</span>, <span class="dt">linetype =</span> <span class="dv">3</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> median),
+            <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="dv">4</span><span class="op">:</span><span class="dv">6</span>,
+                  <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="op">-</span>.<span class="dv">6</span>, .<span class="dv">8</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Perceived Pervasiveness of Sex Discrimination in Society (&quot;</span>, <span class="kw">italic</span>(W), <span class="st">&quot;)&quot;</span>)),
+       <span class="dt">y =</span> <span class="st">&quot;Relative Conditional Effect on Liking&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_black</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid =</span> <span class="kw">element_blank</span>(),
+        <span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_grid</span>(<span class="op">~</span><span class="st"> `</span><span class="dt">direct effect</span><span class="st">`</span>)</code></pre></div>
+<p><img src="13_files/figure-html/unnamed-chunk-28-1.png" width="960" /></p>
+<p>Holy smokes, them are some wide 95% CIs! No wonder the information criteria and <span class="math inline">\(R^2\)</span> comparisons were so uninspiring.</p>
+<p>Notice that the y-axis is on the parameter space. In Hayes’s Figure 13.5, the y-axis is on the <code>liking</code> space, instead. When we want things in the parameter space, we work with the output of <code>posterior_samples()</code>; when we want them in the criterion space, we use <code>fitted()</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># we need new `nd` data</span>
+nd &lt;-
+<span class="st">  </span><span class="kw">tibble</span>(<span class="dt">D1 =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="op">-</span><span class="dv">2</span><span class="op">/</span><span class="dv">3</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>), <span class="dt">each =</span> <span class="dv">30</span>),
+         <span class="dt">D2 =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span><span class="op">/</span><span class="dv">2</span>), <span class="dt">each =</span> <span class="dv">30</span>),
+         <span class="dt">respappr =</span> <span class="kw">mean</span>(protest<span class="op">$</span>respappr),
+         <span class="dt">sexism =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="fl">3.5</span>, <span class="dt">to =</span> <span class="fl">6.5</span>, <span class="dt">length.out =</span> <span class="dv">30</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rep</span>(., <span class="dt">times =</span> <span class="dv">3</span>))
+
+<span class="co"># we feed `nd` into `fitted()`</span>
+model1_fitted &lt;-
+<span class="st">  </span><span class="kw">fitted</span>(model1, 
+       <span class="dt">newdata =</span> nd,
+       <span class="dt">resp =</span> <span class="st">&quot;liking&quot;</span>, 
+       <span class="dt">summary =</span> T) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">bind_cols</span>(nd) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition =</span> <span class="kw">ifelse</span>(D2 <span class="op">==</span><span class="st"> </span><span class="dv">0</span>, <span class="st">&quot;No Protest&quot;</span>,
+                            <span class="kw">ifelse</span>(D2 <span class="op">==</span><span class="st"> </span><span class="op">-</span><span class="dv">1</span><span class="op">/</span><span class="dv">2</span>, <span class="st">&quot;Individual Protest&quot;</span>, <span class="st">&quot;Collective Protest&quot;</span>))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition =</span> <span class="kw">factor</span>(condition, <span class="dt">levels =</span> <span class="kw">c</span>(<span class="st">&quot;No Protest&quot;</span>, <span class="st">&quot;Individual Protest&quot;</span>, <span class="st">&quot;Collective Protest&quot;</span>)))
+ 
+model1_fitted <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> sexism, <span class="dt">group =</span> condition)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> Q2.<span class="dv">5</span>, <span class="dt">ymax =</span> Q97.<span class="dv">5</span>),
+              <span class="dt">linetype =</span> <span class="dv">3</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">fill =</span> <span class="st">&quot;transparent&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> Estimate), <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">data =</span> protest, <span class="kw">aes</span>(<span class="dt">x =</span> sexism, <span class="dt">y =</span> liking),
+             <span class="dt">color =</span> <span class="st">&quot;red&quot;</span>, <span class="dt">size =</span> <span class="dv">2</span><span class="op">/</span><span class="dv">3</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="dv">4</span><span class="op">:</span><span class="dv">6</span>,
+                  <span class="dt">ylim =</span> <span class="dv">4</span><span class="op">:</span><span class="dv">7</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Perceived Pervasiveness of Sex Discrimination in Society (&quot;</span>, <span class="kw">italic</span>(W), <span class="st">&quot;)&quot;</span>)),
+       <span class="dt">y =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Evaluation of the Attorney (&quot;</span>, <span class="kw">italic</span>(Y), <span class="st">&quot;)&quot;</span>))) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_black</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid =</span> <span class="kw">element_blank</span>()) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>condition)</code></pre></div>
+<p><img src="13_files/figure-html/unnamed-chunk-29-1.png" width="960" /></p>
+<p>We expanded the range of the y-axis, a bit, to show more of that data (and there’s even more data outside of our expanded range). Also note how after doing so and after including the 95% CI bands, the crossing regression line effect in Hayes’s Figure 13.5 isn’t as impressive looking any more.</p>
+<p>On pages 497–498, Hayes discussed more omnibus <span class="math inline">\(F\)</span>-tests. Much like with the <span class="math inline">\(M\)</span> criterion, we won’t come up with Bayesian <span class="math inline">\(F\)</span>-tests, but we might go ahead and make pairwise comparisons at the three percentiles Hayes prefers.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># we need new `nd` data</span>
+nd &lt;-
+<span class="st">  </span><span class="kw">tibble</span>(<span class="dt">D1 =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">3</span>, <span class="op">-</span><span class="dv">2</span><span class="op">/</span><span class="dv">3</span>, <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>), <span class="dt">each =</span> <span class="dv">3</span>),
+         <span class="dt">D2 =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">1</span><span class="op">/</span><span class="dv">2</span>, <span class="dv">0</span>, <span class="op">-</span><span class="dv">1</span><span class="op">/</span><span class="dv">2</span>), <span class="dt">each =</span> <span class="dv">3</span>),
+         <span class="dt">respappr =</span> <span class="kw">mean</span>(protest<span class="op">$</span>respappr),
+         <span class="dt">sexism =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="fl">4.250</span>, <span class="fl">5.120</span>, <span class="fl">5.896</span>), <span class="dt">times =</span> <span class="dv">3</span>))
+
+<span class="co"># this tie we&#39;ll use `summary = F`</span>
+model1_fitted &lt;-
+<span class="st">  </span><span class="kw">fitted</span>(model1, 
+       <span class="dt">newdata =</span> nd,
+       <span class="dt">resp =</span> <span class="st">&quot;liking&quot;</span>, 
+       <span class="dt">summary =</span> F) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">condition =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="st">&quot;Collective Protest&quot;</span>, <span class="st">&quot;No Protest&quot;</span>, <span class="st">&quot;Individual Protest&quot;</span>),
+                         <span class="dt">each =</span> <span class="dv">3</span><span class="op">*</span><span class="dv">4000</span>),
+         <span class="dt">sexism =</span> <span class="kw">rep</span>(<span class="kw">c</span>(<span class="fl">4.250</span>, <span class="fl">5.120</span>, <span class="fl">5.896</span>), <span class="dt">times =</span> <span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">rep</span>(., <span class="dt">each =</span> <span class="dv">4000</span>),
+         <span class="dt">iter =</span> <span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4000</span>, <span class="dt">times =</span> <span class="dv">9</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>key) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">spread</span>(<span class="dt">key =</span> condition, <span class="dt">value =</span> value) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">Individual Protest - No Protest</span><span class="st">`</span> =<span class="st"> `</span><span class="dt">Individual Protest</span><span class="st">`</span> <span class="op">-</span><span class="st"> `</span><span class="dt">No Protest</span><span class="st">`</span>,
+         <span class="st">`</span><span class="dt">Collective Protest - No Protest</span><span class="st">`</span> =<span class="st"> `</span><span class="dt">Collective Protest</span><span class="st">`</span> <span class="op">-</span><span class="st"> `</span><span class="dt">No Protest</span><span class="st">`</span>,
+         <span class="st">`</span><span class="dt">Collective Protest - Individual Protest</span><span class="st">`</span> =<span class="st"> `</span><span class="dt">Collective Protest</span><span class="st">`</span> <span class="op">-</span><span class="st"> `</span><span class="dt">Individual Protest</span><span class="st">`</span>)
+
+<span class="co"># a tiny bit more wrangling and we&#39;re ready to plot the difference distributions</span>
+model1_fitted <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(sexism, <span class="kw">contains</span>(<span class="st">&quot;-&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>(key, value, <span class="op">-</span>sexism) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_halfeyeh</span>(<span class="kw">aes</span>(<span class="dt">y =</span> <span class="dv">0</span>), <span class="dt">fill =</span> <span class="st">&quot;grey50&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>,
+                <span class="dt">point_interval =</span> median_qi, <span class="dt">.prob =</span> <span class="fl">0.95</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="dv">0</span>, <span class="dt">color =</span> <span class="st">&quot;grey25&quot;</span>, <span class="dt">linetype =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="ot">NULL</span>, <span class="dt">breaks =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_grid</span>(sexism<span class="op">~</span>key) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_black</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">panel.grid =</span> <span class="kw">element_blank</span>())</code></pre></div>
+<p><img src="13_files/figure-html/unnamed-chunk-30-1.png" width="960" /></p>
+<p>Now we have <code>model1_fitted</code>, it’s easy to get the typical numeric summaries for the differences.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model1_fitted <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(sexism, <span class="kw">contains</span>(<span class="st">&quot;-&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>(key, value, <span class="op">-</span>sexism) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(key, sexism) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(value),
+            <span class="dt">ll =</span> <span class="kw">quantile</span>(value, <span class="dt">probs =</span> .<span class="dv">025</span>),
+            <span class="dt">ul =</span> <span class="kw">quantile</span>(value, <span class="dt">probs =</span> .<span class="dv">975</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate_if</span>(is.double, round, <span class="dt">digits =</span> <span class="dv">3</span>)
+<span class="co">#&gt; # A tibble: 9 x 5</span>
+<span class="co">#&gt; # Groups:   key [3]</span>
+<span class="co">#&gt;   key                                     sexism   mean     ll    ul</span>
+<span class="co">#&gt;   &lt;chr&gt;                                    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 Collective Protest - Individual Protest   4.25 -0.114 -0.715 0.498</span>
+<span class="co">#&gt; 2 Collective Protest - Individual Protest   5.12 -0.146 -0.55  0.263</span>
+<span class="co">#&gt; 3 Collective Protest - Individual Protest   5.90 -0.174 -0.719 0.362</span>
+<span class="co">#&gt; 4 Collective Protest - No Protest           4.25 -0.55  -1.14  0.048</span>
+<span class="co">#&gt; 5 Collective Protest - No Protest           5.12 -0.11  -0.591 0.368</span>
+<span class="co">#&gt; 6 Collective Protest - No Protest           5.90  0.282 -0.367 0.95 </span>
+<span class="co">#&gt; # ... with 3 more rows</span></code></pre></div>
+<p>We don’t have <span class="math inline">\(p\)</span>-values, but all the differences are small in magnitude and have wide 95% intervals straddling zero.</p>
+<p>To get the difference scores Hayes presented on pages 498–500, one might:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">post <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">Difference in liking between being told she protested or not when W is 4.250</span><span class="st">`</span> =<span class="st"> </span>b_liking_D1 <span class="op">+</span><span class="st"> `</span><span class="dt">b_liking_D1:sexism</span><span class="st">`</span><span class="op">*</span><span class="fl">4.250</span>,
+         <span class="st">`</span><span class="dt">Difference in liking between being told she protested or not when W is 5.120</span><span class="st">`</span> =<span class="st"> </span>b_liking_D1 <span class="op">+</span><span class="st"> `</span><span class="dt">b_liking_D1:sexism</span><span class="st">`</span><span class="op">*</span><span class="fl">5.120</span>,
+         <span class="st">`</span><span class="dt">Difference in liking between being told she protested or not when W is 5.896</span><span class="st">`</span> =<span class="st"> </span>b_liking_D1 <span class="op">+</span><span class="st"> `</span><span class="dt">b_liking_D1:sexism</span><span class="st">`</span><span class="op">*</span><span class="fl">5.896</span>,
+         
+         <span class="st">`</span><span class="dt">Difference in liking between collective vs. individual protest when W is 4.250</span><span class="st">`</span> =<span class="st"> </span>b_liking_D2 <span class="op">+</span><span class="st"> `</span><span class="dt">b_liking_D2:sexism</span><span class="st">`</span><span class="op">*</span><span class="fl">4.250</span>,
+         <span class="st">`</span><span class="dt">Difference in liking between collective vs. individual protest when W is 5.120</span><span class="st">`</span> =<span class="st"> </span>b_liking_D2 <span class="op">+</span><span class="st"> `</span><span class="dt">b_liking_D2:sexism</span><span class="st">`</span><span class="op">*</span><span class="fl">5.120</span>,
+         <span class="st">`</span><span class="dt">Difference in liking between collective vs. individual protest when W is 5.896</span><span class="st">`</span> =<span class="st"> </span>b_liking_D2 <span class="op">+</span><span class="st"> `</span><span class="dt">b_liking_D2:sexism</span><span class="st">`</span><span class="op">*</span><span class="fl">5.896</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(<span class="kw">contains</span>(<span class="st">&quot;Difference in liking&quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(key) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(value),
+            <span class="dt">ll =</span> <span class="kw">quantile</span>(value, <span class="dt">probs =</span> .<span class="dv">025</span>),
+            <span class="dt">ul =</span> <span class="kw">quantile</span>(value, <span class="dt">probs =</span> .<span class="dv">975</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate_if</span>(is.double, round, <span class="dt">digits =</span> <span class="dv">3</span>)
+<span class="co">#&gt; # A tibble: 6 x 4</span>
+<span class="co">#&gt;   key                                                    mean     ll    ul</span>
+<span class="co">#&gt;   &lt;chr&gt;                                                 &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 Difference in liking between being told she protest… -0.493 -1.03  0.049</span>
+<span class="co">#&gt; 2 Difference in liking between being told she protest… -0.038 -0.45  0.371</span>
+<span class="co">#&gt; 3 Difference in liking between being told she protest…  0.369 -0.218 0.961</span>
+<span class="co">#&gt; 4 Difference in liking between collective vs. individ… -0.114 -0.715 0.498</span>
+<span class="co">#&gt; 5 Difference in liking between collective vs. individ… -0.146 -0.55  0.263</span>
+<span class="co">#&gt; 6 Difference in liking between collective vs. individ… -0.174 -0.719 0.362</span></code></pre></div>
+</div>
+<div id="references-10" class="section level2 unnumbered">
+<h2>References</h2>
+<p><a href="http://afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html">Hayes, A. F. (2018). <em>Introduction to mediation, moderation, and conditional process analysis: A regression-based approach.</em> (2nd ed.). New York, NY, US: The Guilford Press.</a></p>
+</div>
+<div id="session-info-12" class="section level2 unnumbered">
+<h2>Session info</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()
+<span class="co">#&gt; R version 3.5.1 (2018-07-02)</span>
+<span class="co">#&gt; Platform: x86_64-apple-darwin15.6.0 (64-bit)</span>
+<span class="co">#&gt; Running under: macOS High Sierra 10.13.4</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Matrix products: default</span>
+<span class="co">#&gt; BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib</span>
+<span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; locale:</span>
+<span class="co">#&gt; [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; attached base packages:</span>
+<span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; other attached packages:</span>
+<span class="co">#&gt;  [1] tidybayes_0.12.1.9000 brms_2.3.4            Rcpp_0.12.17         </span>
+<span class="co">#&gt;  [4] bindrcpp_0.2.2        forcats_0.3.0         stringr_1.3.1        </span>
+<span class="co">#&gt;  [7] dplyr_0.7.6           purrr_0.2.5           readr_1.1.1          </span>
+<span class="co">#&gt; [10] tidyr_0.8.1           tibble_1.4.2          ggplot2_3.0.0        </span>
+<span class="co">#&gt; [13] tidyverse_1.2.1      </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; loaded via a namespace (and not attached):</span>
+<span class="co">#&gt;  [1] nlme_3.1-137              matrixStats_0.53.1       </span>
+<span class="co">#&gt;  [3] xts_0.10-2                lubridate_1.7.4          </span>
+<span class="co">#&gt;  [5] threejs_0.3.1             httr_1.3.1               </span>
+<span class="co">#&gt;  [7] LaplacesDemon_16.1.1      rprojroot_1.3-2          </span>
+<span class="co">#&gt;  [9] rstan_2.17.3              tools_3.5.1              </span>
+<span class="co">#&gt; [11] backports_1.1.2           utf8_1.1.4               </span>
+<span class="co">#&gt; [13] R6_2.2.2                  DT_0.4                   </span>
+<span class="co">#&gt; [15] lazyeval_0.2.1            colorspace_1.3-2         </span>
+<span class="co">#&gt; [17] withr_2.1.2               tidyselect_0.2.4         </span>
+<span class="co">#&gt; [19] gridExtra_2.3             mnormt_1.5-5             </span>
+<span class="co">#&gt; [21] Brobdingnag_1.2-5         compiler_3.5.1           </span>
+<span class="co">#&gt; [23] cli_1.0.0                 rvest_0.3.2              </span>
+<span class="co">#&gt; [25] arrayhelpers_1.0-20160527 shinyjs_1.0              </span>
+<span class="co">#&gt; [27] xml2_1.2.0                labeling_0.3             </span>
+<span class="co">#&gt; [29] colourpicker_1.0          bookdown_0.7             </span>
+<span class="co">#&gt; [31] scales_0.5.0              dygraphs_1.1.1.5         </span>
+<span class="co">#&gt; [33] mvtnorm_1.0-8             psych_1.8.4              </span>
+<span class="co">#&gt; [35] ggridges_0.5.0            digest_0.6.15            </span>
+<span class="co">#&gt; [37] StanHeaders_2.17.2        foreign_0.8-70           </span>
+<span class="co">#&gt; [39] rmarkdown_1.10            base64enc_0.1-3          </span>
+<span class="co">#&gt; [41] pkgconfig_2.0.1           htmltools_0.3.6          </span>
+<span class="co">#&gt; [43] htmlwidgets_1.2           rlang_0.2.1              </span>
+<span class="co">#&gt; [45] readxl_1.1.0              rstudioapi_0.7           </span>
+<span class="co">#&gt; [47] shiny_1.1.0               svUnit_0.7-12            </span>
+<span class="co">#&gt; [49] bindr_0.1.1               zoo_1.8-2                </span>
+<span class="co">#&gt; [51] jsonlite_1.5              gtools_3.8.1             </span>
+<span class="co">#&gt; [53] crosstalk_1.0.0           inline_0.3.15            </span>
+<span class="co">#&gt; [55] magrittr_1.5              loo_2.0.0                </span>
+<span class="co">#&gt; [57] bayesplot_1.5.0           Matrix_1.2-14            </span>
+<span class="co">#&gt; [59] munsell_0.5.0             abind_1.4-5              </span>
+<span class="co">#&gt; [61] stringi_1.2.3             yaml_2.1.19              </span>
+<span class="co">#&gt; [63] MASS_7.3-50               ggstance_0.3             </span>
+<span class="co">#&gt; [65] plyr_1.8.4                grid_3.5.1               </span>
+<span class="co">#&gt; [67] parallel_3.5.1            promises_1.0.1           </span>
+<span class="co">#&gt; [69] crayon_1.3.4              miniUI_0.1.1.1           </span>
+<span class="co">#&gt; [71] lattice_0.20-35           haven_1.1.2              </span>
+<span class="co">#&gt; [73] hms_0.4.2                 knitr_1.20               </span>
+<span class="co">#&gt; [75] pillar_1.2.3              igraph_1.2.1             </span>
+<span class="co">#&gt; [77] markdown_0.8              shinystan_2.5.0          </span>
+<span class="co">#&gt; [79] codetools_0.2-15          reshape2_1.4.3           </span>
+<span class="co">#&gt; [81] stats4_3.5.1              rstantools_1.5.0         </span>
+<span class="co">#&gt; [83] glue_1.2.0                evaluate_0.10.1          </span>
+<span class="co">#&gt; [85] modelr_0.1.2              httpuv_1.4.4.2           </span>
+<span class="co">#&gt; [87] cellranger_1.1.0          gtable_0.2.0             </span>
+<span class="co">#&gt; [89] assertthat_0.2.0          xfun_0.3                 </span>
+<span class="co">#&gt; [91] mime_0.5                  xtable_1.8-2             </span>
+<span class="co">#&gt; [93] broom_0.4.5               coda_0.19-1              </span>
+<span class="co">#&gt; [95] later_0.7.3               rsconnect_0.8.8          </span>
+<span class="co">#&gt; [97] shinythemes_1.1.1         bridgesampling_0.4-0</span></code></pre></div>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="further-examples-of-conditional-process-analysis.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": false,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/ASKurz/recoding_Introduction_to_Mediation_Moderation_and_Conditional_Process_Analysis13.Rmd",
+"text": "Edit"
+},
+"download": null,
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

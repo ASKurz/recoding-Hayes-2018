@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>recoding Introduction to Mediation, Moderation, and Conditional Process Analysis</title>
+  <meta name="description" content="This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s <a href="https://github.com/paul-buerkner/brms">brms</a>. I use syntax based on sensibilities from the <a href="https://www.tidyverse.org">tidyverse</a> and plot with Wickham’s <a href="https://cran.r-project.org/web/packages/ggplot2/index.html">ggplot2</a>.">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+
+  <meta property="og:title" content="recoding Introduction to Mediation, Moderation, and Conditional Process Analysis" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s <a href="https://github.com/paul-buerkner/brms">brms</a>. I use syntax based on sensibilities from the <a href="https://www.tidyverse.org">tidyverse</a> and plot with Wickham’s <a href="https://cran.r-project.org/web/packages/ggplot2/index.html">ggplot2</a>." />
+  <meta name="github-repo" content="ASKURZ/recoding_Introduction_to_Mediation_Moderation_and_Conditional_Process_Analysis" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="recoding Introduction to Mediation, Moderation, and Conditional Process Analysis" />
+  <meta name="twitter:site" content="@SolomonKurz" />
+  <meta name="twitter:description" content="This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s <a href="https://github.com/paul-buerkner/brms">brms</a>. I use syntax based on sensibilities from the <a href="https://www.tidyverse.org">tidyverse</a> and plot with Wickham’s <a href="https://cran.r-project.org/web/packages/ggplot2/index.html">ggplot2</a>." />
+  
+
+<meta name="author" content="A Solomon Kurz">
+
+
+<meta name="date" content="2018-07-14">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="introduction.html">
+<link rel="next" href="the-simple-mediation-model.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+<link rel="stylesheet" href="recoding.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><strong><a href="./">recoding Introduction to Mediation, Moderation, and Conditional Process Analysis</a></strong></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a></li>
+<li class="part"><span><b>I FUNDAMENTALS</b></span></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#references"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#session-info"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html"><i class="fa fa-check"></i><b>2</b> Fundamentals of Linear Regression</a><ul>
+<li class="chapter" data-level="2.1" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#correlation-and-prediction"><i class="fa fa-check"></i><b>2.1</b> Correlation and prediction</a></li>
+<li class="chapter" data-level="2.2" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#the-simple-linear-regression-model"><i class="fa fa-check"></i><b>2.2</b> The simple linear regression model</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#interpretation-of-the-constant-and-regression-coefficient"><i class="fa fa-check"></i><b>2.2.1</b> Interpretation of the constant and regression coefficient</a></li>
+<li class="chapter" data-level="2.2.2" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#the-standardized-regression-model"><i class="fa fa-check"></i><b>2.2.2</b> The standardized regression model</a></li>
+<li class="chapter" data-level="2.2.3" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#simple-linear-regression-with-a-dichotomous-antecedent-variable."><i class="fa fa-check"></i><b>2.2.3</b> Simple linear regression with a dichotomous antecedent variable.</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#alternative-explanations-for-association"><i class="fa fa-check"></i><b>2.3</b> Alternative explanations for association</a></li>
+<li class="chapter" data-level="2.4" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#multiple-linear-regression"><i class="fa fa-check"></i><b>2.4</b> Multiple linear regression</a><ul>
+<li class="chapter" data-level="2.4.1" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#the-standardized-regression-model."><i class="fa fa-check"></i><b>2.4.1</b> The standardized regression model.</a></li>
+</ul></li>
+<li class="chapter" data-level="2.5" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#measures-of-model-fit"><i class="fa fa-check"></i><b>2.5</b> Measures of model fit</a></li>
+<li class="chapter" data-level="2.6" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#statistical-inference"><i class="fa fa-check"></i><b>2.6</b> Statistical inference</a><ul>
+<li class="chapter" data-level="2.6.1" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#testing-a-null-hypothesis."><i class="fa fa-check"></i><b>2.6.1</b> Testing a null hypothesis.</a></li>
+<li class="chapter" data-level="2.6.2" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#interval-estimation."><i class="fa fa-check"></i><b>2.6.2</b> Interval estimation.</a></li>
+<li class="chapter" data-level="2.6.3" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#testing-a-hypothesis-about-a-set-of-antecedent-variables."><i class="fa fa-check"></i><b>2.6.3</b> Testing a hypothesis about a set of antecedent variables.</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#multicategorical-antecedent-variables"><i class="fa fa-check"></i><b>2.7</b> Multicategorical antecedent variables</a></li>
+<li class="chapter" data-level="2.8" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#assumptions-for-interpretation-and-statistical-inference"><i class="fa fa-check"></i><b>2.8</b> Assumptions for interpretation and statistical inference</a><ul>
+<li class="chapter" data-level="2.8.1" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#linearity."><i class="fa fa-check"></i><b>2.8.1</b> Linearity.</a></li>
+<li class="chapter" data-level="2.8.2" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#normality."><i class="fa fa-check"></i><b>2.8.2</b> Normality.</a></li>
+<li class="chapter" data-level="2.8.3" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#homoscedasticity."><i class="fa fa-check"></i><b>2.8.3</b> Homoscedasticity.</a></li>
+<li class="chapter" data-level="2.8.4" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#independence."><i class="fa fa-check"></i><b>2.8.4</b> Independence.</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#reference"><i class="fa fa-check"></i>Reference</a></li>
+<li class="chapter" data-level="" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#session-info-1"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="part"><span><b>II MEDIATION ANALYSIS</b></span></li>
+<li class="chapter" data-level="3" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html"><i class="fa fa-check"></i><b>3</b> The Simple Mediation Model</a><ul>
+<li class="chapter" data-level="3.1" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#estimation-of-the-direce-indirect-and-total-effects-of-x"><i class="fa fa-check"></i><b>3.1</b> Estimation of the direce, indirect, and total effects of <span class="math inline">\(X\)</span></a></li>
+<li class="chapter" data-level="3.2" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#example-with-dichotomous-x-the-influence-of-presumed-media-influence"><i class="fa fa-check"></i><b>3.2</b> Example with dichotomous <span class="math inline">\(X\)</span>: The influence of presumed media influence</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#estimation-of-the-model-in-process-for-spss-and-sas."><i class="fa fa-check"></i><b>3.2.1</b> <del>Estimation of the model in PROCESS for SPSS and SAS.</del></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#statistical-inference-1"><i class="fa fa-check"></i><b>3.3</b> Statistical inference</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#inference-about-the-total-effect-of-x-on-y."><i class="fa fa-check"></i><b>3.3.1</b> Inference about the total effect of <span class="math inline">\(X\)</span> on <span class="math inline">\(Y\)</span>.</a></li>
+<li class="chapter" data-level="3.3.2" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#inference-about-the-direct-effect-of-x-on-y."><i class="fa fa-check"></i><b>3.3.2</b> Inference about the direct effect of <span class="math inline">\(X\)</span> on <span class="math inline">\(Y\)</span>.</a></li>
+<li class="chapter" data-level="3.3.3" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#inference-about-the-indirect-of-x-on-y-through-m."><i class="fa fa-check"></i><b>3.3.3</b> Inference about the indirect of <span class="math inline">\(X\)</span> on <span class="math inline">\(Y\)</span> through <span class="math inline">\(M\)</span>.</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#an-example-with-continuous-x-economic-stress-among-small-business-owners"><i class="fa fa-check"></i><b>3.4</b> An example with continuous <span class="math inline">\(X\)</span>: Economic stress among small-business owners</a></li>
+<li class="chapter" data-level="" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#reference-1"><i class="fa fa-check"></i>Reference</a></li>
+<li class="chapter" data-level="" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#session-info-2"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html"><i class="fa fa-check"></i><b>4</b> Causal Steps, Confounding, and Causal Order</a><ul>
+<li class="chapter" data-level="4.1" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#what-about-barron-and-kenny"><i class="fa fa-check"></i><b>4.1</b> What about Barron and Kenny?</a></li>
+<li class="chapter" data-level="4.2" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#confounding-and-causal-order"><i class="fa fa-check"></i><b>4.2</b> Confounding and causal order</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#accounting-for-confounding-and-epiphenomenal-association."><i class="fa fa-check"></i><b>4.2.1</b> Accounting for confounding and epiphenomenal association.</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#effect-size"><i class="fa fa-check"></i><b>4.3</b> Effect size</a><ul>
+<li class="chapter" data-level="4.3.1" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#the-partially-standardized-effect."><i class="fa fa-check"></i><b>4.3.1</b> The partially standardized effect.</a></li>
+<li class="chapter" data-level="4.3.2" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#the-completely-standardized-effect."><i class="fa fa-check"></i><b>4.3.2</b> The completely standardized effect.</a></li>
+<li class="chapter" data-level="4.3.3" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#some-problematic-measures-only-for-indirect-effects."><i class="fa fa-check"></i><b>4.3.3</b> Some (problematic) measures only for indirect effects.</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#statistical-power"><i class="fa fa-check"></i><b>4.4</b> Statistical power</a></li>
+<li class="chapter" data-level="4.5" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#multiple-xs-or-ys-analyze-separately-or-simultaneously"><i class="fa fa-check"></i><b>4.5</b> Multiple <span class="math inline">\(X\)</span>s or <span class="math inline">\(Y\)</span>s: Analyze separately or simultaneously?</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#multiple-x-variables."><i class="fa fa-check"></i><b>4.5.1</b> Multiple <span class="math inline">\(X\)</span> variables.</a></li>
+<li class="chapter" data-level="4.5.2" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#estimation-of-a-model-with-multiple-x-variables-in-process-brms."><i class="fa fa-check"></i><b>4.5.2</b> Estimation of a model with multiple <span class="math inline">\(X\)</span> variables in <del>PROCESS</del> brms.</a></li>
+<li class="chapter" data-level="4.5.3" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#multiple-y-variables."><i class="fa fa-check"></i><b>4.5.3</b> Multiple <span class="math inline">\(Y\)</span> variables.</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#references-1"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#session-info-3"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html"><i class="fa fa-check"></i><b>5</b> More Than One Mediator</a><ul>
+<li class="chapter" data-level="5.1" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#the-parallel-multiple-mediator-model"><i class="fa fa-check"></i><b>5.1</b> The parallel multiple mediator model</a></li>
+<li class="chapter" data-level="5.2" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#example-using-the-presumed-media-influence-study"><i class="fa fa-check"></i><b>5.2</b> Example using the presumed media influence study</a></li>
+<li class="chapter" data-level="5.3" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#statistical-inference-2"><i class="fa fa-check"></i><b>5.3</b> Statistical inference</a><ul>
+<li class="chapter" data-level="5.3.1" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#inference-about-the-direct-and-total-effects."><i class="fa fa-check"></i><b>5.3.1</b> Inference about the direct and total effects.</a></li>
+<li class="chapter" data-level="5.3.2" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#inference-about-specific-indirect-effects."><i class="fa fa-check"></i><b>5.3.2</b> Inference about specific indirect effects.</a></li>
+<li class="chapter" data-level="5.3.3" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#pairwise-comparisons-between-specific-indirect-effects."><i class="fa fa-check"></i><b>5.3.3</b> Pairwise comparisons between specific indirect effects.</a></li>
+<li class="chapter" data-level="5.3.4" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#inference-about-the-total-indirect-effect."><i class="fa fa-check"></i><b>5.3.4</b> Inference about the total indirect effect.</a></li>
+</ul></li>
+<li class="chapter" data-level="5.4" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#the-serial-multiple-mediator-model"><i class="fa fa-check"></i><b>5.4</b> The serial multiple mediator model</a><ul>
+<li class="chapter" data-level="5.4.1" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#direct-and-indirect-effects-in-a-serial-multiple-mediator-model."><i class="fa fa-check"></i><b>5.4.1</b> Direct and indirect effects in a serial multiple mediator model.</a></li>
+<li class="chapter" data-level="5.4.2" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#statistical-inference."><i class="fa fa-check"></i><b>5.4.2</b> Statistical inference.</a></li>
+<li class="chapter" data-level="5.4.3" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#example-from-the-presumed-media-influence-study."><i class="fa fa-check"></i><b>5.4.3</b> Example from the presumed media influence study.</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#references-2"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#session-info-4"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html"><i class="fa fa-check"></i><b>6</b> Mediation Analysis with a Multicategorical Antecedent</a><ul>
+<li class="chapter" data-level="6.1" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#relative-total-direct-and-indirect-effects"><i class="fa fa-check"></i><b>6.1</b> Relative total, direct, and indirect effects</a></li>
+<li class="chapter" data-level="6.2" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#an-example-sex-discrimination-in-the-workplace"><i class="fa fa-check"></i><b>6.2</b> An example: Sex discrimination in the workplace</a></li>
+<li class="chapter" data-level="6.3" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#using-a-different-group-coding-system"><i class="fa fa-check"></i><b>6.3</b> Using a different group coding system</a></li>
+<li class="chapter" data-level="" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#references-3"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#session-info-5"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="part"><span><b>III MODERATION ANALYSIS</b></span></li>
+<li class="chapter" data-level="7" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html"><i class="fa fa-check"></i><b>7</b> Fundamentals of Moderation Analysis</a><ul>
+<li class="chapter" data-level="7.1" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#conditional-and-unconditional-effects"><i class="fa fa-check"></i><b>7.1</b> Conditional and unconditional effects</a></li>
+<li class="chapter" data-level="7.2" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#an-example-climate-change-disasters-and-humanitarianism"><i class="fa fa-check"></i><b>7.2</b> An example: Climate change disasters and humanitarianism</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#estimation-using-process-brms."><i class="fa fa-check"></i><b>7.2.1</b> Estimation using <del>PROCESS</del> brms.</a></li>
+<li class="chapter" data-level="7.2.2" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#interpreting-the-regression-coefficients."><i class="fa fa-check"></i><b>7.2.2</b> Interpreting the regression coefficients.</a></li>
+<li class="chapter" data-level="7.2.3" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#variable-scaling-and-the-interpretation-of-b_1-and-b_3."><i class="fa fa-check"></i><b>7.2.3</b> Variable scaling and the interpretation of <span class="math inline">\(b_{1}\)</span> and <span class="math inline">\(b_{3}\)</span>.</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#visualizing-moderation"><i class="fa fa-check"></i><b>7.3</b> Visualizing moderation</a></li>
+<li class="chapter" data-level="7.4" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#probing-an-interaction"><i class="fa fa-check"></i><b>7.4</b> Probing an interaction</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#the-pick-a-point-approach."><i class="fa fa-check"></i><b>7.4.1</b> The pick-a-point approach.</a></li>
+<li class="chapter" data-level="7.4.2" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#the-johnson-neyman-technique."><i class="fa fa-check"></i><b>7.4.2</b> The Johnson-Neyman technique.</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#the-difference-between-testing-for-moderation-and-probing-it"><i class="fa fa-check"></i><b>7.5</b> The difference between testing for moderation and probing it</a></li>
+<li class="chapter" data-level="7.6" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#artificial-categorization-and-subgroups"><i class="fa fa-check"></i><b>7.6</b> Artificial categorization and subgroups</a></li>
+<li class="chapter" data-level="" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#references-4"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#session-info-6"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html"><i class="fa fa-check"></i><b>8</b> Extending the Fundamental Principles of Moderation Analysis</a><ul>
+<li class="chapter" data-level="8.1" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#moderation-with-a-dichotomous-moderator"><i class="fa fa-check"></i><b>8.1</b> Moderation with a dichotomous moderator</a><ul>
+<li class="chapter" data-level="8.1.1" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#visualizing-and-probing-the-interaction."><i class="fa fa-check"></i><b>8.1.1</b> Visualizing and probing the interaction.</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#interaction-between-two-quantitative-variables"><i class="fa fa-check"></i><b>8.2</b> Interaction between two quantitative variables</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#visualizing-and-probing-the-interaction.-1"><i class="fa fa-check"></i><b>8.2.1</b> Visualizing and probing the interaction.</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#hierarchical-versus-simultaneous-entry"><i class="fa fa-check"></i><b>8.3</b> Hierarchical versus simultaneous entry</a></li>
+<li class="chapter" data-level="8.4" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#the-equivalence-between-moderated-regression-analysis-and-a-2-x-2-factorial-analysis-of-variance"><i class="fa fa-check"></i><b>8.4</b> The equivalence between moderated regression analysis and a 2 X 2 factorial analysis of variance</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#simple-effects-parameterization."><i class="fa fa-check"></i><b>8.4.1</b> Simple effects parameterization.</a></li>
+<li class="chapter" data-level="8.4.2" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#main-effects-parameterization."><i class="fa fa-check"></i><b>8.4.2</b> Main effects parameterization.</a></li>
+<li class="chapter" data-level="8.4.3" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#conducting-a-2-x-2-between-participants-factorial-anova-using-process-another-regression-model-with-brms."><i class="fa fa-check"></i><b>8.4.3</b> Conducting <del>a 2 X 2 between-participants factorial ANOVA using PROCESS</del> another regression model with brms.</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#references-5"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#session-info-7"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html"><i class="fa fa-check"></i><b>9</b> Some Myths and Additional Extensions of Moderation Analysis</a><ul>
+<li class="chapter" data-level="9.1" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#truths-and-myths-about-mean-centering"><i class="fa fa-check"></i><b>9.1</b> Truths and myths about mean-centering</a><ul>
+<li class="chapter" data-level="9.1.1" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-effect-of-mean-centering-on-multicollinearity-and-the-standard-error-of-b_3."><i class="fa fa-check"></i><b>9.1.1</b> The effect of mean-centering on multicollinearity and the standard error of <span class="math inline">\(b_{3}\)</span>.</a></li>
+<li class="chapter" data-level="9.1.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-effect-of-mean-centering-on-b_1-b_2-and-their-standard-errors-posterior-sds."><i class="fa fa-check"></i><b>9.1.2</b> The effect of mean-centering on <span class="math inline">\(b_{1}\)</span>, <span class="math inline">\(b_{2}\)</span>, and their <del>standard errors</del> posterior <span class="math inline">\(SD\)</span>s.</a></li>
+<li class="chapter" data-level="9.1.3" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-centering-option-in-process."><i class="fa fa-check"></i><b>9.1.3</b> The <del>centering option in PROCESS</del>.</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-estimation-and-interpretation-of-standardized-regression-coefficients-in-a-moderation-analysis"><i class="fa fa-check"></i><b>9.2</b> The estimation and interpretation of standardized regression coefficients in a moderation analysis</a><ul>
+<li class="chapter" data-level="9.2.1" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#variant-1."><i class="fa fa-check"></i><b>9.2.1</b> Variant 1.</a></li>
+<li class="chapter" data-level="9.2.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#variant-2."><i class="fa fa-check"></i><b>9.2.2</b> Variant 2.</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#a-caution-on-manual-centering-and-standardization"><i class="fa fa-check"></i><b>9.3</b> A caution on manual centering and standardization</a></li>
+<li class="chapter" data-level="9.4" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#more-than-one-moderator"><i class="fa fa-check"></i><b>9.4</b> More than one moderator</a><ul>
+<li class="chapter" data-level="9.4.1" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#additive-multiple-moderation."><i class="fa fa-check"></i><b>9.4.1</b> Additive multiple moderation.</a></li>
+<li class="chapter" data-level="9.4.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#moderated-moderation."><i class="fa fa-check"></i><b>9.4.2</b> Moderated moderation.</a></li>
+</ul></li>
+<li class="chapter" data-level="9.5" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#comparing-conditional-effects"><i class="fa fa-check"></i><b>9.5</b> Comparing conditional effects</a><ul>
+<li class="chapter" data-level="9.5.1" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#comparing-conditional-effects-in-the-additive-multiple-moderation-model."><i class="fa fa-check"></i><b>9.5.1</b> Comparing conditional effects in the additive multiple moderation model.</a></li>
+<li class="chapter" data-level="9.5.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#comparing-conditional-effects-in-the-moderated-moderation-model."><i class="fa fa-check"></i><b>9.5.2</b> Comparing conditional effects in the moderated moderation model.</a></li>
+<li class="chapter" data-level="9.5.3" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#implementation-in-process-brms.-1"><i class="fa fa-check"></i><b>9.5.3</b> Implementation in <del>PROCESS</del> brms.</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#references-6"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#session-info-8"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html"><i class="fa fa-check"></i><b>10</b> Multicategorical Focal Antecedents and Moderators</a><ul>
+<li class="chapter" data-level="10.1" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#moderation-of-the-effect-of-a-multicategorical-antecedent-variable"><i class="fa fa-check"></i><b>10.1</b> Moderation of the effect of a multicategorical antecedent variable</a></li>
+<li class="chapter" data-level="10.2" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#an-example-from-the-sex-disrimination-in-the-workplace-study"><i class="fa fa-check"></i><b>10.2</b> An example from the sex disrimination in the workplace study</a></li>
+<li class="chapter" data-level="10.3" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#visualizing-the-model"><i class="fa fa-check"></i><b>10.3</b> Visualizing the model</a></li>
+<li class="chapter" data-level="10.4" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#probing-the-interaction"><i class="fa fa-check"></i><b>10.4</b> Probing the interaction</a><ul>
+<li class="chapter" data-level="10.4.1" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#the-pick-a-point-approach.-1"><i class="fa fa-check"></i><b>10.4.1</b> The pick-a-point approach.</a></li>
+<li class="chapter" data-level="10.4.2" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#the-johnson-neyman-technique.-1"><i class="fa fa-check"></i><b>10.4.2</b> The Johnson-Neyman technique.</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#when-the-moderator-is-multicategorical"><i class="fa fa-check"></i><b>10.5</b> When the moderator is multicategorical</a><ul>
+<li class="chapter" data-level="10.5.1" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#an-example."><i class="fa fa-check"></i><b>10.5.1</b> An example.</a></li>
+<li class="chapter" data-level="10.5.2" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#probing-the-interaction-and-interpreting-the-regression-coefficients."><i class="fa fa-check"></i><b>10.5.2</b> Probing the interaction and interpreting the regression coefficients.</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#references-7"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#session-info-9"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="part"><span><b>IV CONDITIONAL PROCESS ANALYSIS</b></span></li>
+<li class="chapter" data-level="11" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html"><i class="fa fa-check"></i><b>11</b> Fundamentals of Conditional Process Analysis</a><ul>
+<li class="chapter" data-level="11.1" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#examples-of-conditional-process-models-in-the-literature"><i class="fa fa-check"></i><b>11.1</b> Examples of conditional process models in the literature</a></li>
+<li class="chapter" data-level="11.2" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#conditional-direct-and-indirect-effects"><i class="fa fa-check"></i><b>11.2</b> Conditional direct and indirect effects</a></li>
+<li class="chapter" data-level="11.3" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#example-hiding-your-feelings-from-your-work-team"><i class="fa fa-check"></i><b>11.3</b> Example: Hiding your feelings from your work team</a></li>
+<li class="chapter" data-level="11.4" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#estimation-of-a-conditional-process-model-using-process"><i class="fa fa-check"></i><b>11.4</b> <del>Estimation of a conditional process model using PROCESS</del></a></li>
+<li class="chapter" data-level="11.5" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#quantifying-and-visualizing-conditional-indirect-and-direct-effects."><i class="fa fa-check"></i><b>11.5</b> Quantifying and visualizing (conditional) indirect and direct effects.</a><ul>
+<li class="chapter" data-level="11.5.1" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#visualizing-the-direct-and-indirect-effects."><i class="fa fa-check"></i><b>11.5.1</b> Visualizing the direct and indirect effects.</a></li>
+</ul></li>
+<li class="chapter" data-level="11.6" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#statistical-inference-3"><i class="fa fa-check"></i><b>11.6</b> Statistical inference</a><ul>
+<li class="chapter" data-level="11.6.1" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#inference-about-the-direct-effect."><i class="fa fa-check"></i><b>11.6.1</b> Inference about the direct effect.</a></li>
+<li class="chapter" data-level="11.6.2" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#inference-about-the-indirect-effect."><i class="fa fa-check"></i><b>11.6.2</b> Inference about the indirect effect.</a></li>
+<li class="chapter" data-level="11.6.3" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#probing-moderation-of-mediation."><i class="fa fa-check"></i><b>11.6.3</b> Probing moderation of mediation.</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#references-8"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#session-info-10"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html"><i class="fa fa-check"></i><b>12</b> Further Examples of Conditional Process Analysis</a><ul>
+<li class="chapter" data-level="12.1" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#revisiting-the-disaster-framing-study"><i class="fa fa-check"></i><b>12.1</b> Revisiting the disaster framing study</a></li>
+<li class="chapter" data-level="12.2" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#moderation-of-the-direct-and-indirect-effects-in-a-conditional-process-model"><i class="fa fa-check"></i><b>12.2</b> Moderation of the direct and indirect effects in a conditional process model</a><ul>
+<li class="chapter" data-level="12.2.1" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#estimation-using-process."><i class="fa fa-check"></i><b>12.2.1</b> <del>Estimation using PROCESS</del>.</a></li>
+<li class="chapter" data-level="12.2.2" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#quantifying-direct-and-indirect-effects."><i class="fa fa-check"></i><b>12.2.2</b> Quantifying direct and indirect effects.</a></li>
+<li class="chapter" data-level="12.2.3" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#visualizing-the-direct-and-indirect-effects.-1"><i class="fa fa-check"></i><b>12.2.3</b> Visualizing the direct and indirect effects.</a></li>
+<li class="chapter" data-level="12.2.4" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#bonus-lets-replace-sapply-with-map."><i class="fa fa-check"></i><b>12.2.4</b> <strong>Bonus</strong>: Let’s replace <code>sapply()</code> with <code>map()</code>.</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#statistical-inference-4"><i class="fa fa-check"></i><b>12.3</b> Statistical inference</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#inference-about-the-direct-effect.-1"><i class="fa fa-check"></i><b>12.3.1</b> Inference about the direct effect.</a></li>
+<li class="chapter" data-level="12.3.2" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#inference-about-the-indirect-effect.-1"><i class="fa fa-check"></i><b>12.3.2</b> Inference about the indirect effect.</a></li>
+<li class="chapter" data-level="12.3.3" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#pruning-the-model."><i class="fa fa-check"></i><b>12.3.3</b> Pruning the model.</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#mediated-moderation"><i class="fa fa-check"></i><b>12.4</b> Mediated moderation</a><ul>
+<li class="chapter" data-level="12.4.1" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#mediated-moderation-as-the-indirect-effect-of-a-product."><i class="fa fa-check"></i><b>12.4.1</b> Mediated moderation as the indirect effect of a product.</a></li>
+<li class="chapter" data-level="12.4.2" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#why-mediated-moderation-is-neither-interesting-nor-meaningful."><i class="fa fa-check"></i><b>12.4.2</b> Why mediated moderation is neither interesting nor meaningful.</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#references-9"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#session-info-11"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html"><i class="fa fa-check"></i><b>13</b> Conditional Process Analysis with a Multicategorical Antecedent</a><ul>
+<li class="chapter" data-level="13.1" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#revisiting-sexual-discrimination-in-the-workplace"><i class="fa fa-check"></i><b>13.1</b> Revisiting sexual discrimination in the workplace</a></li>
+<li class="chapter" data-level="13.2" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#looking-at-the-components-of-the-indirect-effect-of-x"><i class="fa fa-check"></i><b>13.2</b> Looking at the components of the indirect effect of <span class="math inline">\(X\)</span></a><ul>
+<li class="chapter" data-level="13.2.1" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#examiing-the-first-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.1</b> Examiing the first stage of the mediation process.</a></li>
+<li class="chapter" data-level="13.2.2" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#estimating-the-second-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.2</b> Estimating the second stage of the mediation process.</a></li>
+</ul></li>
+<li class="chapter" data-level="13.3" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#relative-conditional-indirect-effects"><i class="fa fa-check"></i><b>13.3</b> Relative conditional indirect effects</a></li>
+<li class="chapter" data-level="13.4" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#testing-and-probing-moderation-of-mediation"><i class="fa fa-check"></i><b>13.4</b> Testing and probing moderation of mediation</a><ul>
+<li class="chapter" data-level="13.4.1" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#a-test-of-moderation-of-the-relative-indirect-effect."><i class="fa fa-check"></i><b>13.4.1</b> A test of moderation of the relative indirect effect.</a></li>
+<li class="chapter" data-level="13.4.2" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#probing-moderation-of-mediation.-2"><i class="fa fa-check"></i><b>13.4.2</b> Probing moderation of mediation.</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#relative-conditional-direct-effects"><i class="fa fa-check"></i><b>13.5</b> Relative conditional direct effects</a></li>
+<li class="chapter" data-level="" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#references-10"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#session-info-12"><i class="fa fa-check"></i>Session info</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">recoding <em>Introduction to Mediation, Moderation, and Conditional Process Analysis</em></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="fundamentals-of-linear-regression" class="section level1">
+<h1><span class="header-section-number">2</span> Fundamentals of Linear Regression</h1>
+<div id="correlation-and-prediction" class="section level2">
+<h2><span class="header-section-number">2.1</span> Correlation and prediction</h2>
+<p>Here we load a couple necessary packages, load the data, and take a peek.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)
+
+glbwarm &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="st">&quot;data/glbwarm/glbwarm.csv&quot;</span>)
+
+<span class="kw">glimpse</span>(glbwarm)
+<span class="co">#&gt; Observations: 815</span>
+<span class="co">#&gt; Variables: 7</span>
+<span class="co">#&gt; $ govact   &lt;dbl&gt; 3.6, 5.0, 6.6, 1.0, 4.0, 7.0, 6.8, 5.6, 6.0, 2.6, 1.4, 5.6, 7.0, 3.8, 3.4, 4.2, 1.0, 2.6...</span>
+<span class="co">#&gt; $ posemot  &lt;dbl&gt; 3.67, 2.00, 2.33, 5.00, 2.33, 1.00, 2.33, 4.00, 5.00, 5.00, 1.00, 4.00, 1.00, 5.67, 3.00...</span>
+<span class="co">#&gt; $ negemot  &lt;dbl&gt; 4.67, 2.33, 3.67, 5.00, 1.67, 6.00, 4.00, 5.33, 6.00, 2.00, 1.00, 4.00, 5.00, 4.67, 2.00...</span>
+<span class="co">#&gt; $ ideology &lt;int&gt; 6, 2, 1, 1, 4, 3, 4, 5, 4, 7, 6, 4, 2, 4, 5, 2, 6, 4, 2, 4, 4, 2, 6, 4, 4, 3, 4, 5, 4, 5...</span>
+<span class="co">#&gt; $ age      &lt;int&gt; 61, 55, 85, 59, 22, 34, 47, 65, 50, 60, 71, 60, 71, 59, 32, 36, 69, 70, 41, 48, 38, 63, ...</span>
+<span class="co">#&gt; $ sex      &lt;int&gt; 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1...</span>
+<span class="co">#&gt; $ partyid  &lt;int&gt; 2, 1, 1, 1, 1, 2, 1, 1, 2, 3, 2, 1, 1, 1, 1, 1, 2, 3, 1, 3, 2, 1, 3, 2, 1, 1, 1, 3, 1, 1...</span></code></pre></div>
+<p>If you are new to tidyverse-style syntax, possibly the oddest component is the pipe (i.e., <code>%&gt;%</code>). I’m not going to explain the <code>%&gt;%</code> in this project, but you might learn more about in <a href="https://www.youtube.com/watch?v=9yjhxvu-pDg">this brief clip</a>, starting around <a href="https://www.youtube.com/watch?v=K-ss_ag2k9E&amp;t=1285s">minute 21:25 in this talk by Wickham</a>, or in <a href="http://r4ds.had.co.nz/transform.html#combining-multiple-operations-with-the-pipe">section 5.6.1 from Grolemund and Wickham’s <em>R for Data Science</em></a>. Really, all of chapter 5 of <em>R4DS</em> is great for new R and new tidyverse users, and their chapter 3 is a nice introduction to plotting with ggplot2.</p>
+<p>Here is our version of Figure 2.1.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">glbwarm <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(negemot, govact) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">count</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> negemot, <span class="dt">y =</span> govact)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">size =</span> n)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;NEGEMOT: Negative emotions about climate change (&quot;</span>, <span class="kw">italic</span>(<span class="st">&quot;X&quot;</span>), <span class="st">&quot;)&quot;</span>)),
+       <span class="dt">y =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;GOVACT: Support for governmentaction (&quot;</span>, <span class="kw">italic</span>(<span class="st">&quot;Y&quot;</span>), <span class="st">&quot;)&quot;</span>))) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</code></pre></div>
+<p><img src="02_files/figure-html/unnamed-chunk-4-1.png" width="480" /></p>
+<p>There are other ways to handle the <a href="http://ggplot2.tidyverse.org/reference/position_jitter.html">overplotting issue, such as jittering</a>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">glbwarm <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> negemot, <span class="dt">y =</span> govact)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_jitter</span>(<span class="dt">height =</span> .<span class="dv">05</span>, <span class="dt">width =</span> .<span class="dv">05</span>, 
+              <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">2</span>, <span class="dt">size =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;NEGEMOT: Negative emotions about climate change (&quot;</span>, <span class="kw">italic</span>(<span class="st">&quot;X&quot;</span>), <span class="st">&quot;)&quot;</span>)),
+       <span class="dt">y =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;GOVACT: Support for governmentaction (&quot;</span>, <span class="kw">italic</span>(<span class="st">&quot;Y&quot;</span>), <span class="st">&quot;)&quot;</span>))) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="02_files/figure-html/unnamed-chunk-5-1.png" width="480" /></p>
+<p>Here’s the simple Pearson’s correlation coefficient.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(glbwarm<span class="op">$</span>negemot, glbwarm<span class="op">$</span>govact)
+<span class="co">#&gt; [1] 0.578</span></code></pre></div>
+<p>If you want more plentiful output, the <code>cor.test()</code> function provides a <span class="math inline">\(t\)</span>-value, the degrees of freedom, the corresponding <span class="math inline">\(p\)</span>-value and the 95% confidence intervals, in addition to the Pearson’s correlation coefficient.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor.test</span>(glbwarm<span class="op">$</span>negemot, glbwarm<span class="op">$</span>govact)
+<span class="co">#&gt; </span>
+<span class="co">#&gt;  Pearson&#39;s product-moment correlation</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; data:  glbwarm$negemot and glbwarm$govact</span>
+<span class="co">#&gt; t = 20, df = 800, p-value &lt;2e-16</span>
+<span class="co">#&gt; alternative hypothesis: true correlation is not equal to 0</span>
+<span class="co">#&gt; 95 percent confidence interval:</span>
+<span class="co">#&gt;  0.530 0.622</span>
+<span class="co">#&gt; sample estimates:</span>
+<span class="co">#&gt;   cor </span>
+<span class="co">#&gt; 0.578</span></code></pre></div>
+<p>To get the Bayesian version, we’ll open our focal statistical package, Bürkner’s <a href="https://github.com/paul-buerkner/brms">brms</a>. [And I’ll briefly note that you could also do many of these analyses with other packages, such as <a href="https://cran.r-project.org/web/packages/blavaan/index.html">blavaan</a>. I just prefer brms.]</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(brms)</code></pre></div>
+<p>We’ll start simple and just use the default priors and settings, but with the addition of parallel sampling via <code>cores = 4</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model1 &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> glbwarm, <span class="dt">family =</span> gaussian,
+      <span class="kw">cbind</span>(negemot, govact) <span class="op">~</span><span class="st"> </span><span class="dv">1</span>,
+      <span class="dt">chains =</span> <span class="dv">4</span>, <span class="dt">cores =</span> <span class="dv">4</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(model1)
+<span class="co">#&gt;  Family: MV(gaussian, gaussian) </span>
+<span class="co">#&gt;   Links: mu = identity; sigma = identity</span>
+<span class="co">#&gt;          mu = identity; sigma = identity </span>
+<span class="co">#&gt; Formula: negemot ~ 1 </span>
+<span class="co">#&gt;          govact ~ 1 </span>
+<span class="co">#&gt;    Data: glbwarm (Number of observations: 815) </span>
+<span class="co">#&gt; Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;</span>
+<span class="co">#&gt;          total post-warmup samples = 4000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Population-Level Effects: </span>
+<span class="co">#&gt;                   Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat</span>
+<span class="co">#&gt; negemot_Intercept     3.56      0.05     3.45     3.67       3633 1.00</span>
+<span class="co">#&gt; govact_Intercept      4.59      0.05     4.50     4.68       3647 1.00</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Family Specific Parameters: </span>
+<span class="co">#&gt;                        Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat</span>
+<span class="co">#&gt; sigma_negemot              1.53      0.04     1.46     1.61       3603 1.00</span>
+<span class="co">#&gt; sigma_govact               1.36      0.03     1.30     1.43       3558 1.00</span>
+<span class="co">#&gt; rescor(negemot,govact)     0.58      0.02     0.53     0.62       3800 1.00</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample </span>
+<span class="co">#&gt; is a crude measure of effective sample size, and Rhat is the potential </span>
+<span class="co">#&gt; scale reduction factor on split chains (at convergence, Rhat = 1).</span></code></pre></div>
+<p>Within the brms framework, <span class="math inline">\(\sigma\)</span> of the Gaussian likelihood is considered a family-specific parameter (e.g., there is no <span class="math inline">\(\sigma\)</span> for the Poisson distribution). When you have an intercept-only regression model with multiple variables, the covariance among their <span class="math inline">\(\sigma\)</span> parameters, <code>rescor(negemot,govact)</code> in this case, is a correlation.</p>
+<p>To learn more about the multivariate syntax in brms, click <a href="https://cran.r-project.org/web/packages/brms/vignettes/brms_multivariate.html">here</a> or code <code>vignette(&quot;brms_multivariate&quot;)</code>.</p>
+<p>But to clarify the output:</p>
+<ul>
+<li>‘Estimate’ = the posterior mean, analogous to the frequentist point estimate</li>
+<li>‘Est.Error’ = the posterior <span class="math inline">\(SD\)</span>, analogous to the frequentist standard error</li>
+<li>‘l-95% CI’ = the lower-level of the percentile-based 95% Bayesian credible interval</li>
+<li>‘u-95% CI’ = the upper-level of the same</li>
+</ul>
+</div>
+<div id="the-simple-linear-regression-model" class="section level2">
+<h2><span class="header-section-number">2.2</span> The simple linear regression model</h2>
+<p>Here is how one might get the simple OLS coefficients in base R with the <code>lm()</code> function.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(model2 &lt;-<span class="st"> </span><span class="kw">lm</span>(<span class="dt">data =</span> glbwarm, govact <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>negemot))
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; lm(formula = govact ~ 1 + negemot, data = glbwarm)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Coefficients:</span>
+<span class="co">#&gt; (Intercept)      negemot  </span>
+<span class="co">#&gt;       2.757        0.514</span></code></pre></div>
+<p>For more detailed output, put the model object <code>model2</code> into the <code>summary()</code> function.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(model2)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; lm(formula = govact ~ 1 + negemot, data = glbwarm)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Residuals:</span>
+<span class="co">#&gt;    Min     1Q Median     3Q    Max </span>
+<span class="co">#&gt; -4.329 -0.673  0.102  0.755  3.214 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Coefficients:</span>
+<span class="co">#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    </span>
+<span class="co">#&gt; (Intercept)   2.7573     0.0987    27.9   &lt;2e-16 ***</span>
+<span class="co">#&gt; negemot       0.5142     0.0255    20.2   &lt;2e-16 ***</span>
+<span class="co">#&gt; ---</span>
+<span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Residual standard error: 1.11 on 813 degrees of freedom</span>
+<span class="co">#&gt; Multiple R-squared:  0.334,  Adjusted R-squared:  0.333 </span>
+<span class="co">#&gt; F-statistic:  407 on 1 and 813 DF,  p-value: &lt;2e-16</span></code></pre></div>
+<p>Here’s the Bayesian model in brms.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model2 &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> glbwarm, <span class="dt">family =</span> gaussian,
+      govact <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>negemot,
+      <span class="dt">chains =</span> <span class="dv">4</span>, <span class="dt">cores =</span> <span class="dv">4</span>)</code></pre></div>
+<p>There are several ways to get a brms model summary. A go-to is with the <code>print()</code> function.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(model2)
+<span class="co">#&gt;  Family: gaussian </span>
+<span class="co">#&gt;   Links: mu = identity; sigma = identity </span>
+<span class="co">#&gt; Formula: govact ~ 1 + negemot </span>
+<span class="co">#&gt;    Data: glbwarm (Number of observations: 815) </span>
+<span class="co">#&gt; Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;</span>
+<span class="co">#&gt;          total post-warmup samples = 4000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Population-Level Effects: </span>
+<span class="co">#&gt;           Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat</span>
+<span class="co">#&gt; Intercept     2.76      0.10     2.56     2.96       4000 1.00</span>
+<span class="co">#&gt; negemot       0.51      0.03     0.46     0.57       3803 1.00</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Family Specific Parameters: </span>
+<span class="co">#&gt;       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat</span>
+<span class="co">#&gt; sigma     1.11      0.03     1.06     1.17       4000 1.00</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample </span>
+<span class="co">#&gt; is a crude measure of effective sample size, and Rhat is the potential </span>
+<span class="co">#&gt; scale reduction factor on split chains (at convergence, Rhat = 1).</span></code></pre></div>
+<p>The <code>summary()</code> function works very much the same way. To get a more focused look, you can use the <code>posterior_summary()</code> function:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">posterior_summary</span>(model2)
+<span class="co">#&gt;              Estimate Est.Error      Q2.5     Q97.5</span>
+<span class="co">#&gt; b_Intercept     2.758    0.1021     2.556     2.956</span>
+<span class="co">#&gt; b_negemot       0.514    0.0261     0.462     0.565</span>
+<span class="co">#&gt; sigma           1.112    0.0275     1.060     1.167</span>
+<span class="co">#&gt; lp__        -1248.621    1.2617 -1251.883 -1247.216</span></code></pre></div>
+<p>That also yields the log posterior, <code>lp__</code>, which you can learn more about <a href="https://cran.r-project.org/web/packages/rstan/vignettes/rstan.html#the-log-posterior-function-and-gradient">here</a> or <a href="https://www.jax.org/news-and-insights/jax-blog/2015/october/lp-in-stan-output">here</a>. We won’t focus on the <code>lp__</code> directly in this project.</p>
+<p>But anyways, the <code>Q2.5</code> and <code>Q97.5</code>, are the lower- and upper-levels of the 95% credible intervals. The <code>Q</code> prefix stands for quantile (<a href="https://github.com/paul-buerkner/brms/issues/425">see this thread</a>). In this case, these are a renamed version of the <code>l-95% CI</code> and <code>u-95% CI</code> columns from our <code>print()</code> output.</p>
+<p>To make a quick plot of the regression line, one can use the convenient brms function, <code>marginal_effects()</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">marginal_effects</span>(model2)</code></pre></div>
+<p><img src="02_files/figure-html/unnamed-chunk-14-1.png" width="432" /></p>
+<p>If you want to customize that output, you might nest it in <code>plot()</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(<span class="kw">marginal_effects</span>(model2),
+     <span class="dt">points =</span> T,
+     <span class="dt">point_args =</span> <span class="kw">c</span>(<span class="dt">height =</span> .<span class="dv">05</span>, <span class="dt">width =</span> .<span class="dv">05</span>, 
+                    <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">2</span>, <span class="dt">size =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>))</code></pre></div>
+<p><img src="02_files/figure-html/unnamed-chunk-15-1.png" width="432" /></p>
+<p>It’s also useful to be able to work with the output of a brms model directly. For our first step, we’ll put our HMC draws into a data frame.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">post &lt;-<span class="st"> </span><span class="kw">posterior_samples</span>(model2)
+
+<span class="kw">head</span>(post)
+<span class="co">#&gt;   b_Intercept b_negemot sigma  lp__</span>
+<span class="co">#&gt; 1        2.73     0.525  1.05 -1250</span>
+<span class="co">#&gt; 2        2.86     0.505  1.11 -1249</span>
+<span class="co">#&gt; 3        2.76     0.520  1.11 -1247</span>
+<span class="co">#&gt; 4        2.98     0.446  1.12 -1251</span>
+<span class="co">#&gt; 5        2.91     0.462  1.08 -1250</span>
+<span class="co">#&gt; 6        2.77     0.512  1.12 -1247</span></code></pre></div>
+<p>Next, we’ll use the <code>fitted()</code> function to simulate model-implied summaries for the expected <code>govact</code> value, given particular predictor values. Our first model only has <code>negemot</code> as a predictor, and we’ll ask for the expected <code>govact</code> values for <code>negemot</code> ranging from 0 to 7.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nd &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">negemot =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">7</span>, <span class="dt">length.out =</span> <span class="dv">30</span>))
+
+f_model2 &lt;-
+<span class="st">  </span><span class="kw">fitted</span>(model2,
+         <span class="dt">newdata =</span> nd) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">bind_cols</span>(nd)
+
+f_model2
+<span class="co">#&gt; # A tibble: 30 x 5</span>
+<span class="co">#&gt;   Estimate Est.Error  Q2.5 Q97.5 negemot</span>
+<span class="co">#&gt;      &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;</span>
+<span class="co">#&gt; 1     2.76    0.102   2.56  2.96   0    </span>
+<span class="co">#&gt; 2     2.88    0.0963  2.69  3.07   0.241</span>
+<span class="co">#&gt; 3     3.01    0.0906  2.83  3.18   0.483</span>
+<span class="co">#&gt; 4     3.13    0.0849  2.96  3.29   0.724</span>
+<span class="co">#&gt; 5     3.25    0.0794  3.10  3.41   0.966</span>
+<span class="co">#&gt; 6     3.38    0.0739  3.23  3.52   1.21 </span>
+<span class="co">#&gt; # ... with 24 more rows</span></code></pre></div>
+<p>The first two columns should look familiar to the output from <code>print(model2)</code>, above. The next two columns, <code>Q2.5</code> and <code>Q97.5</code>, are the lower- and upper-levels of the 95% credible intervals, like we got from <code>posterior_samples()</code>. We got the final column with the <code>bind_cols(nd)</code> code.</p>
+<p>Here’s our bespoke version of Figure 2.4.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">glbwarm <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(negemot, govact) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">count</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> negemot)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> govact, <span class="dt">size =</span> n)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="dt">data =</span> f_model2,
+              <span class="kw">aes</span>(<span class="dt">ymin =</span> Q2.<span class="dv">5</span>,
+                  <span class="dt">ymax =</span> Q97.<span class="dv">5</span>),
+              <span class="dt">fill =</span> <span class="st">&quot;grey75&quot;</span>, <span class="dt">alpha =</span> <span class="dv">3</span><span class="op">/</span><span class="dv">4</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="dt">data =</span> f_model2,
+            <span class="kw">aes</span>(<span class="dt">y =</span> Estimate)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">2.2</span>, <span class="dt">y =</span> <span class="fl">7.5</span>, <span class="dt">label =</span> <span class="st">&quot;Cases with positive residuals&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;red3&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="dt">x =</span> <span class="fl">4.75</span>, <span class="dt">y =</span> .<span class="dv">8</span>, <span class="dt">label =</span> <span class="st">&quot;Cases with negative residuals&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;blue3&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;NEGEMOT: Negative emotions about climate change (&quot;</span>, <span class="kw">italic</span>(<span class="st">&quot;X&quot;</span>), <span class="st">&quot;)&quot;</span>)),
+       <span class="dt">y =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;GOVACT: Support for governmentaction (&quot;</span>, <span class="kw">italic</span>(<span class="st">&quot;Y&quot;</span>), <span class="st">&quot;)&quot;</span>))) <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="kw">range</span>(glbwarm<span class="op">$</span>negemot)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</code></pre></div>
+<p><img src="02_files/figure-html/unnamed-chunk-18-1.png" width="480" /></p>
+<div id="interpretation-of-the-constant-and-regression-coefficient" class="section level3">
+<h3><span class="header-section-number">2.2.1</span> Interpretation of the constant and regression coefficient</h3>
+<p>Nothing to recode, here.</p>
+</div>
+<div id="the-standardized-regression-model" class="section level3">
+<h3><span class="header-section-number">2.2.2</span> The standardized regression model</h3>
+</div>
+<div id="simple-linear-regression-with-a-dichotomous-antecedent-variable." class="section level3">
+<h3><span class="header-section-number">2.2.3</span> Simple linear regression with a dichotomous antecedent variable.</h3>
+<p>Here we add <code>sex</code> to the model.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model3 &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> glbwarm, <span class="dt">family =</span> gaussian,
+      govact <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>sex,
+      <span class="dt">chains =</span> <span class="dv">4</span>, <span class="dt">cores =</span> <span class="dv">4</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(model3)
+<span class="co">#&gt;  Family: gaussian </span>
+<span class="co">#&gt;   Links: mu = identity; sigma = identity </span>
+<span class="co">#&gt; Formula: govact ~ 1 + sex </span>
+<span class="co">#&gt;    Data: glbwarm (Number of observations: 815) </span>
+<span class="co">#&gt; Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;</span>
+<span class="co">#&gt;          total post-warmup samples = 4000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Population-Level Effects: </span>
+<span class="co">#&gt;           Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat</span>
+<span class="co">#&gt; Intercept     4.72      0.07     4.58     4.85       3872 1.00</span>
+<span class="co">#&gt; sex          -0.27      0.10    -0.45    -0.07       3960 1.00</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Family Specific Parameters: </span>
+<span class="co">#&gt;       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat</span>
+<span class="co">#&gt; sigma     1.36      0.03     1.29     1.42       4000 1.00</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample </span>
+<span class="co">#&gt; is a crude measure of effective sample size, and Rhat is the potential </span>
+<span class="co">#&gt; scale reduction factor on split chains (at convergence, Rhat = 1).</span></code></pre></div>
+<p>Our model output is very close to that in the text. If you just wanted the coefficients, you might use the <code>fixef()</code> function.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fixef</span>(model3) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">3</span>)
+<span class="co">#&gt;           Estimate Est.Error  Q2.5  Q97.5</span>
+<span class="co">#&gt; Intercept    4.716     0.068  4.58  4.850</span>
+<span class="co">#&gt; sex         -0.265     0.097 -0.45 -0.073</span></code></pre></div>
+<p>Though not necessary, we used the <code>round()</code> function to reduce the number of significant digits in the output.</p>
+<p>You can get a little more information with the <code>posterior_summary()</code> function.</p>
+<p>But since Bayesian estimation yields an entire posterior distribution, you can visualize that distribution in any number of ways. Because we’ll be using ggplot2, we’ll need to put the posterior draws into a data frame before plotting.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">post &lt;-<span class="st"> </span><span class="kw">posterior_samples</span>(model3)</code></pre></div>
+<p>We could summarize the posterior with boxplots:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">post <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">female =</span> b_Intercept) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">male =</span> female <span class="op">+</span><span class="st"> </span>b_sex) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(male, female) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> key, <span class="dt">y =</span> value)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_boxplot</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> key)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</code></pre></div>
+<p><img src="02_files/figure-html/unnamed-chunk-22-1.png" width="288" /></p>
+<p>Or with overlapping density plots:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">post <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">female =</span> b_Intercept) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">male =</span> female <span class="op">+</span><span class="st"> </span>b_sex) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(male, female) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">group =</span> key, <span class="dt">fill =</span> key)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_density</span>(<span class="dt">color =</span> <span class="st">&quot;transparent&quot;</span>, <span class="dt">alpha =</span> <span class="dv">3</span><span class="op">/</span><span class="dv">4</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="02_files/figure-html/unnamed-chunk-23-1.png" width="384" /></p>
+<p>Or even with violin plots with superimposed posterior medians and 95% intervals:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">post <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">female =</span> b_Intercept) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">male =</span> female <span class="op">+</span><span class="st"> </span>b_sex) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(male, female) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> key, <span class="dt">y =</span> value)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_violin</span>(<span class="kw">aes</span>(<span class="dt">fill =</span> key), <span class="dt">color =</span> <span class="st">&quot;transparent&quot;</span>, <span class="dt">alpha =</span> <span class="dv">3</span><span class="op">/</span><span class="dv">4</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">stat_summary</span>(<span class="dt">fun.y =</span> median,
+               <span class="dt">fun.ymin =</span> <span class="cf">function</span>(i){<span class="kw">quantile</span>(i, <span class="dt">probs =</span> .<span class="dv">025</span>)},
+               <span class="dt">fun.ymax =</span> <span class="cf">function</span>(i){<span class="kw">quantile</span>(i, <span class="dt">probs =</span> .<span class="dv">975</span>)}) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>)</code></pre></div>
+<p><img src="02_files/figure-html/unnamed-chunk-24-1.png" width="288" /></p>
+<p>For even more ideas, see Matthew Kay’s <a href="https://github.com/mjskay/tidybayes">tidybayes package</a>. You can also get a sense of the model estimates for women and men with a little addition. Here we continue to use the <code>round()</code> function to simplify the output.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># for women</span>
+<span class="kw">round</span>(<span class="kw">fixef</span>(model3)[<span class="dv">1</span>, ], <span class="dt">digits =</span> <span class="dv">2</span>)
+<span class="co">#&gt;  Estimate Est.Error      Q2.5     Q97.5 </span>
+<span class="co">#&gt;      4.72      0.07      4.58      4.85</span>
+
+<span class="co"># for men</span>
+<span class="kw">round</span>(<span class="kw">fixef</span>(model3)[<span class="dv">1</span>, ] <span class="op">+</span><span class="st"> </span><span class="kw">fixef</span>(model3)[<span class="dv">2</span>, ], <span class="dt">digits =</span> <span class="dv">2</span>)
+<span class="co">#&gt;  Estimate Est.Error      Q2.5     Q97.5 </span>
+<span class="co">#&gt;      4.45      0.17      4.13      4.78</span></code></pre></div>
+<p>Here’s the partially-standardized model, first with <code>lm()</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">glbwarm &lt;-
+<span class="st">  </span>glbwarm <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">govact_z =</span> (govact <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(govact))<span class="op">/</span><span class="kw">sd</span>(govact))
+
+<span class="kw">lm</span>(<span class="dt">data =</span> glbwarm, govact_z <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>sex)
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Call:</span>
+<span class="co">#&gt; lm(formula = govact_z ~ 1 + sex, data = glbwarm)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Coefficients:</span>
+<span class="co">#&gt; (Intercept)          sex  </span>
+<span class="co">#&gt;      0.0963      -0.1972</span></code></pre></div>
+<p>Now we’ll use Bayes.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model3_p_z &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> glbwarm, <span class="dt">family =</span> gaussian,
+      govact_z <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>sex,
+      <span class="dt">chains =</span> <span class="dv">4</span>, <span class="dt">cores =</span> <span class="dv">4</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fixef</span>(model3_p_z)
+<span class="co">#&gt;           Estimate Est.Error     Q2.5   Q97.5</span>
+<span class="co">#&gt; Intercept   0.0979    0.0477  0.00333  0.1916</span>
+<span class="co">#&gt; sex        -0.1996    0.0688 -0.33517 -0.0664</span></code></pre></div>
+</div>
+</div>
+<div id="alternative-explanations-for-association" class="section level2">
+<h2><span class="header-section-number">2.3</span> Alternative explanations for association</h2>
+<p>On page 46, Hayes produced a couple correlations. Here’s how to get them from base R.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(glbwarm<span class="op">$</span>sex, glbwarm<span class="op">$</span>negemot)
+<span class="co">#&gt; [1] -0.117</span>
+<span class="kw">cor</span>(glbwarm<span class="op">$</span>sex, glbwarm<span class="op">$</span>govact)
+<span class="co">#&gt; [1] -0.0986</span></code></pre></div>
+<p>Again, if we wanted to get full Bayesian estimates, we’d fit an intercept-only multivariate model.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">brm</span>(<span class="dt">data =</span> glbwarm, <span class="dt">family =</span> gaussian,
+    <span class="kw">cbind</span>(negemot, govact, sex) <span class="op">~</span><span class="st"> </span><span class="dv">1</span>,
+    <span class="dt">chains =</span> <span class="dv">4</span>, <span class="dt">cores =</span> <span class="dv">4</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>
+<span class="st">  </span><span class="kw">print</span>(<span class="dt">digits =</span> <span class="dv">3</span>)
+<span class="co">#&gt;  Family: MV(gaussian, gaussian, gaussian) </span>
+<span class="co">#&gt;   Links: mu = identity; sigma = identity</span>
+<span class="co">#&gt;          mu = identity; sigma = identity</span>
+<span class="co">#&gt;          mu = identity; sigma = identity </span>
+<span class="co">#&gt; Formula: negemot ~ 1 </span>
+<span class="co">#&gt;          govact ~ 1 </span>
+<span class="co">#&gt;          sex ~ 1 </span>
+<span class="co">#&gt;    Data: glbwarm (Number of observations: 815) </span>
+<span class="co">#&gt; Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;</span>
+<span class="co">#&gt;          total post-warmup samples = 4000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Population-Level Effects: </span>
+<span class="co">#&gt;                   Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat</span>
+<span class="co">#&gt; negemot_Intercept    3.558     0.054    3.453    3.660       4000 1.000</span>
+<span class="co">#&gt; govact_Intercept     4.587     0.048    4.490    4.678       4000 1.000</span>
+<span class="co">#&gt; sex_Intercept        0.489     0.018    0.454    0.522       4000 1.000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Family Specific Parameters: </span>
+<span class="co">#&gt;                        Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat</span>
+<span class="co">#&gt; sigma_negemot             1.532     0.038    1.459    1.607       4000 1.000</span>
+<span class="co">#&gt; sigma_govact              1.363     0.033    1.300    1.428       4000 1.000</span>
+<span class="co">#&gt; sigma_sex                 0.502     0.013    0.477    0.528       4000 1.000</span>
+<span class="co">#&gt; rescor(negemot,govact)    0.576     0.023    0.530    0.620       4000 1.000</span>
+<span class="co">#&gt; rescor(negemot,sex)      -0.117     0.034   -0.185   -0.046       4000 0.999</span>
+<span class="co">#&gt; rescor(govact,sex)       -0.097     0.035   -0.166   -0.027       4000 1.000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample </span>
+<span class="co">#&gt; is a crude measure of effective sample size, and Rhat is the potential </span>
+<span class="co">#&gt; scale reduction factor on split chains (at convergence, Rhat = 1).</span></code></pre></div>
+<p>For our purposes, the action is in the ‘rescor(<span class="math inline">\(i\)</span>, <span class="math inline">\(j\)</span>)’ portions of the ‘Family Specific Parameters’ section.</p>
+<p>Anyway, if you wanted to get all the Pearson’s correlations among the <code>glbwarm</code> variables, rather than piecewise <code>cor()</code> approach, you could use the <code>lowerCor()</code> function from the <a href="https://cran.r-project.org/web/packages/psych/index.html">psych package</a>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">psych<span class="op">::</span><span class="kw">lowerCor</span>(glbwarm[, <span class="dv">1</span><span class="op">:</span><span class="dv">7</span>], <span class="dt">digits =</span> <span class="dv">3</span>)
+<span class="co">#&gt;          govact posemt negemt idelgy age    sex    partyd</span>
+<span class="co">#&gt; govact    1.000                                          </span>
+<span class="co">#&gt; posemot   0.043  1.000                                   </span>
+<span class="co">#&gt; negemot   0.578  0.128  1.000                            </span>
+<span class="co">#&gt; ideology -0.418 -0.029 -0.349  1.000                     </span>
+<span class="co">#&gt; age      -0.097  0.042 -0.057  0.212  1.000              </span>
+<span class="co">#&gt; sex      -0.099  0.074 -0.117  0.133  0.166  1.000       </span>
+<span class="co">#&gt; partyid  -0.360 -0.036 -0.324  0.619  0.154  0.109  1.000</span></code></pre></div>
+</div>
+<div id="multiple-linear-regression" class="section level2">
+<h2><span class="header-section-number">2.4</span> Multiple linear regression</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model4 &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> glbwarm, <span class="dt">family =</span> gaussian,
+      govact <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>negemot <span class="op">+</span><span class="st"> </span>posemot <span class="op">+</span><span class="st"> </span>ideology <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>age,
+      <span class="dt">chains =</span> <span class="dv">4</span>, <span class="dt">cores =</span> <span class="dv">4</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(model4)
+<span class="co">#&gt;  Family: gaussian </span>
+<span class="co">#&gt;   Links: mu = identity; sigma = identity </span>
+<span class="co">#&gt; Formula: govact ~ 1 + negemot + posemot + ideology + sex + age </span>
+<span class="co">#&gt;    Data: glbwarm (Number of observations: 815) </span>
+<span class="co">#&gt; Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;</span>
+<span class="co">#&gt;          total post-warmup samples = 4000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Population-Level Effects: </span>
+<span class="co">#&gt;           Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat</span>
+<span class="co">#&gt; Intercept     4.06      0.20     3.66     4.45       4000 1.00</span>
+<span class="co">#&gt; negemot       0.44      0.03     0.39     0.49       4000 1.00</span>
+<span class="co">#&gt; posemot      -0.03      0.03    -0.08     0.03       4000 1.00</span>
+<span class="co">#&gt; ideology     -0.22      0.03    -0.27    -0.16       4000 1.00</span>
+<span class="co">#&gt; sex          -0.01      0.08    -0.16     0.14       4000 1.00</span>
+<span class="co">#&gt; age          -0.00      0.00    -0.01     0.00       4000 1.00</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Family Specific Parameters: </span>
+<span class="co">#&gt;       Estimate Est.Error l-95% CI u-95% CI Eff.Sample Rhat</span>
+<span class="co">#&gt; sigma     1.07      0.03     1.02     1.12       4000 1.00</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample </span>
+<span class="co">#&gt; is a crude measure of effective sample size, and Rhat is the potential </span>
+<span class="co">#&gt; scale reduction factor on split chains (at convergence, Rhat = 1).</span></code></pre></div>
+<p>Here is the posterior mean, what you might call the Bayesian point estimate, for someone with:</p>
+<ul>
+<li>negative emotions = 3,</li>
+<li>positive emotions = 4,</li>
+<li><code>ideology</code> = 2,</li>
+<li>is male (i.e., <code>sex</code> = 1), and</li>
+<li>is 30 years of <code>age</code></li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fixef</span>(model4)[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">fixef</span>(model4)[<span class="dv">2</span>]<span class="op">*</span><span class="dv">3</span> <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">fixef</span>(model4)[<span class="dv">3</span>]<span class="op">*</span><span class="dv">4</span> <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">fixef</span>(model4)[<span class="dv">4</span>]<span class="op">*</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">fixef</span>(model4)[<span class="dv">5</span>]<span class="op">*</span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">fixef</span>(model4)[<span class="dv">6</span>]<span class="op">*</span><span class="dv">30</span>
+<span class="co">#&gt; [1] 4.79</span></code></pre></div>
+<p>Here’s the same deal for a man of the same profile, but with one point higher on <code>negemot</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fixef</span>(model4)[<span class="dv">1</span>] <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">fixef</span>(model4)[<span class="dv">2</span>]<span class="op">*</span><span class="dv">4</span> <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">fixef</span>(model4)[<span class="dv">3</span>]<span class="op">*</span><span class="dv">4</span> <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">fixef</span>(model4)[<span class="dv">4</span>]<span class="op">*</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">fixef</span>(model4)[<span class="dv">5</span>]<span class="op">*</span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">fixef</span>(model4)[<span class="dv">6</span>]<span class="op">*</span><span class="dv">30</span>
+<span class="co">#&gt; [1] 5.23</span></code></pre></div>
+<p>If you want a full expression of the model uncertaintly in terms of the shape of the posterior distribution and the 95% intervals, you’ll probably just want to use <code>posterior_samples()</code> and do a little data processing.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">post &lt;-<span class="st"> </span><span class="kw">posterior_samples</span>(model4)
+
+post &lt;-
+<span class="st">  </span>post <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">our_posterior =</span> b_Intercept <span class="op">+</span><span class="st"> </span>b_negemot<span class="op">*</span><span class="dv">4</span> <span class="op">+</span><span class="st"> </span>b_posemot<span class="op">*</span><span class="dv">4</span> <span class="op">+</span><span class="st"> </span>b_ideology<span class="op">*</span><span class="dv">2</span> <span class="op">+</span><span class="st"> </span>b_sex<span class="op">*</span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>b_age<span class="op">*</span><span class="dv">30</span>)
+
+<span class="co"># This intermediary step will make it easier to specify the break points and their labels for the x-axis  </span>
+post_summary &lt;-
+<span class="st">  </span><span class="kw">quantile</span>(post<span class="op">$</span>our_posterior, <span class="dt">probs =</span> <span class="kw">c</span>(.<span class="dv">025</span>, .<span class="dv">5</span>, .<span class="dv">975</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">labels =</span> value <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">           </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">           </span><span class="kw">as.character</span>())
+
+<span class="kw">ggplot</span>(<span class="dt">data =</span> post,
+       <span class="kw">aes</span>(<span class="dt">x =</span> our_posterior)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_density</span>(<span class="dt">fill =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> post_summary<span class="op">$</span>value,
+             <span class="dt">size =</span> <span class="kw">c</span>(.<span class="dv">5</span>, .<span class="dv">75</span>, .<span class="dv">5</span>), <span class="dt">linetype =</span> <span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="ot">NULL</span>,
+                     <span class="dt">breaks =</span> post_summary<span class="op">$</span>value,
+                     <span class="dt">labels =</span> post_summary<span class="op">$</span>labels) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="ot">NULL</span>, <span class="dt">breaks =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;The expected govact score for a 30-year-old man for whom</span><span class="ch">\n</span><span class="st">negemot and posemot both equal 4 and ideology equals 2.</span><span class="ch">\n</span><span class="st">The solid and dashed white vertical lines are the posterior</span><span class="ch">\n</span><span class="st">median and 95% intervals, respectively.&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="02_files/figure-html/unnamed-chunk-34-1.png" width="384" /></p>
+<p>In the text, Hayes showed that individuals based on these two profiles would be expected to differ by 0.441 (i.e., 5.244 - 4.803 = 0.441). That’s fine if you’re only working with OLS point estimates. But a proper Bayesian approach would express the difference in terms of an entire poster distribution, or at least a point estimate accompanied by some sort of intervals. Here we’ll just work with the posterior to create a difference distribution. You could do that with a little deft <code>posterior_samples()</code> wrangling. Here we’ll employ <code>fitted()</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nd &lt;-
+<span class="st">  </span><span class="kw">tibble</span>(<span class="dt">negemot =</span> <span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">4</span>),
+         <span class="dt">posemot =</span> <span class="dv">4</span>,
+         <span class="dt">ideology =</span> <span class="dv">2</span>,
+         <span class="dt">sex =</span> <span class="dv">1</span>,
+         <span class="dt">age =</span> <span class="dv">30</span>)
+
+<span class="kw">fitted</span>(model4, 
+         <span class="dt">newdata =</span> nd,
+         <span class="dt">summary =</span> F) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">condition_a =</span> V1,
+         <span class="dt">contition_b =</span> V2) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">difference =</span> contition_b <span class="op">-</span><span class="st"> </span>condition_a) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> difference)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_density</span>(<span class="dt">fill =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;transparent&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="ot">NULL</span>, <span class="dt">breaks =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">ggtitle</span>(<span class="st">&quot;The posterior density for the difference between</span><span class="ch">\n</span><span class="st">the two conditions.&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="02_files/figure-html/unnamed-chunk-35-1.png" width="384" /></p>
+<div id="the-standardized-regression-model." class="section level3">
+<h3><span class="header-section-number">2.4.1</span> The standardized regression model.</h3>
+<p>Since brms doesn’t automatically give us the standardized coefficients the way OLS output often does, we’ll have to be proactive. One solution is just to standardized the data themselves and then re-fit the model with those standardized variables. That leads us to the issue of how one standardized variables to begin with. Recall that standardizing entails subtracting the mean of a variable from that variable and then dividing that value by the standard deviation. We don’t want to do that by hand. So one handy way is to make a custom function to do that work for us.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">sandardize &lt;-<span class="st"> </span><span class="cf">function</span>(x){
+  (x <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(x))<span class="op">/</span><span class="kw">sd</span>(x)
+}</code></pre></div>
+<p>Go <a href="http://r4ds.had.co.nz/functions.html">here</a> to learn more about making custom functions in R.</p>
+<p>Here we’ll employ our custom <code>standardize()</code> function to make standardized versions of our variables.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">glbwarm &lt;-
+<span class="st">  </span>glbwarm <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">posemot_z  =</span> <span class="kw">sandardize</span>(posemot), 
+         <span class="dt">negemot_z  =</span> <span class="kw">sandardize</span>(negemot), 
+         <span class="dt">ideology_z =</span> <span class="kw">sandardize</span>(ideology),
+         <span class="dt">sex_z      =</span> <span class="kw">sandardize</span>(sex),
+         <span class="dt">age_z      =</span> <span class="kw">sandardize</span>(age))</code></pre></div>
+<p>Now we’ve got us our standardized variables, let’s fit a standardized model.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model4_z &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> glbwarm, <span class="dt">family =</span> gaussian,
+      govact_z <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>negemot_z <span class="op">+</span><span class="st"> </span>posemot_z <span class="op">+</span><span class="st"> </span>ideology_z <span class="op">+</span><span class="st"> </span>sex_z <span class="op">+</span><span class="st"> </span>age_z,
+      <span class="dt">chains =</span> <span class="dv">4</span>, <span class="dt">cores =</span> <span class="dv">4</span>)</code></pre></div>
+<p>Here are the newly standardized coefficient summaries, minus the <code>Intercept</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fixef</span>(model4_z)[<span class="op">-</span><span class="dv">1</span>, ] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">3</span>)
+<span class="co">#&gt;            Estimate Est.Error   Q2.5  Q97.5</span>
+<span class="co">#&gt; negemot_z     0.495     0.030  0.435  0.553</span>
+<span class="co">#&gt; posemot_z    -0.027     0.028 -0.082  0.025</span>
+<span class="co">#&gt; ideology_z   -0.243     0.031 -0.304 -0.182</span>
+<span class="co">#&gt; sex_z        -0.003     0.028 -0.059  0.051</span>
+<span class="co">#&gt; age_z        -0.016     0.029 -0.073  0.041</span></code></pre></div>
+<p>Our coefficients match up nicely with those in the text. Just as with Hayes’s OLS estimates, we should not attempt to interpret the standardized <code>sex_z</code> coefficient from our Bayesian model.</p>
+<p>Here’s how we’d fit a <em>partially</em>-standardized model–a model in which all variables except for <code>sex</code> are standardized.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model4_z_p &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">update</span>(model4_z,
+         <span class="dt">newdata =</span> glbwarm,
+         <span class="dt">formula =</span> govact_z <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>negemot_z <span class="op">+</span><span class="st"> </span>posemot_z <span class="op">+</span><span class="st"> </span>ideology_z <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>age_z,
+         <span class="dt">chains =</span> <span class="dv">4</span>, <span class="dt">cores =</span> <span class="dv">4</span>)</code></pre></div>
+<p>And here are the coefficient summaries, including the <code>Intercept</code>, for the partially-standardized model.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fixef</span>(model4_z_p) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">3</span>)
+<span class="co">#&gt;            Estimate Est.Error   Q2.5  Q97.5</span>
+<span class="co">#&gt; Intercept     0.003     0.040 -0.075  0.081</span>
+<span class="co">#&gt; negemot_z     0.494     0.029  0.438  0.550</span>
+<span class="co">#&gt; posemot_z    -0.027     0.028 -0.082  0.027</span>
+<span class="co">#&gt; ideology_z   -0.243     0.030 -0.302 -0.184</span>
+<span class="co">#&gt; sex          -0.006     0.055 -0.114  0.101</span>
+<span class="co">#&gt; age_z        -0.015     0.028 -0.069  0.038</span></code></pre></div>
+<p>As Hayes wrote, now <code>sex</code> = -0.006 has a sensible interpretation. “We can say that men and women differ by [-0.006] standard deviations in their support for government action when all other variables in the model are held constant (p. 53).”</p>
+<p>On page 54, Hayes gave us the equation to transform unstandardized coefficients to standardized ones:</p>
+<p><span class="math display">\[\tilde{b}_{i} = b_{i}\left(\frac{SD_{X_{i}}}{SD_{Y}}\right)\]</span></p>
+<p>Let’s give it a whirl with <code>negemot</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Here&#39;s the coefficient for `negemot` from the standardized model, `model4_z`</span>
+<span class="kw">fixef</span>(model4_z)[<span class="st">&quot;negemot_z&quot;</span>, <span class="st">&quot;Estimate&quot;</span>]
+<span class="co">#&gt; [1] 0.495</span>
+
+<span class="co"># Here&#39;s the coefficient for `negemot` from the unstandardized model, `model4`</span>
+<span class="kw">fixef</span>(model4)[<span class="st">&quot;negemot&quot;</span>, <span class="st">&quot;Estimate&quot;</span>]
+<span class="co">#&gt; [1] 0.441</span>
+
+<span class="co"># And here we use Hayes&#39;s formula to standardize the unstandardized coefficient</span>
+<span class="kw">fixef</span>(model4)[<span class="st">&quot;negemot&quot;</span>, <span class="st">&quot;Estimate&quot;</span>]<span class="op">*</span>(<span class="kw">sd</span>(glbwarm<span class="op">$</span>negemot)<span class="op">/</span><span class="kw">sd</span>(glbwarm<span class="op">$</span>govact))
+<span class="co">#&gt; [1] 0.495</span></code></pre></div>
+<p>Looks like we got it within rounding error–pretty good! However, that was just the posterior mean, the Bayesian point estimate. If we want to more fully express the uncertainty around the mean–and we do–, we’ll need to work with the posterior draws.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># the posterior draws from the unstandardized model</span>
+<span class="kw">posterior_samples</span>(model4) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># using Hayes&#39;s formula to standardize `b_negemot`</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">hand-made b_negemot_z</span><span class="st">`</span> =<span class="st"> </span>b_negemot<span class="op">*</span>(<span class="kw">sd</span>(glbwarm<span class="op">$</span>negemot)<span class="op">/</span><span class="kw">sd</span>(glbwarm<span class="op">$</span>govact))) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># taking on the `b_negemot_z` column from the standardized `model4_z` models posterior draws</span>
+<span class="st">  </span><span class="kw">bind_cols</span>(<span class="kw">posterior_samples</span>(model4_z) <span class="op">%&gt;%</span>
+<span class="st">              </span><span class="kw">select</span>(b_negemot_z)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># isolating those two columns</span>
+<span class="st">  </span><span class="kw">select</span>(<span class="st">`</span><span class="dt">hand-made b_negemot_z</span><span class="st">`</span>, b_negemot_z) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># converting the data to the long format and grouping by `key`</span>
+<span class="st">  </span><span class="kw">gather</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(key) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># here we summarize the results</span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">mean =</span> <span class="kw">mean</span>(value),
+            <span class="dt">sd =</span> <span class="kw">sd</span>(value),
+            <span class="dt">ll =</span> <span class="kw">quantile</span>(value, <span class="dt">probs =</span> .<span class="dv">025</span>),
+            <span class="dt">ul =</span> <span class="kw">quantile</span>(value, <span class="dt">probs =</span> .<span class="dv">975</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate_if</span>(is.double, round, <span class="dt">digits =</span> <span class="dv">3</span>)
+<span class="co">#&gt; # A tibble: 2 x 5</span>
+<span class="co">#&gt;   key                    mean    sd    ll    ul</span>
+<span class="co">#&gt;   &lt;chr&gt;                 &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 b_negemot_z           0.495 0.03  0.435 0.553</span>
+<span class="co">#&gt; 2 hand-made b_negemot_z 0.495 0.029 0.437 0.552</span></code></pre></div>
+<p>So our summary confirms that we can apply Hayes’s formula to a <code>posterior_samples()</code> column in order to get fuller summary statistics for a hand-converted standardized coefficient. This would be in full compliance with, say, APA recommendations to include 95% intervals with all effect sizes–the standardized regression coefficient being the effect size, here.</p>
+</div>
+</div>
+<div id="measures-of-model-fit" class="section level2">
+<h2><span class="header-section-number">2.5</span> Measures of model fit</h2>
+<p>In the Bayesian world, we don’t tend to appeal to the <span class="math inline">\(SS_{residual}\)</span>, the <span class="math inline">\(MS_{residual}\)</span>, or the standard error of estimate. We do sometimes, however, appeal to the <span class="math inline">\(R^2\)</span>. I’m not going to go into the technical details here, but you should be aware that the Bayesian <span class="math inline">\(R^2\)</span> is not calculated the same as the OLS <span class="math inline">\(R^2\)</span> is. If you want to dive in, check out the paper by <a href="https://github.com/jgabry/bayes_R2/blob/master/bayes_R2.pdf">Gelman, Goodrich, Gabry, and Ali</a>. Here’s how to get it in brms.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bayes_R2</span>(model4, <span class="dt">summary =</span> T) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">3</span>)
+<span class="co">#&gt;    Estimate Est.Error  Q2.5 Q97.5</span>
+<span class="co">#&gt; R2    0.389      0.02 0.347 0.427</span></code></pre></div>
+<p>Happily, it comes with 95% intervals, which will make the editors at APA journals happy. If you want to go beyond summary statistics and take a look at the full posterior, just set <code>summary = F</code> and data wrangle and plot as usual.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bayes_R2</span>(model4, <span class="dt">summary =</span> F) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> R2)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_density</span>(<span class="dt">fill =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;transparent&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="ot">NULL</span>, <span class="dt">breaks =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;Behold: The Bayesian &quot;</span>, <span class="kw">italic</span>(<span class="st">&quot;R&quot;</span>)<span class="op">^</span>{<span class="dv">2</span>}, <span class="st">&quot; distribution for model 4&quot;</span>)),
+       <span class="dt">x =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">1</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="02_files/figure-html/unnamed-chunk-43-1.png" width="576" /></p>
+<p>Another way we examine model fit is with graphical posterior predictive checks. Posterior predictive checking is a very general approach, which you might learn more about <a href="http://www.stat.columbia.edu/~gelman/research/published/bayes-vis.pdf">here</a> or with a few keyword searches in on <a href="http://andrewgelman.com">Gelman’s blog</a>. One basic way is to use the model in order to simulate data and then compare those data with the original data–the basic idea being that good fitting models should produce data similar to the original data.</p>
+<p>Recall how we’ve used <code>fitted()</code> to make regression lines and expected values? We’ll, now we’ll use <code>predict()</code> to simulate data based on our models.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">predict</span>(model4, 
+        <span class="dt">summary =</span> F,
+        <span class="dt">nsamples =</span> <span class="dv">3</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">t</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">key =</span> <span class="kw">str_replace</span>(key, <span class="st">&quot;V&quot;</span>, <span class="st">&quot;simulation &quot;</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">govact =</span> value) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">bind_cols</span>(
+    <span class="kw">bind_rows</span>(
+      glbwarm <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>govact),
+      glbwarm <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>govact),
+      glbwarm <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>govact))
+    ) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> negemot, <span class="dt">y =</span> govact)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_jitter</span>(<span class="dt">height =</span> .<span class="dv">05</span>, <span class="dt">width =</span> .<span class="dv">05</span>, 
+              <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">2</span>, <span class="dt">size =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">9</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span>key, <span class="dt">ncol =</span> <span class="dv">3</span>)</code></pre></div>
+<p><img src="02_files/figure-html/unnamed-chunk-44-1.png" width="960" /></p>
+<p>The question is, do these simulated data sets look like the original data? Let’s see.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">glbwarm <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> negemot, <span class="dt">y =</span> govact)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_jitter</span>(<span class="dt">height =</span> .<span class="dv">05</span>, <span class="dt">width =</span> .<span class="dv">05</span>, 
+              <span class="dt">alpha =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">2</span>, <span class="dt">size =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">9</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="02_files/figure-html/unnamed-chunk-45-1.png" width="321.6" /></p>
+<p>Overall, the simulations aren’t bad. But in all three <code>govact</code> tends to veer above 7.5, which is where the original data appear to be bounded. But otherwise the overall shape is pretty close, at least with respect to <code>negemot</code>.</p>
+<p>There’s nothing special about three simulations. Three is just more than one and gives you a sense of the variance across simulations. Also, we only examined the model fit with respect to <code>negemot</code>. Since there are other variables in the model, we might also assess the model based on them.</p>
+<p>Another method is with the <code>brms::pp_check()</code> function, which allows users to access a variety of convenience functions from the <a href="https://github.com/stan-dev/bayesplot">bayesplot package</a>. Here we’ll use the default settings and just tack on <code>theme_bw()</code> for aesthetics.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">pp_check</span>(model4) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>()
+<span class="co">#&gt; Using 10 posterior samples for ppc type &#39;dens_overlay&#39; by default.</span></code></pre></div>
+<p><img src="02_files/figure-html/unnamed-chunk-46-1.png" width="576" /></p>
+<p>What we did was simulate 10 data sets worth of <code>govact</code> values, plot their densities (i.e., the thin blue lines) and compare them with the density of the original <code>govact</code> values. What we want is for the thin blue lines to largely align with the thick blue line. Though not perfect, the simulations from our <code>model4</code> did a pretty okay job of reproducing the original <code>govact</code> distribution. For more ideas on this method, see the brms <a href="https://cran.r-project.org/web/packages/brms/brms.pdf">reference manual</a> and <a href="https://cran.r-project.org/web/packages/bayesplot/vignettes/graphical-ppcs.html">this vignette</a> for the bayesplot package.</p>
+</div>
+<div id="statistical-inference" class="section level2">
+<h2><span class="header-section-number">2.6</span> Statistical inference</h2>
+<p>Here’s a tidyverse way to do Hayes’s simulation. We’re just using OLS regression with the <code>lm()</code> function. You could do this with Bayesian HMC estimation, but man would it take a while.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># first, we&#39;ll need two custom functions</span>
+<span class="co"># this first one will use the `sample_n()` function to randomly sample from `glbwarm`</span>
+make_sample &lt;-<span class="st"> </span><span class="cf">function</span>(i){
+  <span class="kw">set.seed</span>(i)
+  <span class="kw">sample_n</span>(glbwarm, <span class="dv">50</span>, <span class="dt">replace =</span> F)
+}
+
+<span class="co"># this second function will fit our model, the same one from `model4`, to each of our subsamples</span>
+glbwarm_model &lt;-<span class="st"> </span><span class="cf">function</span>(df) {
+  <span class="kw">lm</span>(govact <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>negemot <span class="op">+</span><span class="st"> </span>posemot <span class="op">+</span><span class="st"> </span>ideology <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>age, <span class="dt">data =</span> df)
+}
+
+<span class="co"># we need an iteration index, which will double as the values we set our seed with in our `make_sample()` function</span>
+<span class="kw">tibble</span>(<span class="dt">iter =</span> <span class="dv">1</span><span class="op">:</span><span class="fl">1e4</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(iter) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># inserting our subsamples</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sample =</span> <span class="kw">map</span>(iter, make_sample)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># fitting our models</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">model =</span> <span class="kw">map</span>(sample, glbwarm_model)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># taking those model results and tidying them with the broom package</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">broom =</span> <span class="kw">map</span>(model, broom<span class="op">::</span>tidy)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># unnesting allows us to access our model results</span>
+<span class="st">  </span><span class="kw">unnest</span>(broom) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="co"># we&#39;re only going to focus on the estimates for `negemot`</span>
+<span class="st">  </span><span class="kw">filter</span>(term <span class="op">==</span><span class="st"> &quot;negemot&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>
+<span class="st">  </span><span class="co"># Here it is, Figure 2.7</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> estimate)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">binwidth =</span> .<span class="dv">025</span>, <span class="dt">boundary =</span> <span class="dv">0</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Unstandardized regression coefficient for negemot&quot;</span>,
+       <span class="dt">y =</span> <span class="st">&quot;Frequency in 1e4 samples of size 50&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="02_files/figure-html/unnamed-chunk-47-1.png" width="576" /></p>
+<p>To learn more about this approach to simulations, see <a href="http://r4ds.had.co.nz/many-models.html#nested-data">this section of <em>R4DS</em></a>.</p>
+<div id="testing-a-null-hypothesis." class="section level3">
+<h3><span class="header-section-number">2.6.1</span> Testing a null hypothesis.</h3>
+<p>As Bayesians, we don’t need to wed ourselves to the null hypothesis. We’re not interested in the probability of the data given the null hypothesis. Rather, we’re interested in the probability of the parameters given the data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">posterior_samples</span>(model4) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> b_negemot)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_density</span>(<span class="dt">fill =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;transparent&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> <span class="kw">posterior_interval</span>(model4)[<span class="st">&quot;b_negemot&quot;</span>, ],
+             <span class="dt">color =</span> <span class="st">&quot;white&quot;</span>, <span class="dt">linetype =</span> <span class="dv">2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="kw">posterior_interval</span>(model4)[<span class="st">&quot;b_negemot&quot;</span>, ] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.double</span>(),
+                     <span class="dt">labels =</span> <span class="kw">posterior_interval</span>(model4)[<span class="st">&quot;b_negemot&quot;</span>, ] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.double</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.character</span>()) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="ot">NULL</span>, <span class="dt">breaks =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;The most probable values for our b_negemot parameter are the ones around the peak</span><span class="ch">\n</span><span class="st">of the density. For convenience, the dashed lines denote the 95% credible intervals.</span><span class="ch">\n</span><span class="st">Sure, you could ask yourself, &#39;Is zero within those intervals?&#39; But with such rich output,</span><span class="ch">\n</span><span class="st">that seems like an impoverished question to ask.&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="02_files/figure-html/unnamed-chunk-48-1.png" width="576" /></p>
+</div>
+<div id="interval-estimation." class="section level3">
+<h3><span class="header-section-number">2.6.2</span> Interval estimation.</h3>
+<p>Within the Bayesian paradigm, we don’t use 95% intervals based on the typical frequentist formula. With the brms package, we typically use percentile-based intervals. Take the 95% credible intervals for the <code>negemot</code> coefficient from model <code>model4</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">posterior_interval</span>(model4)[<span class="st">&quot;b_negemot&quot;</span>, ]
+<span class="co">#&gt;  2.5% 97.5% </span>
+<span class="co">#&gt; 0.389 0.491</span></code></pre></div>
+<p>We can actually get those intervals with the simple use of the base R <code>quantile()</code> function.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">posterior_samples</span>(model4) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">the_2.5_percentile =</span> <span class="kw">quantile</span>(b_negemot, <span class="dt">probs =</span> .<span class="dv">025</span>),
+            <span class="dt">the_97.5_percentile =</span> <span class="kw">quantile</span>(b_negemot, <span class="dt">probs =</span> .<span class="dv">975</span>))
+<span class="co">#&gt;   the_2.5_percentile the_97.5_percentile</span>
+<span class="co">#&gt; 1              0.389               0.491</span></code></pre></div>
+<p>The consequence of this is that our Bayesian credible intervals aren’t necessarily symmetric. Which is fine because the posterior distribution for a given parameter isn’t always symmetric.</p>
+<p>But not all Bayesian intervals are percentile based. John Kruschke, for example, often recommends highest posterior density intervals in <a href="http://www.indiana.edu/~kruschke/DoingBayesianDataAnalysis/">his work</a>. The brms package doesn’t have a convenience function for these, but you can compute them with help from the <a href="https://cran.r-project.org/web/packages/HDInterval/index.html">HDInterval package</a>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(HDInterval)
+
+<span class="kw">hdi</span>(<span class="kw">posterior_samples</span>(model4)[ , <span class="st">&quot;b_negemot&quot;</span>], <span class="dt">credMass =</span> .<span class="dv">95</span>)
+<span class="co">#&gt; lower upper </span>
+<span class="co">#&gt; 0.388 0.488 </span>
+<span class="co">#&gt; attr(,&quot;credMass&quot;)</span>
+<span class="co">#&gt; [1] 0.95</span></code></pre></div>
+<p>Finally, because Bayesians aren’t bound to the NHST paradigm, we aren’t bound to 95% intervals, either. For example, in both his <a href="http://xcelab.net/rm/statistical-rethinking/">excellent text</a> and as a default in its accompanying <a href="https://github.com/rmcelreath/rethinking">rethinking package</a>, Richard McElreath often uses 89% intervals. Alternatively, Andrew Gelman has publically advocated for <a href="http://andrewgelman.com/2016/11/05/why-i-prefer-50-to-95-intervals/">50% intervals</a>. The most important thing is to express the uncertainty in the posterior in a clearly-specified way. If you’d like, say, 80% intervals in your model summary, you can insert a <code>prob</code> argument into either <code>print()</code> or <code>summary()</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(model4, <span class="dt">prob =</span> .<span class="dv">8</span>)
+<span class="co">#&gt;  Family: gaussian </span>
+<span class="co">#&gt;   Links: mu = identity; sigma = identity </span>
+<span class="co">#&gt; Formula: govact ~ 1 + negemot + posemot + ideology + sex + age </span>
+<span class="co">#&gt;    Data: glbwarm (Number of observations: 815) </span>
+<span class="co">#&gt; Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;</span>
+<span class="co">#&gt;          total post-warmup samples = 4000</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Population-Level Effects: </span>
+<span class="co">#&gt;           Estimate Est.Error l-80% CI u-80% CI Eff.Sample Rhat</span>
+<span class="co">#&gt; Intercept     4.06      0.20     3.80     4.31       4000 1.00</span>
+<span class="co">#&gt; negemot       0.44      0.03     0.41     0.47       4000 1.00</span>
+<span class="co">#&gt; posemot      -0.03      0.03    -0.06     0.01       4000 1.00</span>
+<span class="co">#&gt; ideology     -0.22      0.03    -0.25    -0.18       4000 1.00</span>
+<span class="co">#&gt; sex          -0.01      0.08    -0.11     0.09       4000 1.00</span>
+<span class="co">#&gt; age          -0.00      0.00    -0.00     0.00       4000 1.00</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Family Specific Parameters: </span>
+<span class="co">#&gt;       Estimate Est.Error l-80% CI u-80% CI Eff.Sample Rhat</span>
+<span class="co">#&gt; sigma     1.07      0.03     1.04     1.10       4000 1.00</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample </span>
+<span class="co">#&gt; is a crude measure of effective sample size, and Rhat is the potential </span>
+<span class="co">#&gt; scale reduction factor on split chains (at convergence, Rhat = 1).</span></code></pre></div>
+<p>Note how two of our columns changed to ‘l-80% CI’ and ‘u-80% CI’.</p>
+<p>You can specify custom percentile levels with <code>posterior_summary()</code>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">posterior_summary</span>(model4, <span class="dt">probs =</span> <span class="kw">c</span>(.<span class="dv">9</span>, .<span class="dv">8</span>, .<span class="dv">7</span>, .<span class="dv">6</span>, .<span class="dv">4</span>, .<span class="dv">3</span>, .<span class="dv">2</span>, .<span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">2</span>)
+<span class="co">#&gt;             Estimate Est.Error      Q90      Q80      Q70      Q60      Q40      Q30      Q20      Q10</span>
+<span class="co">#&gt; b_Intercept     4.06      0.20     4.31     4.23     4.17     4.11     4.01     3.96     3.89     3.80</span>
+<span class="co">#&gt; b_negemot       0.44      0.03     0.47     0.46     0.45     0.45     0.43     0.43     0.42     0.41</span>
+<span class="co">#&gt; b_posemot      -0.03      0.03     0.01     0.00    -0.01    -0.02    -0.03    -0.04    -0.05    -0.06</span>
+<span class="co">#&gt; b_ideology     -0.22      0.03    -0.18    -0.20    -0.20    -0.21    -0.22    -0.23    -0.24    -0.25</span>
+<span class="co">#&gt; b_sex          -0.01      0.08     0.09     0.05     0.03     0.01    -0.03    -0.05    -0.08    -0.11</span>
+<span class="co">#&gt; b_age           0.00      0.00     0.00     0.00     0.00     0.00     0.00     0.00     0.00     0.00</span>
+<span class="co">#&gt; sigma           1.07      0.03     1.10     1.09     1.08     1.07     1.06     1.06     1.05     1.04</span>
+<span class="co">#&gt; lp__        -1215.77      1.83 -1213.73 -1214.24 -1214.63 -1215.03 -1215.93 -1216.45 -1217.15 -1218.26</span></code></pre></div>
+<p>And of course, you can use multiple interval summaries when you <code>summarize()</code> the output from <code>posterior_samples()</code>. E.g.,</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">posterior_samples</span>(model4) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">select</span>(b_Intercept<span class="op">:</span>b_age) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(key) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarize</span>(<span class="st">`</span><span class="dt">l-95% CI</span><span class="st">`</span> =<span class="st"> </span><span class="kw">quantile</span>(value, <span class="dt">probs =</span> .<span class="dv">025</span>),
+            <span class="st">`</span><span class="dt">u-95% CI</span><span class="st">`</span> =<span class="st"> </span><span class="kw">quantile</span>(value, <span class="dt">probs =</span> .<span class="dv">975</span>),
+            <span class="st">`</span><span class="dt">l-50% CI</span><span class="st">`</span> =<span class="st"> </span><span class="kw">quantile</span>(value, <span class="dt">probs =</span> .<span class="dv">25</span>),
+            <span class="st">`</span><span class="dt">u-50% CI</span><span class="st">`</span> =<span class="st"> </span><span class="kw">quantile</span>(value, <span class="dt">probs =</span> .<span class="dv">75</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate_if</span>(is.double, round, <span class="dt">digits =</span> <span class="dv">2</span>)
+<span class="co">#&gt; # A tibble: 6 x 5</span>
+<span class="co">#&gt;   key         `l-95% CI` `u-95% CI` `l-50% CI` `u-50% CI`</span>
+<span class="co">#&gt;   &lt;chr&gt;            &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 b_age            -0.01       0          0          0   </span>
+<span class="co">#&gt; 2 b_ideology       -0.27      -0.16      -0.24      -0.2 </span>
+<span class="co">#&gt; 3 b_Intercept       3.66       4.45       3.92       4.2 </span>
+<span class="co">#&gt; 4 b_negemot         0.39       0.49       0.42       0.46</span>
+<span class="co">#&gt; 5 b_posemot        -0.08       0.03      -0.05      -0.01</span>
+<span class="co">#&gt; 6 b_sex            -0.16       0.14      -0.06       0.04</span></code></pre></div>
+<p>Throughout this project, I’m going to be lazy and default to conventional 95% intervals, with occasional appearances of 50% intervals.</p>
+</div>
+<div id="testing-a-hypothesis-about-a-set-of-antecedent-variables." class="section level3">
+<h3><span class="header-section-number">2.6.3</span> Testing a hypothesis about a set of antecedent variables.</h3>
+<p>Here we’ll make use of the <code>update()</code> function to hastily fit our reduced model, <code>model5</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model5 &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">update</span>(model4,
+         govact <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>ideology <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>age,
+         <span class="dt">chains =</span> <span class="dv">4</span>, <span class="dt">cores =</span> <span class="dv">4</span>)</code></pre></div>
+<p>We can get a look at the <span class="math inline">\(R^2\)</span> summaries for our competing models like this.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bayes_R2</span>(model4) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">2</span>)
+<span class="co">#&gt;    Estimate Est.Error Q2.5 Q97.5</span>
+<span class="co">#&gt; R2     0.39      0.02 0.35  0.43</span>
+<span class="kw">bayes_R2</span>(model5) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">2</span>)
+<span class="co">#&gt;    Estimate Est.Error Q2.5 Q97.5</span>
+<span class="co">#&gt; R2     0.18      0.02 0.14  0.22</span></code></pre></div>
+<p>So far, it looks like our fuller model, <code>model4</code>, explains more variation in the data. If we wanted to look at their distributions, we’d set <code>summary = F</code> in the <code>bayes_R2()</code> function and convert the results to a data frame or tibble. Here we use <code>bind_cols()</code> to put the <span class="math inline">\(R^2\)</span> results for both in the same tibble.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">R2s &lt;-
+<span class="st">  </span><span class="kw">bayes_R2</span>(model4, <span class="dt">summary =</span> F) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">rename</span>(<span class="dt">R2_model4 =</span> R2) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">bind_cols</span>(
+    <span class="kw">bayes_R2</span>(model5, <span class="dt">summary =</span> F) <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span>
+<span class="st">      </span><span class="kw">rename</span>(<span class="dt">R2_model5 =</span> R2)
+  )
+
+<span class="kw">head</span>(R2s)
+<span class="co">#&gt; # A tibble: 6 x 2</span>
+<span class="co">#&gt;   R2_model4 R2_model5</span>
+<span class="co">#&gt;       &lt;dbl&gt;     &lt;dbl&gt;</span>
+<span class="co">#&gt; 1     0.374     0.177</span>
+<span class="co">#&gt; 2     0.402     0.239</span>
+<span class="co">#&gt; 3     0.383     0.174</span>
+<span class="co">#&gt; 4     0.397     0.181</span>
+<span class="co">#&gt; 5     0.372     0.178</span>
+<span class="co">#&gt; 6     0.404     0.184</span></code></pre></div>
+<p>With our <code>R2s</code> tibble in hand, we’re ready to plot.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">R2s <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">gather</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">fill =</span> key)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_density</span>(<span class="dt">color =</span> <span class="st">&quot;transparent&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="ot">NULL</span>, <span class="dt">breaks =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">1</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="02_files/figure-html/unnamed-chunk-57-1.png" width="576" /></p>
+<p>Yep, the <span class="math inline">\(R^2\)</span> distribution for <code>model4</code>, the one including the emotion variables, is clearly larger than that for the more parsimonious <code>model5</code>. And it’d just take a little more data wrangling to get a formal <span class="math inline">\(R^2\)</span> difference score.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">R2s <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">difference =</span> R2_model5 <span class="op">-</span><span class="st"> </span>R2_model4) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> difference)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_density</span>(<span class="dt">fill =</span> <span class="st">&quot;black&quot;</span>, <span class="dt">color =</span> <span class="st">&quot;transparent&quot;</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="ot">NULL</span>, <span class="dt">breaks =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="op">-</span><span class="dv">1</span><span class="op">:</span><span class="dv">0</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(Delta, <span class="kw">italic</span>(<span class="st">&quot;R&quot;</span>)<span class="op">^</span>{<span class="dv">2</span>})),
+       <span class="dt">subtitle =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;This is the amount the &quot;</span>, <span class="kw">italic</span>(<span class="st">&quot;R&quot;</span>)<span class="op">^</span>{<span class="dv">2</span>}, <span class="st">&quot; dropped after we pruned the emotion variables from the model.&quot;</span>)),
+       <span class="dt">x =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
+<p><img src="02_files/figure-html/unnamed-chunk-58-1.png" width="576" /></p>
+<p>The <span class="math inline">\(R^2\)</span> approach is popular within the social sciences. But it has its limitations, the first of which is that it doesn’t correct for model complexity. The second is it’s not applicable to a range of models, such as those that do not use the Gaussian likelihood (e.g., logistic regression) or to multilevel models.</p>
+<p>Happily, information criteria offer a more general framework. The AIC is the most popular information criteria among frequentists. Within the Bayesian world, we have the DIC, the WAIC, and the LOO. The DIC is quickly falling out of favor and is not immediately available with the brms package. However, we can use the WAIC and the LOO, both of which are computed in brms via the <a href="https://github.com/stan-dev/loo">loo package</a>.</p>
+<p>In brms, you can get the WAIC or LOO values with <code>waic()</code> or <code>loo()</code>, respectively. Here we use <code>loo()</code> and save the output as objects.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">l_model4 &lt;-<span class="st"> </span><span class="kw">loo</span>(model4)
+l_model5 &lt;-<span class="st"> </span><span class="kw">loo</span>(model5)</code></pre></div>
+<p>Here’s the main loo-summary output for <code>model4</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">l_model4
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Computed from 4000 by 815 log-likelihood matrix</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;          Estimate   SE</span>
+<span class="co">#&gt; elpd_loo  -1213.7 22.7</span>
+<span class="co">#&gt; p_loo         7.5  0.6</span>
+<span class="co">#&gt; looic      2427.5 45.5</span>
+<span class="co">#&gt; ------</span>
+<span class="co">#&gt; Monte Carlo SE of elpd_loo is 0.0.</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; All Pareto k estimates are good (k &lt; 0.5).</span>
+<span class="co">#&gt; See help(&#39;pareto-k-diagnostic&#39;) for details.</span></code></pre></div>
+<p>You get a wealth of output, more of which can be seen with <code>str(l_model4)</code>. For now, notice the “All pareto k estimates are good (k &lt; 0.5).” Pareto <span class="math inline">\(k\)</span> values <a href="https://cran.r-project.org/web/packages/loo/vignettes/loo2-example.html#plotting-pareto-k-diagnostics">can be used for diagnostics</a>. Each case in the data gets its own <span class="math inline">\(k\)</span> value and we like it when those <span class="math inline">\(k\)</span>s are low. The makers of the loo package get worried when those <span class="math inline">\(k\)</span>s exceed 0.7 and as a result, <code>loo()</code> spits out a warning message when they do. Happily, we have no such warning messages in this example.</p>
+<p>If you want to work with the <span class="math inline">\(k\)</span> values directly, you can extract them and place them into a tibble like so:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">l_model4<span class="op">$</span>diagnostics <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">as_tibble</span>()
+<span class="co">#&gt; # A tibble: 815 x 2</span>
+<span class="co">#&gt;   pareto_k n_eff</span>
+<span class="co">#&gt;      &lt;dbl&gt; &lt;dbl&gt;</span>
+<span class="co">#&gt; 1  -0.120  3973.</span>
+<span class="co">#&gt; 2  -0.143  3992.</span>
+<span class="co">#&gt; 3   0.0169 3890.</span>
+<span class="co">#&gt; 4   0.311  2405.</span>
+<span class="co">#&gt; 5  -0.0462 3997.</span>
+<span class="co">#&gt; 6  -0.126  3966.</span>
+<span class="co">#&gt; # ... with 809 more rows</span></code></pre></div>
+<p>The <code>pareto_k</code> values can be used to examine cases that are overly-influential on the model parameters, something akin to a Cook’s <span class="math inline">\(D_{i}\)</span>. See, for example <a href="https://stackoverflow.com/questions/39578834/linear-model-diagnostics-for-bayesian-models-using-rstan/39595436">this discussion on stackoverflow.com</a> in which several members of the <a href="http://mc-stan.org">Stan team</a> weighed in. The issue is also discussed in <a href="https://arxiv.org/abs/1507.04544">this paper</a> and in <a href="https://www.youtube.com/watch?v=FUROJM3u5HQ&amp;feature=youtu.be&amp;a=">this lecture by Aki Vehtari</a>.</p>
+<p>But anyway, we’re getting ahead of ourselves. Back to the LOO.</p>
+<p>Like other information criteria, the LOO values aren’t of interest in and of themselves. However, the values of one model’s LOO relative to that of another is of great interest. We generally prefer models with lower information criteria. With <code>compare_ic()</code>, we can compute a formal difference score between multiple loo objects.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">compare_ic</span>(l_model4, l_model5)
+<span class="co">#&gt;                 LOOIC   SE</span>
+<span class="co">#&gt; model4           2427 45.5</span>
+<span class="co">#&gt; model5           2666 41.1</span>
+<span class="co">#&gt; model4 - model5  -238 31.8</span></code></pre></div>
+<p>We also get a standard error. Here it looks like <code>model4</code> was substantially better, in terms of LOO-values, than <code>model5</code>.</p>
+<p>For more on the LOO, see the <a href="https://cran.r-project.org/web/packages/loo/loo.pdf">loo reference manual</a>, this <a href="https://cran.r-project.org/web/packages/loo/vignettes/loo2-example.html">handy vignette</a>, or the scholarly papers referenced therein. Also, although McElreath doesn’t discuss the LOO, he does cover the topic in general in his <a href="http://xcelab.net/rm/statistical-rethinking/">text</a> and in his <a href="https://www.youtube.com/watch?v=t0pRuy1_190&amp;t=1307s&amp;list=PLDcUM9US4XdM9_N6XUUFrhghGJ4K25bFc&amp;index=9">online lectures on the topic</a>.</p>
+</div>
+</div>
+<div id="multicategorical-antecedent-variables" class="section level2">
+<h2><span class="header-section-number">2.7</span> Multicategorical antecedent variables</h2>
+<p><code>partyid</code> is coded 1 = Democrat 2 = Independent 3 = Repuclican. You can get a count of the cases within a give <code>partyid</code> like this:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">glbwarm <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(partyid) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">count</span>()
+<span class="co">#&gt; # A tibble: 3 x 2</span>
+<span class="co">#&gt; # Groups:   partyid [3]</span>
+<span class="co">#&gt;   partyid     n</span>
+<span class="co">#&gt;     &lt;int&gt; &lt;int&gt;</span>
+<span class="co">#&gt; 1       1   359</span>
+<span class="co">#&gt; 2       2   192</span>
+<span class="co">#&gt; 3       3   264</span></code></pre></div>
+<p>We can get grouped means for <code>govact</code> like this:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">glbwarm <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(partyid) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">mean_support_for_governmental_action =</span> <span class="kw">mean</span>(govact))
+<span class="co">#&gt; # A tibble: 3 x 2</span>
+<span class="co">#&gt;   partyid mean_support_for_governmental_action</span>
+<span class="co">#&gt;     &lt;int&gt;                                &lt;dbl&gt;</span>
+<span class="co">#&gt; 1       1                                 5.06</span>
+<span class="co">#&gt; 2       2                                 4.61</span>
+<span class="co">#&gt; 3       3                                 3.92</span></code></pre></div>
+<p>We can make dummies with the <code>ifelse()</code> function. We’ll just go ahead and do that right within the <code>brm()</code> function.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model6 &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">brm</span>(<span class="dt">data =</span> glbwarm <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">        </span><span class="kw">mutate</span>(<span class="dt">Democrat =</span> <span class="kw">ifelse</span>(partyid <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">0</span>),
+               <span class="dt">Republican =</span> <span class="kw">ifelse</span>(partyid <span class="op">==</span><span class="st"> </span><span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">0</span>)), 
+      <span class="dt">family =</span> gaussian,
+      govact <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>Democrat <span class="op">+</span><span class="st"> </span>Republican,
+      <span class="dt">chains =</span> <span class="dv">4</span>, <span class="dt">cores =</span> <span class="dv">4</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fixef</span>(model6)
+<span class="co">#&gt;            Estimate Est.Error   Q2.5  Q97.5</span>
+<span class="co">#&gt; Intercept     4.607    0.0929  4.426  4.786</span>
+<span class="co">#&gt; Democrat      0.458    0.1140  0.232  0.683</span>
+<span class="co">#&gt; Republican   -0.684    0.1224 -0.913 -0.436</span></code></pre></div>
+<p>The intercept is the stand-in for Independents and the other two coefficients are difference scores.</p>
+<p>The <span class="math inline">\(R^2\)</span> is okay:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bayes_R2</span>(model6) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">3</span>)
+<span class="co">#&gt;    Estimate Est.Error  Q2.5 Q97.5</span>
+<span class="co">#&gt; R2    0.133     0.021 0.093 0.175</span></code></pre></div>
+<p>There’s no need to compute an <span class="math inline">\(F\)</span>-test on our <span class="math inline">\(R^2\)</span>. The posterior mean and it’s 95% intervals are well away from zero. But you could use your <code>bayes_R2(model6, summary = F)</code> plotting skills from above to more fully inspect the posterior if you’d like.</p>
+<p>We could also use information criteria. One method would be to compare the WAIC or LOO value of <code>model6</code> with an intercept-only model. First, we’ll need to fit that model.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model7 &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">update</span>(model6,
+         govact <span class="op">~</span><span class="st"> </span><span class="dv">1</span>,
+         <span class="dt">chains =</span> <span class="dv">4</span>, <span class="dt">cores =</span> <span class="dv">4</span>)</code></pre></div>
+<p>If we just put both models into <code>waic()</code>, we can side step the need to save their outputs as objects which we then put into <code>compare_ic()</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">waic</span>(model6, model7)
+<span class="co">#&gt;                 WAIC   SE</span>
+<span class="co">#&gt; model6          2707 40.1</span>
+<span class="co">#&gt; model7          2818 42.7</span>
+<span class="co">#&gt; model6 - model7 -110 20.8</span></code></pre></div>
+<p>The WAIC comparison suggests <code>model6</code>, the one with the <code>partyid</code> dummies, is an improvement over the simple intercept-only model. Another way to compare the information criteria is with AIC-type weighting. The brms package offers a variety of weighting methods via the <code>model_weights()</code> function.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MWs &lt;-<span class="st"> </span><span class="kw">model_weights</span>(model6, model7, <span class="dt">weights =</span> <span class="st">&quot;waic&quot;</span>)
+
+MWs
+<span class="co">#&gt;   model6   model7 </span>
+<span class="co">#&gt; 1.00e+00 1.14e-24</span></code></pre></div>
+<p>If you’re not a fan of scientific notation, you can put the results in a tibble and look at them on a plot.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MWs <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">as.data.frame</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">rownames_to_column</span>() <span class="op">%&gt;%</span><span class="st"> </span>
+
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> ., <span class="dt">y =</span> rowname)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">labs</span>(<span class="dt">subtitle =</span> <span class="st">&quot;The weights should sum to 1. In this case virtually all the weight is placed</span><span class="ch">\n</span><span class="st">in model6. Recall, that these are RELATIVE weights. Add another</span><span class="ch">\n</span><span class="st">model fit into the mix and the weights might well change.&quot;</span>, 
+       <span class="dt">x =</span> <span class="st">&quot;WAIC weight&quot;</span>, <span class="dt">y =</span> <span class="ot">NULL</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme_bw</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">axis.ticks.y =</span> <span class="kw">element_blank</span>())</code></pre></div>
+<p><img src="02_files/figure-html/unnamed-chunk-66-1.png" width="480" /></p>
+<p>You could, of course, do all this with the LOO.</p>
+</div>
+<div id="assumptions-for-interpretation-and-statistical-inference" class="section level2">
+<h2><span class="header-section-number">2.8</span> Assumptions for interpretation and statistical inference</h2>
+<div id="linearity." class="section level3">
+<h3><span class="header-section-number">2.8.1</span> Linearity.</h3>
+<p>I have nothing to add, here.</p>
+</div>
+<div id="normality." class="section level3">
+<h3><span class="header-section-number">2.8.2</span> Normality.</h3>
+<p>The brms package is quite general and allows users to fit models from a variety of likelihoods other than the Gaussian. For example, users can accommodate outliers/extreme values with <a href="https://github.com/ASKurz/Student-s-t_regression">Student’s t regression</a>. You can do count regression with the Poisson or the negative binomial… For more, see McElreath’s lecture <a href="https://www.youtube.com/watch?v=DyrUkqK9Tj4&amp;t=254s&amp;frags=pl%2Cwn">introducing the generalized linear model</a> or Bürkner’s vignette, <a href="https://cran.r-project.org/web/packages/brms/vignettes/brms_families.html"><em>Parameterization of Response Distributions in brms</em></a></p>
+</div>
+<div id="homoscedasticity." class="section level3">
+<h3><span class="header-section-number">2.8.3</span> Homoscedasticity.</h3>
+<p>The brms package can also accommodate homoscedasticity with distributional modeling. In short, one simply models <span class="math inline">\(\sigma\)</span> in addition to the mean, <span class="math inline">\(\mu\)</span>. See Bürkner’s <a href="https://cran.r-project.org/web/packages/brms/vignettes/brms_distreg.html">handy vignette</a> on the topic.</p>
+</div>
+<div id="independence." class="section level3">
+<h3><span class="header-section-number">2.8.4</span> Independence.</h3>
+<p>And the issue of independence is where the multilevel model comes on. See any relevant text, such as <a href="http://xcelab.net/rm/statistical-rethinking/"><em>Statistical Rethinking</em></a> or <a href="http://www.stat.columbia.edu/~gelman/arm/"><em>Data Analysis Using Regression and Multilevel/Hierarchical Models</em></a>.</p>
+</div>
+</div>
+<div id="reference" class="section level2 unnumbered">
+<h2>Reference</h2>
+<p><a href="http://afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html">Hayes, A. F. (2018). <em>Introduction to mediation, moderation, and conditional process analysis: A regression-based approach.</em> (2nd ed.). New York, NY, US: The Guilford Press.</a></p>
+</div>
+<div id="session-info-1" class="section level2 unnumbered">
+<h2>Session info</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()
+<span class="co">#&gt; R version 3.5.1 (2018-07-02)</span>
+<span class="co">#&gt; Platform: x86_64-apple-darwin15.6.0 (64-bit)</span>
+<span class="co">#&gt; Running under: macOS High Sierra 10.13.4</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Matrix products: default</span>
+<span class="co">#&gt; BLAS: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRblas.0.dylib</span>
+<span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; locale:</span>
+<span class="co">#&gt; [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; attached base packages:</span>
+<span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; other attached packages:</span>
+<span class="co">#&gt;  [1] HDInterval_0.2.0 bindrcpp_0.2.2   brms_2.3.4       Rcpp_0.12.17     forcats_0.3.0    stringr_1.3.1   </span>
+<span class="co">#&gt;  [7] dplyr_0.7.6      purrr_0.2.5      readr_1.1.1      tidyr_0.8.1      tibble_1.4.2     ggplot2_3.0.0   </span>
+<span class="co">#&gt; [13] tidyverse_1.2.1 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; loaded via a namespace (and not attached):</span>
+<span class="co">#&gt;  [1] nlme_3.1-137         matrixStats_0.53.1   xts_0.10-2           lubridate_1.7.4      threejs_0.3.1       </span>
+<span class="co">#&gt;  [6] httr_1.3.1           rprojroot_1.3-2      rstan_2.17.3         tools_3.5.1          backports_1.1.2     </span>
+<span class="co">#&gt; [11] utf8_1.1.4           R6_2.2.2             DT_0.4               lazyeval_0.2.1       colorspace_1.3-2    </span>
+<span class="co">#&gt; [16] withr_2.1.2          tidyselect_0.2.4     gridExtra_2.3        mnormt_1.5-5         Brobdingnag_1.2-5   </span>
+<span class="co">#&gt; [21] compiler_3.5.1       cli_1.0.0            rvest_0.3.2          shinyjs_1.0          xml2_1.2.0          </span>
+<span class="co">#&gt; [26] labeling_0.3         colourpicker_1.0     bookdown_0.7         scales_0.5.0         dygraphs_1.1.1.5    </span>
+<span class="co">#&gt; [31] mvtnorm_1.0-8        psych_1.8.4          ggridges_0.5.0       digest_0.6.15        StanHeaders_2.17.2  </span>
+<span class="co">#&gt; [36] foreign_0.8-70       rmarkdown_1.10       base64enc_0.1-3      pkgconfig_2.0.1      htmltools_0.3.6     </span>
+<span class="co">#&gt; [41] htmlwidgets_1.2      rlang_0.2.1          readxl_1.1.0         rstudioapi_0.7       shiny_1.1.0         </span>
+<span class="co">#&gt; [46] bindr_0.1.1          zoo_1.8-2            jsonlite_1.5         gtools_3.8.1         crosstalk_1.0.0     </span>
+<span class="co">#&gt; [51] inline_0.3.15        magrittr_1.5         loo_2.0.0            bayesplot_1.5.0      Matrix_1.2-14       </span>
+<span class="co">#&gt; [56] munsell_0.5.0        abind_1.4-5          stringi_1.2.3        yaml_2.1.19          plyr_1.8.4          </span>
+<span class="co">#&gt; [61] grid_3.5.1           parallel_3.5.1       promises_1.0.1       crayon_1.3.4         miniUI_0.1.1.1      </span>
+<span class="co">#&gt; [66] lattice_0.20-35      haven_1.1.2          hms_0.4.2            knitr_1.20           pillar_1.2.3        </span>
+<span class="co">#&gt; [71] igraph_1.2.1         markdown_0.8         shinystan_2.5.0      codetools_0.2-15     reshape2_1.4.3      </span>
+<span class="co">#&gt; [76] stats4_3.5.1         rstantools_1.5.0     glue_1.2.0           evaluate_0.10.1      modelr_0.1.2        </span>
+<span class="co">#&gt; [81] httpuv_1.4.4.2       cellranger_1.1.0     gtable_0.2.0         assertthat_0.2.0     xfun_0.3            </span>
+<span class="co">#&gt; [86] mime_0.5             xtable_1.8-2         broom_0.4.5          coda_0.19-1          later_0.7.3         </span>
+<span class="co">#&gt; [91] rsconnect_0.8.8      shinythemes_1.1.1    bridgesampling_0.4-0</span></code></pre></div>
+
+</div>
+</div>
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="introduction.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="the-simple-mediation-model.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": false,
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/ASKurz/recoding_Introduction_to_Mediation_Moderation_and_Conditional_Process_Analysis02.Rmd",
+"text": "Edit"
+},
+"download": null,
+"toc": {
+"collapse": "section"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

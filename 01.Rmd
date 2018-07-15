@@ -1,0 +1,15 @@
+# (PART) FUNDAMENTALS {-}
+
+# Introduction
+
+Since there's no code or data plots in this chapter, there's nothing to translate. Enjoy an old [video of Hayes promoting conditional process analysis](https://www.youtube.com/watch?v=P0YdlBh1pqs&frags=pl%2Cwn), instead.
+
+## References {-}
+
+[Hayes, A. F. (2018). *Introduction to mediation, moderation, and conditional process analysis: A regression-based approach.* (2nd ed.). New York, NY, US: The Guilford Press.](http://afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html)
+
+## Session info {-}
+
+```{r}
+sessionInfo()
+```

@@ -1,0 +1,15 @@
+bookdown::gitbook:
+  config:
+    toc:
+      collapse: section
+      before: |
+        <li><strong><a href="./">recoding Introduction to Mediation, Moderation, and Conditional Process Analysis</a></strong></li>
+    edit:
+      link: https://github.com/ASKurz/recoding_Introduction_to_Mediation_Moderation_and_Conditional_Process_Analysis%s
+      text: "Edit"
+    sharing: no
+  css: recoding.css
+
+bookdown::pdf_book:
+  latex_engine: "xelatex"
+

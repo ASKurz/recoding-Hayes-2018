@@ -1,0 +1,175 @@
+---
+title: "Chapter 00"
+author: "A Solomon Kurz"
+date: "`r format(Sys.Date())`"
+output:
+  github_document
+---
+
+```{r set-options, echo = FALSE, cachse = FALSE}
+options(width = 100)
+```
+
+The difficulty of adapting the code from Hayes’s text to serve the Bayesian paradigm via Bürkner's [brms package](https://github.com/paul-buerkner/brms) is that models are fit in brms in fundamentally different way they are via OLS, whether you use SPSS, SAS, or R. So although a brand new Bayesian should be able to start following along with my code, they’d probably be baffled at what was going on on more than one occasion. So to start things off, we’ll add a Chapter 00 to the project. The purpose of this chapter is to give new Bayesians a quick orientation to modern Bayesian computation via Hamiltonian Monte Carlo (HMC). This chapter is not intended to be a beginner's crash course in R, which is something better left to [Grolemund and Wickham’s *R for Data Science*](http://r4ds.had.co.nz). But I will walk you through some of the very basics of fitting models in brms.
+
+## 0.1 Let's load some data
+
+Here we load a couple necessary packages, load the data, and take a `glimpse()`.
+
+```{r, warning = F, message = F}
+library(readr)
+library(tidyverse)
+
+glbwarm <- read_csv("data/glbwarm/glbwarm.csv")
+
+glimpse(glbwarm)
+```
+
+In this chapter, we'll focus in the simple univariable model of `negemot` predicting `govact`. Here are what the two look like in a scatterplot. 
+
+```{r, fig.width = 5, fig.height = 4}
+ggplot(data = glbwarm,
+       aes(x = negemot, y = govact)) +
+  geom_point()
+```
+
+The plot has some overplotting issues, which we play around a little bit with in Chapter 2. For now, just notice that they appear to have an approximately linear relationship.
+
+## 0.2 Model fitting 101
+
+Here we'll load our primary package, brms.
+
+```{r, message = F, warning = F}
+library(brms)
+```
+
+The main function in brms is `brm()`. As described in the brms [reference manual](https://cran.r-project.org/web/packages/brms/brms.pdf), the job of the `brm()` function is to
+
+>fit Bayesian generalized (non-)linear multivariate multilevel models using Stan for full Bayesian inference. A wide range of distributions and link functions are supported, allowing users to fit – among others – linear, robust linear, count data, survival, response times, ordinal, zero-inflated, hurdle, and even self-defined mixture models all in a multilevel context. Further modeling options include non-linear and smooth terms, auto-correlation structures, censored data, meta-analytic stan- dard errors, and quite a few more. In addition, all parameters of the response distributions can be predicted in order to perform distributional regression. Prior specifications are flexible and ex- plicitly encourage users to apply prior distributions that actually reflect their beliefs. In addition, model fit can easily be assessed and compared with posterior predictive checks and leave-one-out cross-validation.
+
+In other words, `brm()` does a lot. Happily for the beginner, the function comes with a handful of sensible default settings. We'll cover some of them later in. At a bare minimum, we need to tell `brm()` two things to get started. We need to tell it what data we're working with and we need to specify a model. In order to run our simple linear model and save the results as an object in R, we'll do:
+
+```{r}
+model1 <- 
+  brm(data = glbwarm,
+      govact ~ 1 + negemot)
+```
+
+We indicated what our data were with the `data = glbwarm` argument and specified the model as `govact ~ 1 + negemot`. Because `=` is a special operator in R, we use the `~` as a stand-in in our model formulas. the `1` in the formula is a stand-in for the model intercept, which Hayes typically referrs to as the constant. In other texts the intercept is sometimes called *a* or $\beta$~0~. Since `brm()` knows that we usually want intercepts in our regression models, it also allows users to omit the `1` with formulas looking like `govact ~ negemot`. However, I prefer to leave the `1` in because it helps me to remember the intercept. To each their own.
+
+Executing the code above yielded a bunch of frightening output starting with "Compiling the C++ model
+Start sampling." We're going to ignore that for now, though we will come back to it. for now, let's take a look at what we've done with the `summary()` function.
+
+```{r}
+summary(model1)
+```
+
+At the top we get some technical information, which we'll walk through in a bit. Our main model output is in the 'Population-Level Effects' section. The well-named `Intercept` line shows the summary for our model intercept, `1`. The `negemot` line is for the regression coefficient of that variable. For the moment, you can think of 'Estimate' as our point estimate or coefficient. 'Est.Error' is like a standard error and the next two columns are the lower-levels and upper-levels of our 95% intervals. We'll come back to 'Eff.Sample' and 'Rhat'. 
+
+So the basic interpretation is that our model tells that our best guess is that when `negemot` is at zero, we should expect `govact` to be about 2.7. It also tells us that a 1-point increase in `negemot` predicts an 0.5-point increase in `govact`.
+
+Notice `sigma` in the 'Family Specific Parameters' section. This is something like the error term or the residual variance in an OLS model. Hayes generally deemphasized `sigma` in the text, though he indirectly referenced it throughout the book with the various model $R^2$ values. So I'll de-emphasize it, too. However, [McElreath's *Statistical Rethinking* text](http://xcelab.net/rm/statistical-rethinking/) walks it out further. 
+
+### 0.2.1 We can inspect the model graphically.
+
+#### 0.2.1.1. The regression line.
+
+If you'd like a quick look at the model-implied regression line, you can use the convenient brms function, `marginal_effects()`.
+
+```{r, fig.width = 5, fig.height = 4}
+marginal_effects(model1)
+```
+
+The predictor is on the x-axis and the criterion is on the y. The blue line corresponds to the best estimate (i.e., ‘Estimate’) and the gray band surrounding it shows the 95% intervals. I explain why the intervals make a subtle bowtie shape in later chapters.
+
+#### 0.2.1.1. Now it's time to dive deeper.
+
+In frequentist land, of which OLS is a part, we typically describe our model coefficients in terms of point estimates, standard errors, and 95% confidence intervals. As Hayes explains in the 95% confidence intervals are typically a function of the standard error and $t$-value. Thus, you have a point and its intervals, either standard errors or 95% CIs, with which to describe your OLS estimates.
+
+Things are different for Bayesians. When using brms, you get an entire posterior distribution for each model parameter. This can be really odd at first, so let’s get right to looking at what I’m talking about.
+
+```{r, fig.width = 4, fig.height = 3}
+post <- posterior_samples(model1)
+
+ggplot(data = post,
+       aes(x = b_negemot)) +
+  geom_density(fill = "black")
+```
+
+I'll explain the `post <- posterior_samples(model1)` part in a bit.
+
+With that code, we plotted the posterior distribution for our `negemot` regression coefficient. We don't just have a point and intervals; we have an entire shape. This is a probability distribution, which means that the higher parts of the distribution are the most probable values for the `negemot` coefficient. Recall that our 'Estimate' was about 0.5, which is near the middle of the distribution. In fact, that 0.5 value is the mean of the distribution. Here's the median:
+
+```{r}
+median(post$b_negemot)
+```
+
+So the default in brms is to summarize the central tendency of a posterior distribution in terms of the mean. You can use other descriptions of central tendency, but to keep things simple, we'll just stick with the mean.
+
+Here's the standard deviation.
+
+```{r}
+sd(post$b_negemot)
+```
+
+That looks a lot like the number in the 'Est.Error' column, doesn't it. Within the Bayesian paradigm, we don't really have a standard error in the frequentist sense. But we do have a posterior *SD* for each model parameter and those *SD*s often match up quite nicely with their frequentist standard error analogues. The two do have important technical differences, but those are outside of the scope of this primer. You'd want a proper Bayesian introductory textbook for that.
+
+Buy anyway, we can also summarize the posterior in terms of percentiles (which are given in a 0-to-100 metric) or quantiles (which are pretty much the same thing but given in a 0-to-1 metric). I point out the analogy between percentiles and quantiles becaue R offers the handy `quantile()` function.
+
+```{r}
+quantile(post$b_negemot, probs = c(.025, .975))
+```
+
+We just computed the .025 and .095 quantiles, which correspond to the 2.5 and 97.5 percentiles. Those percentiles also correspond to the 95% interval. In the contemporary Bayesian world, we typically compute our 95% intervals not with formulas, but by simple taking the percentiles from the posterior distribution. That is, our Bayesian intervals are percentile based, not analytically derived. Also, Bayesian intervals are often called credible intervals, probability intervals, or posterior intervals. Sometimes people are lazy and just call them confidence intervals, but I recommend against that. It can get confusing. 
+
+All this computation leads to a much bigger can of worms.
+
+## 0.3 What is HMC estimation, anyways?
+
+
+
+
+
+
+
+
+
+
+```{r}
+plot(model1)
+```
+
+
+```{r}
+model1 %>% str
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Note. The analyses in this document were done with:
+
+* R            3.4.4
+* RStudio      1.1.442
+* rmarkdown    1.9
+* tidyverse    1.2.1
+* readr        1.1.1
+* rstan        2.17.3
+* brms         2.3.2 
+* tidybayes    0.12.1.9000
+
+## Reference
+
+Hayes, A. F. (2018). *Introduction to mediation, moderation, and conditional process analysis: A regression-based approach.* (2nd ed.). New York, NY, US: The Guilford Press.

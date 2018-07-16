@@ -25,7 +25,7 @@
 <meta name="author" content="A Solomon Kurz">
 
 
-<meta name="date" content="2018-07-15">
+<meta name="date" content="2018-07-16">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -367,7 +367,7 @@ pmi &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="
 ##   &lt;int&gt; &lt;int&gt;
 ## 1     0    65
 ## 2     1    58</code></pre>
-<p>Here is how to get the ungrouped mean and <em>SD</em> values for <code>reaction</code> and <code>pmi</code>, as presented in Table 3.1,</p>
+<p>Here is how to get the ungrouped mean and <span class="math inline">\(SD\)</span> values for <code>reaction</code> and <code>pmi</code>, as presented in Table 3.1,</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pmi <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">select</span>(reaction, pmi) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">gather</span>() <span class="op">%&gt;%</span><span class="st"> </span>
@@ -380,7 +380,7 @@ pmi &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="
 ##   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt;
 ## 1 pmi       5.60  1.32
 ## 2 reaction  3.48  1.55</code></pre>
-<p>You might get the mean and <em>SD</em> values for <code>reaction</code> and <code>pmi</code> grouped by <code>cond</code> like this:</p>
+<p>You might get the mean and <span class="math inline">\(SD\)</span> values for <code>reaction</code> and <code>pmi</code> grouped by <code>cond</code> like this:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">pmi <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">select</span>(reaction, pmi, cond) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">gather</span>(key, value, <span class="op">-</span>cond) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -480,7 +480,7 @@ m_model &lt;-<span class="st"> </span><span class="kw">bf</span>(pmi <span class
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="kw">fixef</span>(model1)[<span class="dv">5</span> , ] <span class="op">*</span><span class="st"> </span><span class="kw">fixef</span>(model1)[<span class="dv">3</span> , ]) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">3</span>)</code></pre></div>
 <pre><code>##  Estimate Est.Error      Q2.5     Q97.5 
 ##     0.239     0.023    -0.002     0.653</code></pre>
-<p>Now, this does get us the correct ‘Estimate’ (i.e., posterior mean). However, the posterior <em>SD</em> and 95% intervals are off. If you want to do this properly, you need to work with the poster samples themselves. Here they are:</p>
+<p>Now, this does get us the correct ‘Estimate’ (i.e., posterior mean). However, the posterior <span class="math inline">\(SD\)</span> and 95% intervals are off. If you want to do this properly, you need to work with the poster samples themselves. Here they are:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">post &lt;-<span class="st"> </span><span class="kw">posterior_samples</span>(model1)
 
 <span class="kw">glimpse</span>(post)</code></pre></div>
@@ -545,7 +545,7 @@ m_model &lt;-<span class="st"> </span><span class="kw">bf</span>(pmi <span class
 ## [1,]    3.616     0.187 3.247 3.985
 ## [2,]    3.359     0.175 3.010 3.698</code></pre>
 <p>Note how this is where the two values in the <span class="math inline">\(Y\)</span> adjusted column in Table 3.1 came from.</p>
-<p>However, if we want to reproduce how Hayes computed the total effect (i.e. <span class="math inline">\(c&#39;\)</span> + <span class="math inline">\(ab\)</span>), we’ll need to work with the posterior itself, <code>post</code>. Recall, we’ve already saved the indirect effect as a vector, <code>ab</code>. The direct effect, <span class="math inline">\(c&#39;\)</span>, is labeled <code>b_reaction_cond</code> within <code>post</code>. in order to get the total effect, <span class="math inline">\(c\)</span>, all we need to is add those vectors together.</p>
+<p>However, if we want to reproduce how Hayes computed the total effect (i.e., <span class="math inline">\(c&#39;\)</span> + <span class="math inline">\(ab\)</span>), we’ll need to work with the posterior itself, <code>post</code>. Recall, we’ve already saved the indirect effect as a vector, <code>ab</code>. The direct effect, <span class="math inline">\(c&#39;\)</span>, is labeled <code>b_reaction_cond</code> within <code>post</code>. in order to get the total effect, <span class="math inline">\(c\)</span>, all we need to is add those vectors together.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">post &lt;-
 <span class="st">  </span>post <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="dt">total_effect =</span> b_reaction_cond <span class="op">+</span><span class="st"> </span>ab)</code></pre></div>

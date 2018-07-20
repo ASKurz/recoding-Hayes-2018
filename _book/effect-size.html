@@ -6,26 +6,26 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>recoding Introduction to Mediation, Moderation, and Conditional Process Analysis</title>
-  <meta name="description" content="This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s <a href="https://github.com/paul-buerkner/brms">brms</a>. I use syntax based on sensibilities from the <a href="https://www.tidyverse.org">tidyverse</a> and plot with Wickham’s <a href="https://cran.r-project.org/web/packages/ggplot2/index.html">ggplot2</a>.">
+  <meta name="description" content="This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms. I use syntax based on sensibilities from the tidyverse and plot with Wickham’s ggplot2.">
   <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
   <meta property="og:title" content="recoding Introduction to Mediation, Moderation, and Conditional Process Analysis" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s <a href="https://github.com/paul-buerkner/brms">brms</a>. I use syntax based on sensibilities from the <a href="https://www.tidyverse.org">tidyverse</a> and plot with Wickham’s <a href="https://cran.r-project.org/web/packages/ggplot2/index.html">ggplot2</a>." />
+  <meta property="og:description" content="This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms. I use syntax based on sensibilities from the tidyverse and plot with Wickham’s ggplot2." />
   <meta name="github-repo" content="ASKURZ/recoding-Hayes-2018" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="recoding Introduction to Mediation, Moderation, and Conditional Process Analysis" />
   <meta name="twitter:site" content="@SolomonKurz" />
-  <meta name="twitter:description" content="This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s <a href="https://github.com/paul-buerkner/brms">brms</a>. I use syntax based on sensibilities from the <a href="https://www.tidyverse.org">tidyverse</a> and plot with Wickham’s <a href="https://cran.r-project.org/web/packages/ggplot2/index.html">ggplot2</a>." />
+  <meta name="twitter:description" content="This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms. I use syntax based on sensibilities from the tidyverse and plot with Wickham’s ggplot2." />
   
 
 <meta name="author" content="A Solomon Kurz">
 
 
-<meta name="date" content="2018-07-16">
+<meta name="date" content="2018-07-20">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -474,11 +474,11 @@ model5 &lt;-
 <p>Here are the unstandardized coefficients:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fixef</span>(model5) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">3</span>)</code></pre></div>
 <pre><code>##                    Estimate Est.Error   Q2.5 Q97.5
-## withdraw_Intercept    1.441     0.248  0.954 1.936
-## affect_Intercept      0.797     0.143  0.524 1.075
-## withdraw_estress     -0.076     0.052 -0.179 0.026
-## withdraw_affect       0.768     0.100  0.572 0.960
-## affect_estress        0.173     0.030  0.116 0.231</code></pre>
+## withdraw_Intercept    1.446     0.258  0.946 1.946
+## affect_Intercept      0.799     0.142  0.517 1.074
+## withdraw_estress     -0.076     0.054 -0.184 0.028
+## withdraw_affect       0.770     0.103  0.568 0.972
+## affect_estress        0.173     0.029  0.115 0.232</code></pre>
 <p>On pages 135–136, Hayes provided the formulas to compute the standardized effects:</p>
 <p><span class="math display">\[c&#39;_{cs} = \frac{SD_X(c&#39;)}{SD_{Y}} = SD_{X}(c&#39;_{ps})\]</span></p>
 <p><span class="math display">\[ab_{cs} = \frac{SD_X(ab)}{SD_{Y}} = SD_{X}(ab_{ps})\]</span></p>
@@ -506,9 +506,9 @@ post <span class="op">%&gt;%</span><span class="st"> </span>
 <pre><code>## # A tibble: 3 x 5
 ##   key         mean median     ll    ul
 ##   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
-## 1 ab_s       0.152  0.15   0.092 0.22 
-## 2 c_prime_s -0.086 -0.086 -0.204 0.03 
-## 3 c_s        0.066  0.065 -0.06  0.186</code></pre>
+## 1 ab_s       0.152  0.15   0.093 0.225
+## 2 c_prime_s -0.087 -0.087 -0.21  0.032
+## 3 c_s        0.065  0.065 -0.059 0.187</code></pre>
 <p>Success!</p>
 </div>
 <div id="some-problematic-measures-only-for-indirect-effects." class="section level3">

@@ -6,26 +6,26 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>recoding Introduction to Mediation, Moderation, and Conditional Process Analysis</title>
-  <meta name="description" content="This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s <a href="https://github.com/paul-buerkner/brms">brms</a>. I use syntax based on sensibilities from the <a href="https://www.tidyverse.org">tidyverse</a> and plot with Wickham’s <a href="https://cran.r-project.org/web/packages/ggplot2/index.html">ggplot2</a>.">
+  <meta name="description" content="This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms. I use syntax based on sensibilities from the tidyverse and plot with Wickham’s ggplot2.">
   <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
 
   <meta property="og:title" content="recoding Introduction to Mediation, Moderation, and Conditional Process Analysis" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s <a href="https://github.com/paul-buerkner/brms">brms</a>. I use syntax based on sensibilities from the <a href="https://www.tidyverse.org">tidyverse</a> and plot with Wickham’s <a href="https://cran.r-project.org/web/packages/ggplot2/index.html">ggplot2</a>." />
+  <meta property="og:description" content="This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms. I use syntax based on sensibilities from the tidyverse and plot with Wickham’s ggplot2." />
   <meta name="github-repo" content="ASKURZ/recoding-Hayes-2018" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="recoding Introduction to Mediation, Moderation, and Conditional Process Analysis" />
   <meta name="twitter:site" content="@SolomonKurz" />
-  <meta name="twitter:description" content="This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s <a href="https://github.com/paul-buerkner/brms">brms</a>. I use syntax based on sensibilities from the <a href="https://www.tidyverse.org">tidyverse</a> and plot with Wickham’s <a href="https://cran.r-project.org/web/packages/ggplot2/index.html">ggplot2</a>." />
+  <meta name="twitter:description" content="This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms. I use syntax based on sensibilities from the tidyverse and plot with Wickham’s ggplot2." />
   
 
 <meta name="author" content="A Solomon Kurz">
 
 
-<meta name="date" content="2018-07-16">
+<meta name="date" content="2018-07-20">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -358,12 +358,12 @@ model4 &lt;-
 <p>The coefficient summaries for <code>model4</code> correspond to the top section of Table 10.3 (p. 373).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fixef</span>(model4) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">3</span>)</code></pre></div>
 <pre><code>##             Estimate Est.Error   Q2.5  Q97.5
-## Intercept      5.693     0.236  5.218  6.149
-## D1            -0.290     0.344 -0.956  0.391
-## D2            -0.178     0.319 -0.804  0.442
-## sexism_p      -0.465     0.208 -0.863 -0.055
-## D1:sexism_p    0.892     0.292  0.323  1.466
-## D2:sexism_p    0.769     0.281  0.226  1.310</code></pre>
+## Intercept      5.698     0.234  5.232  6.149
+## D1            -0.300     0.343 -0.970  0.367
+## D2            -0.193     0.312 -0.789  0.437
+## sexism_p      -0.476     0.206 -0.897 -0.065
+## D1:sexism_p    0.907     0.288  0.359  1.490
+## D2:sexism_p    0.787     0.275  0.257  1.324</code></pre>
 <p>We can compare their Bayesian <span class="math inline">\(R^2\)</span> distributions like we usually do.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">r2s &lt;-
 <span class="st">  </span><span class="kw">bayes_R2</span>(model3, <span class="dt">summary =</span> F) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -387,16 +387,16 @@ r2s <span class="op">%&gt;%</span><span class="st"> </span>
 <pre><code>## # A tibble: 3 x 4
 ##   key                   median     ll    ul
 ##   &lt;fct&gt;                  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
-## 1 Model without D1 + D2  0.14   0.053 0.244
-## 2 Model with D1 + D2     0.155  0.061 0.251
-## 3 The R2 difference      0.013 -0.124 0.147</code></pre>
+## 1 Model without D1 + D2  0.139  0.051 0.244
+## 2 Model with D1 + D2     0.156  0.066 0.257
+## 3 The R2 difference      0.017 -0.124 0.152</code></pre>
 <p>Our results differ a bit from those in the text, but the substantive interpretation is the same. The <code>D1</code> and <code>D2</code> parameters added little predictive power to the model in terms of <span class="math inline">\(R^2\)</span>. We can also use information criteria to compare the models. Here are the results from using the LOO-CV.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">loo</span>(model3, model4,
     <span class="dt">reloo =</span> T)</code></pre></div>
 <pre><code>##                  LOOIC    SE
-## model3          371.82 21.97
-## model4          374.60 21.66
-## model3 - model4  -2.78  1.58</code></pre>
+## model3          371.91 22.21
+## model4          374.97 21.82
+## model3 - model4  -3.06  1.78</code></pre>
 <p>[When I ran the <code>loo()</code> without the <code>reloo</code> argument, I got a warning message about an observation with an overly-large pareto <span class="math inline">\(k\)</span> value. Setting <code>reloo = T</code> fixed the problem.]</p>
 <p>The LOO-CV difference between the two models was pretty small and its standard error was of about the same magnitude of its difference. Thus, the LOO-CV gives the same general message as the <span class="math inline">\(R^2\)</span>. The <code>D1</code> and <code>D2</code> parameters were sufficiently small and uncertain enough that constraining them to zero did little in terms of reducing the explanatory power of the statistical model.</p>
 <p>Here’s the same thing all over again, but this time after centering <code>sexism</code> on 5.120.</p>
@@ -420,12 +420,12 @@ model4 &lt;-
 <p>These coefficient summaries correspond to the middle section of Table 10.3 (p. 373).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fixef</span>(model4) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">3</span>)</code></pre></div>
 <pre><code>##             Estimate Est.Error   Q2.5  Q97.5
-## Intercept      5.283     0.156  4.978  5.587
-## D1             0.488     0.221  0.051  0.921
-## D2             0.493     0.221  0.065  0.924
-## sexism_p      -0.472     0.218 -0.899 -0.050
-## D1:sexism_p    0.901     0.305  0.318  1.483
-## D2:sexism_p    0.778     0.293  0.234  1.356</code></pre>
+## Intercept      5.282     0.157  4.970  5.590
+## D1             0.491     0.227  0.030  0.928
+## D2             0.500     0.216  0.078  0.923
+## sexism_p      -0.470     0.205 -0.865 -0.069
+## D1:sexism_p    0.902     0.289  0.328  1.464
+## D2:sexism_p    0.777     0.278  0.226  1.317</code></pre>
 <p>Here are the Bayesian <span class="math inline">\(R^2\)</span> summaries and the summary for their difference.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">r2s &lt;-
 <span class="st">  </span><span class="kw">bayes_R2</span>(model3, <span class="dt">summary =</span> F) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -449,14 +449,14 @@ r2s <span class="op">%&gt;%</span><span class="st"> </span>
 <pre><code>## # A tibble: 3 x 4
 ##   key                   median     ll    ul
 ##   &lt;fct&gt;                  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
-## 1 Model without D1 + D2  0.101  0.026 0.196
-## 2 Model with D1 + D2     0.156  0.064 0.26 
-## 3 The R2 difference      0.054 -0.081 0.186</code></pre>
+## 1 Model without D1 + D2  0.1    0.027 0.197
+## 2 Model with D1 + D2     0.156  0.066 0.258
+## 3 The R2 difference      0.054 -0.077 0.187</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">loo</span>(model3, model4)</code></pre></div>
 <pre><code>##                  LOOIC    SE
-## model3          377.64 23.73
-## model4          375.25 21.81
-## model3 - model4   2.39  6.04</code></pre>
+## model3          377.29 23.60
+## model4          374.90 21.90
+## model3 - model4   2.39  5.97</code></pre>
 <p>Here again our Bayesian <span class="math inline">\(R^2\)</span> and <code>loo()</code> results cohere, both suggesting the <code>D1</code> and <code>D2</code> parameters were of little predictive utility. Note how this differs a little from the second <span class="math inline">\(F\)</span>-test on page 370.</p>
 <p>Here’s what happens when we center <code>sexism</code> on 5.896.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">protest &lt;-
@@ -479,12 +479,12 @@ model4 &lt;-
 <p>These coefficient summaries correspond to the lower section of Table 10.3 (p. 373).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fixef</span>(model4) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">3</span>)</code></pre></div>
 <pre><code>##             Estimate Est.Error   Q2.5  Q97.5
-## Intercept      4.920     0.236  4.466  5.377
-## D1             1.187     0.314  0.571  1.813
-## D2             1.093     0.321  0.469  1.712
-## sexism_p      -0.473     0.209 -0.887 -0.058
-## D1:sexism_p    0.906     0.296  0.330  1.481
-## D2:sexism_p    0.778     0.282  0.215  1.329</code></pre>
+## Intercept      4.920     0.234  4.466  5.385
+## D1             1.184     0.310  0.557  1.791
+## D2             1.093     0.322  0.470  1.716
+## sexism_p      -0.469     0.207 -0.883 -0.065
+## D1:sexism_p    0.897     0.293  0.335  1.471
+## D2:sexism_p    0.772     0.280  0.215  1.297</code></pre>
 <p>Again, the <span class="math inline">\(R^2\)</span> distributions and their difference-score distribution.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">r2s &lt;-
 <span class="st">  </span><span class="kw">bayes_R2</span>(model3, <span class="dt">summary =</span> F) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -508,14 +508,14 @@ r2s <span class="op">%&gt;%</span><span class="st"> </span>
 <pre><code>## # A tibble: 3 x 4
 ##   key                   median    ll    ul
 ##   &lt;fct&gt;                  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 Model without D1 + D2  0.027 0.002 0.088
-## 2 Model with D1 + D2     0.156 0.064 0.259
-## 3 The R2 difference      0.124 0.017 0.232</code></pre>
+## 1 Model without D1 + D2  0.027 0.003 0.09 
+## 2 Model with D1 + D2     0.154 0.061 0.255
+## 3 The R2 difference      0.123 0.016 0.233</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">loo</span>(model3, model4)</code></pre></div>
 <pre><code>##                  LOOIC    SE
-## model3          387.67 26.77
-## model4          375.00 21.61
-## model3 - model4  12.67 11.24</code></pre>
+## model3          387.57 26.71
+## model4          374.89 21.82
+## model3 - model4  12.68 11.06</code></pre>
 <p>Although our Bayesian <span class="math inline">\(R^2\)</span> difference is now predominantly positive, the LOO-CV difference for the two models remains uncertain. Here’s a look at the two parameters in question using a handmade coefficient plot.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">posterior_samples</span>(model4) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">select</span>(b_D1<span class="op">:</span>b_D2) <span class="op">%&gt;%</span><span class="st"> </span>

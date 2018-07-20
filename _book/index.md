@@ -1,14 +1,14 @@
 --- 
 title: "recoding *Introduction to Mediation, Moderation, and Conditional Process Analysis*"
 author: ["A Solomon Kurz"]
-date: "2018-07-16"
+date: "2018-07-20"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book
 link-citations: yes
 github-repo: ASKURZ/recoding-Hayes-2018
 twitter-handle: SolomonKurz
-description: "This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s [brms](https://github.com/paul-buerkner/brms). I use syntax based on sensibilities from the [tidyverse](https://www.tidyverse.org) and plot with Wickham’s [ggplot2](https://cran.r-project.org/web/packages/ggplot2/index.html)."
+description: "This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms. I use syntax based on sensibilities from the tidyverse and plot with Wickham’s ggplot2."
 ---
 
 # Welcome {-}

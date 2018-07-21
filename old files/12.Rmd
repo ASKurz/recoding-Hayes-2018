@@ -459,7 +459,7 @@ print(model4, digits = 3)
 
 Since we're altering the model, we may as well use information criteria to compare the two versions.
 
-```{r}
+```{r loo_3_and_4, cache = T}
 loo(model3, model4)
 ```
 

@@ -695,11 +695,11 @@ fixef(model6)[4, ] %>% round(digits = 3)
 However, the results aren’t exactly the same because of simulation error. If you were working on a project requiring high precision, increase the number of posterior iterations. To demonstrate, here we'll increase each chain's post-warmup iteration count by an order of magnitude, resulting in 80,000 post-warmup iterations rather than the defuault 4,000.
 
 ```{r models5_and_6, cache = T, message = F, warning = F}
-model5 <-
+model5_big <-
   update(model5,
          chains = 4, cores = 4, warmup = 1000, iter = 21000)
 
-model6 <-
+model6_big <-
   update(model6,
          chains = 4, cores = 4, warmup = 1000, iter = 21000)
 ```
@@ -707,19 +707,19 @@ model6 <-
 Now they're quite a bit closer. 
 
 ```{r}
-fixef(model5)[4, ] %>% round(digits = 3)
-fixef(model6)[4, ] %>% round(digits = 3)
+fixef(model5_big)[4, ] %>% round(digits = 3)
+fixef(model6_big)[4, ] %>% round(digits = 3)
 ```
 
 And before you get fixate on how there are still differences after 80,000 iterations, each, consider comparing the two density plots:
 
 ```{r, fig.width = 4.5, fig.height = 3.25}
-posterior_samples(model5) %>% 
+posterior_samples(model5_big) %>% 
   as_tibble() %>% 
   select(`b_policy:kerry`) %>% 
   rename(iteraction = `b_policy:kerry`) %>% 
   bind_rows(
-    posterior_samples(model6) %>% 
+    posterior_samples(model6_big) %>% 
       as_tibble() %>% 
       select(`b_policy_me:kerry_me`) %>% 
       rename(iteraction = `b_policy_me:kerry_me`)

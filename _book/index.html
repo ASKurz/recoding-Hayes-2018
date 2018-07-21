@@ -25,7 +25,7 @@
 <meta name="author" content="A Solomon Kurz">
 
 
-<meta name="date" content="2018-07-20">
+<meta name="date" content="2018-07-21">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,7 +33,7 @@
   
   
 
-<link rel="next" href="introduction.html">
+<link rel="next" href="why-this.html">
 <script src="assets/jquery-2.2.3/jquery.min.js"></script>
 <link href="assets/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="assets/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -99,7 +99,11 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a><ul>
+<li class="chapter" data-level="" data-path="why-this.html"><a href="why-this.html"><i class="fa fa-check"></i>Why this?</a></li>
+<li class="chapter" data-level="" data-path="my-assumptions-about-you.html"><a href="my-assumptions-about-you.html"><i class="fa fa-check"></i>My assumptions about you</a></li>
+<li class="chapter" data-level="" data-path="how-to-use-and-understand-this-project.html"><a href="how-to-use-and-understand-this-project.html"><i class="fa fa-check"></i>How to use and understand this project</a></li>
+</ul></li>
 <li class="part"><span><b>I FUNDAMENTALS</b></span></li>
 <li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
 <li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
@@ -334,27 +338,20 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="header">
 <h1 class="title">recoding <em>Introduction to Mediation, Moderation, and Conditional Process Analysis</em></h1>
 <h4 class="author"><em>A Solomon Kurz</em></h4>
-<h4 class="date"><em>2018-07-20</em></h4>
+<h4 class="date"><em>2018-07-21</em></h4>
 </div>
 <div id="welcome" class="section level1 unnumbered">
 <h1>Welcome</h1>
 <p>Andrew Hayes’s <em>Introduction to Mediation, Moderation, and Conditional Process Analysis</em> text, <a href="http://afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html">the second edition of which just came out</a>, has become a staple in social science graduate education. Both editions of his text have been from a frequentist OLS perspective. This project is an effort to connect his work with the Bayesian paradigm. Herein I refit his models with my favorite <a href="https://www.r-bloggers.com/why-use-r-five-reasons/">R</a> package for Bayesian regression, Bürkner’s <a href="https://github.com/paul-buerkner/brms">brms</a>. I also prefer plotting with Wickham’s <a href="https://cran.r-project.org/web/packages/ggplot2/index.html">ggplot2</a>, and recently converted to using <a href="https://www.tidyverse.org">tidyverse</a>-style syntax (which you might learn about <a href="http://r4ds.had.co.nz/transform.html">here</a> or <a href="http://style.tidyverse.org">here</a>). But to be clear, this project is not meant to stand alone. It’s a supplement to the textbook.</p>
-<p><strong>Disclaimer</strong>: brms is a rapidly-evolving package. To get a sense, see how frequently Bürkner has updated some of the most <a href="https://cran.r-project.org/src/contrib/Archive/brms/">recent versions</a>. I also have a lot to learn as a Bayesian and as an R user. So some of the code may appear dated or inelegant. Which is all to say, <em>suggestions on how to improve my code are welcome</em>.</p>
-<p><strong>If you’re totally new to Bayesian regression and HMC estimation</strong>, you might want to look at <a href="https://cran.r-project.org/web/packages/brms/vignettes/brms_overview.pdf">this paper</a>, watch a few of <a href="https://www.youtube.com/channel/UCNJK6_DZvcMqNSzQdEkzvzA/playlists">these</a>, or even start with my other <a href="https://github.com/ASKurz/Statistical_Rethinking_with_brms_ggplot2_and_the_tidyverse">repo</a>. That said, you do not need to be totally fluent in Bayes or brms. Otherwise why would you need this project, anyway? IMO, the most important things are curiosity, a willingness to try, and persistent tinkering. I love this stuff. Hopefully you will, too.</p>
-<p>Happy modeling!</p>
-<p>The source code of the project is available <a href="https://github.com/ASKurz/recoding_Introduction_to_Mediation_Moderation_and_Conditional_Process_Analysis">here</a>. This project is powered by Yihui Xie’s <a href="https://bookdown.org">bookdown package</a> which makes it easy to turn R markdown files into HTML, PDF, and EPUB. You can learn more <a href="https://bookdown.org/yihui/bookdown/">here</a>.</p>
-
+<p>The source code of the project is available <a href="https://github.com/ASKurz/recoding_Introduction_to_Mediation_Moderation_and_Conditional_Process_Analysis">here</a>. This project is powered by Yihui Xie’s <a href="https://bookdown.org">bookdown package</a> which makes it easy to turn R markdown files into HTML, PDF, and EPUB. You can learn more <a href="https://bookdown.org/yihui/bookdown/">here</a>. While you’re at it, also check out <a href="https://bookdown.org/yihui/rmarkdown/">this great guide to R Markdown</a>.</p> 
 </div>
-
-
-
             </section>
 
           </div>
         </div>
       </div>
 
-<a href="introduction.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+<a href="why-this.html" class="navigation navigation-next navigation-unique" aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="assets/gitbook-2.6.7/js/app.min.js"></script>

@@ -102,7 +102,7 @@ Also, the plot theme in this chapter is a nod to [John Kruschke](http://www.indi
 
 ## ~~Estimation of a conditional process model using PROCESS~~ 
 
-We just fit the model, above.
+We just fit the model in the last section.
 
 ## Quantifying and visualizing (conditional) indirect and direct effects.
 
@@ -141,7 +141,7 @@ post %>%
 
 #### The direct effect.
 
-The direct effect for his model is `b_perform_dysfunc` in brms. Here's how to get it's summary values from `posterior_summary()`.
+The direct effect for his model is `b_perform_dysfunc` in brms. Here's how to get its summary values from `posterior_summary()`.
 
 ```{r}
 posterior_summary(model1)["b_perform_dysfunc", ] %>% round(digits = 3)
@@ -239,7 +239,7 @@ post %>%
 
 As we're square within the Bayesian modeling paradigm, we have no need to appeal to normal theory for the posterior $SD$s or 95% intervals. 
 
-#### ~~Bootstrap confidence intervals~~ Percentile-based Bayesian credible intervals.
+#### ~~Bootstrap confidence intervals~~ Two types of Bayesian credible intervals.
 
 We produced the summary values corresponding to those in Table 11.3 some time ago. Here they are, again.
 
@@ -258,7 +258,7 @@ post %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
-And if we wanted to summarize those same effects with posterior modes and 95% highest posterior density intervals, instead, we’d replace our `summarize()` code with a `mode_hdi()` statement.
+Those were our usual percentile-based intervals. If we wanted to summarize those same effects with posterior modes and 95% highest posterior density intervals, instead, we’d replace our `summarize()` code with a `mode_hdi()` statement.
 
 ```{r}
 post %>% 

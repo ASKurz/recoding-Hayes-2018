@@ -25,7 +25,7 @@
 <meta name="author" content="A Solomon Kurz">
 
 
-<meta name="date" content="2018-07-21">
+<meta name="date" content="2018-07-26">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -371,15 +371,15 @@ R2s <span class="op">%&gt;%</span><span class="st"> </span>
 <p><img src="13_files/figure-html/unnamed-chunk-24-1.png" width="576" /></p>
 <p>We’ll also compare the models by their information criteria.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">loo</span>(model1, model3)</code></pre></div>
-<pre><code>##                  LOOIC    SE
-## model1          760.10 29.56
-## model3          761.79 31.07
-## model1 - model3  -1.69  5.42</code></pre>
+<pre><code>##                 LOOIC    SE
+## model1          760.1 29.56
+## model3          761.6 30.99
+## model1 - model3  -1.5  5.49</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">waic</span>(model1, model3)</code></pre></div>
 <pre><code>##                   WAIC    SE
 ## model1          759.74 29.47
-## model3          761.59 31.03
-## model1 - model3  -1.85  5.42</code></pre>
+## model3          761.34 30.92
+## model1 - model3  -1.60  5.47</code></pre>
 <p>As when we went through these steps for <code>resp = &quot;respappr&quot;</code>, above, the Bayesian <span class="math inline">\(R^2\)</span>, the LOO-CV, and the WAIC all suggest there’s little difference between the two models with respect to predictive utility. In such a case, I’d lean on theory to choose between them. If inclined, one could also do Bayesian model averaging.</p>
 <p>Our approach to plotting the relative conditional <em>direct</em> effects will mirror what we did for the relative conditional <em>indirect</em> effects, above. Here are the <code>brm()</code> parameters that correspond to the parameter names of Hayes’s notation.</p>
 <ul>

@@ -1,7 +1,4 @@
-```{r include=FALSE, cache=FALSE}
-set.seed(1014)
-options(digits = 3)
-
+```{r include = FALSE, cache = FALSE}
 knitr::opts_chunk$set(
   comment = "#>",
   collapse = TRUE,
@@ -10,6 +7,7 @@ knitr::opts_chunk$set(
 
 options(dplyr.print_min = 6, dplyr.print_max = 6)
 ```
+
 # Fundamentals of Linear Regression
 
 ```{r set-options, echo = FALSE, cache = FALSE}
@@ -57,13 +55,13 @@ glbwarm %>%
   theme_bw()
 ```
 
-Here's the simple Pearson's correlation coefficient.
+The `cor()` function is a simple way to compute a Pearson's correlation coefficient.
 
 ```{r}
 cor(glbwarm$negemot, glbwarm$govact)
 ```
 
-If you want more plentiful output, the `cor.test()` function provides a $t$-value, the degrees of freedom, the corresponding $p$-value and the 95% confidence intervals, in addition to the Pearson's correlation coefficient.
+If you want more plentiful output, the `cor.test()` function returns a $t$-value, the degrees of freedom, the corresponding $p$-value and the 95% confidence intervals, in addition to the Pearson's correlation coefficient.
 
 ```{r}
 cor.test(glbwarm$negemot, glbwarm$govact)
@@ -88,7 +86,7 @@ model1 <-
 print(model1)
 ```
 
-Within the brms framework, $\sigma$ of the Gaussian likelihood is considered a family-specific parameter (e.g., there is no $\sigma$ for the Poisson distribution). When you have an intercept-only regression model with multiple variables, the covariance among their $\sigma$ parameters, `rescor(negemot,govact)` in this case, is a correlation.
+Within the brms framework, $\sigma$ of the Gaussian likelihood is considered a family-specific parameter (e.g., there is no $\sigma$ for the Poisson distribution). When you have an intercept-only regression model with multiple variables, the covariance among their $\sigma$ parameters are correlations. Since our multivariate model is of two variables, we have one covariance for the $\sigmas$s, `rescor(negemot,govact)`, which is our Bayesian analogue to the Pearson’s correlation.
 
 To learn more about the multivariate syntax in brms, click [here](https://cran.r-project.org/web/packages/brms/vignettes/brms_multivariate.html) or code `vignette("brms_multivariate")`.
 
@@ -138,7 +136,7 @@ That also yields the log posterior, `lp__`, which you can learn more about [here
 
 But anyways, the `Q2.5` and `Q97.5`, are the lower- and upper-levels of the 95% credible intervals. The `Q` prefix stands for quantile ([see this thread](https://github.com/paul-buerkner/brms/issues/425)). In this case, these are a renamed version of the `l-95% CI` and `u-95% CI` columns from our `print()` output.
 
-To make a quick plot of the regression line, one can use the convenient brms function, `marginal_effects()`.
+To make a quick plot of the regression line, one can use the convenient `marginal_effects()` function.
 
 ```{r, fig.width = 4.5, fig.height = 3}
 marginal_effects(model2)
@@ -206,6 +204,8 @@ glbwarm %>%
 Nothing to recode, here.
 
 ### The standardized regression model
+
+Same here.
 
 ### Simple linear regression with a dichotomous antecedent variable.
 
@@ -347,6 +347,8 @@ psych::lowerCor(glbwarm[, 1:7], digits = 3)
 
 ## Multiple linear regression
 
+There’s nothing particularly special about jumping from univariable to multivariable models in brms. You just keep tacking on predictors with the `+` operator. 
+
 ```{r model4, cache = T, message = F, warning = F}
 model4 <- 
   brm(data = glbwarm, family = gaussian,
@@ -443,7 +445,7 @@ fitted(model4,
 
 ### The standardized regression model.
 
-Since brms doesn't automatically give us the standardized coefficients the way OLS output often does, we'll have to be proactive. One solution is just to standardized the data themselves and then re-fit the model with those standardized variables. That leads us to the issue of how one standardized variables to begin with. Recall that standardizing entails subtracting the mean of a variable from that variable and then dividing that value by the standard deviation. We don't want to do that by hand. So one handy way is to make a custom function to do that work for us.
+brms doesn't automatically give us the standardized coefficients the way OLS output often does. We'll have to be proactive. One solution is just to standardized the data themselves and then re-fit the model with those standardized variables. That leads us to the issue of how one standardized variables to begin with. Recall that standardizing entails subtracting the mean of a variable from that variable and then dividing that value by the standard deviation. We don't want to do that by hand. So one handy way is to make a custom function to do that work for us.
 
 ```{r}
 sandardize <- function(x){
@@ -540,11 +542,11 @@ posterior_samples(model4) %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
-So our summary confirms that we can apply Hayes's formula to a `posterior_samples()` column in order to get fuller summary statistics for a hand-converted standardized coefficient. This would be in full compliance with, say, APA recommendations to include 95% intervals with all effect sizes--the standardized regression coefficient being the effect size, here.
+Our summary confirms that we can apply Hayes's formula to a `posterior_samples()` column in order to get fuller summary statistics for a hand-converted standardized coefficient. This would be in full compliance with, say, APA recommendations to include 95% intervals with all effect sizes--the standardized regression coefficient being the effect size, here.
 
 ## Measures of model fit
 
-In the Bayesian world, we don't tend to appeal to the $SS_{residual}$, the $MS_{residual}$, or the standard error of estimate. We do sometimes, however, appeal to the $R^2$. I'm not going to go into the technical details here, but you should be aware that the Bayesian $R^2$ is not calculated the same as the OLS $R^2$ is. If you want to dive in, check out the paper by [Gelman, Goodrich, Gabry, and Ali](https://github.com/jgabry/bayes_R2/blob/master/bayes_R2.pdf). Here's how to get it in brms.
+In the Bayesian world, we don't tend to appeal to the $SS_{residual}$, the $MS_{residual}$, or the standard error of estimate. We do sometimes, however, appeal to the $R^2$. I'm not going to go into the technical details here, but you should be aware that the Bayesian $R^2$ is not calculated the same as the OLS $R^2$. If you want to dive in, check out the paper by [Gelman, Goodrich, Gabry, and Ali](https://github.com/jgabry/bayes_R2/blob/master/bayes_R2.pdf). Here's how to get it in brms.
 
 ```{r}
 bayes_R2(model4, summary = T) %>% round(digits = 3)
@@ -619,10 +621,9 @@ What we did was simulate 10 data sets worth of `govact` values, plot their densi
 
 ## Statistical inference
 
-Here's a tidyverse way to do Hayes's simulation. We're just using OLS regression with the `lm()` function. You could do this with Bayesian HMC estimation, but man would it take a while.
+Here's a tidyverse way to do Hayes's simulation. We're just using OLS regression with the `lm()` function. You could do this with Bayesian HMC estimation, but man would it take a while. For our first step, we’ll define two custom functions.
 
-```{r, fig.width = 6, fig.height = 3.5}
-# first, we'll need two custom functions
+```{r}
 # this first one will use the `sample_n()` function to randomly sample from `glbwarm`
 make_sample <- function(i){
   set.seed(i)
@@ -633,7 +634,11 @@ make_sample <- function(i){
 glbwarm_model <- function(df) {
   lm(govact ~ 1 + negemot + posemot + ideology + sex + age, data = df)
 }
+```
 
+Now we’ll run the simulation, wrangle the output, and plot in one fell swoop.
+
+```{r sim, cache = T, fig.width = 6, fig.height = 3.5}
 # we need an iteration index, which will double as the values we set our seed with in our `make_sample()` function
 tibble(iter = 1:1e4) %>% 
   group_by(iter) %>% 
@@ -660,7 +665,11 @@ To learn more about this approach to simulations, see [this section of *R4DS*](h
 
 ### Testing a null hypothesis.
 
-As Bayesians, we don't need to wed ourselves to the null hypothesis. We're not interested in the probability of the data given the null hypothesis. Rather, we're interested in the probability of the parameters given the data.
+As Bayesians, we don't need to wed ourselves to the null hypothesis. We're not interested in the probability of the data given the null hypothesis. Bayes’s rule,
+
+$$p(\theta|D) = \frac{p(D|\theta)p(\theta)}{p(D)}$$
+
+ gives us the probability of the model parameters, given the data. Though I acknowledge [different researchers might set out to ask different things of their data](http://daniellakens.blogspot.com/2017/11/the-statisticians-fallacy.html), I propose we’re generally more interested in determining the most probable parameter values than we are the probabilities tested within the NHST paradigm.
 
 ```{r, fig.width = 6, fig.height = 3.5}
 posterior_samples(model4) %>% 
@@ -791,7 +800,7 @@ R2s %>%
   scale_y_continuous(NULL, breaks = NULL) +
   coord_cartesian(xlim = -1:0) +
   labs(title = expression(paste(Delta, italic("R")^{2})),
-       subtitle = expression(paste("This is the amount the ", italic("R")^{2}, " dropped after we pruned the emotion variables from the model.")),
+       subtitle = expression(paste("This is the amount the ", italic("R")^{2}, " dropped after pruning the emotion variables from the model.")),
        x = NULL) +
   theme_bw()
 ```
@@ -928,7 +937,7 @@ I have nothing to add, here.
 
 ### Normality.
 
-The brms package is quite general and allows users to fit models from a variety of likelihoods other than the Gaussian. For example, users can accommodate outliers/extreme values with [Student's t regression](https://github.com/ASKurz/Student-s-t_regression). You can do count regression with the Poisson or the negative binomial... For more, see McElreath's lecture [introducing the generalized linear model](https://www.youtube.com/watch?v=DyrUkqK9Tj4&t=254s&frags=pl%2Cwn) or Bürkner's vignette, [*Parameterization of Response Distributions in brms*](https://cran.r-project.org/web/packages/brms/vignettes/brms_families.html)
+The brms package is quite general and allows users to fit models from a variety of likelihoods other than the Gaussian. For example, users can accommodate outliers/extreme values with [Student's t regression](https://github.com/ASKurz/Student-s-t_regression). You can do count regression with the Poisson or the negative binomial... For more, see McElreath's lecture [introducing the generalized linear model](https://www.youtube.com/watch?v=DyrUkqK9Tj4&t=254s&frags=pl%2Cwn) or Bürkner's vignette, [*Parameterization of Response Distributions in brms*](https://cran.r-project.org/web/packages/brms/vignettes/brms_families.html).
 
 ### Homoscedasticity.
 

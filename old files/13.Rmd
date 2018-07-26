@@ -92,7 +92,7 @@ bayes_R2(model1) %>% round(digits = 3)
 
 ## Looking at the components of the indirect effect of $X$
 
-### Examiing the first stage of the mediation process.
+### Examining the first stage of the mediation process.
 
 When making a `newdata` object to feed into `fitted()` with more complicated models, it can be useful to review the model formula like so:
 
@@ -156,7 +156,7 @@ model2 <-
       chains = 4, cores = 4)
 ```
 
-Now we're ready to compare $R^2$ distributions.
+With `model2` in hand, we're ready to compare $R^2$ distributions.
 
 ```{r, fig.width = 4, fig.height = 2}
 R2s <-
@@ -295,7 +295,7 @@ Before we use Hayes's formulas at the top of pate 488 to re-express the posterio
 * $a_{5}$ = `b_respappr_D2:sexism`
 * $b$ = `b_liking_respappr`
 
-To get our posterior transformations, we'll use the `tidyverse::map()` approach, which first requires we define two custom functions.
+To get our posterior transformations, we'll use the `purrr::map()` approach, which first requires we define two custom functions.
 
 ```{r}
 # (a1 + a4W)*b
@@ -315,7 +315,7 @@ Next, we'll make a 30-row tibble with each row a value for `sexism`, ranging fro
 rcie_tibble <-
   tibble(sexism = seq(from = 3.5, to = 6.5, length.out = 30)) %>% 
   group_by(sexism) %>% 
-  mutate(`Protest vs. No Protest` = map(sexism, D1_function),
+  mutate(`Protest vs. No Protest`            = map(sexism, D1_function),
          `Collective vs. Individual Protest` = map(sexism, D2_function)) %>% 
   unnest() %>% 
   ungroup() %>% 
@@ -403,7 +403,7 @@ post %>%
   select(a4b:a5b) %>%
   gather() %>% 
  
-  ggplot(aes(x = value, y = key, group = key)) +
+  ggplot(aes(x = value, y = key)) +
   geom_halfeyeh(point_interval = median_qi, .prob = c(0.95, 0.5),
                 fill = "grey50", color = "white") +
   scale_y_discrete(expand = c(.1, .1)) +
@@ -421,7 +421,7 @@ We already computed the relevant 95% credible intervals at the end of section **
 ```{r, fig.width = 8, fig.height = 3.5}
 rcie_tibble_pick_a_point %>%   
   
-  ggplot(aes(x = value, y = sexism, group = sexism)) +
+  ggplot(aes(x = value, y = sexism)) +
   geom_halfeyeh(point_interval = median_qi, .prob = c(0.95, 0.5),
                 fill = "grey50", color = "white") +
   labs(x = "Relative Conditional Effect on Liking", y = NULL) +

@@ -22,7 +22,7 @@ Load brms.
 library(brms)
 ```
 
-Our `model1` is the simple moderation model.
+`model1` is the simple moderation model.
 
 ```{r model1, cache = T, message = F, warning = F}
 model1 <-
@@ -91,7 +91,7 @@ fitted(model1, summary = F,
   spread(key = frame, value = value) %>% 
   mutate(difference = `1` - `0`) %>% 
   
-  ggplot(aes(x = difference, y = skeptic, group = skeptic, fill = skeptic %>% as.character())) +
+  ggplot(aes(x = difference, y = skeptic, fill = skeptic %>% as.character())) +
   geom_halfeyeh(point_interval = median_qi, .prob = c(0.95, 0.5)) +
   scale_fill_brewer() +
   scale_y_continuous(breaks = quantile(disaster$skeptic, probs = c(.16, .5, .86)),
@@ -115,7 +115,7 @@ model2 <-
 print(model2, digits = 3)
 ```
 
-The Bayesian $R^2$
+The Bayesian $R^2$ summaries:
 
 ```{r}
 bayes_R2(model2) %>% round(digits = 3)
@@ -252,7 +252,7 @@ glimpse(justify_effects)
 glimpse(donate_effects)
 ```
 
-Here we'll combine those two tibbles by stacking `donate_effects` underneath `justify_effects` and then indexing them by `effect`. Then we're ready to plot.
+Next we'll combine those two tibbles by stacking `donate_effects` underneath `justify_effects` and then indexing them by `effect`. Then we're ready to plot.
 
 ```{r, fig.width = 6, fig.height = 4}
 # combining the tibbles
@@ -291,7 +291,7 @@ figure_12.7 %>%
 
 Note how wide those 95% intervals are relative to the scale of the y-axis. I specifically kept the y-axis within the same range as Figure 12.7 in the text. To me the message is clear: include credible-interval ribbons in your regression slope plots. They help depict how uncertain the posterior is in a way a simple line slopes just don't.
 
-### **Bonus**: Let's replace `sapply()` with `map()`.
+### **Bonus**: Let's replace `sapply()` with `map()`. {-}
 
 Good old `sapply()` worked just fine for our purposes, above. However, we can use `map()` to accomplish those goals in a more tidyverse-consistent fashion. First we'll define two custom functions to do what our two `sapply()` statements did for us.
 
@@ -313,7 +313,7 @@ tidyverse_style_tibble <-
   tibble(skeptic = seq(from = 0, to = 6, length.out = 30)) %>% 
   group_by(skeptic) %>% 
   mutate(`indirect effect` = map(skeptic, make_justify),
-         `direct effect` = map(skeptic, make_donate))
+         `direct effect`   = map(skeptic, make_donate))
 
 tidyverse_style_tibble
 ```
@@ -342,7 +342,7 @@ tidyverse_style_tibble <-
 head(tidyverse_style_tibble)
 ```
 
-Now we have 60 row, 30 for `direct effect` and another 30 for `indirect effect`. Each has the typical summary values for all 30 levels of `skeptic`. Now we're ready to plot.
+Now we have 60 row, 30 for `direct effect` and another 30 for `indirect effect`. Each has the typical summary values for all 30 levels of `skeptic`. We're ready to plot.
 
 ```{r, fig.width = 6, fig.height = 4}
 tidyverse_style_tibble %>% 
@@ -428,7 +428,7 @@ post %>%
   mutate(W = str_remove(key, "indirect effect when W is ") %>% as.double()) %>% 
   
   
-  ggplot(aes(x = `indirect effect`, y = W, group = W, fill = W %>% as.character())) +
+  ggplot(aes(x = `indirect effect`, y = W, fill = W %>% as.character())) +
   geom_halfeyeh(point_interval = median_qi, .prob = c(0.95, 0.5)) +
   scale_fill_brewer() +
   scale_y_continuous(breaks = c(1.592, 2.8, 5.2),

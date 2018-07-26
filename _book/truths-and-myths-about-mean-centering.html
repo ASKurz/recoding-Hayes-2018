@@ -25,7 +25,7 @@
 <meta name="author" content="A Solomon Kurz">
 
 
-<meta name="date" content="2018-07-21">
+<meta name="date" content="2018-07-26">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -584,10 +584,13 @@ correlations3 &lt;-<span class="st"> </span>
 ## negemotxage_Intercept  174.771     3.434  167.802  181.368       2955 1.000
 ## 
 ## Family Specific Parameters: 
+##                   Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
+## sigma_negemot        1.529     0.038    1.458    1.606       2564 1.001
+## sigma_age           16.359     0.397   15.605   17.161       3319 1.000
+## sigma_negemotxage   97.422     2.363   92.860  102.135       2674 1.000
+## 
+## Residual Correlations: 
 ##                             Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-## sigma_negemot                  1.529     0.038    1.458    1.606       2564 1.001
-## sigma_age                     16.359     0.397   15.605   17.161       3319 1.000
-## sigma_negemotxage             97.422     2.363   92.860  102.135       2674 1.000
 ## rescor(negemot,age)           -0.059     0.035   -0.128    0.010       3520 1.000
 ## rescor(negemot,negemotxage)    0.765     0.015    0.735    0.793       2526 1.001
 ## rescor(age,negemotxage)        0.548     0.024    0.499    0.594       4000 1.000
@@ -614,10 +617,13 @@ correlations3 &lt;-<span class="st"> </span>
 ## negemotcxagec_Intercept   -1.422     0.859   -3.115    0.251       4000 1.000
 ## 
 ## Family Specific Parameters: 
+##                     Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
+## sigma_negemotc         1.533     0.039    1.460    1.611       4000 0.999
+## sigma_agec            16.372     0.410   15.606   17.180       4000 0.999
+## sigma_negemotcxagec   24.247     0.620   23.072   25.476       4000 0.999
+## 
+## Residual Correlations: 
 ##                                Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-## sigma_negemotc                    1.533     0.039    1.460    1.611       4000 0.999
-## sigma_agec                       16.372     0.410   15.606   17.180       4000 0.999
-## sigma_negemotcxagec              24.247     0.620   23.072   25.476       4000 0.999
 ## rescor(negemotc,agec)            -0.056     0.035   -0.124    0.014       4000 1.000
 ## rescor(negemotc,negemotcxagec)    0.092     0.034    0.023    0.159       4000 1.000
 ## rescor(agec,negemotcxagec)       -0.015     0.036   -0.084    0.057       4000 1.000
@@ -644,10 +650,13 @@ correlations3 &lt;-<span class="st"> </span>
 ## negemotzxagez_Intercept   -0.057     0.035   -0.124    0.012       4000 0.999
 ## 
 ## Family Specific Parameters: 
+##                     Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
+## sigma_negemotz         1.003     0.025    0.957    1.053       4000 1.000
+## sigma_agez             1.002     0.025    0.956    1.051       4000 1.000
+## sigma_negemotzxagez    0.972     0.024    0.927    1.022       4000 1.000
+## 
+## Residual Correlations: 
 ##                                Estimate Est.Error l-95% CI u-95% CI Eff.Sample  Rhat
-## sigma_negemotz                    1.003     0.025    0.957    1.053       4000 1.000
-## sigma_agez                        1.002     0.025    0.956    1.051       4000 1.000
-## sigma_negemotzxagez               0.972     0.024    0.927    1.022       4000 1.000
 ## rescor(negemotz,agez)            -0.056     0.035   -0.124    0.013       4000 1.000
 ## rescor(negemotz,negemotzxagez)    0.091     0.035    0.024    0.161       4000 1.000
 ## rescor(agez,negemotzxagez)       -0.014     0.035   -0.083    0.053       4000 1.000

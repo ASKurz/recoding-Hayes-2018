@@ -10,7 +10,7 @@ options(width = 110)
 
 ## Example with dichotomous $X$: The influence of presumed media influence
 
-Here we load a couple necessary packages, load the data, and take a peek at them.
+Here we load a couple necessary packages, load the data, and take a peek.
 
 ```{r, warning = F, message = F}
 library(tidyverse)
@@ -238,7 +238,7 @@ Nothing new for us, here.
 
 ### Inference about the direct effect of $X$ on $Y$.
 
-In this section, Hayes provides a $t$-test and corresponding $p$-value for the direct effect (i.e., $c'$, `b_reaction_cond`). Instead of the $t$-test, we can just look at the posterior distribution.
+In this section, Hayes provided a $t$-test and corresponding $p$-value for the direct effect (i.e., $c'$, `b_reaction_cond`). Instead of the $t$-test, we can just look at the posterior distribution.
 
 ```{r, fig.width = 4, fig.height = 2}
 post %>% 
@@ -296,7 +296,7 @@ post %>%
   slice(1:10)
 ```
 
-Our data frame, `post`, has 4000 rows. Why 4000? By default, brms runs 4 HMC chains. Each chain has 2000 iterations, 1000 of which are warmups, which we always discard. As such, there are 1000 good iterations left in each chain and $1000\times4 = 4000$. We can change these defaults as needed. At this point in the project, the default settings have been fine.
+Our data frame, `post`, has 4000 rows. Why 4000? By default, brms runs 4 HMC chains. Each chain has 2000 iterations, 1000 of which are warmups, which we always discard. As such, there are 1000 good iterations left in each chain and $1000\times4 = 4000$. We can change these defaults as needed.
 
 Each row in `post` contains the parameter values based on one of those draws. And again, these are draws from the posterior distribution. They are not draws from the data.
 
@@ -370,7 +370,7 @@ Hayes discussed setting the seed in PROCESS on page 104. You can do this with th
 
 #### Alternative "asymmetric" confidence interval approaches.
 
-This section does not quite refer to us. I'm a little surprised Hayes didn't at least dedicate a paragraph or two mentioning Bayesian estimation. Sure, he mentioned Monte Carlo, but not within the context of Bayes. So it goes...
+This section does not quite refer to us. I'm a little surprised Hayes didn't at least dedicate a paragraph or two on Bayesian estimation. Sure, he mentioned Monte Carlo, but not within the context of Bayes. So it goes...
 
 ## An example with continuous $X$: Economic stress among small-business owners
 

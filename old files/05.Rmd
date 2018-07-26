@@ -1,10 +1,12 @@
 # More Than One Mediator
 
-## The parallel multiple mediator model
-
 ```{r set-options, echo = FALSE, cache = FALSE}
 options(width = 110)
 ```
+
+## The parallel multiple mediator model
+
+Going from one to multiple mediators can be a big step up, conceptually. But from a model fitting perspective, it often isn’t that big of a deal. We just have more parameters.
 
 ## Example using the presumed media influence study
 
@@ -122,7 +124,7 @@ post %>%
   mutate_if(is_double, round, digits = 3)
 ```
 
-In the middle paragraph of page 158, Hayes showd how the mean difference in `imprt` between the two `cond` groups multiplied by `b1`, the coefficient of `import` predicting `reaction`, is equal to the `a1b1` indirect effect. He does this with simple algebra using the group means and the point estimates. 
+In the middle paragraph of page 158, Hayes showd how the mean difference in `imprt` between the two `cond` groups multiplied by `b1`, the coefficient of `import` predicting `reaction`, is equal to the `a1b1` indirect effect. He did that with simple algebra using the group means and the point estimates. 
 
 Let's follow along. First, we'll get those two group means and save them as numbers to arbitrary precision.
 
@@ -155,7 +157,7 @@ post %>%
   mutate_if(is_double, round, digits = 3)
 ```
 
-Yep, at the mean, Hayes's formula is spot on. But the distributions are distinct. They differ slightly at the median and vastly in the widths of the posterior intervals. I’m no mathematician, so take this with a grain of salt, but I suspect this has to do with how we used fixed values (i.e., the difference of the subsample means) to compute `handmade a1b1`, but all the components in `a1b1` were estimated.
+Yep, Hayes's formula is spot on at the mean. But the distributions are distinct. They differ slightly at the median and vastly in the widths of the posterior intervals. I’m no mathematician, so take this with a grain of salt, but I suspect this has to do with how we used fixed values (i.e., the difference of the subsample means) to compute `handmade a1b1`, but all the components in `a1b1` were estimated.
 
 Here we'll follow the same protocol for `a2b2`.
 

@@ -113,7 +113,7 @@ post <- posterior_samples(model1)
 head(post)
 ```
 
-We've got six rows, each one corresponding to the credible parameter values from a given posterior draw. The `lp__` is uniquely Bayesian and beyond the scope of this project. You might think of `sigma` as the Bayesian analogue to what the OLS folks often refer to as error or the residual variance. Hayes doesn't tend to emphasize it in this text, but it's something you'll want to pay increasing attention to as you move along in your Bayesian career. All the columns starting with `b_` are the regression parameters, the model coefficients or the fixed effects. But anyways, notice that those `b_` columns correspond to the four parameter values in formula 8.2 on page 270. Here they are, but reformatted to more closely mimic the text:
+`head()` returned six rows, each one corresponding to the credible parameter values from a given posterior draw. The `lp__` is uniquely Bayesian and beyond the scope of this project. You might think of `sigma` as the Bayesian analogue to what the OLS folks often refer to as error or the residual variance. Hayes doesn't tend to emphasize it in this text, but it's something you'll want to pay increasing attention to as you move along in your Bayesian career. All the columns starting with `b_` are the regression parameters, the model coefficients or the fixed effects. But anyways, notice that those `b_` columns correspond to the four parameter values in formula 8.2 on page 270. Here they are, but reformatted to more closely mimic the text:
 
 1. $\hat{Y}$ = `r round(post[1, 1], 3)` + `r round(post[1, 2], 3)`$X$ + `r round(post[1, 3], 3)`$W$ + `r round(post[1, 4], 3)`*XW*
 2. $\hat{Y}$ = `r round(post[2, 1], 3)` + `r round(post[2, 2], 3)`$X$ + `r round(post[2, 3], 3)`$W$ + `r round(post[2, 4], 3)`*XW*
@@ -122,7 +122,7 @@ We've got six rows, each one corresponding to the credible parameter values from
 5. $\hat{Y}$ = `r round(post[5, 1], 3)` + `r round(post[5, 2], 3)`$X$ + `r round(post[5, 3], 3)`$W$ + `r round(post[5, 4], 3)`*XW*
 6. $\hat{Y}$ = `r round(post[6, 1], 3)` + `r round(post[6, 2], 3)`$X$ + `r round(post[6, 3], 3)`$W$ + `r round(post[6, 4], 3)`*XW*
 
-Each row of `post`, each iteration or posterior draw, yields a full model equation that is a credible description of the data—or at least as credible as we can get within the limits of the model we have specified, our priors (which we typically cop out on and just use defaults in this project), and how well those fit when applied to the data at hand. So when we use brms convenience functions like `fitted()`, we pass specific predictor values through those 4000 unique model equations, which produces 4000 similar but distinct expected $Y$-values. So although a nice way to summarize those 4000 values is with summaries such as the posterior mean/median and 95% intervals, another way is to just plot an individual regression line for each of the iterations. That is what’s going on when we depict out models with a spaghetti plot.
+Each row of `post`, each iteration or posterior draw, yields a full model equation that is a credible description of the data—or at least as credible as we can get within the limits of the model we have specified, our priors (which we typically cop out on and just use defaults in this project), and how well those fit when applied to the data at hand. So when we use brms convenience functions like `fitted()`, we pass specific predictor values through those 4000 unique model equations, which produces 4000 similar but distinct expected $Y$-values. So although a nice way to summarize those 4000 values is with summaries such as the posterior mean/median and 95% intervals, another way is to just plot an individual regression line for each of the iterations. That is what’s going on when we depict our models with a spaghetti plot.
 
 The thing I like about spaghetti plots is that they give a three-dimensional sense of the posterior. Note that each individual line is very skinny and semitransparent. When you pile a whole bunch of them atop each other, the peaked or most credible regions of the posterior are the most saturated in color. Less credible posterior regions almost seamlessly merge into the background. Also, note how the combination of many similar but distinct straight lines results in a bowtie shape. Hopefully this clarifies where that shape’s been coming from when we use `geom_ribbon()` to plot the 95% intervals.
 
@@ -264,7 +264,7 @@ fitted(model3, newdata = nd,
 
 When we reduce the number of lines depicted in the plot, we lose some of the three-dimensional illusion. It’s nice, however, to get a closer look to each individual line. To each their own.
 
-We'll continue with our spaghetti plot approach for Figure 8.7. Again, when we did the JN technique plot for Chapter 7, we computed values for the posterior mean and the 95% intervals. Because the intervals follow a bowtie shape, we had to compute the $Y$-values for many values across the x-axis in order to make the curve look smooth. But as long as we stick with the spaghetti plot approach, all we need are the values at the endpoints of each iteration. Although each line is straight, the combination of many lines is what produces the bowtie effect.
+We'll continue with our spaghetti plot approach for Figure 8.7. Again, when we made the JN technique plot for Chapter 7, we computed values for the posterior mean and the 95% intervals. Because the intervals follow a bowtie shape, we had to compute the $Y$-values for many values across the x-axis in order to make the curve look smooth. But as long as we stick with the spaghetti plot approach, all we need are the values at the endpoints of each iteration. Although each line is straight, the combination of many lines is what produces the bowtie effect.
 
 ```{r, fig.width = 6, fig.height = 4.5}
 # here is our primary data object
@@ -508,7 +508,7 @@ post %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
-So then the main effect of for candidate is similarly computed using either approach:
+The main effect of for candidate is similarly computed using either approach:
 
 ```{r}
 post %>% 
@@ -641,7 +641,7 @@ post %>%
 
 ### Main effects parameterization.
 
-A nice feature of brms is you transform your data right within the `brm()` or `update()` functions. Here we'll make our two new main-effects-coded variables, `policy_me` and `kerry_me`, with the `mutate()` function right within `update()`.
+A nice feature of brms is you can transform your data right within the `brm()` or `update()` functions. Here we'll make our two new main-effects-coded variables, `policy_me` and `kerry_me`, with the `mutate()` function right within `update()`.
 
 ```{r model6, cache = T, message = F, warning = F}
 model6 <-
@@ -654,7 +654,14 @@ model6 <-
          chains = 4, cores = 4)
 ```
 
-Here's our analogue to the "Model 2" portion of Table 8.5.
+Transforming your data within the brms functions won’t change the original data structure. However, brms will save the data used to fit the model within the `brm()` object. You can access that data like so:
+
+```{r}
+model6$data %>% 
+  head()
+```
+
+But we digress. Here's our analogue to the "Model 2" portion of Table 8.5.
 
 ```{r}
 fixef(model6) %>% round(digits = 3)

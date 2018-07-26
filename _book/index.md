@@ -1,7 +1,7 @@
 --- 
 title: "recoding *Introduction to Mediation, Moderation, and Conditional Process Analysis*"
 author: ["A Solomon Kurz"]
-date: "2018-07-21"
+date: "2018-07-26"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book

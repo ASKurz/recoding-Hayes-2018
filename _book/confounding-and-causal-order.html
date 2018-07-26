@@ -306,7 +306,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="13" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html"><i class="fa fa-check"></i><b>13</b> Conditional Process Analysis with a Multicategorical Antecedent</a><ul>
 <li class="chapter" data-level="13.1" data-path="revisiting-sexual-discrimination-in-the-workplace.html"><a href="revisiting-sexual-discrimination-in-the-workplace.html"><i class="fa fa-check"></i><b>13.1</b> Revisiting sexual discrimination in the workplace</a></li>
 <li class="chapter" data-level="13.2" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html"><i class="fa fa-check"></i><b>13.2</b> Looking at the components of the indirect effect of <span class="math inline">\(X\)</span></a><ul>
-<li class="chapter" data-level="13.2.1" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#examiing-the-first-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.1</b> Examiing the first stage of the mediation process.</a></li>
+<li class="chapter" data-level="13.2.1" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#examining-the-first-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.1</b> Examining the first stage of the mediation process.</a></li>
 <li class="chapter" data-level="13.2.2" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#estimating-the-second-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.2</b> Estimating the second stage of the mediation process.</a></li>
 </ul></li>
 <li class="chapter" data-level="13.3" data-path="relative-conditional-indirect-effects.html"><a href="relative-conditional-indirect-effects.html"><i class="fa fa-check"></i><b>13.3</b> Relative conditional indirect effects</a></li>
@@ -354,7 +354,7 @@ estress &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span cla
 ## $ sex      &lt;int&gt; 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1...
 ## $ age      &lt;int&gt; 51, 45, 42, 50, 48, 48, 51, 47, 40, 43, 57, 36, 33, 29, 33, 48, 40, 45, 37, 42, 54, 57, ...
 ## $ ese      &lt;dbl&gt; 5.33, 6.05, 5.26, 4.35, 4.86, 5.05, 3.66, 6.13, 5.26, 4.00, 2.53, 6.60, 5.20, 5.66, 5.66...</code></pre>
-<p>Here are the Pearson’s correlations.</p>
+<p>The <code>lowerCor()</code> function from the psych package makes it easy to estimate the lower triangle of a correlation matrix.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">psych<span class="op">::</span><span class="kw">lowerCor</span>(estress, <span class="dt">digits =</span> <span class="dv">3</span>)</code></pre></div>
 <pre><code>##          tenure estrss affect wthdrw sex    age    ese   
 ## tenure    1.000                                          
@@ -477,7 +477,7 @@ m_model &lt;-<span class="st"> </span><span class="kw">bf</span>(affect <span cl
 ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
 ## is a crude measure of effective sample size, and Rhat is the potential 
 ## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
-<p>In the printout, notice how first within intercepts and then with covariates and sigma, the coefficients are presented as for <code>withdraw</code> first and then <code>affect</code>. Also notice how the coefficients for the covariates are presented in the same order for each criterions. Hopefully that’ll make it easier to sift through the printout. Happily, our coefficients are quite similar to those in Table 4.1</p>
+<p>In the printout, notice how first within intercepts and then with covariates and sigma, the coefficients are presented as for <code>withdraw</code> first and then <code>affect</code>. Also notice how the coefficients for the covariates are presented in the same order for each criterions. Hopefully that’ll make it easier to sift through the printout. Happily, our coefficients are quite similar to those in Table 4.1.</p>
 <p>Here are the <span class="math inline">\(R^2\)</span> values.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bayes_R2</span>(model2) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">3</span>)</code></pre></div>
 <pre><code>##             Estimate Est.Error  Q2.5 Q97.5

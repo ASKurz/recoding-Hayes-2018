@@ -306,7 +306,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="13" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html"><i class="fa fa-check"></i><b>13</b> Conditional Process Analysis with a Multicategorical Antecedent</a><ul>
 <li class="chapter" data-level="13.1" data-path="revisiting-sexual-discrimination-in-the-workplace.html"><a href="revisiting-sexual-discrimination-in-the-workplace.html"><i class="fa fa-check"></i><b>13.1</b> Revisiting sexual discrimination in the workplace</a></li>
 <li class="chapter" data-level="13.2" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html"><i class="fa fa-check"></i><b>13.2</b> Looking at the components of the indirect effect of <span class="math inline">\(X\)</span></a><ul>
-<li class="chapter" data-level="13.2.1" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#examiing-the-first-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.1</b> Examiing the first stage of the mediation process.</a></li>
+<li class="chapter" data-level="13.2.1" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#examining-the-first-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.1</b> Examining the first stage of the mediation process.</a></li>
 <li class="chapter" data-level="13.2.2" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#estimating-the-second-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.2</b> Estimating the second stage of the mediation process.</a></li>
 </ul></li>
 <li class="chapter" data-level="13.3" data-path="relative-conditional-indirect-effects.html"><a href="relative-conditional-indirect-effects.html"><i class="fa fa-check"></i><b>13.3</b> Relative conditional indirect effects</a></li>
@@ -478,11 +478,11 @@ model5 &lt;-
 <p>Here are the unstandardized coefficients:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fixef</span>(model5) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">3</span>)</code></pre></div>
 <pre><code>##                    Estimate Est.Error   Q2.5 Q97.5
-## withdraw_Intercept    1.446     0.254  0.947 1.945
-## affect_Intercept      0.797     0.141  0.513 1.073
-## withdraw_estress     -0.077     0.052 -0.175 0.026
-## withdraw_affect       0.768     0.105  0.560 0.980
-## affect_estress        0.174     0.029  0.115 0.231</code></pre>
+## withdraw_Intercept    1.448     0.253  0.949 1.934
+## affect_Intercept      0.800     0.145  0.508 1.083
+## withdraw_estress     -0.077     0.052 -0.178 0.026
+## withdraw_affect       0.769     0.104  0.560 0.975
+## affect_estress        0.173     0.030  0.114 0.233</code></pre>
 <p>On pages 135–136, Hayes provided the formulas to compute the standardized effects:</p>
 <p><span class="math display">\[c&#39;_{cs} = \frac{SD_X(c&#39;)}{SD_{Y}} = SD_{X}(c&#39;_{ps})\]</span></p>
 <p><span class="math display">\[ab_{cs} = \frac{SD_X(ab)}{SD_{Y}} = SD_{X}(ab_{ps})\]</span></p>
@@ -510,9 +510,9 @@ post <span class="op">%&gt;%</span><span class="st"> </span>
 <pre><code>## # A tibble: 3 x 5
 ##   key         mean median     ll    ul
 ##   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
-## 1 ab_s       0.152  0.151  0.093 0.223
-## 2 c_prime_s -0.087 -0.088 -0.2   0.029
-## 3 c_s        0.065  0.064 -0.055 0.19</code></pre>
+## 1 ab_s       0.152  0.15   0.091 0.222
+## 2 c_prime_s -0.088 -0.088 -0.204 0.03 
+## 3 c_s        0.064  0.063 -0.057 0.181</code></pre>
 <p>Success!</p>
 </div>
 <div id="some-problematic-measures-only-for-indirect-effects." class="section level3">

@@ -410,7 +410,7 @@ Let's see what we've done.
 print(model6)
 ```
 
-When using the multivariate `mi()` syntax, your `print()` output becomes more complicated. Now we have a regression model for both `govact_z` and `negemot_z_missing`. At a minimum, each has its own intercept and residual variance (i.e., sigma). In the 'Population-Level Effects' section, the first part of the names for each regression coefficient clarifies which $Y$-variable it corresponds to (e.g., `govactz_Intercept` is the intercept for our primary $Y$-variable, `govact_z`). In the 'Family Specific Parameters' section, the sigmas are similarly labeled. 
+When using the multivariate `mi()` syntax, your `print()` output becomes more complicated. Now we have a regression model for both `govact_z` and `negemot_z_missing`. At a minimum, each has its own intercept and residual variance (i.e., sigma). In the 'Population-Level Effects' section, the first part of the names for each regression coefficient clarifies which $Y$-variable it corresponds to (e.g., `govactz_Intercept` is the intercept for our primary $Y$-variable, `govact_z`). In the 'Family Specific Parameters' section, the sigmas are similarly labeled.
 
 Perhaps most importantly, we see "Data: glbwarm (Number of observations: 815)" at the top of the output. The multivariate `mi()` syntax used all the available data. No listwise deletion necessary.
 

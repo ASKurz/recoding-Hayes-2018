@@ -306,7 +306,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="13" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html"><i class="fa fa-check"></i><b>13</b> Conditional Process Analysis with a Multicategorical Antecedent</a><ul>
 <li class="chapter" data-level="13.1" data-path="revisiting-sexual-discrimination-in-the-workplace.html"><a href="revisiting-sexual-discrimination-in-the-workplace.html"><i class="fa fa-check"></i><b>13.1</b> Revisiting sexual discrimination in the workplace</a></li>
 <li class="chapter" data-level="13.2" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html"><i class="fa fa-check"></i><b>13.2</b> Looking at the components of the indirect effect of <span class="math inline">\(X\)</span></a><ul>
-<li class="chapter" data-level="13.2.1" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#examiing-the-first-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.1</b> Examiing the first stage of the mediation process.</a></li>
+<li class="chapter" data-level="13.2.1" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#examining-the-first-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.1</b> Examining the first stage of the mediation process.</a></li>
 <li class="chapter" data-level="13.2.2" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#estimating-the-second-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.2</b> Estimating the second stage of the mediation process.</a></li>
 </ul></li>
 <li class="chapter" data-level="13.3" data-path="relative-conditional-indirect-effects.html"><a href="relative-conditional-indirect-effects.html"><i class="fa fa-check"></i><b>13.3</b> Relative conditional indirect effects</a></li>
@@ -483,7 +483,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <span class="st">  </span><span class="kw">mutate_if</span>(is.double, round, <span class="dt">digits =</span> <span class="dv">3</span>)</code></pre></div>
 <pre><code>##   median     ll     ul
 ## 1 -0.206 -0.379 -0.026</code></pre>
-<p>So then the main effect of for candidate is similarly computed using either approach:</p>
+<p>The main effect of for candidate is similarly computed using either approach:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">post <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">transmute</span>(<span class="dt">main_effect =</span> ((Y_bar_<span class="dv">4</span> <span class="op">-</span><span class="st"> </span>Y_bar_<span class="dv">2</span>) <span class="op">+</span><span class="st"> </span>(Y_bar_<span class="dv">3</span> <span class="op">-</span><span class="st"> </span>Y_bar_<span class="dv">1</span>))<span class="op">/</span><span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">summarize</span>(<span class="dt">median =</span> <span class="kw">median</span>(main_effect),
@@ -609,7 +609,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="main-effects-parameterization." class="section level3">
 <h3><span class="header-section-number">8.4.2</span> Main effects parameterization.</h3>
-<p>A nice feature of brms is you transform your data right within the <code>brm()</code> or <code>update()</code> functions. Here we’ll make our two new main-effects-coded variables, <code>policy_me</code> and <code>kerry_me</code>, with the <code>mutate()</code> function right within <code>update()</code>.</p>
+<p>A nice feature of brms is you can transform your data right within the <code>brm()</code> or <code>update()</code> functions. Here we’ll make our two new main-effects-coded variables, <code>policy_me</code> and <code>kerry_me</code>, with the <code>mutate()</code> function right within <code>update()</code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model6 &lt;-
 <span class="st">  </span><span class="kw">update</span>(model5,
          <span class="dt">newdata =</span> caskets <span class="op">%&gt;%</span>
@@ -618,7 +618,17 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
          <span class="dt">family =</span> gaussian,
          interest <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>policy_me <span class="op">+</span><span class="st"> </span>kerry_me <span class="op">+</span><span class="st"> </span>policy_me<span class="op">:</span>kerry_me,
          <span class="dt">chains =</span> <span class="dv">4</span>, <span class="dt">cores =</span> <span class="dv">4</span>)</code></pre></div>
-<p>Here’s our analogue to the “Model 2” portion of Table 8.5.</p>
+<p>Transforming your data within the brms functions won’t change the original data structure. However, brms will save the data used to fit the model within the <code>brm()</code> object. You can access that data like so:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model6<span class="op">$</span>data <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">head</span>()</code></pre></div>
+<pre><code>##   interest policy_me kerry_me
+## 1        4       0.5      0.5
+## 2        2      -0.5      0.5
+## 3        3       0.5      0.5
+## 4        1       0.5      0.5
+## 5        1       0.5      0.5
+## 6        2      -0.5     -0.5</code></pre>
+<p>But we digress. Here’s our analogue to the “Model 2” portion of Table 8.5.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fixef</span>(model6) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">3</span>)</code></pre></div>
 <pre><code>##                    Estimate Est.Error   Q2.5  Q97.5
 ## Intercept             1.980     0.045  1.894  2.066
@@ -692,7 +702,7 @@ model6 &lt;-
        <span class="dt">subtitle =</span> <span class="st">&quot;Yes, they are indeed different. And yet that difference is so</span><span class="ch">\n</span><span class="st">trivial that we&#39;d expect greater variability from measurement</span><span class="ch">\n</span><span class="st">error than we still have from simulation error.&quot;</span>,
        <span class="dt">x =</span> <span class="ot">NULL</span>) <span class="op">+</span>
 <span class="st">  </span>theme_<span class="dv">08</span> </code></pre></div>
-<p><img src="08_files/figure-html/unnamed-chunk-47-1.png" width="432" /></p>
+<p><img src="08_files/figure-html/unnamed-chunk-48-1.png" width="432" /></p>
 </div>
 <div id="conducting-a-2-x-2-between-participants-factorial-anova-using-process-another-regression-model-with-brms." class="section level3">
 <h3><span class="header-section-number">8.4.3</span> Conducting <del>a 2 X 2 between-participants factorial ANOVA using PROCESS</del> another regression model with brms.</h3>
@@ -755,7 +765,7 @@ post <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Group means&quot;</span>,
        <span class="dt">x =</span> <span class="ot">NULL</span>) <span class="op">+</span>
 <span class="st">  </span>theme_<span class="dv">08</span></code></pre></div>
-<p><img src="08_files/figure-html/unnamed-chunk-50-1.png" width="768" /></p>
+<p><img src="08_files/figure-html/unnamed-chunk-51-1.png" width="768" /></p>
 <p>Since each of the four primary vectors in our <code>post</code> object is of a group mean, it’s trivial to compute difference scores. To compute the difference score analogous to Hayes’s two <span class="math inline">\(t\)</span>-tests, we’d do the following.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">post <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">transmute</span>(<span class="dt">difference_1 =</span> b_policy_kerry10 <span class="op">-</span><span class="st"> </span>b_policy_kerry00,

@@ -306,7 +306,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="13" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html"><i class="fa fa-check"></i><b>13</b> Conditional Process Analysis with a Multicategorical Antecedent</a><ul>
 <li class="chapter" data-level="13.1" data-path="revisiting-sexual-discrimination-in-the-workplace.html"><a href="revisiting-sexual-discrimination-in-the-workplace.html"><i class="fa fa-check"></i><b>13.1</b> Revisiting sexual discrimination in the workplace</a></li>
 <li class="chapter" data-level="13.2" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html"><i class="fa fa-check"></i><b>13.2</b> Looking at the components of the indirect effect of <span class="math inline">\(X\)</span></a><ul>
-<li class="chapter" data-level="13.2.1" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#examiing-the-first-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.1</b> Examiing the first stage of the mediation process.</a></li>
+<li class="chapter" data-level="13.2.1" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#examining-the-first-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.1</b> Examining the first stage of the mediation process.</a></li>
 <li class="chapter" data-level="13.2.2" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#estimating-the-second-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.2</b> Estimating the second stage of the mediation process.</a></li>
 </ul></li>
 <li class="chapter" data-level="13.3" data-path="relative-conditional-indirect-effects.html"><a href="relative-conditional-indirect-effects.html"><i class="fa fa-check"></i><b>13.3</b> Relative conditional indirect effects</a></li>
@@ -371,15 +371,15 @@ R2s <span class="op">%&gt;%</span><span class="st"> </span>
 <p><img src="13_files/figure-html/unnamed-chunk-24-1.png" width="576" /></p>
 <p>We’ll also compare the models by their information criteria.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">loo</span>(model1, model3)</code></pre></div>
-<pre><code>##                 LOOIC    SE
-## model1          760.1 29.56
-## model3          761.6 30.99
-## model1 - model3  -1.5  5.49</code></pre>
+<pre><code>##                  LOOIC    SE
+## model1          760.10 29.56
+## model3          761.26 31.27
+## model1 - model3  -1.16  5.57</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">waic</span>(model1, model3)</code></pre></div>
 <pre><code>##                   WAIC    SE
 ## model1          759.74 29.47
-## model3          761.34 30.92
-## model1 - model3  -1.60  5.47</code></pre>
+## model3          760.86 31.14
+## model1 - model3  -1.12  5.53</code></pre>
 <p>As when we went through these steps for <code>resp = &quot;respappr&quot;</code>, above, the Bayesian <span class="math inline">\(R^2\)</span>, the LOO-CV, and the WAIC all suggest there’s little difference between the two models with respect to predictive utility. In such a case, I’d lean on theory to choose between them. If inclined, one could also do Bayesian model averaging.</p>
 <p>Our approach to plotting the relative conditional <em>direct</em> effects will mirror what we did for the relative conditional <em>indirect</em> effects, above. Here are the <code>brm()</code> parameters that correspond to the parameter names of Hayes’s notation.</p>
 <ul>

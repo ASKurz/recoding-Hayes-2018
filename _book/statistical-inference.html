@@ -306,7 +306,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="13" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html"><i class="fa fa-check"></i><b>13</b> Conditional Process Analysis with a Multicategorical Antecedent</a><ul>
 <li class="chapter" data-level="13.1" data-path="revisiting-sexual-discrimination-in-the-workplace.html"><a href="revisiting-sexual-discrimination-in-the-workplace.html"><i class="fa fa-check"></i><b>13.1</b> Revisiting sexual discrimination in the workplace</a></li>
 <li class="chapter" data-level="13.2" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html"><i class="fa fa-check"></i><b>13.2</b> Looking at the components of the indirect effect of <span class="math inline">\(X\)</span></a><ul>
-<li class="chapter" data-level="13.2.1" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#examiing-the-first-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.1</b> Examiing the first stage of the mediation process.</a></li>
+<li class="chapter" data-level="13.2.1" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#examining-the-first-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.1</b> Examining the first stage of the mediation process.</a></li>
 <li class="chapter" data-level="13.2.2" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#estimating-the-second-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.2</b> Estimating the second stage of the mediation process.</a></li>
 </ul></li>
 <li class="chapter" data-level="13.3" data-path="relative-conditional-indirect-effects.html"><a href="relative-conditional-indirect-effects.html"><i class="fa fa-check"></i><b>13.3</b> Relative conditional indirect effects</a></li>
@@ -337,9 +337,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
             <section class="normal" id="section-">
 <div id="statistical-inference" class="section level2">
 <h2><span class="header-section-number">2.6</span> Statistical inference</h2>
-<p>Here’s a tidyverse way to do Hayes’s simulation. We’re just using OLS regression with the <code>lm()</code> function. You could do this with Bayesian HMC estimation, but man would it take a while.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># first, we&#39;ll need two custom functions</span>
-<span class="co"># this first one will use the `sample_n()` function to randomly sample from `glbwarm`</span>
+<p>Here’s a tidyverse way to do Hayes’s simulation. We’re just using OLS regression with the <code>lm()</code> function. You could do this with Bayesian HMC estimation, but man would it take a while. For our first step, we’ll define two custom functions.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># this first one will use the `sample_n()` function to randomly sample from `glbwarm`</span>
 make_sample &lt;-<span class="st"> </span><span class="cf">function</span>(i){
   <span class="kw">set.seed</span>(i)
   <span class="kw">sample_n</span>(glbwarm, <span class="dv">50</span>, <span class="dt">replace =</span> F)
@@ -348,9 +347,9 @@ make_sample &lt;-<span class="st"> </span><span class="cf">function</span>(i){
 <span class="co"># this second function will fit our model, the same one from `model4`, to each of our subsamples</span>
 glbwarm_model &lt;-<span class="st"> </span><span class="cf">function</span>(df) {
   <span class="kw">lm</span>(govact <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>negemot <span class="op">+</span><span class="st"> </span>posemot <span class="op">+</span><span class="st"> </span>ideology <span class="op">+</span><span class="st"> </span>sex <span class="op">+</span><span class="st"> </span>age, <span class="dt">data =</span> df)
-}
-
-<span class="co"># we need an iteration index, which will double as the values we set our seed with in our `make_sample()` function</span>
+}</code></pre></div>
+<p>Now we’ll run the simulation, wrangle the output, and plot in one fell swoop.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># we need an iteration index, which will double as the values we set our seed with in our `make_sample()` function</span>
 <span class="kw">tibble</span>(<span class="dt">iter =</span> <span class="dv">1</span><span class="op">:</span><span class="fl">1e4</span>) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">group_by</span>(iter) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="co"># inserting our subsamples</span>
@@ -370,11 +369,13 @@ glbwarm_model &lt;-<span class="st"> </span><span class="cf">function</span>(df)
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Unstandardized regression coefficient for negemot&quot;</span>,
        <span class="dt">y =</span> <span class="st">&quot;Frequency in 1e4 samples of size 50&quot;</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
-<p><img src="02_files/figure-html/unnamed-chunk-46-1.png" width="576" /></p>
+<p><img src="02_files/figure-html/sim-1.png" width="576" /></p>
 <p>To learn more about this approach to simulations, see <a href="http://r4ds.had.co.nz/many-models.html#nested-data">this section of <em>R4DS</em></a>.</p>
 <div id="testing-a-null-hypothesis." class="section level3">
 <h3><span class="header-section-number">2.6.1</span> Testing a null hypothesis.</h3>
-<p>As Bayesians, we don’t need to wed ourselves to the null hypothesis. We’re not interested in the probability of the data given the null hypothesis. Rather, we’re interested in the probability of the parameters given the data.</p>
+<p>As Bayesians, we don’t need to wed ourselves to the null hypothesis. We’re not interested in the probability of the data given the null hypothesis. Bayes’s rule,</p>
+<p><span class="math display">\[p(\theta|D) = \frac{p(D|\theta)p(\theta)}{p(D)}\]</span></p>
+<p>gives us the probability of the model parameters, given the data. Though I acknowledge <a href="http://daniellakens.blogspot.com/2017/11/the-statisticians-fallacy.html">different researchers might set out to ask different things of their data</a>, I propose we’re generally more interested in determining the most probable parameter values than we are the probabilities tested within the NHST paradigm.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">posterior_samples</span>(model4) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> b_negemot)) <span class="op">+</span>
@@ -522,7 +523,7 @@ glbwarm_model &lt;-<span class="st"> </span><span class="cf">function</span>(df)
 <span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="ot">NULL</span>, <span class="dt">breaks =</span> <span class="ot">NULL</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">coord_cartesian</span>(<span class="dt">xlim =</span> <span class="op">-</span><span class="dv">1</span><span class="op">:</span><span class="dv">0</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(Delta, <span class="kw">italic</span>(<span class="st">&quot;R&quot;</span>)<span class="op">^</span>{<span class="dv">2</span>})),
-       <span class="dt">subtitle =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;This is the amount the &quot;</span>, <span class="kw">italic</span>(<span class="st">&quot;R&quot;</span>)<span class="op">^</span>{<span class="dv">2</span>}, <span class="st">&quot; dropped after we pruned the emotion variables from the model.&quot;</span>)),
+       <span class="dt">subtitle =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;This is the amount the &quot;</span>, <span class="kw">italic</span>(<span class="st">&quot;R&quot;</span>)<span class="op">^</span>{<span class="dv">2</span>}, <span class="st">&quot; dropped after pruning the emotion variables from the model.&quot;</span>)),
        <span class="dt">x =</span> <span class="ot">NULL</span>) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
 <p><img src="02_files/figure-html/unnamed-chunk-57-1.png" width="576" /></p>

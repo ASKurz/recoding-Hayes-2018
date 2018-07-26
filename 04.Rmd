@@ -24,7 +24,7 @@ estress <- read_csv("data/estress/estress.csv")
 glimpse(estress)
 ```
 
-Here are the Pearson's correlations.
+The `lowerCor()` function from the psych package makes it easy to estimate the lower triangle of a correlation matrix.
 
 ```{r}
 psych::lowerCor(estress, digits = 3)
@@ -100,7 +100,7 @@ Here's the summary:
 print(model2, digits = 3)
 ```
 
-In the printout, notice how first within intercepts and then with covariates and sigma, the coefficients are presented as for `withdraw` first and then `affect`. Also notice how the coefficients for the covariates are presented in the same order for each criterions. Hopefully that'll make it easier to sift through the printout. Happily, our coefficients are quite similar to those in Table 4.1 
+In the printout, notice how first within intercepts and then with covariates and sigma, the coefficients are presented as for `withdraw` first and then `affect`. Also notice how the coefficients for the covariates are presented in the same order for each criterions. Hopefully that'll make it easier to sift through the printout. Happily, our coefficients are quite similar to those in Table 4.1.
 
 Here are the $R^2$ values.
 

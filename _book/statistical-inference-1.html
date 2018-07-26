@@ -306,7 +306,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="13" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html"><i class="fa fa-check"></i><b>13</b> Conditional Process Analysis with a Multicategorical Antecedent</a><ul>
 <li class="chapter" data-level="13.1" data-path="revisiting-sexual-discrimination-in-the-workplace.html"><a href="revisiting-sexual-discrimination-in-the-workplace.html"><i class="fa fa-check"></i><b>13.1</b> Revisiting sexual discrimination in the workplace</a></li>
 <li class="chapter" data-level="13.2" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html"><i class="fa fa-check"></i><b>13.2</b> Looking at the components of the indirect effect of <span class="math inline">\(X\)</span></a><ul>
-<li class="chapter" data-level="13.2.1" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#examiing-the-first-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.1</b> Examiing the first stage of the mediation process.</a></li>
+<li class="chapter" data-level="13.2.1" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#examining-the-first-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.1</b> Examining the first stage of the mediation process.</a></li>
 <li class="chapter" data-level="13.2.2" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#estimating-the-second-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.2</b> Estimating the second stage of the mediation process.</a></li>
 </ul></li>
 <li class="chapter" data-level="13.3" data-path="relative-conditional-indirect-effects.html"><a href="relative-conditional-indirect-effects.html"><i class="fa fa-check"></i><b>13.3</b> Relative conditional indirect effects</a></li>
@@ -342,7 +342,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </div>
 <div id="inference-about-the-direct-effect-of-x-on-y." class="section level3">
 <h3><span class="header-section-number">3.3.2</span> Inference about the direct effect of <span class="math inline">\(X\)</span> on <span class="math inline">\(Y\)</span>.</h3>
-<p>In this section, Hayes provides a <span class="math inline">\(t\)</span>-test and corresponding <span class="math inline">\(p\)</span>-value for the direct effect (i.e., <span class="math inline">\(c&#39;\)</span>, <code>b_reaction_cond</code>). Instead of the <span class="math inline">\(t\)</span>-test, we can just look at the posterior distribution.</p>
+<p>In this section, Hayes provided a <span class="math inline">\(t\)</span>-test and corresponding <span class="math inline">\(p\)</span>-value for the direct effect (i.e., <span class="math inline">\(c&#39;\)</span>, <code>b_reaction_cond</code>). Instead of the <span class="math inline">\(t\)</span>-test, we can just look at the posterior distribution.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">post <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span>
 <span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> b_reaction_cond)) <span class="op">+</span>
@@ -397,7 +397,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ## 8   0.6320108      0.5958088 0.37655762
 ## 9   0.2710269      0.6620422 0.17943122
 ## 10  0.2677347      0.6401424 0.17138832</code></pre>
-<p>Our data frame, <code>post</code>, has 4000 rows. Why 4000? By default, brms runs 4 HMC chains. Each chain has 2000 iterations, 1000 of which are warmups, which we always discard. As such, there are 1000 good iterations left in each chain and <span class="math inline">\(1000\times4 = 4000\)</span>. We can change these defaults as needed. At this point in the project, the default settings have been fine.</p>
+<p>Our data frame, <code>post</code>, has 4000 rows. Why 4000? By default, brms runs 4 HMC chains. Each chain has 2000 iterations, 1000 of which are warmups, which we always discard. As such, there are 1000 good iterations left in each chain and <span class="math inline">\(1000\times4 = 4000\)</span>. We can change these defaults as needed.</p>
 <p>Each row in <code>post</code> contains the parameter values based on one of those draws. And again, these are draws from the posterior distribution. They are not draws from the data.</p>
 </div>
 <div id="step-3." class="section level5">
@@ -474,7 +474,7 @@ post <span class="op">%&gt;%</span><span class="st"> </span>
 </div>
 <div id="alternative-asymmetric-confidence-interval-approaches." class="section level4">
 <h4><span class="header-section-number">3.3.3.3</span> Alternative “asymmetric” confidence interval approaches.</h4>
-<p>This section does not quite refer to us. I’m a little surprised Hayes didn’t at least dedicate a paragraph or two mentioning Bayesian estimation. Sure, he mentioned Monte Carlo, but not within the context of Bayes. So it goes…</p>
+<p>This section does not quite refer to us. I’m a little surprised Hayes didn’t at least dedicate a paragraph or two on Bayesian estimation. Sure, he mentioned Monte Carlo, but not within the context of Bayes. So it goes…</p>
 </div>
 </div>
 </div>

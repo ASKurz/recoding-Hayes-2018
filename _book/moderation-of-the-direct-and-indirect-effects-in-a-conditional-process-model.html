@@ -306,7 +306,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="13" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html"><i class="fa fa-check"></i><b>13</b> Conditional Process Analysis with a Multicategorical Antecedent</a><ul>
 <li class="chapter" data-level="13.1" data-path="revisiting-sexual-discrimination-in-the-workplace.html"><a href="revisiting-sexual-discrimination-in-the-workplace.html"><i class="fa fa-check"></i><b>13.1</b> Revisiting sexual discrimination in the workplace</a></li>
 <li class="chapter" data-level="13.2" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html"><i class="fa fa-check"></i><b>13.2</b> Looking at the components of the indirect effect of <span class="math inline">\(X\)</span></a><ul>
-<li class="chapter" data-level="13.2.1" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#examiing-the-first-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.1</b> Examiing the first stage of the mediation process.</a></li>
+<li class="chapter" data-level="13.2.1" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#examining-the-first-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.1</b> Examining the first stage of the mediation process.</a></li>
 <li class="chapter" data-level="13.2.2" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#estimating-the-second-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.2</b> Estimating the second stage of the mediation process.</a></li>
 </ul></li>
 <li class="chapter" data-level="13.3" data-path="relative-conditional-indirect-effects.html"><a href="relative-conditional-indirect-effects.html"><i class="fa fa-check"></i><b>13.3</b> Relative conditional indirect effects</a></li>
@@ -479,7 +479,7 @@ donate_effects &lt;-
 ## $ median  &lt;dbl&gt; 0.1597819, 0.1630075, 0.1678151, 0.1705533, 0.1731486, 0.1770148, 0.1808678, 0.1831889, 0...
 ## $ ll      &lt;dbl&gt; -0.37958850, -0.35153604, -0.32329946, -0.29206770, -0.26686317, -0.24508634, -0.22429952...
 ## $ ul      &lt;dbl&gt; 0.6936796, 0.6765022, 0.6547631, 0.6400564, 0.6175050, 0.5998254, 0.5765224, 0.5634475, 0...</code></pre>
-<p>Here we’ll combine those two tibbles by stacking <code>donate_effects</code> underneath <code>justify_effects</code> and then indexing them by <code>effect</code>. Then we’re ready to plot.</p>
+<p>Next we’ll combine those two tibbles by stacking <code>donate_effects</code> underneath <code>justify_effects</code> and then indexing them by <code>effect</code>. Then we’re ready to plot.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># combining the tibbles</span>
 figure_<span class="fl">12.7</span> &lt;-
 <span class="st">  </span>justify_effects <span class="op">%&gt;%</span><span class="st"> </span>
@@ -531,7 +531,7 @@ make_donate &lt;-<span class="cf">function</span>(w){
 <span class="st">  </span><span class="kw">tibble</span>(<span class="dt">skeptic =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">6</span>, <span class="dt">length.out =</span> <span class="dv">30</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">group_by</span>(skeptic) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">mutate</span>(<span class="st">`</span><span class="dt">indirect effect</span><span class="st">`</span> =<span class="st"> </span><span class="kw">map</span>(skeptic, make_justify),
-         <span class="st">`</span><span class="dt">direct effect</span><span class="st">`</span> =<span class="st"> </span><span class="kw">map</span>(skeptic, make_donate))
+         <span class="st">`</span><span class="dt">direct effect</span><span class="st">`</span>   =<span class="st"> </span><span class="kw">map</span>(skeptic, make_donate))
 
 tidyverse_style_tibble</code></pre></div>
 <pre><code>## # A tibble: 30 x 3
@@ -585,7 +585,7 @@ tidyverse_style_tibble</code></pre></div>
 ## 4 direct effect   0.621 0.171   -0.292     0.640  0.95
 ## 5 direct effect   0.828 0.173   -0.267     0.618  0.95
 ## 6 direct effect   1.03  0.177   -0.245     0.600  0.95</code></pre>
-<p>Now we have 60 row, 30 for <code>direct effect</code> and another 30 for <code>indirect effect</code>. Each has the typical summary values for all 30 levels of <code>skeptic</code>. Now we’re ready to plot.</p>
+<p>Now we have 60 row, 30 for <code>direct effect</code> and another 30 for <code>indirect effect</code>. Each has the typical summary values for all 30 levels of <code>skeptic</code>. We’re ready to plot.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tidyverse_style_tibble <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> skeptic, <span class="dt">group =</span> effect)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> conf.low, <span class="dt">ymax =</span> conf.high, <span class="dt">fill =</span> effect),

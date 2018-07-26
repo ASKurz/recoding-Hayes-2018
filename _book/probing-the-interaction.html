@@ -306,7 +306,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="13" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html"><i class="fa fa-check"></i><b>13</b> Conditional Process Analysis with a Multicategorical Antecedent</a><ul>
 <li class="chapter" data-level="13.1" data-path="revisiting-sexual-discrimination-in-the-workplace.html"><a href="revisiting-sexual-discrimination-in-the-workplace.html"><i class="fa fa-check"></i><b>13.1</b> Revisiting sexual discrimination in the workplace</a></li>
 <li class="chapter" data-level="13.2" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html"><i class="fa fa-check"></i><b>13.2</b> Looking at the components of the indirect effect of <span class="math inline">\(X\)</span></a><ul>
-<li class="chapter" data-level="13.2.1" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#examiing-the-first-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.1</b> Examiing the first stage of the mediation process.</a></li>
+<li class="chapter" data-level="13.2.1" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#examining-the-first-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.1</b> Examining the first stage of the mediation process.</a></li>
 <li class="chapter" data-level="13.2.2" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#estimating-the-second-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.2</b> Estimating the second stage of the mediation process.</a></li>
 </ul></li>
 <li class="chapter" data-level="13.3" data-path="relative-conditional-indirect-effects.html"><a href="relative-conditional-indirect-effects.html"><i class="fa fa-check"></i><b>13.3</b> Relative conditional indirect effects</a></li>
@@ -362,12 +362,12 @@ model4 &lt;-
 <p>The coefficient summaries for <code>model4</code> correspond to the top section of Table 10.3 (p. 373).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fixef</span>(model4) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">3</span>)</code></pre></div>
 <pre><code>##             Estimate Est.Error   Q2.5  Q97.5
-## Intercept      5.700     0.231  5.253  6.164
-## D1            -0.298     0.336 -0.962  0.357
-## D2            -0.187     0.313 -0.788  0.408
-## sexism_p      -0.473     0.205 -0.874 -0.064
-## D1:sexism_p    0.900     0.287  0.327  1.448
-## D2:sexism_p    0.780     0.274  0.240  1.308</code></pre>
+## Intercept      5.692     0.230  5.227  6.141
+## D1            -0.290     0.343 -0.962  0.386
+## D2            -0.180     0.311 -0.791  0.424
+## sexism_p      -0.466     0.209 -0.882 -0.046
+## D1:sexism_p    0.892     0.288  0.320  1.458
+## D2:sexism_p    0.774     0.277  0.232  1.339</code></pre>
 <p>We can compare their Bayesian <span class="math inline">\(R^2\)</span> distributions like we usually do.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">r2s &lt;-
 <span class="st">  </span><span class="kw">bayes_R2</span>(model3, <span class="dt">summary =</span> F) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -391,16 +391,16 @@ r2s <span class="op">%&gt;%</span><span class="st"> </span>
 <pre><code>## # A tibble: 3 x 4
 ##   key                   median     ll    ul
 ##   &lt;fct&gt;                  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
-## 1 Model without D1 + D2  0.138  0.053 0.241
-## 2 Model with D1 + D2     0.156  0.064 0.254
-## 3 The R2 difference      0.016 -0.12  0.148</code></pre>
+## 1 Model without D1 + D2  0.14   0.051 0.244
+## 2 Model with D1 + D2     0.154  0.063 0.255
+## 3 The R2 difference      0.013 -0.123 0.149</code></pre>
 <p>Our results differ a bit from those in the text, but the substantive interpretation is the same. The <code>D1</code> and <code>D2</code> parameters added little predictive power to the model in terms of <span class="math inline">\(R^2\)</span>. We can also use information criteria to compare the models. Here are the results from using the LOO-CV.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">loo</span>(model3, model4,
     <span class="dt">reloo =</span> T)</code></pre></div>
 <pre><code>##                  LOOIC    SE
-## model3          371.67 22.12
-## model4          374.45 21.82
-## model3 - model4  -2.79  1.74</code></pre>
+## model3          371.84 22.04
+## model4          374.88 21.90
+## model3 - model4  -3.05  1.56</code></pre>
 <p>[When I ran the <code>loo()</code> without the <code>reloo</code> argument, I got a warning message about an observation with an overly-large pareto <span class="math inline">\(k\)</span> value. Setting <code>reloo = T</code> fixed the problem.]</p>
 <p>The LOO-CV difference between the two models was pretty small and its standard error was of about the same magnitude of its difference. Thus, the LOO-CV gives the same general message as the <span class="math inline">\(R^2\)</span>. The <code>D1</code> and <code>D2</code> parameters were sufficiently small and uncertain enough that constraining them to zero did little in terms of reducing the explanatory power of the statistical model.</p>
 <p>Here’s the same thing all over again, but this time after centering <code>sexism</code> on 5.120.</p>
@@ -424,12 +424,12 @@ model4 &lt;-
 <p>These coefficient summaries correspond to the middle section of Table 10.3 (p. 373).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fixef</span>(model4) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">3</span>)</code></pre></div>
 <pre><code>##             Estimate Est.Error   Q2.5  Q97.5
-## Intercept      5.284     0.159  4.974  5.595
-## D1             0.487     0.226  0.049  0.937
-## D2             0.493     0.222  0.062  0.926
-## sexism_p      -0.470     0.214 -0.886 -0.058
-## D1:sexism_p    0.901     0.291  0.339  1.468
-## D2:sexism_p    0.774     0.284  0.212  1.333</code></pre>
+## Intercept      5.285     0.154  4.977  5.579
+## D1             0.488     0.220  0.053  0.913
+## D2             0.492     0.213  0.074  0.916
+## sexism_p      -0.469     0.203 -0.867 -0.064
+## D1:sexism_p    0.894     0.289  0.330  1.458
+## D2:sexism_p    0.769     0.275  0.216  1.311</code></pre>
 <p>Here are the Bayesian <span class="math inline">\(R^2\)</span> summaries and the summary for their difference.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">r2s &lt;-
 <span class="st">  </span><span class="kw">bayes_R2</span>(model3, <span class="dt">summary =</span> F) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -453,18 +453,15 @@ r2s <span class="op">%&gt;%</span><span class="st"> </span>
 <pre><code>## # A tibble: 3 x 4
 ##   key                   median     ll    ul
 ##   &lt;fct&gt;                  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
-## 1 Model without D1 + D2  0.099  0.029 0.193
-## 2 Model with D1 + D2     0.156  0.065 0.255
-## 3 The R2 difference      0.055 -0.076 0.181</code></pre>
+## 1 Model without D1 + D2  0.1    0.029 0.193
+## 2 Model with D1 + D2     0.153  0.066 0.253
+## 3 The R2 difference      0.053 -0.074 0.175</code></pre>
+<p>And the LOO-CV:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">loo</span>(model3, model4)</code></pre></div>
-<pre><code>## Warning: Found 1 observations with a pareto_k &gt; 0.7 in model &#39;model3&#39;. It is recommended to set
-## &#39;reloo = TRUE&#39; in order to calculate the ELPD without the assumption that these observations are
-## negligible. This will refit the model 1 times to compute the ELPDs for the problematic observations
-## directly.</code></pre>
 <pre><code>##                  LOOIC    SE
-## model3          377.46 23.82
-## model4          375.21 21.92
-## model3 - model4   2.25  6.02</code></pre>
+## model3          377.42 23.75
+## model4          374.37 21.72
+## model3 - model4   3.05  6.05</code></pre>
 <p>Here again our Bayesian <span class="math inline">\(R^2\)</span> and <code>loo()</code> results cohere, both suggesting the <code>D1</code> and <code>D2</code> parameters were of little predictive utility. Note how this differs a little from the second <span class="math inline">\(F\)</span>-test on page 370.</p>
 <p>Here’s what happens when we center <code>sexism</code> on 5.896.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">protest &lt;-
@@ -487,12 +484,12 @@ model4 &lt;-
 <p>These coefficient summaries correspond to the lower section of Table 10.3 (p. 373).</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fixef</span>(model4) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">3</span>)</code></pre></div>
 <pre><code>##             Estimate Est.Error   Q2.5  Q97.5
-## Intercept      4.918     0.232  4.440  5.367
-## D1             1.185     0.313  0.582  1.836
-## D2             1.090     0.313  0.475  1.714
-## sexism_p      -0.471     0.208 -0.886 -0.075
-## D1:sexism_p    0.903     0.292  0.338  1.493
-## D2:sexism_p    0.772     0.279  0.223  1.332</code></pre>
+## Intercept      4.922     0.231  4.468  5.368
+## D1             1.177     0.314  0.568  1.785
+## D2             1.092     0.320  0.468  1.726
+## sexism_p      -0.471     0.208 -0.879 -0.072
+## D1:sexism_p    0.898     0.290  0.344  1.475
+## D2:sexism_p    0.774     0.277  0.220  1.306</code></pre>
 <p>Again, the <span class="math inline">\(R^2\)</span> distributions and their difference-score distribution.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">r2s &lt;-
 <span class="st">  </span><span class="kw">bayes_R2</span>(model3, <span class="dt">summary =</span> F) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -516,14 +513,14 @@ r2s <span class="op">%&gt;%</span><span class="st"> </span>
 <pre><code>## # A tibble: 3 x 4
 ##   key                   median    ll    ul
 ##   &lt;fct&gt;                  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 Model without D1 + D2  0.027 0.002 0.094
-## 2 Model with D1 + D2     0.154 0.064 0.261
-## 3 The R2 difference      0.123 0.016 0.234</code></pre>
+## 1 Model without D1 + D2  0.028 0.003 0.09 
+## 2 Model with D1 + D2     0.153 0.061 0.255
+## 3 The R2 difference      0.121 0.018 0.23</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">loo</span>(model3, model4)</code></pre></div>
 <pre><code>##                  LOOIC    SE
-## model3          387.84 26.84
-## model4          374.69 21.82
-## model3 - model4  13.16 11.27</code></pre>
+## model3          387.41 26.61
+## model4          374.56 21.89
+## model3 - model4  12.85 10.94</code></pre>
 <p>Although our Bayesian <span class="math inline">\(R^2\)</span> difference is now predominantly positive, the LOO-CV difference for the two models remains uncertain. Here’s a look at the two parameters in question using a handmade coefficient plot.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">posterior_samples</span>(model4) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">select</span>(b_D1<span class="op">:</span>b_D2) <span class="op">%&gt;%</span><span class="st"> </span>

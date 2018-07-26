@@ -306,7 +306,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="13" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html"><i class="fa fa-check"></i><b>13</b> Conditional Process Analysis with a Multicategorical Antecedent</a><ul>
 <li class="chapter" data-level="13.1" data-path="revisiting-sexual-discrimination-in-the-workplace.html"><a href="revisiting-sexual-discrimination-in-the-workplace.html"><i class="fa fa-check"></i><b>13.1</b> Revisiting sexual discrimination in the workplace</a></li>
 <li class="chapter" data-level="13.2" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html"><i class="fa fa-check"></i><b>13.2</b> Looking at the components of the indirect effect of <span class="math inline">\(X\)</span></a><ul>
-<li class="chapter" data-level="13.2.1" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#examiing-the-first-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.1</b> Examiing the first stage of the mediation process.</a></li>
+<li class="chapter" data-level="13.2.1" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#examining-the-first-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.1</b> Examining the first stage of the mediation process.</a></li>
 <li class="chapter" data-level="13.2.2" data-path="looking-at-the-components-of-the-indirect-effect-of-x.html"><a href="looking-at-the-components-of-the-indirect-effect-of-x.html#estimating-the-second-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.2</b> Estimating the second stage of the mediation process.</a></li>
 </ul></li>
 <li class="chapter" data-level="13.3" data-path="relative-conditional-indirect-effects.html"><a href="relative-conditional-indirect-effects.html"><i class="fa fa-check"></i><b>13.3</b> Relative conditional indirect effects</a></li>
@@ -374,10 +374,10 @@ glbwarm &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span cla
        <span class="dt">y =</span> <span class="kw">expression</span>(<span class="kw">paste</span>(<span class="st">&quot;GOVACT: Support for governmentaction (&quot;</span>, <span class="kw">italic</span>(<span class="st">&quot;Y&quot;</span>), <span class="st">&quot;)&quot;</span>))) <span class="op">+</span>
 <span class="st">  </span><span class="kw">theme_bw</span>()</code></pre></div>
 <p><img src="02_files/figure-html/unnamed-chunk-4-1.png" width="480" /></p>
-<p>Here’s the simple Pearson’s correlation coefficient.</p>
+<p>The <code>cor()</code> function is a simple way to compute a Pearson’s correlation coefficient.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor</span>(glbwarm<span class="op">$</span>negemot, glbwarm<span class="op">$</span>govact)
 <span class="co">#&gt; [1] 0.578</span></code></pre></div>
-<p>If you want more plentiful output, the <code>cor.test()</code> function provides a <span class="math inline">\(t\)</span>-value, the degrees of freedom, the corresponding <span class="math inline">\(p\)</span>-value and the 95% confidence intervals, in addition to the Pearson’s correlation coefficient.</p>
+<p>If you want more plentiful output, the <code>cor.test()</code> function returns a <span class="math inline">\(t\)</span>-value, the degrees of freedom, the corresponding <span class="math inline">\(p\)</span>-value and the 95% confidence intervals, in addition to the Pearson’s correlation coefficient.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor.test</span>(glbwarm<span class="op">$</span>negemot, glbwarm<span class="op">$</span>govact)
 <span class="co">#&gt; </span>
 <span class="co">#&gt;  Pearson&#39;s product-moment correlation</span>
@@ -421,7 +421,7 @@ glbwarm &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span cla
 <span class="co">#&gt; Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample </span>
 <span class="co">#&gt; is a crude measure of effective sample size, and Rhat is the potential </span>
 <span class="co">#&gt; scale reduction factor on split chains (at convergence, Rhat = 1).</span></code></pre></div>
-<p>Within the brms framework, <span class="math inline">\(\sigma\)</span> of the Gaussian likelihood is considered a family-specific parameter (e.g., there is no <span class="math inline">\(\sigma\)</span> for the Poisson distribution). When you have an intercept-only regression model with multiple variables, the covariance among their <span class="math inline">\(\sigma\)</span> parameters, <code>rescor(negemot,govact)</code> in this case, is a correlation.</p>
+<p>Within the brms framework, <span class="math inline">\(\sigma\)</span> of the Gaussian likelihood is considered a family-specific parameter (e.g., there is no <span class="math inline">\(\sigma\)</span> for the Poisson distribution). When you have an intercept-only regression model with multiple variables, the covariance among their <span class="math inline">\(\sigma\)</span> parameters are correlations. Since our multivariate model is of two variables, we have one covariance for the <span class="math inline">\(\sigmas\)</span>s, <code>rescor(negemot,govact)</code>, which is our Bayesian analogue to the Pearson’s correlation.</p>
 <p>To learn more about the multivariate syntax in brms, click <a href="https://cran.r-project.org/web/packages/brms/vignettes/brms_multivariate.html">here</a> or code <code>vignette(&quot;brms_multivariate&quot;)</code>.</p>
 <p>But to clarify the output:</p>
 <ul>

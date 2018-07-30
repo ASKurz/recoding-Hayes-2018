@@ -25,7 +25,7 @@
 <meta name="author" content="A Solomon Kurz">
 
 
-<meta name="date" content="2018-07-26">
+<meta name="date" content="2018-07-30">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -517,7 +517,7 @@ figure_<span class="fl">12.7</span> <span class="op">%&gt;%</span><span class="s
 </div>
 <div id="bonus-lets-replace-sapply-with-map." class="section level3">
 <h3><span class="header-section-number">12.2.4</span> <strong>Bonus</strong>: Let’s replace <code>sapply()</code> with <code>map()</code>.</h3>
-<p>Good old <code>sapply()</code> worked just fine for our purposes, above. However, we can use <code>map()</code> to accomplish those goals in a more tidyverse-consistent fashion. First we’ll define two custom functions to do what our two <code>sapply()</code> statements did for us.</p>
+<p>Good old base R <code>sapply()</code> worked just fine for our purposes, above. However, we can use <code>purrr::map()</code> to accomplish those goals in a more tidyverse-consistent fashion. First we’ll define two custom functions to do what our two <code>sapply()</code> statements did for us.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># defining two custom functions</span>
 make_justify &lt;-<span class="st"> </span><span class="cf">function</span>(w){
     (post<span class="op">$</span>b_justify_frame <span class="op">+</span><span class="st"> </span>post<span class="op">$</span><span class="st">`</span><span class="dt">b_justify_frame:skeptic</span><span class="st">`</span><span class="op">*</span>w)<span class="op">*</span>post<span class="op">$</span>b_donate_justify
@@ -526,7 +526,7 @@ make_justify &lt;-<span class="st"> </span><span class="cf">function</span>(w){
 make_donate &lt;-<span class="cf">function</span>(w){
     post<span class="op">$</span>b_donate_frame <span class="op">+</span><span class="st"> </span>post<span class="op">$</span><span class="st">`</span><span class="dt">b_donate_frame:skeptic</span><span class="st">`</span><span class="op">*</span>w
   }</code></pre></div>
-<p>Next, we’ll make a 30-row tibble with each row a value for <code>skeptic</code>, ranging from 0 ot 6, just like what we did with <code>sapply()</code>, above. Because we’ll be performing a nested operation for each value of <code>skeptic</code>, we’ll group the tibble by <code>skeptic</code>. Then with the <code>mutate()</code> function, we’ll use <code>map()</code> to apply our custom <code>make_justify</code> and <code>make_donate</code> functions to each of the 30 <code>skeptic</code> values.</p>
+<p>Next, we’ll make a 30-row tibble with each row containing a value for <code>skeptic</code>, ranging from 0 ot 6, just like what we did with <code>sapply()</code>. Because we’ll be performing a nested operation for each value of <code>skeptic</code>, we’ll group the tibble by <code>skeptic</code>. Then with the <code>mutate()</code> function, we’ll use <code>map()</code> to apply our custom <code>make_justify</code> and <code>make_donate</code> functions to each of the 30 <code>skeptic</code> values.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tidyverse_style_tibble &lt;-
 <span class="st">  </span><span class="kw">tibble</span>(<span class="dt">skeptic =</span> <span class="kw">seq</span>(<span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="dv">6</span>, <span class="dt">length.out =</span> <span class="dv">30</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">group_by</span>(skeptic) <span class="op">%&gt;%</span><span class="st"> </span>
@@ -549,7 +549,7 @@ tidyverse_style_tibble</code></pre></div>
 ##  9   1.66  &lt;dbl [4,000]&gt;     &lt;dbl [4,000]&gt;  
 ## 10   1.86  &lt;dbl [4,000]&gt;     &lt;dbl [4,000]&gt;  
 ## # ... with 20 more rows</code></pre>
-<p>This yielded a nested tibble. At one level of investigation, we have 30 rows–one for each of the 30 <code>skeptic</code> values. However, for both the <code>idirect effect</code> and <code>direct effect</code> columns, we’ve packed an entire 4000-row list into each of those rows. The lists are 4000-rows long because both of our custom functions entailed pushing those <code>skeptic</code> values through the posterior, which itself had 4000 iterations. Next we’ll use <code>unnest()</code> to unnest the tibble.</p>
+<p>This yielded a nested tibble. At one level of investigation, we have 30 rows–one for each of the 30 <code>skeptic</code> values. However, for both the <code>idirect effect</code> and <code>direct effect</code> columns, we’ve packed an entire 4000-row list into each of those rows. Those lists are 4000-rows long because both of our custom functions entailed pushing those <code>skeptic</code> values through the posterior, which itself had 4000 iterations. Next we’ll use <code>unnest()</code> to unnest the tibble.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tidyverse_style_tibble &lt;-
 <span class="st">  </span>tidyverse_style_tibble <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">unnest</span>()

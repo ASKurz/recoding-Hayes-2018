@@ -25,7 +25,7 @@
 <meta name="author" content="A Solomon Kurz">
 
 
-<meta name="date" content="2018-07-26">
+<meta name="date" content="2018-07-30">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -697,7 +697,7 @@ correlations3 &lt;-<span class="st"> </span>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">VarCorr</span>(correlations1)<span class="op">$</span>residual__<span class="op">$</span>cov[<span class="dv">3</span>, , <span class="st">&quot;negemotxage&quot;</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">3</span>)</code></pre></div>
 <pre><code>##  Estimate Est.Error      Q2.5     Q97.5 
 ##  9496.592   460.872  8622.952 10431.460</code></pre>
-<p>And if you’re like totally lost with all this indexing, you might code <code>VarCorr(correlations1) %&gt;% str()</code> and spend a little time looking at what <code>VarCorr()</code> returns.</p>
+<p>And if you’re like totally lost with all this indexing, you might execute <code>VarCorr(correlations1) %&gt;% str()</code> and spend a little time looking at what <code>VarCorr()</code> returns.</p>
 <p>On page 309, Hayes explained why the OLS variance for <span class="math inline">\(b_{3}\)</span> is unaffected by mean centering. The story was similar for our HMC model, too:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fixef</span>(model1)[<span class="st">&quot;negemot:age&quot;</span>, <span class="st">&quot;Est.Error&quot;</span>]</code></pre></div>
 <pre><code>## [1] 0.001609585</code></pre>

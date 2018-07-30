@@ -25,7 +25,7 @@
 <meta name="author" content="A Solomon Kurz">
 
 
-<meta name="date" content="2018-07-26">
+<meta name="date" content="2018-07-30">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -383,7 +383,7 @@ protest &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span cla
 ## 5       2 liking    5.75 0.936
 ## 6       2 respappr  5.49 0.936</code></pre>
 <p>It looks like Hayes has a typo in the <span class="math inline">\(SD\)</span> for <code>liking</code> when <code>protest == 0</code>. It seemed he accidentally entered the value for when <code>protest == 1</code> in that slot.</p>
-<p>You’ll have to wait a minute to see where the adjusted <span class="math inline">\(Y\)</span> values came.</p>
+<p>You’ll have to wait a minute to see where the adjusted <span class="math inline">\(Y\)</span> values came from.</p>
 <p>With a little <code>ifelse()</code>, computing the dummies <code>D1</code> and <code>D2</code> is easy enough.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">protest &lt;-
 <span class="st">  </span>protest <span class="op">%&gt;%</span><span class="st"> </span>
@@ -477,7 +477,7 @@ y_model &lt;-<span class="st"> </span><span class="kw">bf</span>(liking   <span 
 ## Samples were drawn using sampling(NUTS). For each parameter, Eff.Sample 
 ## is a crude measure of effective sample size, and Rhat is the potential 
 ## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
-<p>The Bayesian <span class="math inline">\(R^2\)</span> posteriors:</p>
+<p>Behold the Bayesian <span class="math inline">\(R^2\)</span> posteriors.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">bayes_R2</span>(model2, <span class="dt">summary =</span> F) <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">gather</span>() <span class="op">%&gt;%</span><span class="st"> </span>

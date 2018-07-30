@@ -25,7 +25,7 @@
 <meta name="author" content="A Solomon Kurz">
 
 
-<meta name="date" content="2018-07-26">
+<meta name="date" content="2018-07-30">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -478,11 +478,11 @@ model5 &lt;-
 <p>Here are the unstandardized coefficients:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">fixef</span>(model5) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">3</span>)</code></pre></div>
 <pre><code>##                    Estimate Est.Error   Q2.5 Q97.5
-## withdraw_Intercept    1.448     0.253  0.949 1.934
-## affect_Intercept      0.800     0.145  0.508 1.083
-## withdraw_estress     -0.077     0.052 -0.178 0.026
-## withdraw_affect       0.769     0.104  0.560 0.975
-## affect_estress        0.173     0.030  0.114 0.233</code></pre>
+## withdraw_Intercept    1.444     0.257  0.929 1.949
+## affect_Intercept      0.797     0.140  0.527 1.083
+## withdraw_estress     -0.077     0.053 -0.179 0.026
+## withdraw_affect       0.771     0.105  0.565 0.978
+## affect_estress        0.173     0.029  0.114 0.230</code></pre>
 <p>On pages 135–136, Hayes provided the formulas to compute the standardized effects:</p>
 <p><span class="math display">\[c&#39;_{cs} = \frac{SD_X(c&#39;)}{SD_{Y}} = SD_{X}(c&#39;_{ps})\]</span></p>
 <p><span class="math display">\[ab_{cs} = \frac{SD_X(ab)}{SD_{Y}} = SD_{X}(ab_{ps})\]</span></p>
@@ -510,9 +510,9 @@ post <span class="op">%&gt;%</span><span class="st"> </span>
 <pre><code>## # A tibble: 3 x 5
 ##   key         mean median     ll    ul
 ##   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
-## 1 ab_s       0.152  0.15   0.091 0.222
-## 2 c_prime_s -0.088 -0.088 -0.204 0.03 
-## 3 c_s        0.064  0.063 -0.057 0.181</code></pre>
+## 1 ab_s       0.153  0.151  0.092 0.22 
+## 2 c_prime_s -0.088 -0.087 -0.205 0.03 
+## 3 c_s        0.065  0.065 -0.062 0.188</code></pre>
 <p>Success!</p>
 </div>
 <div id="some-problematic-measures-only-for-indirect-effects." class="section level3">

@@ -1,7 +1,7 @@
 --- 
 title: "recoding *Introduction to Mediation, Moderation, and Conditional Process Analysis*"
 author: ["A Solomon Kurz"]
-date: "2018-07-26"
+date: "2018-07-30"
 site: bookdown::bookdown_site
 output: bookdown::gitbook
 documentclass: book
@@ -51,6 +51,6 @@ In this project, I use a handful of formatting conventions gleaned from [*R4DS*]
 ```
 
 * Functions are in a typewriter font and followed by parentheses, all atop a gray background (e.g., `brm()`).
-* When I want to make explicit what packages a given function comes from, I insert the double-color operator `::` between the package name and the function (e.g., `tidyr::gather()`).
+* When I want to make explicit what packages a given function comes from, I insert the double-colon operator `::` between the package name and the function (e.g., `tidyr::gather()`).
 * R objects, such as data or function arguments, are in typewriter font atop a gray background (e.g., `d` or `size = 2`).
 * Hyperlinks are denoted by their typical [blue-colored font](https://www.afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html).

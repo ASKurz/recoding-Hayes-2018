@@ -25,7 +25,7 @@
 <meta name="author" content="A Solomon Kurz">
 
 
-<meta name="date" content="2018-07-26">
+<meta name="date" content="2018-07-30">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -450,7 +450,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ## sigma_pmi               1.3195622 0.08718468  1.164042e+00    1.5044898
 ## lp__                 -434.8809615 1.97212737 -4.397098e+02 -432.1698836</code></pre>
 <p>Those .025 and .975 quantiles from above are just what brms is giving us in our 95% Bayesian credible intervals.</p>
-<p>Here’s our version of Figure 3.5</p>
+<p>Here’s our version of Figure 3.5.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># these will come in handy in the subtitle</span>
 ll &lt;-<span class="st"> </span><span class="kw">quantile</span>(post<span class="op">$</span>ab, <span class="dt">probs =</span> .<span class="dv">025</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">3</span>)
 ul &lt;-<span class="st"> </span><span class="kw">quantile</span>(post<span class="op">$</span>ab, <span class="dt">probs =</span> .<span class="dv">975</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dt">digits =</span> <span class="dv">3</span>)

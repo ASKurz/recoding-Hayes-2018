@@ -6,7 +6,8 @@
 options(width = 110)
 ```
 
-Hayes closed the opening with: 
+Hayes closed the opening with:
+
 > Whereas answering questions about *when* or *for whom* is the domain of moderation analysis, questions that ask about *how* pertain to *mediation*, the focus of this and the next three chapters. In this chapter, [we’ll explore] the *simple mediation model* and illustrate using ~~OLS regression-based~~ Bayesian path analysis how the effect of an antecedent variable $X$ on some final consequent $Y$ can be partitioned into two paths of influence, *direct* and *indirect*.
 
 ## Estimation of the direce, indirect, and total effects of $X$

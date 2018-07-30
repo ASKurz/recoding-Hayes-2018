@@ -4,7 +4,7 @@
 options(width = 110)
 ```
 
-"Historically, investigators interested in doing a mediation analysis with a multicategorical antecedents $X$ have resorted to some less optimal strategies than the one [Hayes] discuss[ed] in this chapter (p. 188)." "Happily, the approach outlined in this chapter avoids such gaffs. Hayes’s procedure does not require discarding any data; the entire sample is analyzed simultaneously. Furthermore, the multicategorical nature of $X$ is respected and retained (p. 189)."
+"Historically, investigators interested in doing a mediation analysis with a multicategorical antecedents $X$ have resorted to some less optimal strategies than the one [Hayes] discuss[ed] in this chapter (p. 188)." Happily, the approach outlined in this chapter avoids such gaffs. Hayes’s procedure "does not require discarding any data; the entire sample is analyzed simultaneously. Furthermore, the multicategorical nature of $X$ is respected and retained (p. 189)."
 
 ## Relative total, direct, and indirect effects
 

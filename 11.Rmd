@@ -6,9 +6,17 @@
 options(width = 110)
 ```
 
+On page 395, Hayes dropped the bomb:
+
+Thus far in this book, mediation and moderation have been treated as distinct, separate, and independent concepts with different analytical procedures and interpretations. Yet processes modeled with mediation analysis likely are contingent and hence moderated, in that they operate differently for different people or in different contexts or circumstances. A more complete analysis, therefore, should attempt to model the mechanisms at work linking $X$ to $Y$ while simultaneously allowing those effects to be contingent on context, circumstance, or individual differences.
+
 ## Examples of conditional process models in the literature
 
+You can look these up on your own.
+
 ## Conditional direct and indirect effects
+
+Nothing for us to code, here.
 
 ## Example: Hiding your feelings from your work team
 
@@ -294,7 +302,7 @@ post %>%
 
 This time we used the `prob = c(.95, .5)` argument within `stat_pointinterval()` to return both 95% and 50% highest posterior density intervals—which are the outer and inner lines, respectively.
 
-This, of course, leads us right into
+This, of course, leads us right into:
 
 #### A Johnson-Neyman approach.
 

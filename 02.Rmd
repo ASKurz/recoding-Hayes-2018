@@ -7,11 +7,17 @@ knitr::opts_chunk$set(
 
 options(dplyr.print_min = 6, dplyr.print_max = 6)
 ```
+
 # Fundamentals of Linear Regression
 
 ```{r set-options, echo = FALSE, cache = FALSE}
 options(width = 110)
 ```
+
+On page 30, Hayes concluded the opening of this chapter thusly:
+> Linear regression is the foundation of most of the methods [Hayes described in his] book, so a solid understanding of the fundamentals of linear regression is essential. I assume that most readers have been exposed to linear regression in some form before discovering this book, and so some of the material will be review. Even so, I encourage everyone to read this chapter.
+
+Since we’re adding Bayes and the tidyverse into the mix, walking through this chapter will be double important, for us.
 
 ## Correlation and prediction
 

@@ -6,7 +6,12 @@
 options(width = 110)
 ```
 
+Hayes closed the opening with: 
+> Whereas answering questions about *when* or *for whom* is the domain of moderation analysis, questions that ask about *how* pertain to *mediation*, the focus of this and the next three chapters. In this chapter, [we’ll explore] the *simple mediation model* and illustrate using ~~OLS regression-based~~ Bayesian path analysis how the effect of an antecedent variable $X$ on some final consequent $Y$ can be partitioned into two paths of influence, *direct* and *indirect*.
+
 ## Estimation of the direce, indirect, and total effects of $X$
+
+Nothing to translate, here.
 
 ## Example with dichotomous $X$: The influence of presumed media influence
 
@@ -343,7 +348,7 @@ posterior_summary(model1)
 
 Those .025 and .975 quantiles from above are just what brms is giving us in our 95% Bayesian credible intervals.
 
-Here's our version of Figure 3.5
+Here's our version of Figure 3.5.
 
 ```{r, fig.width = 4.25, fig.height = 4}
 # these will come in handy in the subtitle

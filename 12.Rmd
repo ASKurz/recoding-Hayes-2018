@@ -4,6 +4,12 @@
 options(width = 110)
 ```
 
+On page 432, Hayes explained:
+
+> In this chapter [he built] on the foundation laid by stepping through an analysis of a more complicated conditional process model that include[d] moderation of both the indirect effects in a simple mediation model. [He did] so by first using a piecemeal approach that focuse[d] on each pathway in the model. With some understanding gained by this examination of the components in the process, [he brought] the pieces together into an integrated conditional process analysis.
+
+We’ll do that too.
+
 ## Revisiting the disaster framing study
 
 Here we load a couple necessary packages, load the data, and take a `glimpse()`.
@@ -115,7 +121,7 @@ model2 <-
 print(model2, digits = 3)
 ```
 
-The Bayesian $R^2$ summaries:
+Consider the Bayesian $R^2$ summaries.
 
 ```{r}
 bayes_R2(model2) %>% round(digits = 3)
@@ -293,7 +299,7 @@ Note how wide those 95% intervals are relative to the scale of the y-axis. I spe
 
 ### **Bonus**: Let's replace `sapply()` with `map()`.
 
-Good old `sapply()` worked just fine for our purposes, above. However, we can use `map()` to accomplish those goals in a more tidyverse-consistent fashion. First we'll define two custom functions to do what our two `sapply()` statements did for us.
+Good old base R `sapply()` worked just fine for our purposes, above. However, we can use `purrr::map()` to accomplish those goals in a more tidyverse-consistent fashion. First we'll define two custom functions to do what our two `sapply()` statements did for us.
 
 ```{r}
 # defining two custom functions
@@ -306,7 +312,7 @@ make_donate <-function(w){
   }
 ```
 
-Next, we'll make a 30-row tibble with each row a value for `skeptic`, ranging from 0 ot 6, just like what we did with `sapply()`, above. Because we'll be performing a nested operation for each value of `skeptic`, we'll group the tibble by `skeptic`. Then with the `mutate()` function, we'll use `map()` to apply our custom `make_justify` and `make_donate` functions to each of the 30 `skeptic` values.
+Next, we'll make a 30-row tibble with each row containing a value for `skeptic`, ranging from 0 ot 6, just like what we did with `sapply()`. Because we'll be performing a nested operation for each value of `skeptic`, we'll group the tibble by `skeptic`. Then with the `mutate()` function, we'll use `map()` to apply our custom `make_justify` and `make_donate` functions to each of the 30 `skeptic` values.
 
 ```{r}
 tidyverse_style_tibble <-
@@ -318,7 +324,7 @@ tidyverse_style_tibble <-
 tidyverse_style_tibble
 ```
 
-This yielded a nested tibble. At one level of investigation, we have 30 rows--one for each of the 30 `skeptic` values. However, for both the `idirect effect` and `direct effect` columns, we've packed an entire 4000-row list into each of those rows. The lists are 4000-rows long because both of our custom functions entailed pushing those `skeptic` values through the posterior, which itself had 4000 iterations. Next we'll use `unnest()` to unnest the tibble.
+This yielded a nested tibble. At one level of investigation, we have 30 rows--one for each of the 30 `skeptic` values. However, for both the `idirect effect` and `direct effect` columns, we've packed an entire 4000-row list into each of those rows. Those lists are 4000-rows long because both of our custom functions entailed pushing those `skeptic` values through the posterior, which itself had 4000 iterations. Next we'll use `unnest()` to unnest the tibble.
 
 ```{r}
 tidyverse_style_tibble <-

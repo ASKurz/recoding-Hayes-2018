@@ -4,6 +4,8 @@
 options(width = 110)
 ```
 
+In this chapter, we’ll explore complications, "including testing and ruling out various alternative explanations for associations observed in a mediation analysis, effect size, and models with multiple causal agents and outcomes (p. 113)."
+
 ## What about Barron and Kenny?
 
 On page 121 of the text, Hayes opined:
@@ -377,7 +379,7 @@ Hayes recommended against these, so I'm not going to bother working any examples
 
 ## Statistical power
 
-As Hayed discussed, power is an important but thorny issue within the frequentist paradigm. Given that we’re not particularly interested in rejecting the point-null hypothesis as Bayesians and that we bring in priors (which we’ve largely avoided explicitly mentioning in his project but have been quietly using all along), the issue is even more difficult for Bayesians. To learn more on the topic, check out [Miočević, MacKinnon, and Levy's paper](https://www.tandfonline.com/doi/abs/10.1080/10705511.2017.1312407?src=recsys&journalCode=hsem20) on power in small-sample Bayesian analyses or [Gelman and Carlin's paper](http://journals.sagepub.com/doi/pdf/10.1177/1745691614551642) offering an alternative to the power paradigm. You might also look at Matti Vuorre's [Sample size planning with brms project](https://gitlab.com/vuorre/bayesplan).
+As Hayes discussed, power is an important but thorny issue within the frequentist paradigm. Given that we’re not particularly interested in rejecting the point-null hypothesis as Bayesians and that we bring in priors (which we’ve largely avoided explicitly mentioning in his project but have been quietly using all along), the issue is even more difficult for Bayesians. To learn more on the topic, check out [Miočević, MacKinnon, and Levy's paper](https://www.tandfonline.com/doi/abs/10.1080/10705511.2017.1312407?src=recsys&journalCode=hsem20) on power in small-sample Bayesian analyses or [Gelman and Carlin's paper](http://journals.sagepub.com/doi/pdf/10.1177/1745691614551642) offering an alternative to the power paradigm. You might also look at Matti Vuorre's [Sample size planning with brms project](https://gitlab.com/vuorre/bayesplan).
 
 ## Multiple $X$s or $Y$s: Analyze separately or simultaneously?
 

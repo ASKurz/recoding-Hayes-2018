@@ -1,10 +1,14 @@
 # Multicategorical Focal Antecedents and Moderators
 
-## Moderation of the effect of a multicategorical antecedent variable
-
 ```{r set-options, echo = FALSE, cache = FALSE}
 options(width = 100)
 ```
+
+Herein we extend our approach to "interaction[s] involving a multicategorical focal antecedent variable or moderator (p. 350)." As Hayes cautioned, the formulas get a bit complex.
+
+## Moderation of the effect of a multicategorical antecedent variable
+
+Nothing to recode, here.
 
 ## An example from the sex disrimination in the workplace study
 
@@ -48,7 +52,7 @@ model2 <-
          chains = 4, cores = 4)
 ```
 
-$R^2$s:
+Behold the $R^2$s.
 
 ```{r}
 r2s <-

@@ -4,6 +4,8 @@
 options(width = 105)
 ```
 
+In this chapter, our Bayesian approach complicates some of Hayes’s flow. We’ll see how Bayesian HMC estimation can make us reconsider the value in mean centering and we’ll also slip in some missing data talk.
+
 ## Truths and myths about mean-centering
 
 Here we load a couple necessary packages, load the data, and take a `glimpse()`.
@@ -259,7 +261,7 @@ VarCorr(correlations1)$residual__$cov[2, , "age"] %>% round(digits = 3)
 VarCorr(correlations1)$residual__$cov[3, , "negemotxage"] %>% round(digits = 3)
 ```
 
-And if you're like totally lost with all this indexing, you might code `VarCorr(correlations1) %>% str()` and spend a little time looking at what `VarCorr()` returns.
+And if you're like totally lost with all this indexing, you might execute `VarCorr(correlations1) %>% str()` and spend a little time looking at what `VarCorr()` returns.
 
 On page 309, Hayes explained why the OLS variance for $b_{3}$ is unaffected by mean centering. The story was similar for our HMC model, too:
 

@@ -4,6 +4,12 @@
 options(width = 100)
 ```
 
+With his opening lines, Hayes prepared us:
+
+> At the end of any great fireworks show is the grand finale, where the pyrotechnicians throw everything remaining in their arsenal at you at once, leaving you amazed, dazed, and perhaps temporarily a little hard of hearing. Although this is not the final chapter of this book, I am now going to throw everything at you at once with an example of the most complicated conditional process model I will cover in this book.
+
+Though there’s more in the text, this chapter is the last one requiring recoding. Enjoy the fireworks.
+
 ## Revisiting sexual discrimination in the workplace
 
 Here we load a couple necessary packages, load the data, and take a `glimpse()`.
@@ -309,7 +315,7 @@ D2_function <- function(w){
   }
 ```
 
-Next, we'll make a 30-row tibble with each row a value for `sexism`, ranging from 3.5 to 6.5. We'll then apply our two custom functions to the `sexism` values and wrangle the results a bit to make them useful for our purposes.
+Next, we'll make a 30-row tibble with each row containing a value for `sexism`, ranging from 3.5 to 6.5. We'll then apply our two custom functions to the `sexism` values and wrangle the results a bit to make them useful for our purposes.
 
 ```{r}
 rcie_tibble <-

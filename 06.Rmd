@@ -4,6 +4,8 @@
 options(width = 110)
 ```
 
+"Historically, investigators interested in doing a mediation analysis with a multicategorical antecedents $X$ have resorted to some less optimal strategies than the one [Hayes] discuss[ed] in this chapter (p. 188)." "Happily, the approach outlined in this chapter avoids such gaffs. Hayes’s procedure does not require discarding any data; the entire sample is analyzed simultaneously. Furthermore, the multicategorical nature of $X$ is respected and retained (p. 189)."
+
 ## Relative total, direct, and indirect effects
 
 Nothing to translate, here.
@@ -46,7 +48,7 @@ protest %>%
  
 It looks like Hayes has a typo in the $SD$ for `liking` when `protest == 0`. It seemed he accidentally entered the value for when `protest == 1` in that slot.
 
-You'll have to wait a minute to see where the adjusted $Y$ values came.
+You'll have to wait a minute to see where the adjusted $Y$ values came from.
 
 With a little `ifelse()`, computing the dummies `D1` and `D2` is easy enough.
 
@@ -140,7 +142,7 @@ model2 <-
 print(model2)
 ```
 
-The Bayesian $R^2$ posteriors:
+Behold the Bayesian $R^2$ posteriors.
 
 ```{r, fig.width = 6, fig.height = 2.5}
 bayes_R2(model2, summary = F) %>% 

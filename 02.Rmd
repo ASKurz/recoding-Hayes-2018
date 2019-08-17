@@ -1,12 +1,4 @@
-```{r include = F, cache = F}
-knitr::opts_chunk$set(
-  comment = "#>",
-  collapse = TRUE,
-  cache = TRUE
-)
 
-options(dplyr.print_min = 6, dplyr.print_max = 6)
-```
 
 # Fundamentals of Linear Regression
 
@@ -14,11 +6,9 @@ options(dplyr.print_min = 6, dplyr.print_max = 6)
 options(width = 110)
 ```
 
-On page 30, Hayes concluded the opening of this chapter thusly:
+> Linear regression is the foundation of most of the methods [Hayes described in his] book, so a solid understanding of the fundamentals of linear regression is essential. I assume that most readers have been exposed to linear regression in some form before discovering this book, and so some of the material will be review. Even so, I encourage everyone to read this chapter. (p. 30)
 
-> Linear regression is the foundation of most of the methods [Hayes described in his] book, so a solid understanding of the fundamentals of linear regression is essential. I assume that most readers have been exposed to linear regression in some form before discovering this book, and so some of the material will be review. Even so, I encourage everyone to read this chapter.
-
-Since we’re adding Bayes and the tidyverse into the mix, walking through this chapter will be double important, for us.
+Since we're adding Bayes and the tidyverse into the mix, walking through this chapter will be double important, for us.
 
 ## Correlation and prediction
 
@@ -32,7 +22,7 @@ glbwarm <- read_csv("data/glbwarm/glbwarm.csv")
 glimpse(glbwarm)
 ```
 
-If you are new to tidyverse-style syntax, possibly the oddest component is the pipe (i.e., `%>%`). I’m not going to explain the `%>%` in this project, but you might learn more about in [this brief clip](https://www.youtube.com/watch?v=9yjhxvu-pDg), starting around [minute 21:25 in this talk by Wickham](https://www.youtube.com/watch?v=K-ss_ag2k9E&t=1285s), or in [section 5.6.1 from Grolemund and Wickham’s *R for Data Science*](http://r4ds.had.co.nz/transform.html#combining-multiple-operations-with-the-pipe). Really, all of chapter 5 of *R4DS* is great for new R and new tidyverse users, and their chapter 3 is a nice introduction to plotting with ggplot2.
+If you are new to tidyverse-style syntax, possibly the oddest component is the pipe (i.e., `%>%`). I'm not going to explain the `%>%` in this project, but you might learn more about in [this brief clip](https://www.youtube.com/watch?v=9yjhxvu-pDg), starting around [minute 21:25 in this talk by Wickham](https://www.youtube.com/watch?v=K-ss_ag2k9E&t=1285s), or in [section 5.6.1 from Grolemund and Wickham’s *R for Data Science*](http://r4ds.had.co.nz/transform.html#combining-multiple-operations-with-the-pipe). Really, all of chapter 5 of *R4DS* is great for new R and new tidyverse users, and their chapter 3 is a nice introduction to plotting with ggplot2.
 
 Here is our version of Figure 2.1. 
 
@@ -42,11 +32,11 @@ glbwarm %>%
   count() %>% 
   
   ggplot(aes(x = negemot, y = govact)) +
-  geom_point(aes(size = n)) +
+  geom_point(aes(size = n),
+             show.legend = F) +
   labs(x = expression(paste("NEGEMOT: Negative emotions about climate change (", italic("X"), ")")),
        y = expression(paste("GOVACT: Support for governmentaction (", italic("Y"), ")"))) +
-  theme_bw() +
-  theme(legend.position = "none")
+  theme_bw()
 ```
 
 There are other ways to handle the [overplotting issue, such as jittering](http://ggplot2.tidyverse.org/reference/position_jitter.html). 
@@ -83,25 +73,47 @@ We'll start simple and just use the default priors and settings, but with the ad
 
 ```{r model1, cache = T, message = F, warning = F}
 model1 <- 
-  brm(data = glbwarm, family = gaussian,
-      cbind(negemot, govact) ~ 1,
-      chains = 4, cores = 4)
+  brm(data = glbwarm, 
+      family = gaussian,
+      mvbind(negemot, govact) ~ 1,
+      cores = 4)
 ```
 
 ```{r}
 print(model1)
 ```
 
-Within the brms framework, $\sigma$ of the Gaussian likelihood is considered a family-specific parameter (e.g., there is no $\sigma$ for the Poisson distribution). When you have an intercept-only regression model with multiple variables, the covariance among their $\sigma$ parameters are correlations. Since our multivariate model is of two variables, we have one covariance for the $\sigmas$s, `rescor(negemot,govact)`, which is our Bayesian analogue to the Pearson’s correlation.
+In regression models, we typically use predictor variables to explain variation in our criterion variables. It’s pretty much never the case that our predictors explain all the variation. The variation that’s left over is often called residual variation, residual variance, residuals, error, or even $\epsilon$. 
+
+More formally, when we use likelihood-based estimators, such as maximum likelihood (popular with multilevel modeling and structural equation modeling) or Bayesian estimators, we express the models for our criterion variables in terms of likelihood functions. Probably the  most common likelihood function, and the one consistent with the models in Hayes’ text, is the Gaussian likelihood. With that likelihood we say our criterion variable $y_i$ is normally distributed with a mean $\mu$ and standard deviation $\sigma$. We might express that formally as
+
+$$
+y_i \sim \text{Normal} (\mu, \sigma),
+$$
+
+Where $\sim$ stands for "is distributed as" and $i$ indexes the $i^\text{th}$ row in the data. When we add predictors to the model, they are typically used to model the mean $\mu$. Thus, in the case there we have a sole predictor $x_i$ which varies across participants, we'd expand our model formula to
+
+$$
+\begin{align*}
+y_i & \sim \text{Normal} (\mu_i, \sigma) \\
+\mu_i & = \beta_0 + \beta_1 x_i,
+\end{align*}
+$$
+
+where $\beta_0$ is the intercept and $\beta_1$ is the slope for predictor $x$, which varies across cases. In this formulation, $\sigma$ is the standard deviation after accounting for the systemic variation explained by $x_i$. That is, it's the residual variance (i.e., $\epsilon$), but in a standard-deviation metric. *Why in a standard deviation metric?*, you ask. There are technical reasons why brms expresses it as a standard deviation which I'm not going to go into, here. But just beware that whereas many frequentist software packages the express the residual variation in a variance metric, it's expressed in a standard-deviation metric in brms. Just go with it and move on. 
+
+Within the brms framework, $\sigma$ of the Gaussian likelihood is considered a family-specific parameter. As it turns out, there are many other fine likelihood functions in addition to the Gaussian and not all of them have a $\sigma$ parameter. For example, there is no $\sigma$ for the Poisson distribution, which is popular likelihood function for count variables. Because Bürkner made the brms package capable of a variety of likelihood functions, it behooved him to give this section of the output a generic name.
+
+When you have a regression model with multiple Gaussian criterion variables, those variables will typically have some degree of covariation. It's often termed residual covariance, particularly within the structural equation modeling paradigm. But when you have an intercept-only regression model with multiple variables, that residual covariance is just a covariance. And when you express those variation parameters in terms of standard deviations $\sigma$, their covariance is expressed as a correlation $\rho$. Since our multivariate model is of two variables, we have one $\rho$ parameter for the $\sigmas$s, `rescor(negemot,govact)`, which is our Bayesian analogue to the Pearson’s correlation.
 
 To learn more about the multivariate syntax in brms, click [here](https://cran.r-project.org/web/packages/brms/vignettes/brms_multivariate.html) or code `vignette("brms_multivariate")`.
 
 But to clarify the output:
 
-* 'Estimate'  = the posterior mean, analogous to the frequentist point estimate
-* 'Est.Error' = the posterior $SD$, analogous to the frequentist standard error
-* 'l-95% CI'  = the lower-level of the percentile-based 95% Bayesian credible interval
-* 'u-95% CI'  = the upper-level of the same
+* 'Estimate'  = the posterior mean, analogous to the frequentist point estimate,
+* 'Est.Error' = the posterior $SD$, analogous to the frequentist standard error,
+* 'l-95% CI'  = the lower-level of the percentile-based 95% Bayesian credible interval, and
+* 'u-95% CI'  = the upper-level of the same.
 
 ## The simple linear regression model
 
@@ -121,9 +133,10 @@ Here's the Bayesian model in brms.
 
 ```{r model2, cache = T, message = F, warning = F}
 model2 <- 
-  brm(data = glbwarm, family = gaussian,
+  brm(data = glbwarm, 
+      family = gaussian,
       govact ~ 1 + negemot,
-      chains = 4, cores = 4)
+      cores = 4)
 ```
 
 There are several ways to get a brms model summary. A go-to is with the `print()` function.
@@ -138,7 +151,7 @@ The `summary()` function works very much the same way. To get a more focused loo
 posterior_summary(model2)
 ```
 
-That also yields the log posterior, `lp__`, which you can learn more about [here](https://cran.r-project.org/web/packages/rstan/vignettes/rstan.html#the-log-posterior-function-and-gradient) or [here](https://www.jax.org/news-and-insights/jax-blog/2015/october/lp-in-stan-output). We won't focus on the `lp__` directly in this project.
+That also yields the log posterior, `lp__`, which you can learn more about [here](https://cran.r-project.org/web/packages/rstan/vignettes/rstan.html#the-log-posterior-function-and-gradient) or [here](https://www.jax.org/news-and-insights/jax-blog/2015/october/lp-in-stan-output). We won't focus on the `lp__` directly in this project. But it's influence will be lurking in the shadows.
 
 But anyways, the `Q2.5` and `Q97.5`, are the lower- and upper-levels of the 95% credible intervals. The `Q` prefix stands for quantile ([see this thread](https://github.com/paul-buerkner/brms/issues/425)). In this case, these are a renamed version of the `l-95% CI` and `u-95% CI` columns from our `print()` output.
 
@@ -157,7 +170,7 @@ plot(marginal_effects(model2),
                     alpha = 1/2, size = 1/3))
 ```
 
-It's also useful to be able to work with the output of a brms model directly. For our first step, we'll put our HMC draws into a data frame.
+It's also useful to be able to work with the output of a brms model directly. For our first step, we'll put our HMC draws into a data frame with the `posterior_samples()` function.
 
 ```{r}
 post <- posterior_samples(model2)
@@ -170,13 +183,13 @@ Next, we'll use the `fitted()` function to simulate model-implied summaries for 
 ```{r}
 nd <- tibble(negemot = seq(from = 0, to = 7, length.out = 30))
 
-f_model2 <-
+f <-
   fitted(model2,
          newdata = nd) %>% 
-  as_tibble() %>% 
+  data.frame() %>% 
   bind_cols(nd)
 
-f_model2
+head(f)
 ```
 
 The first two columns should look familiar to the output from `print(model2)`, above. The next two columns, `Q2.5` and `Q97.5`, are the lower- and upper-levels of the 95% credible intervals, like we got from `posterior_samples()`. We got the final column with the `bind_cols(nd)` code.
@@ -189,27 +202,27 @@ glbwarm %>%
   count() %>% 
   
   ggplot(aes(x = negemot)) +
-  geom_point(aes(y = govact, size = n)) +
-  geom_ribbon(data = f_model2,
+  geom_point(aes(y = govact, size = n),
+             show.legend = F) +
+  geom_ribbon(data = f,
               aes(ymin = Q2.5,
                   ymax = Q97.5),
               fill = "grey75", alpha = 3/4) +
-  geom_line(data = f_model2,
+  geom_line(data = f,
             aes(y = Estimate)) +
   annotate("text", x = 2.2, y = 7.5, label = "Cases with positive residuals", color = "red3") +
   annotate("text", x = 4.75, y = .8, label = "Cases with negative residuals", color = "blue3") +
   labs(x = expression(paste("NEGEMOT: Negative emotions about climate change (", italic("X"), ")")),
        y = expression(paste("GOVACT: Support for governmentaction (", italic("Y"), ")"))) +
   coord_cartesian(xlim = range(glbwarm$negemot)) +
-  theme_bw() +
-  theme(legend.position = "none")
+  theme_bw()
 ```
 
-### Interpretation of the constant and regression coefficient
+### Interpretation of the constant and regression coefficient.
 
 Nothing to recode, here.
 
-### The standardized regression model
+### The standardized regression model.
 
 Same here.
 
@@ -219,9 +232,10 @@ Here we add `sex` to the model.
 
 ```{r model3, cache = T, message = F, warning = F}
 model3 <- 
-  brm(data = glbwarm, family = gaussian,
+  brm(data = glbwarm, 
+      family = gaussian,
       govact ~ 1 + sex,
-      chains = 4, cores = 4)
+      cores = 4)
 ```
 
 ```{r}
@@ -244,7 +258,7 @@ But since Bayesian estimation yields an entire posterior distribution, you can v
 post <- posterior_samples(model3)
 ```
 
-We could summarize the posterior with boxplots:
+We could summarize the posterior with boxplots
 
 ```{r, fig.width = 3, fig.height = 3}
 post %>% 
@@ -259,7 +273,7 @@ post %>%
   theme(legend.position = "none")
 ```
 
-Or with overlapping density plots:
+or with overlapping density plots
 
 ```{r, fig.width = 4, fig.height = 2}
 post %>% 
@@ -273,7 +287,7 @@ post %>%
   theme_bw()
 ```
 
-Or even with violin plots with superimposed posterior medians and 95% intervals:
+or even with violin plots with superimposed posterior medians and 95% intervals.
 
 ```{r, fig.width = 3, fig.height = 2.5}
 post %>% 
@@ -291,7 +305,7 @@ post %>%
   theme(legend.position = "none")
 ```
 
-For even more ideas, see Matthew Kay's [tidybayes package](https://github.com/mjskay/tidybayes). You can also get a sense of the model estimates for women and men with a little addition. Here we continue to use the `round()` function to simplify the output.
+For even more ideas, see [Matthew Kay](https://twitter.com/mjskay)'s [tidybayes package](https://mjskay.github.io/tidybayes/articles/tidybayes.html). You can also get a sense of the model estimates for women and men with a little addition. Here we continue to use the `round()` function to simplify the output.
 
 ```{r}
 # for women
@@ -315,9 +329,10 @@ Now we'll use Bayes.
 
 ```{r model3_p_z, cache = T, message = F, warning = F}
 model3_p_z <- 
-  brm(data = glbwarm, family = gaussian,
+  brm(data = glbwarm, 
+      family = gaussian,
       govact_z ~ 1 + sex,
-      chains = 4, cores = 4)
+      cores = 4)
 ```
 
 ```{r}
@@ -336,9 +351,10 @@ cor(glbwarm$sex, glbwarm$govact)
 Again, if we wanted to get full Bayesian estimates, we'd fit an intercept-only multivariate model.
 
 ```{r, message = F, warning = F}
-brm(data = glbwarm, family = gaussian,
-    cbind(negemot, govact, sex) ~ 1,
-    chains = 4, cores = 4) %>% 
+brm(data = glbwarm, 
+    family = gaussian,
+    mvbind(negemot, govact, sex) ~ 1,
+    cores = 4) %>% 
   
   print(digits = 3)
 ```
@@ -357,9 +373,10 @@ here’s nothing particularly special about jumping from univariable to multivar
 
 ```{r model4, cache = T, message = F, warning = F}
 model4 <- 
-  brm(data = glbwarm, family = gaussian,
+  brm(data = glbwarm, 
+      family = gaussian,
       govact ~ 1 + negemot + posemot + ideology + sex + age,
-      chains = 4, cores = 4)
+      cores = 4)
 ```
 
 ```{r}
@@ -372,26 +389,26 @@ Here is the posterior mean, what you might call the Bayesian point estimate, for
 * positive emotions = 4,
 * `ideology` = 2,
 * is male (i.e., `sex` = 1), and
-* is 30 years of `age`
+* is 30 years of `age`.
 
 ```{r}
 fixef(model4)[1] + 
-  fixef(model4)[2]*3 + 
-  fixef(model4)[3]*4 + 
-  fixef(model4)[4]*2 + 
-  fixef(model4)[5]*1 + 
-  fixef(model4)[6]*30
+  fixef(model4)[2] * 3 + 
+  fixef(model4)[3] * 4 + 
+  fixef(model4)[4] * 2 + 
+  fixef(model4)[5] * 1 + 
+  fixef(model4)[6] * 30
 ```
 
 Here's the same deal for a man of the same profile, but with one point higher on `negemot`.
 
 ```{r}
 fixef(model4)[1] + 
-  fixef(model4)[2]*4 + 
-  fixef(model4)[3]*4 + 
-  fixef(model4)[4]*2 + 
-  fixef(model4)[5]*1 + 
-  fixef(model4)[6]*30
+  fixef(model4)[2] * 4 + 
+  fixef(model4)[3] * 4 + 
+  fixef(model4)[4] * 2 + 
+  fixef(model4)[5] * 1 + 
+  fixef(model4)[6] * 30
 ```
 
 If you want a full expression of the model uncertaintly in terms of the shape of the posterior distribution and the 95% intervals, you'll probably just want to use `posterior_samples()` and do a little data processing.
@@ -403,7 +420,7 @@ post <-
   post %>%
   mutate(our_posterior = b_Intercept + b_negemot*4 + b_posemot*4 + b_ideology*2 + b_sex*1 + b_age*30)
 
-# This intermediary step will make it easier to specify the break points and their labels for the x-axis  
+# this intermediary step will make it easier to specify the break points and their labels for the x-axis  
 post_summary <-
   quantile(post$our_posterior, probs = c(.025, .5, .975)) %>% 
   as_tibble() %>% 
@@ -411,6 +428,7 @@ post_summary <-
            round(digits = 3) %>% 
            as.character())
 
+# plot!
 ggplot(data = post,
        aes(x = our_posterior)) +
   geom_density(fill = "black") +
@@ -420,7 +438,7 @@ ggplot(data = post,
                      breaks = post_summary$value,
                      labels = post_summary$labels) +
   scale_y_continuous(NULL, breaks = NULL) +
-  labs(subtitle = "The expected govact score for a 30-year-old man for whom\nnegemot and posemot both equal 4 and ideology equals 2.\nThe solid and dashed white vertical lines are the posterior\nmedian and 95% intervals, respectively.") +
+  labs(subtitle = "The expected govact score for a 30-year-old man for\nwhom negemot and posemot both equal 4 and ideology\nequals 2. The solid and dashed white vertical lines are the\nposterior median and 95% intervals, respectively.") +
   theme_bw()
 ```
 
@@ -428,19 +446,18 @@ In the text, Hayes showed that individuals based on these two profiles would be 
 
 ```{r, fig.width = 4, fig.height = 3}
 nd <-
-  tibble(negemot = c(3, 4),
-         posemot = 4,
+  tibble(negemot  = c(3, 4),
+         posemot  = 4,
          ideology = 2,
-         sex = 1,
-         age = 30)
+         sex      = 1,
+         age      = 30)
 
 fitted(model4, 
          newdata = nd,
          summary = F) %>% 
-  as_tibble() %>% 
-  rename(condition_a = V1,
-         contition_b = V2) %>% 
-  mutate(difference = contition_b - condition_a) %>% 
+  data.frame() %>% 
+  set_names(str_c("condition_", letters[1:2])) %>% 
+  mutate(difference = condition_b - condition_a) %>% 
   
   ggplot(aes(x = difference)) +
   geom_density(fill = "black", color = "transparent") +
@@ -455,7 +472,7 @@ brms doesn't automatically give us the standardized coefficients the way OLS out
 
 ```{r}
 sandardize <- function(x){
-  (x - mean(x))/sd(x)
+  (x - mean(x)) / sd(x)
 }
 ```
 
@@ -477,9 +494,10 @@ Now we've got us our standardized variables, let's fit a standardized model.
 
 ```{r model4_z, cache = T, message = F, warning = F}
 model4_z <- 
-  brm(data = glbwarm, family = gaussian,
+  brm(data = glbwarm, 
+      family = gaussian,
       govact_z ~ 1 + negemot_z + posemot_z + ideology_z + sex_z + age_z,
-      chains = 4, cores = 4)
+      cores = 4)
 ```
 
 Here are the newly standardized coefficient summaries, minus the `Intercept`.
@@ -497,10 +515,13 @@ model4_z_p <-
   update(model4_z,
          newdata = glbwarm,
          formula = govact_z ~ 1 + negemot_z + posemot_z + ideology_z + sex + age_z,
-         chains = 4, cores = 4)
+         cores = 4)
 ```
 
-And here are the coefficient summaries, including the `Intercept`, for the partially-standardized model.
+
+Notice our use of the `update()` function. If you want to hastily fit a **brms** model of the same basic form of a prior model, you can just update some of the parameters of that original fit. In this case, all we did was swap out one of the predictors. To accommodate that change, we used the `newdata` argument so the model had access to the new variable and then we fed in the new formula. 
+
+Anyway, here are the coefficient summaries, including the `Intercept`, for the partially-standardized model.
 
 ```{r}
 fixef(model4_z_p) %>% round(digits = 3)
@@ -510,19 +531,21 @@ As Hayes wrote, now `sex` = `r round(brms::fixef(model4_z_p)[5], digits = 3)` ha
 
 On page 54, Hayes gave us the equation to transform unstandardized coefficients to standardized ones:
 
-$$\tilde{b}_{i} = b_{i}\left(\frac{SD_{X_{i}}}{SD_{Y}}\right)$$
+$$
+\tilde{b}_{i} = b_{i}\left(\frac{SD_{X_{i}}}{SD_{Y}}\right)
+$$
 
 Let's give it a whirl with `negemot`.
 
 ```{r}
-# Here's the coefficient for `negemot` from the standardized model, `model4_z`
+# here's the coefficient for `negemot` from the standardized model, `model4_z`
 fixef(model4_z)["negemot_z", "Estimate"]
 
-# Here's the coefficient for `negemot` from the unstandardized model, `model4`
+# here's the coefficient for `negemot` from the unstandardized model, `model4`
 fixef(model4)["negemot", "Estimate"]
 
-# And here we use Hayes's formula to standardize the unstandardized coefficient
-fixef(model4)["negemot", "Estimate"]*(sd(glbwarm$negemot)/sd(glbwarm$govact))
+# and here we use Hayes' formula to standardize the unstandardized coefficient
+fixef(model4)["negemot", "Estimate"] * (sd(glbwarm$negemot) / sd(glbwarm$govact))
 ```
 
 Looks like we got it within rounding error--pretty good! However, that was just the posterior mean, the Bayesian point estimate. If we want to more fully express the uncertainty around the mean--and we do--, we'll need to work with the posterior draws.
@@ -530,8 +553,8 @@ Looks like we got it within rounding error--pretty good! However, that was just 
 ```{r}
 # the posterior draws from the unstandardized model
 posterior_samples(model4) %>% 
-  # using Hayes's formula to standardize `b_negemot`
-  mutate(`hand-made b_negemot_z` = b_negemot*(sd(glbwarm$negemot)/sd(glbwarm$govact))) %>% 
+  # using Hayes' formula to standardize `b_negemot`
+  mutate(`hand-made b_negemot_z` = b_negemot * (sd(glbwarm$negemot) / sd(glbwarm$govact))) %>% 
   # taking on the `b_negemot_z` column from the standardized `model4_z` models posterior draws
   bind_cols(posterior_samples(model4_z) %>%
               select(b_negemot_z)) %>% 
@@ -548,7 +571,7 @@ posterior_samples(model4) %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
-Our summary confirms that we can apply Hayes's formula to a `posterior_samples()` column in order to get fuller summary statistics for a hand-converted standardized coefficient. This would be in full compliance with, say, APA recommendations to include 95% intervals with all effect sizes--the standardized regression coefficient being the effect size, here.
+Our summary confirms that we can apply Hayes' formula to a `posterior_samples()` column in order to get fuller summary statistics for a hand-converted standardized coefficient. This would be in full compliance with, say, APA recommendations to include 95% intervals with all effect sizes--the standardized regression coefficient being the effect size, here.
 
 ## Measures of model fit
 
@@ -562,7 +585,7 @@ Happily, it comes with 95% intervals, which will make the editors at APA journal
 
 ```{r, fig.width = 6, fig.height = 1.75}
 bayes_R2(model4, summary = F) %>% 
-  as_tibble() %>% 
+  data.frame() %>% 
   
   ggplot(aes(x = R2)) +
   geom_density(fill = "black", color = "transparent") +
@@ -627,11 +650,11 @@ What we did was simulate 10 data sets worth of `govact` values, plot their densi
 
 ## Statistical inference
 
-Here's a tidyverse way to do Hayes's simulation. We're just using OLS regression with the `lm()` function. You could do this with Bayesian HMC estimation, but man would it take a while. For our first step, we’ll define two custom functions.
+Here's a tidyverse way to do Hayes' simulation. We're just using OLS regression with the `lm()` function. You could do this with Bayesian HMC estimation, but man would it take a while. For our first step, we’ll define two custom functions.
 
 ```{r}
 # this first one will use the `sample_n()` function to randomly sample from `glbwarm`
-make_sample <- function(i){
+make_sample <- function(i) {
   set.seed(i)
   sample_n(glbwarm, 50, replace = F)
 }
@@ -642,7 +665,7 @@ glbwarm_model <- function(df) {
 }
 ```
 
-Now we’ll run the simulation, wrangle the output, and plot in one fell swoop.
+Now we'll run the simulation, wrangle the output, and plot in one fell swoop.
 
 ```{r sim, cache = T, fig.width = 6, fig.height = 3.5}
 # we need an iteration index, which will double as the values we set our seed with in our `make_sample()` function
@@ -659,7 +682,7 @@ tibble(iter = 1:1e4) %>%
   # we're only going to focus on the estimates for `negemot`
   filter(term == "negemot") %>% 
   
-  # Here it is, Figure 2.7
+  # here it is, Figure 2.7
   ggplot(aes(x = estimate)) +
   geom_histogram(binwidth = .025, boundary = 0) +
   labs(x = "Unstandardized regression coefficient for negemot",
@@ -671,11 +694,11 @@ To learn more about this approach to simulations, see [this section of *R4DS*](h
 
 ### Testing a null hypothesis.
 
-As Bayesians, we don't need to wed ourselves to the null hypothesis. We're not interested in the probability of the data given the null hypothesis. Bayes’s rule,
+As Bayesians, we don't need to wed ourselves to the null hypothesis. We're not interested in the probability of the data given the null hypothesis. Bayes' rule,
 
-$$p(\theta|D) = \frac{p(D|\theta)p(\theta)}{p(D)}$$
+$$p(\theta | D) = \frac{p(D | \theta) p(\theta)}{p(D)}$$
 
-gives us the probability of the model parameters, given the data. Though I acknowledge [different researchers might set out to ask different things of their data](http://daniellakens.blogspot.com/2017/11/the-statisticians-fallacy.html), I propose we’re generally more interested in determining the most probable parameter values than we are the probabilities tested within the NHST paradigm.
+gives us the probability of the model parameters, given the data. Though I acknowledge [different researchers might set out to ask different things of their data](http://daniellakens.blogspot.com/2017/11/the-statisticians-fallacy.html), I propose we're generally more interested in determining the most probable parameter values than we are the probabilities tested within the NHST paradigm.
 
 ```{r, fig.width = 6, fig.height = 3.5}
 posterior_samples(model4) %>% 
@@ -703,7 +726,7 @@ We can actually get those intervals with the simple use of the base R `quantile(
 
 ```{r}
 posterior_samples(model4) %>% 
-  summarize(the_2.5_percentile = quantile(b_negemot, probs = .025),
+  summarize(the_2.5_percentile  = quantile(b_negemot, probs = .025),
             the_97.5_percentile = quantile(b_negemot, probs = .975))
 ```
 
@@ -756,7 +779,7 @@ Here we'll make use of the `update()` function to hastily fit our reduced model,
 model5 <- 
   update(model4,
          govact ~ 1 + ideology + sex + age,
-         chains = 4, cores = 4)
+         cores = 4)
 ```
 
 We can get a look at the $R^2$ summaries for our competing models like this.
@@ -769,23 +792,23 @@ bayes_R2(model5) %>% round(digits = 2)
 So far, it looks like our fuller model, `model4`, explains more variation in the data. If we wanted to look at their distributions, we'd set `summary = F` in the `bayes_R2()` function and convert the results to a data frame or tibble. Here we use `bind_cols()` to put the $R^2$ results for both in the same tibble.
 
 ```{r}
-R2s <-
+r2s <-
   bayes_R2(model4, summary = F) %>%
-  as_tibble() %>%
-  rename(R2_model4 = R2) %>% 
+  data.frame() %>%
+  rename(r2_model4 = R2) %>% 
   bind_cols(
     bayes_R2(model5, summary = F) %>%
-      as_tibble() %>%
-      rename(R2_model5 = R2)
+      data.frame() %>%
+      rename(r2_model5 = R2)
   )
 
-head(R2s)
+head(r2s)
 ```
 
-With our `R2s` tibble in hand, we're ready to plot.
+With our `r2s` tibble in hand, we're ready to plot.
 
 ```{r, fig.width = 6, fig.height = 1.5}  
-R2s %>% 
+r2s %>% 
   gather() %>% 
   
   ggplot(aes(x = value, fill = key)) +
@@ -798,8 +821,8 @@ R2s %>%
 Yep, the $R^2$ distribution for `model4`, the one including the emotion variables, is clearly larger than that for the more parsimonious `model5`. And it'd just take a little more data wrangling to get a formal $R^2$ difference score.
 
 ```{r, fig.width = 6, fig.height = 2}  
-R2s %>% 
-  mutate(difference = R2_model5 - R2_model4) %>% 
+r2s %>% 
+  mutate(difference = r2_model5 - r2_model4) %>% 
   
   ggplot(aes(x = difference)) +
   geom_density(fill = "black", color = "transparent") +

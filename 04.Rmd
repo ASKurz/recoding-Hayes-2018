@@ -4,15 +4,19 @@
 options(width = 110)
 ```
 
-In this chapter, we’ll explore complications, "including testing and ruling out various alternative explanations for associations observed in a mediation analysis, effect size, and models with multiple causal agents and outcomes (p. 113)."
+> Comfort with [the principles of the basic mediation model] allows you to conduct mediation analysis and use it to shed light on your research questions and hypotheses about causal processes. In this chapter, [we] take up a variety of complications, including testing and ruling out various alternative explanations for associations observed in a mediation analysis, effect size, and models with multiple causal agents and outcomes. (p. 113)
 
 ## What about Barron and Kenny?
 
-On page 121 of the text, Hayes opined:
+> Complete and partial mediation are concepts that are deeply ingrained in the thinking of social and behavioral scientists. But I just don't see what they offer our understanding of a phenomenon. They are too sample-size-dependent and the distinction between them has no substantive or theoretical meaning or value of any consequence. I recommend avoiding expressing hypotheses about mediation or results of a mediation analysis using these terms. (p. 121)
 
->Complete and partial mediation are concepts that are deeply ingrained in the thinking of social and behavioral scientists. But I just don’t see what they offer our understanding of a phenomenon. They are too sample-size-dependent and the distinction between them has no substantive or theoretical meaning or value of any consequence. I recommend avoiding expressing hypotheses about mediation or results of a mediation analysis using these terms.
+Agreed.
 
 ## Confounding and causal order
+
+> One of the beautiful features of experiments is the causal interpretations they afford about differences between groups. Good experimentation is tough and requires lots of careful planning and strict control over experimental procedures, construction of stimuli, treatment of participants, and so forth. But when done well, no research design gives a researcher more confidence in the claim that differences between groups defined by $X$ on some variable of interest is due to $X$ rather than something else. Given that a mediation model is a causal model, the ability to make unequivocal causal claims about the effect of $X$ on $M$ and the direct and total effects of $X$ on $Y$ gives experiments tremendous appeal.
+>
+> Absent random assignment to values of $X$, *all* of the associations in a mediation model are susceptible to confounding and epiphenomenal association, not just the association between $M$ and $Y$. Whether one’s design includes manipulation and random assignment of $X$ or not, it behooves the researcher to seriously ponder these potential threats to causal inference and, if possible, do something to reduce their plausibility as alternative explanations for associations observed. (pp 121--122, *emphasis* in the original)
 
 ### Accounting for confounding and epiphenomenal association.
 
@@ -42,12 +46,13 @@ Recall that if you want the correlations with Bayesian estimation and those swee
 
 ```{r model1, cache = T, message = F, warning = F}
 model1 <- 
-  brm(data = estress, family = gaussian,
-      cbind(ese, estress, affect, withdraw) ~ 1,
-      chains = 4, cores = 4)
+  brm(data = estress, 
+      family = gaussian,
+      mvbind(ese, estress, affect, withdraw) ~ 1,
+      cores = 4)
 ```
 
-The summary:
+Behold the summary.
 
 ```{r}
 print(model1, digits = 3)
@@ -56,47 +61,43 @@ print(model1, digits = 3)
 Since we have posteriors for the correlations, why not plot them? Here we use the `theme_black()` from brms and a color scheme from the [viridis package](https://cran.r-project.org/web/packages/viridis/index.html).
 
 ```{r, message = F, warning = F, fig.width = 10, fig.height = 1.75}
-library(viridis)
-
 posterior_samples(model1) %>% 
   select(rescor__ese__estress, rescor__ese__affect, rescor__estress__withdraw) %>% 
   gather() %>% 
   
   ggplot(aes(x = value, fill = key)) +
   geom_density(alpha = .85, color = "transparent") +
-  scale_fill_viridis(discrete = T, option = "D", direction = -1,
-                     labels = c(expression(paste(rho["ese, affect"])),
-                                expression(paste(rho["ese, estress"])),
-                                expression(paste(rho["estress, withdraw"]))),
-                     guide = guide_legend(label.hjust = 0,
-                                          label.theme = element_text(size = 15, angle = 0, color = "white"),
-                                          title.theme = element_blank())) +
-  coord_cartesian(xlim = c(-1, 1)) +
+  scale_fill_viridis_d(option = "D", direction = -1,
+                       labels = c(expression(paste(rho["ese, affect"])),
+                                  expression(paste(rho["ese, estress"])),
+                                  expression(paste(rho["estress, withdraw"]))),
+                       guide = guide_legend(label.hjust = 0,
+                                            label.theme = element_text(size = 15, angle = 0, color = "white"),
+                                            title.theme = element_blank())) +
+  xlim(-1, 1) +
+  scale_y_continuous(NULL, breaks = NULL) +
   labs(title = "Our correlation density plot",
        x = NULL) +
   theme_black() +
-  theme(panel.grid = element_blank(),
-        axis.text.y = element_text(hjust = 0),
+  theme(panel.grid   = element_blank(),
+        axis.text.y  = element_text(hjust = 0),
         axis.ticks.y = element_blank())
 ```
 
-Before we fit our mediation model with `brm()`, we'll specify the sub-models, here.
 
-```{r}
-y_model <- bf(withdraw ~ 1 + estress + affect + ese + sex + tenure)
-m_model <- bf(affect ~ 1 + estress + ese + sex + tenure)
-```
-
-With `y_model` and `m_model` defined, we're ready to fit.
+In the last chapter, we said there were multiple ways to set up a multivariate model in brms. Our first approach was to externally define the submodels using the `bf()` function, save them as objects, and then include those objects within the `brm()` function. Another approach is to just define the separate `bf()` submodels directly in the `brm()` function, combining them with the `+` operator. That's the approach we will practice in this chapter. Here's what it looks like for our first mediation model.
 
 ```{r model2, cache = T, message = F, warning = F}
 model2 <-
-  brm(data = estress, family = gaussian,
-      y_model + m_model + set_rescor(FALSE),
-      chains = 4, cores = 4)
+  brm(data = estress, 
+      family = gaussian,
+      bf(withdraw ~ 1 + estress + affect + ese + sex + tenure) +
+        bf(affect ~ 1 + estress + ese + sex + tenure) +
+        set_rescor(FALSE),
+      cores = 4)
 ```
 
-Here's the summary:
+Worked like a charm. Here's the summary.
 
 ```{r}
 print(model2, digits = 3)
@@ -104,7 +105,7 @@ print(model2, digits = 3)
 
 In the printout, notice how first within intercepts and then with covariates and sigma, the coefficients are presented as for `withdraw` first and then `affect`. Also notice how the coefficients for the covariates are presented in the same order for each criterions. Hopefully that'll make it easier to sift through the printout. Happily, our coefficients are quite similar to those in Table 4.1.
 
-Here are the $R^2$ values.
+Here are the $R^2$ summaries.
 
 ```{r}
 bayes_R2(model2) %>% round(digits = 3)
@@ -114,16 +115,16 @@ These are also in the same ballpark, but a little higher. Why not glance at thei
 
 ```{r, fig.width = 6, fig.height = 2}
 bayes_R2(model2, summary = F) %>% 
-  as_tibble() %>% 
+  data.frame() %>% 
   gather() %>% 
   
   ggplot(aes(x = value, fill = key)) +
   geom_density(color = "transparent", alpha = .85) +
-  scale_fill_manual(values = c(viridis_pal(option = "A")(7)[c(7, 3)]), 
-                    labels = c("affect", "withdraw"),
-                    guide = guide_legend(title.theme = element_blank())) +
+  scale_fill_viridis_d(option = "A", begin = .33, direction = -1,
+                       labels = c("affect", "withdaw"),
+                       guide  = guide_legend(title.theme = element_blank())) +
   scale_y_continuous(NULL, breaks = NULL) +
-  coord_cartesian(xlim = 0:1) +
+  xlim(0:1) +
   labs(title = expression(paste("The ", italic("R")^{2}, " distributions for model2")),
        x = NULL) +
   theme_black() +
@@ -135,7 +136,7 @@ Here we retrieve the posterior samples, compute the indirect effect, and summari
 ```{r}
 post <-
   posterior_samples(model2) %>% 
-  mutate(ab = b_affect_estress*b_withdraw_affect)
+  mutate(ab = b_affect_estress * b_withdraw_affect)
 
 quantile(post$ab, probs = c(.5, .025, .975)) %>% 
   round(digits = 3)
@@ -145,12 +146,12 @@ The results are similar to those in the text (p. 127). Here's what it looks like
 
 ```{r, fig.width = 4, fig.height = 3.5}
 post %>% 
-  
   ggplot(aes(x = ab)) +
-  geom_density(color = "transparent",
-               fill = viridis_pal(option = "A")(7)[5]) +
+  geom_density(aes(fill = factor(0)),
+               color = "transparent", show.legend = F) +
   geom_vline(xintercept = quantile(post$ab, probs = c(.5, .025, .975)),
              color = "black", linetype = c(1, 3, 3)) +
+  scale_fill_viridis_d(option = "A", begin = .6) +
   scale_y_continuous(NULL, breaks = NULL) +
   xlab(expression(italic("ab"))) +
   theme_black() +
@@ -178,6 +179,8 @@ Both appear pretty small. Which leads us to the next section...
 
 ## Effect size
 
+> The quantification of effect size in mediation analysis is an evolving area of thought and research. [Hayes described] two measures of effect size that apply to the direct, indirect, and total effects in a mediation model.... For an excellent discussion of measures of effect size in mediation analysis, see [Preacher and Kelley (2011)](http://quantpsy.org/pubs/preacher_kelley_2011.pdf). [We will] use their notation below. (p. 133)
+
 ### The partially standardized effect.
 
 We get $SD$s using the `sd()` function. Here's the $SD$ for our $Y$ variable, `withdraw`.
@@ -186,19 +189,19 @@ We get $SD$s using the `sd()` function. Here's the $SD$ for our $Y$ variable, `w
 sd(estress$withdraw)
 ```
 
-Here we compute the partially standardized effect sizes for $c'$ and $ab$ by dividing those vectors in our `post` object by `sd(estress$withdraw)`, which we saved as `SD_y`.
+Here we compute the partially standardized effect sizes for $c'$ and $ab$ by dividing those vectors in our `post` object by `sd(estress$withdraw)`, which we saved as `sd_y`.
 
 ```{r}
-SD_y <- sd(estress$withdraw)
+sd_y <- sd(estress$withdraw)
 
 post %>% 
-  mutate(c_prime_ps = b_withdraw_estress/SD_y,
-         ab_ps = ab/SD_y) %>% 
-  mutate(c_ps = c_prime_ps + ab_ps) %>% 
+  mutate(c_prime_ps = b_withdraw_estress / sd_y,
+         ab_ps      = ab / sd_y) %>% 
+  mutate(c_ps       = c_prime_ps + ab_ps) %>% 
   select(c_prime_ps, ab_ps, c_ps) %>% 
   gather() %>%
   group_by(key) %>% 
-  summarize(mean = mean(value), 
+  summarize(mean   = mean(value), 
             median = median(value),
             ll = quantile(value, probs = .025),
             ul = quantile(value, probs = .975)) %>% 
@@ -209,15 +212,15 @@ The results are similar, though not identical, to those in the text. Here we hav
 
 ```{r, fig.height = 3, fig.width = 10}
 post %>% 
-  mutate(c_prime_ps = b_withdraw_estress/SD_y,
-         ab_ps = ab/SD_y) %>% 
-  mutate(c_ps = c_prime_ps + ab_ps) %>% 
+  mutate(c_prime_ps = b_withdraw_estress / sd_y,
+         ab_ps      = ab / sd_y) %>% 
+  mutate(c_ps       = c_prime_ps + ab_ps) %>% 
   select(c_prime_ps, ab_ps, c_ps) %>% 
   gather() %>% 
   
   ggplot(aes(x = value, fill = key)) +
   geom_density(alpha = .85, color = "transparent") +
-  scale_fill_viridis(discrete = T, option = "D") +
+  scale_fill_viridis_d(option = "D") +
   scale_y_continuous(NULL, breaks = NULL) +
   labs(title = "Partially-standardized coefficients",
        x = NULL) +
@@ -227,20 +230,22 @@ post %>%
   facet_wrap(~key, ncol = 3)
 ```
 
-On page 135, Hayes revisited the model from section 3.3. We'll have to reload the data and refit that model to follow along.
+On page 135, Hayes revisited the model from section 3.3. We'll have to reload the data and refit that model to follow along. First, load the data.
 
 ```{r, message = F, warning = F}
 pmi <- read_csv("data/pmi/pmi.csv")
-
-y_model <- bf(reaction ~ 1 + pmi + cond)
-m_model <- bf(pmi ~ 1 + cond)
 ```
+
+Refit the model, this time with the `bf()` statements defined right within `brm()`.
 
 ```{r model3, cache = T, message = F, warning = F}
 model3 <-
-  brm(data = pmi, family = gaussian,
-      y_model + m_model + set_rescor(FALSE),
-      chains = 4, cores = 4)
+  brm(data = pmi, 
+      family = gaussian,
+       bf(reaction ~ 1 + pmi + cond) + 
+        bf(pmi ~ 1 + cond) + 
+        set_rescor(FALSE),
+      cores = 4)
 ```
 
 The partially-standardized parameters require some `posterior_samples()` wrangling.
@@ -248,18 +253,18 @@ The partially-standardized parameters require some `posterior_samples()` wrangli
 ```{r}
 post <- posterior_samples(model3)
 
-SD_y <- sd(pmi$reaction)
+sd_y <- sd(pmi$reaction)
 
 post %>% 
-  mutate(ab = b_pmi_cond * b_reaction_pmi,
-         c_prime = b_reaction_cond) %>% 
-  mutate(ab_ps = ab/SD_y,
-         c_prime_ps = c_prime/SD_y) %>% 
-  mutate(c_ps = c_prime_ps + ab_ps) %>% 
+  mutate(ab         = b_pmi_cond * b_reaction_pmi,
+         c_prime    = b_reaction_cond) %>% 
+  mutate(ab_ps      = ab / sd_y,
+         c_prime_ps = c_prime / sd_y) %>% 
+  mutate(c_ps       = c_prime_ps + ab_ps) %>% 
   select(c_prime_ps, ab_ps, c_ps) %>% 
   gather() %>%
   group_by(key) %>% 
-  summarize(mean = mean(value), 
+  summarize(mean   = mean(value), 
             median = median(value),
             ll = quantile(value, probs = .025),
             ul = quantile(value, probs = .975)) %>% 
@@ -272,11 +277,11 @@ Happily, these results are closer to those in the text than with the previous ex
 
 **Note**. Hayes could have made this clearer in the text, but the `estress` model he referred to in this section was the one from way back in section 3.5, _not_ the one from earlier in this chapter.
 
-One way to get a standardized solution is to standardize the variables in the data and then fit the model with those standardized variables. To do so, we'll revisit our custom `standardize()`, put it to work, and fit the standardized version of the model from section 3.5, which we'll call `model4`.With our `y_model` and `m_model` defined, we're ready to fit.
+One way to get a standardized solution is to standardize the variables in the data and then fit the model with those standardized variables. To do so, we'll revisit our custom `standardize()`, put it to work, and fit the standardized version of the model from section 3.5, which we'll call `model4`.
 
 ```{r, message = F, warning = F}
 sandardize <- function(x){
-  (x - mean(x))/sd(x)
+  (x - mean(x)) / sd(x)
 }
 
 estress <-
@@ -284,19 +289,21 @@ estress <-
   mutate(withdraw_z = sandardize(withdraw), 
          estress_z  = sandardize(estress), 
          affect_z   = sandardize(affect))
-
-y_model <- bf(withdraw_z ~ 1 + estress_z + affect_z)
-m_model <- bf(affect_z ~ 1 + estress_z)
 ```
+
+Fit the model.
 
 ```{r model4, cache = T, message = F, warning = F}
 model4 <-
-  brm(data = estress, family = gaussian,
-      y_model + m_model + set_rescor(FALSE),
-      chains = 4, cores = 4)
+  brm(data = estress, 
+      family = gaussian,
+      bf(withdraw_z ~ 1 + estress_z + affect_z) + 
+        bf(affect_z ~ 1 + estress_z) + 
+        set_rescor(FALSE),
+      cores = 4)
 ```
 
-Here they are, our newly standardized coefficients:
+Here they are, our newly standardized coefficients.
 
 ```{r}
 fixef(model4) %>% round(digits = 3)
@@ -305,16 +312,14 @@ fixef(model4) %>% round(digits = 3)
 Here we do the wrangling necessary to spell out the standardized effects for $ab$, $c'$, and $c$.
 
 ```{r}
-post <- posterior_samples(model4)
-
-post %>% 
-  mutate(ab_s = b_affectz_estress_z * b_withdrawz_affect_z,
+posterior_samples(model4) %>% 
+  mutate(ab_s      = b_affectz_estress_z * b_withdrawz_affect_z,
          c_prime_s = b_withdrawz_estress_z) %>%
-  mutate(c_s = ab_s + c_prime_s) %>% 
+  mutate(c_s       = ab_s + c_prime_s) %>% 
   select(c_prime_s, ab_s, c_s) %>% 
   gather() %>%
   group_by(key) %>% 
-  summarize(mean = mean(value), 
+  summarize(mean   = mean(value), 
             median = median(value),
             ll = quantile(value, probs = .025),
             ul = quantile(value, probs = .975)) %>% 
@@ -324,16 +329,16 @@ post %>%
 Let's confirm that we can recover these values by applying the formulas on page 135 to the unstandardized model, which we'll call `model5`. First, we'll have to fit that model since we haven't fit that one since Chapter 3.
 
 ```{r, message = F, warning = F}
-y_model <- bf(withdraw ~ 1 + estress + affect)
-m_model <- bf(affect ~ 1 + estress)
-
 model5 <-
-  brm(data = estress, family = gaussian,
-      y_model + m_model + set_rescor(FALSE),
-      chains = 4, cores = 4)
+  brm(data = estress, 
+      family = gaussian,
+      bf(withdraw ~ 1 + estress + affect) + 
+        bf(affect ~ 1 + estress) + 
+        set_rescor(FALSE),
+      cores = 4)
 ```
 
-Here are the unstandardized coefficients:
+Check the unstandardized coefficient summaries.
 
 ```{r}
 fixef(model5) %>% round(digits = 3)
@@ -341,30 +346,30 @@ fixef(model5) %>% round(digits = 3)
 
 On pages 135--136, Hayes provided the formulas to compute the standardized effects:
 
-$$c'_{cs} = \frac{SD_X(c')}{SD_{Y}} = SD_{X}(c'_{ps})$$
-
-$$ab_{cs} = \frac{SD_X(ab)}{SD_{Y}} = SD_{X}(ab_{ps})$$
-
-$$c_{cs} = \frac{SD_X(c)}{SD_{Y}} = c'_{cs} + ab_{ps}$$
+$$
+\begin{align*}
+c'_{cs} & = \frac{SD_X(c')}{SD_{Y}} = SD_{X}(c'_{ps}) \\
+ab_{cs} & = \frac{SD_X(ab)}{SD_{Y}} = SD_{X}(ab_{ps}) \\
+c_{cs}  & = \frac{SD_X(c)}{SD_{Y}} = c'_{cs} + ab_{ps}
+\end{align*}
+$$
 
 Here we put them in action to standardize the unstandardized results.
 
 ```{r}
-post <- posterior_samples(model5)
+sd_x <- sd(estress$estress)
+sd_y <- sd(estress$withdraw)
 
-SD_x <- sd(estress$estress)
-SD_y <- sd(estress$withdraw)
-
-post %>% 
-  mutate(ab = b_affect_estress * b_withdraw_affect,
-         c_prime = b_withdraw_estress) %>% 
-  mutate(ab_s = (SD_x*ab)/SD_y,
-         c_prime_s = (SD_x*c_prime)/SD_y) %>% 
-  mutate(c_s = ab_s + c_prime_s) %>% 
+posterior_samples(model5) %>% 
+  mutate(ab        = b_affect_estress * b_withdraw_affect,
+         c_prime   = b_withdraw_estress) %>% 
+  mutate(ab_s      = (sd_x * ab) / sd_y,
+         c_prime_s = (sd_x * c_prime) / sd_y) %>% 
+  mutate(c_s       = ab_s + c_prime_s) %>% 
   select(c_prime_s, ab_s, c_s) %>% 
   gather() %>%
   group_by(key) %>% 
-  summarize(mean = mean(value), 
+  summarize(mean   = mean(value), 
             median = median(value),
             ll = quantile(value, probs = .025),
             ul = quantile(value, probs = .975)) %>% 
@@ -379,111 +384,113 @@ Hayes recommended against these, so I'm not going to bother working any examples
 
 ## Statistical power
 
-As Hayes discussed, power is an important but thorny issue within the frequentist paradigm. Given that we’re not particularly interested in rejecting the point-null hypothesis as Bayesians and that we bring in priors (which we’ve largely avoided explicitly mentioning in his project but have been quietly using all along), the issue is even more difficult for Bayesians. To learn more on the topic, check out [Miočević, MacKinnon, and Levy's paper](https://www.tandfonline.com/doi/abs/10.1080/10705511.2017.1312407?src=recsys&journalCode=hsem20) on power in small-sample Bayesian analyses or [Gelman and Carlin's paper](http://journals.sagepub.com/doi/pdf/10.1177/1745691614551642) offering an alternative to the power paradigm. You might also look at Matti Vuorre's [Sample size planning with brms project](https://gitlab.com/vuorre/bayesplan).
+As Hayes discussed, power is an important but thorny issue within the frequentist paradigm. Given that we’re not particularly interested in rejecting the point-null hypothesis as Bayesians and that we bring in priors (which we've largely avoided explicitly mentioning in his project but have been quietly using all along), the issue is even more difficult for Bayesians. To learn more on the topic, check out chapter 13 in [Kruschke's text](http://www.indiana.edu/~kruschke/DoingBayesianDataAnalysis/), [Miočević, MacKinnon, and Levy's paper](https://www.tandfonline.com/doi/abs/10.1080/10705511.2017.1312407?src=recsys&journalCode=hsem20) on power in small-sample Bayesian analyses or [Gelman and Carlin's paper](http://journals.sagepub.com/doi/pdf/10.1177/1745691614551642) offering an alternative to the power paradigm. You might look at Matti Vuorre's [Sample size planning with brms project](https://gitlab.com/vuorre/bayesplan). And finally, I have a series of blog posts on Bayesian power analyses. You can find the first post [here](https://solomonkurz.netlify.com/post/bayesian-power-analysis-part-i/).
 
 ## Multiple $X$s or $Y$s: Analyze separately or simultaneously?
 
+"Researchers sometimes propose that several causal agents ($X$ variables simultaneously transmit their effects on the same outcome through the same mediator(s)" (p. 141).
+
 ### Multiple $X$ variables.
+
+> The danger in including multiple $X$'s in a mediation model, as when including statistical controls, is the possibility that highly correlated $X$s will cancel out each other’s effects. This is a standard concern in linear models involving correlated predictors. Two $X$ variables (or an $X$ variable and a control variable) highly correlated with each other may also both be correlated with $M$ or $Y$, so when they are both included as predictors of $M$ or $Y$ in a mediation model, they compete against each other in their attempt to explain variation in $M$ and $Y$. Their regression coefficients quantify their unique association with the model's mediator and outcome variable(s). at the extreme, the two variables end up performing like two boxers in the ring simultaneously throwing a winning blow at the other at precisely the same time. Both get knocked out and neither goes away appearing worthy of a prize. The stronger the associations between the variables in the model, the greater the potential of such a problem. (pp. 143--144)
 
 The same basic problems with multicollinearity applies to the Bayesian paradigm, too.
 
 ### Estimation of a model with multiple $X$ variables in ~~PROCESS~~ brms.
 
-Hayes discussed the limitation that his PROCESS program may only handle a single $X$ variable in the `x=` part of the command line, for which he displayed a workaround. We don’t have such a limitation in brms. Using Hayes’s hypothetical data syntax for a model with three $X$s, the brms code would be:
+Hayes discussed the limitation that his PROCESS program may only handle a single $X$ variable in the `x=` part of the command line, for which he displayed a workaround. We don't have such a limitation in brms. Using Hayes's hypothetical data syntax for a model with three $X$s, the brms code would be like this.
 
 ```{r, eval = F}
-y_model <- bf(dv ~ 1 + iv1 + iv2 + iv3 + med)
-m_model <- bf(med ~ 1 + iv1 + iv2 + iv3)
-
 model6 <-
-  brm(data = data, family = gaussian,
-      y_model + m_model + set_rescor(FALSE),
-      chains = 4, cores = 4)
+  brm(data = data, 
+      family = gaussian,
+      bf(dv ~ 1 + iv1 + iv2 + iv3 + med) + 
+        bf(med ~ 1 + iv1 + iv2 + iv3) + 
+        set_rescor(FALSE),
+      cores = 4)
 ```
 
 To show it in action, let's simulate some data.
 
 ```{r}
-N <- 1e3
+n <- 1e3
 
 set.seed(4.5)
 d <-
-  tibble(iv1 = rnorm(N, mean = 0, sd = 1),
-         iv2 = rnorm(N, mean = 0, sd = 1),
-         iv3 = rnorm(N, mean = 0, sd = 1),
-         med = rnorm(N, mean = 0 + iv1*-1 + iv2*0 + iv3*1, sd = 1),
-         dv  = rnorm(N, mean = 0 + iv1*0 + iv2*.5 + iv3*1 + med*.5, sd = 1))
+  tibble(iv1 = rnorm(n, mean = 0, sd = 1),
+         iv2 = rnorm(n, mean = 0, sd = 1),
+         iv3 = rnorm(n, mean = 0, sd = 1)) %>% 
+  mutate(med = rnorm(n, mean = 0 + iv1 * -1 + iv2 * 0 + iv3 * 1, sd = 1),
+         dv  = rnorm(n, mean = 0 + iv1 * 0 + iv2 * .5 + iv3 * 1 + med * .5, sd = 1))
 
 head(d)
 ```
 
-Before we proceed, if data simulation is new to you, you might check out [Roger Peng's helpful tutorial](https://www.youtube.com/watch?v=tvv4IA8PEzw) on the subject.
+Before we proceed, if data simulation is new to you, you might check out [Roger Peng's helpful tutorial](https://www.youtube.com/watch?v=tvv4IA8PEzw) or [this great post](https://aosmith.rbind.io/2018/08/29/getting-started-simulating-data/) by Ariel Muldoon.
 
-Here are the sub-models.
-
-```{r, message = F, warning = F}
-y_model <- bf(dv ~ 1 + iv1 + iv2 + iv3 + med)
-m_model <- bf(med ~ 1 + iv1 + iv2 + iv3)
-```
-
-Now we fit.
+Here we fit the model.
 
 ```{r model7, cache = T, message = F, warning = F}
 model7 <-
-  brm(data = d, family = gaussian,
-      y_model + m_model + set_rescor(FALSE),
-      chains = 4, cores = 4)
+  brm(data = d, 
+      family = gaussian,
+      bf(dv ~ 1 + iv1 + iv2 + iv3 + med) + 
+        bf(med ~ 1 + iv1 + iv2 + iv3) + 
+        set_rescor(FALSE),
+      cores = 4)
 ```
 
-And the results:
+Behold the results.
 
 ```{r}
 print(model7)
 ```
 
-brms came through just fine. If you wanted to simulate data with a particular correlation structure for the `iv` variables, you might use the `mvnorm()` function from the [MASS package](https://cran.r-project.org/web/packages/MASS/index.html), which you can learn more about [here](http://blog.revolutionanalytics.com/2016/02/multivariate_data_with_r.html).
+Good old `brms::brm()` came through just fine. If you wanted to simulate data with a particular correlation structure for the `iv` variables, you might use the `mvnorm()` function from the [MASS package](https://cran.r-project.org/web/packages/MASS/index.html), which you can learn more about [here](http://blog.revolutionanalytics.com/2016/02/multivariate_data_with_r.html).
 
 ### Multiple $Y$ variables.
 
-We've already been using the multivariate syntax in brms for our simple mediation models. Fitting a mediation model with multiple $Y$ variables is a minor extension. Let's simulate more data.
+We've already been using the multivariate syntax in brms for our simple mediation models. Fitting a mediation model with multiple $Y$ variables is a minor extension. To see, let's simulate more data.
 
 ```{r}
-N <- 1e3
+n <- 1e3
 
 set.seed(4.5)
 d <-
-  tibble(iv  = rnorm(N, mean = 0, sd = 1),
-         med = rnorm(N, mean = 0 + iv*.5, sd = 1),
-         dv1 = rnorm(N, mean = 0 + iv*-1 + med*0,  sd = 1),
-         dv2 = rnorm(N, mean = 0 + iv*0  + med*.5, sd = 1),
-         dv3 = rnorm(N, mean = 0 + iv*1  + med*1,  sd = 1))
+  tibble(iv  = rnorm(n, mean = 0, sd = 1)) %>% 
+  mutate(med = rnorm(n, mean = 0 + iv * .5, sd = 1)) %>% 
+  mutate(dv1 = rnorm(n, mean = 0 + iv * -1 + med * 0,  sd = 1),
+         dv2 = rnorm(n, mean = 0 + iv * 0  + med * .5, sd = 1),
+         dv3 = rnorm(n, mean = 0 + iv * 1  + med * 1,  sd = 1))
 
 head(d)
 ```
 
-Here are the sub-models.
-
-```{r, message = F, warning = F}
-y_model_1 <- bf(dv1 ~ 1 + iv + med)
-y_model_2 <- bf(dv2 ~ 1 + iv + med)
-y_model_3 <- bf(dv3 ~ 1 + iv + med)
-m_model <- bf(med ~ 1 + iv)
-```
-
-And we fit.
+Fitting this requires a slew of `bf()` statements.
 
 ```{r model8, cache = T, message = F, warning = F}
 model8 <-
-  brm(data = d, family = gaussian,
-      y_model_1 + y_model_2 + y_model_3 + m_model + set_rescor(FALSE),
-      chains = 4, cores = 4)
+  brm(data = d, 
+      family = gaussian,
+      bf(dv1 ~ 1 + iv + med) + 
+        bf(dv2 ~ 1 + iv + med) + 
+        bf(dv3 ~ 1 + iv + med) + 
+        bf(med ~ 1 + iv) + 
+        set_rescor(FALSE),
+      cores = 4)
 ```
 
 ```{r}
 print(model8)
 ```
 
-brms to the rescue once again!
+Once again, brms to the rescue!
+
+## Chapter summary
+
+> Statistical mediation analysis has changed since the publication of Baron and Kenny (1986). The heyday of the causal steps "criteria to establish mediation" approach is over. Also disappearing in the 21 century is a concern about whether a process can be labeled as complete or partial mediation. Modern mediation analysis emphasizes an explicit estimation of the indirect effect, inferential tests of the indirect effect that don't make unnecessary assumptions, and an acknowledgement that evidence of a statistically significant association between $X$ and $Y$ is not necessary to talk about a model intervening variable process (in which case the concepts of complete and partial mediation simply don't make sense). (p. 146)
+
+To this, I'll just point out Hayes is speaking from a frequentist hypothesis-testing orientation. If you would like to dwell on significance tests, you certainty can. But particularly from within the Bayesian paradigm, you don't need to.
 
 ## References {-}
 

@@ -8,11 +8,26 @@ options(width = 110)
 
 Hayes closed the opening with:
 
-> Whereas answering questions about *when* or *for whom* is the domain of moderation analysis, questions that ask about *how* pertain to *mediation*, the focus of this and the next three chapters. In this chapter, [we’ll explore] the *simple mediation model* and illustrate using ~~OLS regression-based~~ Bayesian path analysis how the effect of an antecedent variable $X$ on some final consequent $Y$ can be partitioned into two paths of influence, *direct* and *indirect*.
+> Whereas answering questions about *when* or *for whom* is the domain of moderation analysis, questions that ask about *how* pertain to *mediation*, the focus of this and the next three chapters. In this chapter, [we’ll explore] the *simple mediation model* and illustrate using ~~OLS regression-based~~ Bayesian path analysis how the effect of an antecedent variable $X$ on some final consequent $Y$ can be partitioned into two paths of influence, *direct* and *indirect*. (p. 78, *emphasis* in the original)
+
+## The simple mediation model
+
+> Mediation analysis is a statistical method used to evaluate evidence from studies designed to test hypotheses about how some causal antecedent variable $X$ transmits its effect on a consequent variable $Y$.
+>
+> When thinking about whether a phenomenon or theory you are studying could be conceptualized as a mediation process, it is important to keep in mind that mediation is ultimately a causal explanation. It is assumed that the relationships in the system are causal, and, importantly, that $M$ is causally located *between* $X$ and $Y$. It must be assumed, if not also empirically substantiated, that $X$ causes $M$, which in turn causes $Y$. $M$ cannot possibly carry $X$’s effect on $Y$ if $M$ is not located causally between $X$ and $Y$. (pp. 78--81, *emphasis* in the original)
 
 ## Estimation of the direce, indirect, and total effects of $X$
 
-Nothing to translate, here.
+Given the simple three-term mediation model, the statistical model is expressed in the two equations
+
+$$
+\begin{align*}
+M & = i_M + a X + e_M \\
+Y & = i_Y + c' X + b M + e_Y.
+\end{align*}
+$$
+
+When using OLS software, as Hayes promotes throughout the text, these equations are estimated sequentially. However, the brms package has multivariate capabilities. As such, our results will be from a Bayesian multilevel model that simultaneously computes both equations at once. They are both part of a joint model. And when we consider more advanced models later in the text, our multivariate models will fit even more that two equations at once. None of this is a problem for brms.
 
 ## Example with dichotomous $X$: The influence of presumed media influence
 
@@ -26,23 +41,21 @@ pmi <- read_csv("data/pmi/pmi.csv")
 glimpse(pmi)
 ```
 
-You can get the male/female split like so:
+You can get the male/female split like so.
 
 ```{r}
 pmi %>% 
-  group_by(gender) %>% 
-  count()
+  count(gender)
 ```
 
 Here is the split by `condition`:
 
 ```{r}
 pmi %>% 
-  group_by(cond) %>% 
-  count()
+  count(cond)
 ```
 
-Here is how to get the ungrouped mean and $SD$ values for `reaction` and `pmi`, as presented in Table 3.1,
+Here is how to get the ungrouped mean and $SD$ values for `reaction` and `pmi`, as presented in Table 3.1.
 
 ```{r}
 pmi %>% 
@@ -50,11 +63,11 @@ pmi %>%
   gather() %>% 
   group_by(key) %>% 
   summarise(mean = mean(value),
-            sd = sd(value)) %>% 
+            sd   = sd(value)) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
 
-You might get the mean and $SD$ values for `reaction` and `pmi` grouped by `cond` like this:
+You might get the mean and $SD$ values for `reaction` and `pmi` grouped by `cond` like this.
 
 ```{r}
 pmi %>% 
@@ -62,7 +75,7 @@ pmi %>%
   gather(key, value, -cond) %>% 
   group_by(cond, key) %>% 
   summarise(mean = mean(value),
-            sd = sd(value)) %>% 
+            sd   = sd(value)) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
 
@@ -87,7 +100,7 @@ Now we have our `bf()` objects in hand, we'll combine them with the `+` operator
 model1 <-
   brm(data = pmi, family = gaussian,
       y_model + m_model + set_rescor(FALSE),
-      chains = 4, cores = 4)
+      cores = 4)
 ```
 
 Here are our results.
@@ -98,13 +111,11 @@ print(model1)
 
 If you compare our model summary with the coefficients in the path model in Figure 3.3, you'll see our coefficients are the same. The brms summary also includes intercepts and residual variances, which are typically omitted in path diagrams even though they're still part of the model.
 
-If you're getting lost in all the model output, try this.
+If you're getting lost in all the model output, try taking out the constant and error terms.
 
 ```{r}
 fixef(model1)[3:5, ] %>% round(digits = 3)
 ```
-
-Also note that Hayes tends to refer to the intercepts as constants. 
 
 In his Table 3.2, Hayes included the $R^2$ values. Here are ours.
 
@@ -119,7 +130,7 @@ It's worth it to actually plot the $R^2$ distributions.
 library(ggthemes)
 
 bayes_R2(model1, summary = F) %>% 
-  as_tibble() %>% 
+  data.frame() %>% 
   gather() %>% 
   
   ggplot(aes(x = value, fill = key)) +
@@ -131,12 +142,12 @@ bayes_R2(model1, summary = F) %>%
   theme_classic()
 ```
 
-We went through the trouble of plotting the $R^2$ distributions because it’s useful to understand that they won’t often be symmetric when they’re near their logical boundaries (i.e., 0 and 1). This is where asymmetric Bayesian credible intervals can really shine.
+We went through the trouble of plotting the $R^2$ distributions because it’s useful to understand that they won't often be symmetric when they're near their logical boundaries (i.e., 0 and 1). This is where asymmetric Bayesian credible intervals can really shine.
 
-Let's get down to business and examine the indirect effect, the $ab$ pathway. In our model:
+Let's get down to business and examine the indirect effect, the $ab$ pathway. In our model,
 
-* $a$ = `pmi_cond`
-* $b$ = `reaction_pmi`
+* $a$ = `pmi_cond` and
+* $b$ = `reaction_pmi`.
 
 You can isolate them with `fixef()[i]`.
 
@@ -151,7 +162,7 @@ So the naive approach would be to just multiply them.
 (fixef(model1)[5 , ] * fixef(model1)[3 , ]) %>% round(digits = 3)
 ```
 
-Now, this does get us the correct 'Estimate' (i.e., posterior mean). However, the posterior $SD$ and 95% intervals are off. If you want to do this properly, you need to work with the poster samples themselves. Here they are:
+Now, this does get us the correct 'Estimate' (i.e., posterior mean). However, the posterior $SD$ and 95% intervals are off. If you want to do this properly, you need to work with the poster samples themselves. We do that with the `posterior_samples()` function.
 
 ```{r}
 post <- posterior_samples(model1)
@@ -164,7 +175,7 @@ Here we compute the indirect effect, `ab`.
 ```{r}
 post <-
   post %>% 
-  mutate(ab = b_pmi_cond*b_reaction_pmi)
+  mutate(ab = b_pmi_cond * b_reaction_pmi)
 ```
 
 Now we have `ab` as a properly computed vector, we can summarize it with the `quantile()` function.
@@ -178,7 +189,6 @@ And we can even visualize it as a density.
 
 ```{r, fig.width = 4, fig.height = 2}
 post %>% 
-  
   ggplot(aes(x = ab)) +
   geom_density(color = "transparent", 
                fill = colorblind_pal()(3)[3]) +
@@ -192,7 +202,7 @@ It's also worth pointing out that as the indirect effect isn't perfectly symmetr
 
 ```{r}
 post %>% 
-  summarize(mean = mean(ab),
+  summarize(mean   = mean(ab),
             median = median(ab)) %>% 
   round(digits = 3)
 ```
@@ -217,7 +227,7 @@ fitted(model1, newdata = nd, resp = "reaction") %>% round(digits = 3)
 
 Note how this is where the two values in the $Y$ adjusted column in Table 3.1 came from. 
 
-However, if we want to reproduce how Hayes computed the total effect (i.e., $c'$ + $ab$), we'll need to work with the posterior itself, `post`. Recall, we've already saved the indirect effect as a vector, `ab`. The direct effect, $c'$, is labeled `b_reaction_cond` within `post`. in order to get the total effect, $c$, all we need to is add those vectors together.
+However, if we want to reproduce how Hayes computed the total effect (i.e., $c' + ab$), we'll need to work with the posterior draws themselves, `post`. Recall, we've already saved the indirect effect as a vector, `ab`. The direct effect, $c'$, is labeled `b_reaction_cond` within `post`. To get the total effect, $c$, all we need to is add those vectors together.
 
 ```{r}
 post <-
@@ -240,15 +250,30 @@ Nothing new for us, here.
 
 ## Statistical inference
 
+Our approach will not match up neatly with Hayes's on this topic.
+
 ### Inference about the total effect of $X$ on $Y$.
+
+As we mentioned in Chapter 2, we can indeed focus on rejecting $H_0$ when using Bayesian statistics. I, however, am not a fan of that approach and I will not be focusing on Bayesian $p$-values. But throughout this project, we will make great efforts to express the (un)certainty in our models with various plots of posterior distributions and summary statistics, such as measures of central tendency (e.g., means) and spread (e.g., percentile-based 95% intervals). 
+
+So instead of $t$- and $p$-values for $c'$, we are going to focus on the distribution. We already gave the mean and 95% intervals, above. Here's a look at the density.
+
+```{r, fig.width = 4, fig.height = 2}
+ post %>% 
+  ggplot(aes(x = total_effect)) +
+  geom_density(color = "transparent", 
+               fill = colorblind_pal()(3)[2]) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  xlab(expression(paste(italic(c)," (i.e., the total effect)"))) +
+  theme_classic()
+```
 
 ### Inference about the direct effect of $X$ on $Y$.
 
-In this section, Hayes provided a $t$-test and corresponding $p$-value for the direct effect (i.e., $c'$, `b_reaction_cond`). Instead of the $t$-test, we can just look at the posterior distribution.
+Like in the last section, we will just look at the posterior distribution for the direct effect (i.e., $c'$, `b_reaction_cond`).
 
 ```{r, fig.width = 4, fig.height = 2}
 post %>% 
-  
   ggplot(aes(x = b_reaction_cond)) +
   geom_density(color = "transparent", 
                fill = colorblind_pal()(4)[4]) +
@@ -274,6 +299,8 @@ posterior_interval(model1)["b_reaction_cond", ]
 
 ### Inference about the indirect of $X$ on $Y$ through $M$.
 
+> The indirect effect quantifies how much two cases that differ by a unit on $X$ are estimated to differ on $Y$ as a result of $X$'s influence on $M$, which in turn influences $Y$. The indirect effect is relevant as to [what extent] $X$'s effect on $Y$ can be said to be transmitted through the mechanism represented by the $X \rightarrow M \rightarrow Y$ causal chain of events. (p. 95)
+
 #### The normal theory approach.
 
 This is not our approach.
@@ -294,7 +321,7 @@ With HMC we do not take random samples of the data themselves. Rather, we take r
 
 ##### Step 2.
 
-After we fit our model with the `brm()` function and save our posterior draws in a data frame (i.e., `post <- posterior_samples(my_model_fit)`), we then make a new column (a.k.a. vector, variable) that is the product of our coefficients for the $a$ and $b$ pathways. In the example above, this looked like `post %>% mutate(ab = b_pmi_cond*b_reaction_pmi)`. Let's take a look at those columns.
+After we fit our model with the `brm()` function and save our posterior draws in a data frame (i.e., `post <- posterior_samples(my_model_fit)`), we then make a new column (a.k.a. vector, variable) that is the product of our coefficients for the $a$ and $b$ pathways. In the example above, this looked like `post %>% mutate(ab = b_pmi_cond * b_reaction_pmi)`. Let's take a look at those columns.
 
 ```{r}
 post %>% 
@@ -302,17 +329,17 @@ post %>%
   slice(1:10)
 ```
 
-Our data frame, `post`, has 4000 rows. Why 4000? By default, brms runs 4 HMC chains. Each chain has 2000 iterations, 1000 of which are warmups, which we always discard. As such, there are 1000 good iterations left in each chain and $1000\times4 = 4000$. We can change these defaults as needed. 
+Our data frame, `post`, has 4000 rows. Why 4000? By default, brms runs 4 HMC chains. Each chain has 2000 iterations, 1000 of which are warmups, which we always discard. As such, there are 1000 good iterations left in each chain and $1000 \times 4 = 4000$. We can change these defaults as needed. 
 
 Each row in `post` contains the parameter values based on one of those draws. And again, these are draws from the posterior distribution. They are not draws from the data.
 
 ##### Step 3.
 
-We don't refit the model $k$ times based on the samples from the data. We take a number of draws from the posterior distribution. Hayes likes to take 5000 samples when he bootstraps. Happily, that number is quite similar to our 4000 HMC draws. Whether 5000, 4000 or 10,000, these are all large enough numbers that the distributions become fairly stable. With HMC, however, you might want to increase the number of iterations if the effective sample size, 'Eff.Sample' in the `print()` output, is substantially smaller than the number of iterations.
+We don't refit the model $k$ times based on the samples from the data. We take a number of draws from the posterior distribution. Hayes likes to take 5000 samples when he bootstraps. Happily, that number is quite similar to our default 4000 HMC draws. Whether 5000, 4000 or 10,000, these are all large enough numbers that the distributions become fairly stable. With HMC, however, you might want to increase the number of iterations if the effective sample size, 'Eff.Sample' in the `print()` output, is substantially smaller than the number of iterations.
 
 ##### Step 4.
 
-When we use the `quantile()` function to compute our Bayesian credible intervals, we've sorted. Conceptually, we've done this:
+When we use the `quantile()` function to compute our Bayesian credible intervals, we've sorted. Conceptually, we've done this.
 
 ```{r}
 post %>% 
@@ -328,7 +355,7 @@ Yes, this is what we do, too.
 ```{r}
 ci <- 95
 
-.5*(100 - ci)
+0.5 * (100 - ci)
 ```
 
 ##### Step 6.
@@ -338,7 +365,7 @@ This is also what we do.
 ```{r}
 ci <- 95
 
-(100 - .5*(100 - ci))
+(100 - 0.5 * (100 - ci))
 ```
 
 Also, notice the headers in the rightmost two columns in our `posterior_summary()` output:
@@ -351,7 +378,7 @@ Those .025 and .975 quantiles from above are just what brms is giving us in our 
 
 Here's our version of Figure 3.5.
 
-```{r, fig.width = 4.25, fig.height = 4}
+```{r, fig.width = 4.5, fig.height = 4}
 # these will come in handy in the subtitle
 ll <- quantile(post$ab, probs = .025) %>% round(digits = 3)
 ul <- quantile(post$ab, probs = .975) %>% round(digits = 3)
@@ -376,7 +403,7 @@ Hayes discussed setting the seed in PROCESS on page 104. You can do this with th
 
 #### Alternative "asymmetric" confidence interval approaches.
 
-This section does not quite refer to us. I'm a little surprised Hayes didn't at least dedicate a paragraph or two on Bayesian estimation. Sure, he mentioned Monte Carlo, but not within the context of Bayes. So it goes...
+This section does not quite refer to us. I'm a little surprised Hayes didn't at least dedicate a paragraph or two on Bayesian estimation. Sure, he mentioned Monte Carlo, but not within the context of Bayes. So it goes. But if you're interested, you can read about Bayesian intervals for mediation models in Yuan and MacKinnon's [*Bayesian mediation analysis*](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2885293/pdf/nihms171111.pdf). And yes, Hayes is aware of this. He has cited it [in his work](https://www.researchgate.net/profile/Mohamed_Hammad11/post/What_statistical_methods_can_you_recommend_to_be_used_in_this_study/attachment/5a921b91b53d2f0bba541dd1/AS%3A597744293003264%401519524753928/download/An+Index+and+Test+of+Linear+Moderated+Mediation.pdf).
 
 ## An example with continuous $X$: Economic stress among small-business owners
 
@@ -401,10 +428,10 @@ With our `y_model` and `m_model` defined, we're ready to fit.
 model2 <-
   brm(data = estress, family = gaussian,
       y_model + m_model + set_rescor(FALSE),
-      chains = 4, cores = 4)
+      cores = 4)
 ```
 
-Let's take a look.
+Let's take a look at the results.
 
 ```{r}
 print(model2, digits = 3)

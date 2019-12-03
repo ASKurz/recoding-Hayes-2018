@@ -2,7 +2,7 @@
 
 # Fundamentals of Conditional Process Analysis
 
-```{r set-options, echo = FALSE, cachse = FALSE}
+```{r, echo = FALSE, cachse = FALSE}
 options(width = 110)
 ```
 

@@ -1,14 +1,12 @@
 # Further Examples of Conditional Process Analysis
 
-```{r set-options, echo = FALSE, cachse = FALSE}
+```{r, echo = FALSE, cachse = FALSE}
 options(width = 110)
 ```
 
-On page 432, Hayes explained:
-
-> In this chapter [he built] on the foundation laid by stepping through an analysis of a more complicated conditional process model that include[d] moderation of both the indirect effects in a simple mediation model. [He did] so by first using a piecemeal approach that focuse[d] on each pathway in the model. With some understanding gained by this examination of the components in the process, [he brought] the pieces together into an integrated conditional process analysis.
-
-We’ll do that too.
+> In this chapter [Hayes built] on the foundation laid by stepping through an analysis of a more complicated conditional process model that include[d] moderation of both the indirect effects in a simple mediation model. [He did] so by first using a piecemeal approach that focuse[d] on each pathway in the model. With some understanding gained by this examination of the components in the process, [he brought] the pieces together into an integrated conditional process analysis...
+>
+> When an indirect effect of $X$ on $Y$ through $M$ is moderated, we call this phenomenon *moderated mediation*. In such a scenario, the mechanism represented by the $X \rightarrow M \rightarrow Y$ chain of events operates to varying degrees (or not at all) for certain people or in certain contexts. A similar-sounding phenomenon is *mediated moderation*, which refers to the scenario in which an interaction between X and some moderator $W$ on $Y$ is carried through a mediator $M$. [We'll see] in this chapter that a mediated moderation analysis is really nothing other than a mediation analysis with the product of two variables serving as the causal agent of focus. (p. 432)
 
 ## Revisiting the disaster framing study
 
@@ -22,49 +20,89 @@ disaster <- read_csv("data/disaster/disaster.csv")
 glimpse(disaster)
 ```
 
-Load brms.
+Load **brms**.
 
 ```{r, message = F, warning = F}
 library(brms)
 ```
 
-`model1` is the simple moderation model.
+At the top of page 433, Hayes fit a simple univariable model
+
+$$Y = b_0 + b_1 X + e_Y,$$
+
+where the $X$ is `frame` the $Y$ is `donate`. Here's the model.
 
 ```{r model1, cache = T, message = F, warning = F}
 model1 <-
-  brm(data = disaster, family = gaussian,
-      donate ~ 1 + frame + skeptic + frame:skeptic,
+  brm(data = disaster, 
+      family = gaussian,
+      donate ~ 1 + frame,
       chains = 4, cores = 4)
 ```
 
-Our `model1` summary matches nicely with the text.
+Check the summary.
 
 ```{r}
 print(model1, digits = 3)
 ```
 
-For the figures in this chapter, we'll take theme cues from Matthew Kay's [tidybayes package](https://github.com/mjskay/tidybayes). Otherwise, our Figure 12.2 is business as usual at this point.
+Hayes interpteted the coefficient for `frame` through the lens of a $t$ statistic and accompanying $p$-value. We'll just plot the posterior. For the figures in this chapter, we'll take theme cues from the vignettes from Matthew Kay's [**tidybayes** package](https://github.com/mjskay/tidybayes).
+
+```{r, fig.width = 4, fig.height = 2.5}
+library(tidybayes)
+theme_set(theme_tidybayes() + cowplot::panel_border())
+
+posterior_samples(model1) %>% 
+  ggplot(aes(x = b_frame, y = 0)) +
+  geom_halfeyeh() +
+  geom_vline(xintercept = 0, linetype = 2) +
+  scale_y_continuous(NULL, breaks = NULL)
+```
+
+
+Now we fit the moderation model
+
+$$Y = b_0 + b_1 X + + b_2 W + b_3 XW + e_Y,$$
+
+where `skeptic` is the $W$ variable.
+
+```{r model2, cache = T, message = F, warning = F}
+model2 <-
+  brm(data = disaster, 
+      family = gaussian,
+      donate ~ 1 + frame + skeptic + frame:skeptic,
+      chains = 4, cores = 4)
+```
+
+Our `model2` summary matches nicely with the text.
+
+```{r}
+print(model2, digits = 3)
+```
+
+Here's our Figure 12.2.
 
 ```{r, fig.width = 6, fig.height = 5}
-theme_set(theme_light())
-
 nd <-
   tibble(frame = rep(0:1, each = 30),
          skeptic = rep(seq(from = 0, to = 7, length.out = 30),
                        times = 2))
 
-fitted(model1, newdata = nd) %>% 
+fitted(model2, newdata = nd) %>% 
   as_tibble() %>% 
   bind_cols(nd) %>% 
   mutate(frame = ifelse(frame == 0, str_c("Natural causes (X = ", frame, ")"),
                         str_c("Climate change (X = ", frame, ")"))) %>% 
+  mutate(frame = factor(frame,
+                        levels = c("Natural causes (X = 0)",
+                                   "Climate change (X = 1)"))) %>% 
   
   ggplot(aes(x = skeptic, y = Estimate)) +
   geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5, fill = frame),
               alpha = 1/3) +
   geom_line(aes(color = frame)) +
-  scale_fill_brewer(type = "qual") +
-  scale_color_brewer(type = "qual") +
+  scale_fill_brewer(palette = "Set2") +
+  scale_color_brewer(palette = "Set2") +
   coord_cartesian(xlim = 1:6,
                   ylim = c(3.5, 5.5)) +
   labs(x = expression(paste("Climate Change Skepticism (", italic(W), ")")),
@@ -77,40 +115,37 @@ fitted(model1, newdata = nd) %>%
 In Hayes's Figure 12.2, he emphasized the differences at the three levels of `skeptic`. If you want the full difference score distributions in a pick-a-point-approach sort of way, you might plot the densities with `tidybayes::geom_halfeyeh()`, which places coefficient plots at the base of the densities. In this case, we show the posterior medians with the dots, the 50% intervals with the thick horizontal lines, and the 95% intervals with the thinner horizontal lines.
 
 ```{r, fig.width = 6, fig.height = 2.5}
-library(tidybayes)
 nd <-
-  tibble(frame = rep(0:1, times = 3),
-         skeptic = rep(quantile(disaster$skeptic, probs = c(.16, .5, .86)),
-                                times = 2))
+  crossing(frame   = 0:1,
+           skeptic = quantile(disaster$skeptic, probs = c(.16, .5, .86)))
 
-fitted(model1, summary = F,
+fitted(model2, summary = F,
        newdata = nd) %>% 
   as_tibble() %>% 
   gather() %>% 
-  mutate(frame = rep(rep(0:1, times = 3),
-                     each = 4000),
-         skeptic = rep(rep(quantile(disaster$skeptic, probs = c(.16, .5, .86)),
-                                times = 2),
-                       each = 4000),
-         iter = rep(1:4000, times = 6)) %>% 
+  bind_cols(
+    nd %>% 
+      expand(nesting(frame, skeptic),
+             iter = 1:4000)
+  ) %>% 
   select(-key) %>% 
   spread(key = frame, value = value) %>% 
   mutate(difference = `1` - `0`) %>% 
   
   ggplot(aes(x = difference, y = skeptic, fill = skeptic %>% as.character())) +
-  geom_halfeyeh(point_interval = median_qi, .prob = c(0.95, 0.5)) +
+  geom_halfeyeh(point_interval = median_qi, .width = c(0.95, 0.5)) +
   scale_fill_brewer() +
   scale_y_continuous(breaks = quantile(disaster$skeptic, probs = c(.16, .5, .86)),
                      labels = quantile(disaster$skeptic, probs = c(.16, .5, .86)) %>% round(2)) +
-  theme(legend.position = "none",
-        panel.grid.minor.y = element_blank())
+  theme(legend.position = "none")
 ```
 
-Here's our simple mediation model, `model2`, using the multivariate syntax right in the `brm()` function.
+Here's our simple mediation model, `model3`, using the multivariate syntax right in the `brm()` function.
 
-```{r model2, cache = T, message = F, warning = F}
-model2 <-
-  brm(data = disaster, family = gaussian,
+```{r model3, cache = T, message = F, warning = F}
+model3 <-
+  brm(data = disaster, 
+      family = gaussian,
       bf(justify ~ 1 + frame) +
         bf(donate ~ 1 + frame + justify) +
         set_rescor(FALSE),
@@ -118,44 +153,40 @@ model2 <-
 ```
 
 ```{r}
-print(model2, digits = 3)
+print(model3, digits = 3)
 ```
 
 Consider the Bayesian $R^2$ summaries.
 
 ```{r}
-bayes_R2(model2) %>% round(digits = 3)
+bayes_R2(model3) %>% round(digits = 3)
 ```
 
 If you want the indirect effect with its intervals, you use `posterior_samples()` and data wrangle, as usual.
 
-```{r}
-posterior_samples(model2) %>% 
-  mutate(ab = b_justify_frame*b_donate_justify) %>% 
-  summarize(mean = mean(ab),
-            ll = quantile(ab, probs = .025),
-            ul = quantile(ab, probs = .975)) %>% 
-  mutate_if(is.double, round, digits = 3)
+```{r, warning = F, message = F}
+posterior_samples(model3) %>% 
+  mutate(ab = b_justify_frame * b_donate_justify) %>% 
+  mean_qi(ab)
 ```
-
-We might also streamline our code a touch using `tidybayes::mean_qi()` in place of `tidyverse::summarize()`.
-  
-```{r}
-posterior_samples(model2) %>% 
-  mutate(ab = b_justify_frame*b_donate_justify) %>% 
-  mean_qi(ab, .prob = .95) %>% 
-  mutate_if(is.double, round, digits = 3)
-```  
-
-Note that the last column explicates what interval level we used.
 
 ## Moderation of the direct and indirect effects in a conditional process model
 
-We don't need to do anything particularly special to fit a model like this in brms. It just requires we do a careful job specifying the formulas in our `bf()` arguments. If you find this syntax a little too cumbersome, you can always specify the formulas outside of `brm()`, save them as one or multiple objects, and plug those objects into `brm()`.
+Our conditional process model follows the form
 
-```{r model3, cache = T, message = F, warning = F}
-model3 <-
-  brm(data = disaster, family = gaussian,
+$$
+\begin{align*}
+M & = i_M + a_1 X + a_2 W + a_3 XW + e_M \\
+Y & = i_Y + c_1' X + c_2' W + c_3' XW + b M + e_Y.
+\end{align*}
+$$
+
+We don't need to do anything particularly special to fit a model like this with **brms**. It just requires we do a careful job specifying the formulas in our `bf()` arguments. If you find this syntax a little too cumbersome, you can always specify the formulas outside of `brm()`, save them as one or multiple objects, and plug those objects into `brm()`.
+
+```{r model4, cache = T, message = F, warning = F}
+model4 <-
+  brm(data = disaster, 
+      family = gaussian,
       bf(justify ~ 1 + frame + skeptic + frame:skeptic) +
         bf(donate ~ 1 + frame + justify + skeptic + frame:skeptic) +
         set_rescor(FALSE),
@@ -165,35 +196,41 @@ model3 <-
 The model summary:
 
 ```{r}
-print(model3, digits = 3)
+print(model4, digits = 3)
+```
+
+Here are the Bayesian $R^2$ summaries.
+
+```{r}
+bayes_R2(model4)
 ```
 
 ### ~~Estimation using PROCESS~~.
 
-We just fit the model. Next.
+We just fit the model. Next!
 
 ### Quantifying direct and indirect effects.
 
-Here are $a_{1}$ through $a_{3}$.
+Here are summaries for $a_1$ through $a_3$.
 
 ```{r}
-fixef(model3)[c(3:5), ] %>% round(digits = 3)
+fixef(model4)[c(3:5), ] %>% round(digits = 3)
 ```
 
 This is $b$.
 
 ```{r}
-fixef(model3)[7, ] %>% round(digits = 3)
+fixef(model4)["donate_justify", ] %>% round(digits = 3)
 ```
 
-We'll need to employ `posterior_samples()` to compute $(a_{1} + a_{3}W)b$.
+We'll need to employ `posterior_samples()` to compute $(a_1 + a_3 W)b$, as shown in Table 12.2.
 
-```{r}
+```{r, warning = F, message = F}
 post <- 
-  posterior_samples(model3) %>% 
-  mutate(`indirect effect when W is 1.592` = (b_justify_frame + `b_justify_frame:skeptic`*1.592)*b_donate_justify,
-         `indirect effect when W is 2.800` = (b_justify_frame + `b_justify_frame:skeptic`*2.800)*b_donate_justify,
-         `indirect effect when W is 5.200` = (b_justify_frame + `b_justify_frame:skeptic`*5.200)*b_donate_justify) 
+  posterior_samples(model4) %>% 
+  mutate(`indirect effect when W is 1.592` = (b_justify_frame + `b_justify_frame:skeptic` * 1.592) * b_donate_justify,
+         `indirect effect when W is 2.800` = (b_justify_frame + `b_justify_frame:skeptic` * 2.800) * b_donate_justify,
+         `indirect effect when W is 5.200` = (b_justify_frame + `b_justify_frame:skeptic` * 5.200) * b_donate_justify)
 
 post %>% 
   select(starts_with("indirect")) %>% 
@@ -203,88 +240,105 @@ post %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
-#### The conditional direct effect of $X$.
-
-This process is very similar.
+And if you really want that full-on Table 12.2 layout, try this.
 
 ```{r}
+post %>% 
+  mutate(a1 = b_justify_frame,
+         a3 = `b_justify_frame:skeptic`,
+         b  = b_donate_justify,
+         c1 = b_donate_frame,
+         c3 = `b_donate_frame:skeptic`) %>% 
+  expand(nesting(a1, a3, b, c1, c3),
+         w = c(1.592, 2.800, 5.200)) %>% 
+  mutate(`a1 + a3w`      = a1 + a3 * w,
+         `(a1 + a3w)b`   = (a1 + a3 * w) * b,
+         `direct effect` = c1 + c3 * w) %>% 
+  select(-(a1:a3), -(c1:c3)) %>% 
+  pivot_longer(-w) %>% 
+  group_by(w, name) %>% 
+  summarise(mean = mean(value) %>% round(digits = 3)) %>% 
+  pivot_wider(names_from  = name, 
+              values_from = mean) %>% 
+  select(w, `a1 + a3w`, b, everything())
+```
+
+#### The conditional direct effect of $X$.
+
+We already computed this in the last code block, above. But since we just focused on the posterior means, here's a summary of their medians and 95% intervals.
+
+```{r, warning = F, message = F}
 post <- 
   post %>% 
-  mutate(`direct effect when W is 1.592` = b_donate_frame + `b_donate_frame:skeptic`*1.592,
-         `direct effect when W is 2.800` = b_donate_frame + `b_donate_frame:skeptic`*2.800,
-         `direct effect when W is 5.200` = b_donate_frame + `b_donate_frame:skeptic`*5.200)
+  mutate(`direct effect when W is 1.592` = b_donate_frame + `b_donate_frame:skeptic` * 1.592,
+         `direct effect when W is 2.800` = b_donate_frame + `b_donate_frame:skeptic` * 2.800,
+         `direct effect when W is 5.200` = b_donate_frame + `b_donate_frame:skeptic` * 5.200)
 
 post %>% 
   select(starts_with("direct")) %>% 
   gather() %>% 
   group_by(key) %>% 
-  median_qi(value, .prob = .95) %>% 
-  mutate_if(is.double, round, digits = 3)
+  median_qi(value, .width = .95) %>% 
+  mutate_if(is.double, round, digits = 3) %>% 
+  select(key:.upper)
+```
+
+We can always plot, too.
+
+```{r, fig.width = 6, fig.height = 2.5}
+w <- c(1.592, 2.800, 5.200)
+  
+  post %>% 
+  expand(nesting(b_donate_frame, `b_donate_frame:skeptic`),
+         w = w) %>% 
+  mutate(`conditional direct effect` = b_donate_frame + `b_donate_frame:skeptic` * w) %>% 
+
+  ggplot(aes(x = `conditional direct effect`, y = w, fill = w %>% as.character())) +
+  geom_halfeyeh(point_interval = median_qi, .width = c(0.95, 0.5)) +
+  scale_y_continuous(breaks = w) +
+  scale_fill_brewer() +
+  theme(legend.position = "none")
 ```
 
 ### Visualizing the direct and indirect effects.
 
-In order to make Figure 12.7, we'll use `sapply()` to get the conditional effects for `justify` and `donate`.
+We'll need to do some `post` wrangling before we're ready to make our Figure 12.7. We'll save the results as `effects`.
 
 ```{r}
-justify_effects <-
-  sapply(seq(from = 0, to = 6, length.out = 30), function(w){
-    (post$b_justify_frame + post$`b_justify_frame:skeptic`*w)*post$b_donate_justify
-    }) %>% 
-  as_tibble() %>% 
-  gather() %>% 
-  select(-key) %>% 
-  mutate(skeptic = seq(from = 0, to = 6, length.out = 30) %>% rep(., each = 4000)) %>% 
-  group_by(skeptic) %>% 
-  summarize(median = median(value),
-            ll = quantile(value, probs = .025),
-            ul = quantile(value, probs = .975))
+effects <-
+  post %>% 
+  expand(nesting(b_justify_frame, `b_justify_frame:skeptic`, b_donate_justify, b_donate_frame, `b_donate_frame:skeptic`),
+         w = seq(from = 0, to = 6, length.out = 30)) %>% 
+  mutate(`direct effect`   = b_donate_frame + `b_donate_frame:skeptic` * w,
+         `indirect effect` = (b_justify_frame + `b_justify_frame:skeptic` * w) * b_donate_justify) %>% 
+  pivot_longer(cols = c(`direct effect`, `indirect effect`)) %>% 
+  mutate(name = factor(name,
+                       levels = c("direct effect", "indirect effect"))) %>% 
+  select(w:value)
 
-donate_effects <-
-  sapply(seq(from = 0, to = 6, length.out = 30), function(w){
-    post$b_donate_frame + post$`b_donate_frame:skeptic`*w
-    }) %>% 
-  as_tibble() %>% 
-  gather() %>% 
-  select(-key) %>% 
-  mutate(skeptic = seq(from = 0, to = 6, length.out = 30) %>% rep(., each = 4000)) %>% 
-  group_by(skeptic) %>% 
-  summarize(median = median(value),
-            ll = quantile(value, probs = .025),
-            ul = quantile(value, probs = .975))
-
-# here's what they look like:
-glimpse(justify_effects)
-glimpse(donate_effects)
+head(effects)
 ```
 
-Next we'll combine those two tibbles by stacking `donate_effects` underneath `justify_effects` and then indexing them by `effect`. Then we're ready to plot.
+Now we plot.
 
 ```{r, fig.width = 6, fig.height = 4}
-# combining the tibbles
-figure_12.7 <-
-  justify_effects %>% 
-  bind_rows(donate_effects) %>% 
-  mutate(effect = rep(c("Indirect effect", "Direct effect"), each = nrow(justify_effects)))
-  
 # we'll need this for `geom_text()`
-text_tibble <-
-  tibble(x = c(4.2, 4.7),
-         y = c(.28, -.28),
-         angle = c(3.6, 335),
-         effect = c("Direct effect", "Indirect effect"))
+text <-
+  tibble(x      = c(4.2, 4.7),
+         y      = c(.28, -.28),
+         angle  = c(3.6, 335),
+         name = factor(c("direct effect", "indirect effect"),
+                       levels = c("direct effect", "indirect effect")))
 
-# the plot
-figure_12.7 %>% 
-  ggplot(aes(x = skeptic, group = effect)) +
-  geom_ribbon(aes(ymin = ll, ymax = ul, fill = effect),
-              alpha = 1/3) +
-  geom_line(aes(y = median, color = effect)) +
-  geom_text(data = text_tibble,
+# plot!
+effects %>% 
+  ggplot(aes(x = w, color = name, fill = name)) +
+  stat_lineribbon(aes(y = value),
+                  .width = .95, alpha = 1/3) +
+  geom_text(data = text,
             aes(x = x, y = y,
                 angle = angle, 
-                color = effect,
-                label = effect),
+                label = name),
             size = 5) +
   scale_fill_brewer(type = "qual") +
   scale_color_brewer(type = "qual") +
@@ -295,85 +349,13 @@ figure_12.7 %>%
   theme(legend.position = "none")
 ```
 
-Note how wide those 95% intervals are relative to the scale of the y-axis. I specifically kept the y-axis within the same range as Figure 12.7 in the text. To me the message is clear: include credible-interval ribbons in your regression slope plots. They help depict how uncertain the posterior is in a way a simple line slopes just don't.
-
-### **Bonus**: Let's replace `sapply()` with `map()`.
-
-Good old base R `sapply()` worked just fine for our purposes, above. However, we can use `purrr::map()` to accomplish those goals in a more tidyverse-consistent fashion. First we'll define two custom functions to do what our two `sapply()` statements did for us.
-
-```{r}
-# defining two custom functions
-make_justify <- function(w){
-    (post$b_justify_frame + post$`b_justify_frame:skeptic`*w)*post$b_donate_justify
-  }
-
-make_donate <-function(w){
-    post$b_donate_frame + post$`b_donate_frame:skeptic`*w
-  }
-```
-
-Next, we'll make a 30-row tibble with each row containing a value for `skeptic`, ranging from 0 ot 6, just like what we did with `sapply()`. Because we'll be performing a nested operation for each value of `skeptic`, we'll group the tibble by `skeptic`. Then with the `mutate()` function, we'll use `map()` to apply our custom `make_justify` and `make_donate` functions to each of the 30 `skeptic` values.
-
-```{r}
-tidyverse_style_tibble <-
-  tibble(skeptic = seq(from = 0, to = 6, length.out = 30)) %>% 
-  group_by(skeptic) %>% 
-  mutate(`indirect effect` = map(skeptic, make_justify),
-         `direct effect`   = map(skeptic, make_donate))
-
-tidyverse_style_tibble
-```
-
-This yielded a nested tibble. At one level of investigation, we have 30 rows--one for each of the 30 `skeptic` values. However, for both the `idirect effect` and `direct effect` columns, we've packed an entire 4000-row list into each of those rows. Those lists are 4000-rows long because both of our custom functions entailed pushing those `skeptic` values through the posterior, which itself had 4000 iterations. Next we'll use `unnest()` to unnest the tibble.
-
-```{r}
-tidyverse_style_tibble <-
-  tidyverse_style_tibble %>% 
-  unnest()
-
-head(tidyverse_style_tibble)
-```
-
-After un-nesting, the tibble is now $4000\times30 = 120,000$ rows long. With just a little more wrangling, we'll have our familiar summaries for each level of `skeptic`.
-
-```{r}
-tidyverse_style_tibble <-
-  tidyverse_style_tibble %>% 
-  ungroup() %>% 
-  mutate(iter = rep(1:4000, times = 30)) %>% 
-  gather(effect, value, -skeptic, -iter) %>% 
-  group_by(effect, skeptic) %>% 
-  median_qi(value, .prob = .95)
-  
-head(tidyverse_style_tibble)
-```
-
-Now we have 60 row, 30 for `direct effect` and another 30 for `indirect effect`. Each has the typical summary values for all 30 levels of `skeptic`. We're ready to plot.
-
-```{r, fig.width = 6, fig.height = 4}
-tidyverse_style_tibble %>% 
- ggplot(aes(x = skeptic, group = effect)) +
-  geom_ribbon(aes(ymin = conf.low, ymax = conf.high, fill = effect),
-              alpha = 1/3) +
-  geom_line(aes(y = value, color = effect)) +
-  scale_fill_brewer(type = "qual", palette = 2) +
-  scale_color_brewer(type = "qual", palette = 2) +
-  coord_cartesian(xlim = c(1, 5.5),
-                  ylim = c(-.6, .4)) +
-  labs(x = expression(paste("Climate Change Skepticism (", italic(W), ")")),
-       y = "Effects of Disaster Frame on Willingness to Donate") +
-  theme(legend.position = "none")
-```
-
-Do note how, in our plot above, we used tidybayes terms `value` (i.e., median--the specified measure of central tendency), `conf.low` and `conf.high`, the lower- and upper-levels of the 95% interval.
-
-To learn more about nested data and using the `map()` function, check out [this subsection](http://r4ds.had.co.nz/many-models.html#nested-data) of Grolemund and Wickham's [*R4DS*](http://r4ds.had.co.nz) or [starting from this point on](https://www.youtube.com/watch?v=rz3_FDVt9eg&t=824s&frags=pl%2Cwn) in this video of one of Wickham's workshops.
+Note how wide those 95% intervals are relative to the scale of the y-axis, which I specifically kept within the same range as Figure 12.7 in the text. To me the message is clear: include credible-interval ribbons in your regression slope plots. They help depict how uncertain the posterior is in a way a simple line slopes just don't.
 
 ## Statistical inference
 
 ### Inference about the direct effect.
 
-We've already computed the 95% intervals for these. Here they are as `stat_pointinterval()` plots.
+We've already computed the 95% intervals for the direct effect, $\theta_{X \rightarrow Y}$, conditional on the three levels of $W$. Here's a different look at those intervals, superimposed on the 80% and 50% intervals, using the `tidybayes::stat_interval()` function.
 
 ```{r, fig.width = 6, fig.height = 4}
 post %>% 
@@ -382,7 +364,8 @@ post %>%
   mutate(key = str_remove(key, "direct effect when W is ") %>% as.double()) %>% 
   
   ggplot(aes(x = key, y = value, group = key)) +
-  stat_pointinterval(point_interval = median_qi, .prob = c(.95, .5)) +
+  stat_interval(.width = c(.95, .80, .5)) +
+  scale_color_brewer("Interval") +
   coord_cartesian(xlim = c(1, 5.5)) +
   labs(x = expression(paste("Climate Change Skepticism (", italic(W), ")")),
        y = "Conditional Direct Effect of Disaster Frame on\nWillingness to Donate")
@@ -392,54 +375,57 @@ post %>%
 
 #### A statistical test of moderated mediation.
 
-To get a sense of $a_{3}b$, we just:
+To get a sense of $a_3 b$, we just:
 
-```{r}
+```{r, warning = F, message = F}
 post <- 
   post %>% 
-  mutate(a3b = `b_justify_frame:skeptic`*b_donate_justify) 
+  mutate(a3b = `b_justify_frame:skeptic` * b_donate_justify) 
 
 post %>% 
   select(a3b) %>% 
-  summarize(median = median(a3b),
-            sd = sd(a3b),
-            ll = quantile(a3b, probs = .025),
-            ul = quantile(a3b, probs = .975)) %>% 
+  median_qi(a3b) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
 
-We might use `stat_pointintervalh()` to visualize $a_{3}b$ with a coefficient plot.
+Here we'll combine `stat_intervalh()` and `stat_pointintervalh()` to visualize $a_3 b$ with a coefficient plot.
 
 ```{r, fig.width = 6, fig.height = 1}
 post %>% 
   ggplot(aes(x = a3b, y = 1)) +
-  stat_pointintervalh(point_interval = median_qi, .prob = c(.95, .5)) +
+  stat_intervalh(.width = c(.95, .8, .5)) +
+  stat_pointintervalh(point_interval = median_qi, .width = c(.95, .8, .5),
+                      position = position_nudge(y = -.75)) +
+  scale_color_brewer("Interval") +
   scale_y_discrete(NULL, breaks = NULL) +
   coord_cartesian(xlim = c(-.5, 0)) +
   labs(title = expression(paste("Coefficient plot for ", italic(a)[3], italic(b), " (i.e., the index of moderated mediation)")),
-       x = NULL)
+       x     = NULL) +
+  theme(legend.position = "none")
 ```
 
 #### Probing moderation of mediation.
 
-As discussed in my manuscript for Chapter 11, our Bayesian version of the JN technique should be fine because HMC does not impose the normality assumption on the parameter posteriors. In this instance, I'll leave the JN technique plot as an exercise for the interested reader. Here we'll just follow along with the text and pick a few points.
+As we discussed in Chapter 11, our Bayesian version of the JN technique should be fine because HMC does not impose the normality assumption on the parameter posteriors. In this instance, I'll leave the JN technique plot as an exercise for the interested reader. Here we'll just follow along with the text and pick a few points.
 
-We computed and inspected these 95% intervals, above. Here we look at the entire densities with `geom_halfeyeh()`.
+We computed and inspected these 95% intervals, above. Here's another way we might `geom_halfeyeh()` to look at their entire densities.
 
-```{r, fig.width = 6, fig.height = 2.5}
+```{r, fig.width = 5, fig.height = 3}
 post %>% 
   select(starts_with("indirect")) %>% 
   gather() %>% 
-  rename(`indirect effect` = value) %>% 
+  rename(`conditional indirect effect` = value) %>% 
   mutate(W = str_remove(key, "indirect effect when W is ") %>% as.double()) %>% 
   
   
-  ggplot(aes(x = `indirect effect`, y = W, fill = W %>% as.character())) +
-  geom_halfeyeh(point_interval = median_qi, .prob = c(0.95, 0.5)) +
+  ggplot(aes(x = `conditional indirect effect`, y = W, fill = W %>% as.character())) +
+  geom_vline(xintercept = 0, linetype = 2) +
+  geom_halfeyeh(point_interval = median_qi, .width = 0.95) +
   scale_fill_brewer() +
   scale_y_continuous(breaks = c(1.592, 2.8, 5.2),
                      labels = c(1.6, 2.8, 5.2)) +
-  coord_cartesian(xlim = -1:1) +
+  coord_flip() +
+  # coord_cartesian(xlim = -1:1) +
   theme(legend.position = "none",
         panel.grid.minor.y = element_blank())
 ```
@@ -448,9 +434,10 @@ post %>%
 
 Fitting the model without the interaction term is just a small change to one of our `formula` arguments.
 
-```{r model4, cache = T, message = F, warning = F}
-model4 <-
-  brm(data = disaster, family = gaussian,
+```{r model5, cache = T, message = F, warning = F}
+model5 <-
+  brm(data = disaster, 
+      family = gaussian,
       bf(justify ~ 1 + frame + skeptic + frame:skeptic) +
         bf(donate ~ 1 + frame + justify + skeptic) +
         set_rescor(FALSE),
@@ -460,34 +447,48 @@ model4 <-
 Here are the results.
 
 ```{r}
-print(model4, digits = 3)
+print(model5, digits = 3)
 ```
 
 Since we're altering the model, we may as well use information criteria to compare the two versions.
 
 ```{r}
-loo(model3, model4)
+model4 <- add_criterion(model4, "loo")
+model5 <- add_criterion(model5, "loo")
+
+loo_compare(model4, model5) %>% 
+  print(simplify = F)
 ```
 
-The difference in LOO-CV values for the two models was modest. There's little predictive reason to choose one over the other. You could argue that `model4` is simpler than `model3`. Since we've got a complex model either way, one might also consider which one was of primary theoretical interest.
+The difference in LOO-CV values for the two models was modest. There's little predictive reason to choose one over the other. You could argue in favor of `model5` because it's simpler than `model4`. Since we've got a complex model either way, one might also consider which one was of primary theoretical interest.
 
 ## Mediated moderation
 
+> Mediation is moderated if the indirect effect of $X$ on $Y$ through one or more mediators is contingent on a moderator. With evidence of moderated mediation, one can claim that the $X \rightarrow M \rightarrow Y$ chain of events functions differently or to varying degrees for different people, in different contexts or conditions, or whatever the moderator variable represents. Although similar in name and pronunciation to moderated mediation, the term *mediated moderation* refers to the phenomenon in which an interaction between $X$ and a moderator $W$ in a model of $Y$ is carried through a mediator. (p. 459, *emphasis* in the original)
+
+Hayes later opined:
+
+> Although there is an abundance of published examples of mediated moderation analysis, their frequency of occurrence in the literature should not be confused with meaningfulness of the procedure itself. I will argue toward the end of this section that rarely is the phenomenon of mediated moderation interesting when interpreted as such. It is almost always substantively more meaningful to conceptualize a mediated moderation process in terms of moderated mediation. But before doing this, I will describe how a mediated moderation analysis is undertaken. (p. 460)
+
 ### Mediated moderation as the indirect effect of a product.
 
-Hayes explains this in the next subsection, but we've already fit this model, which we called `model3`. Here's the summary.
+Hayes explains this in the next subsection, but we've already fit this model presented in this subsection. We called it `model4`. Here's the summary.
 
 ```{r}
-print(model3, digits = 3)
+print(model4, digits = 3)
 ```
 
 ### Why mediated moderation is neither interesting nor meaningful.
 
-If it helps interpret this section, take a long look at the model formula.
+Mediated moderation and moderated mediation are statistically the same.
 
-```{r}
-model3$formula
-```
+> The only difference between them is how they are interpreted, and on what part of the model your attention is focused.
+>
+> Moderated mediation focuses on the conditional nature of an indirect effect--how an indirect effect is moderated. If you think of the terms "mediation" and "indirect effect" as essentially synonymous conceptually, then moderated mediation means a moderated indirect effect. Interpretive focus in a moderated mediation analysis is directed at estimating the indirect effect and how that effect varies as a function of a moderator. Mediated moderation, by contrast, asks about the mechanism through which an interaction between $X$ and a moderator $W$ operates, where the product of $X$ and $W$ is construed as the causal agent sending its effect to $Y$ through $M$. Focus in mediated moderation is the estimation of the indirect effect of the product of $X$ and $W$.(p. 465)
+
+Hayes later concluded that we should avoid
+
+> the articulation of hypotheses or research questions in terms of the mediation of the effect of a product, abandoning the term *mediated moderation* entirely, and instead [reframe] such hypotheses and research questions in terms of the contingencies of an indirect effect--moderated mediation. (p. 467, *emphasis* in the original)
 
 ## References {-}
 

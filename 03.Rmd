@@ -2,13 +2,13 @@
 
 # The Simple Mediation Model
 
-```{r set-options, echo = FALSE, cache = FALSE}
+```{r, echo = FALSE, cache = FALSE}
 options(width = 110)
 ```
 
 Hayes closed the opening with:
 
-> Whereas answering questions about *when* or *for whom* is the domain of moderation analysis, questions that ask about *how* pertain to *mediation*, the focus of this and the next three chapters. In this chapter, [we’ll explore] the *simple mediation model* and illustrate using ~~OLS regression-based~~ Bayesian path analysis how the effect of an antecedent variable $X$ on some final consequent $Y$ can be partitioned into two paths of influence, *direct* and *indirect*. (p. 78, *emphasis* in the original)
+> Whereas answering questions about *when* or *for whom* is the domain of moderation analysis, questions that ask about *how* pertain to *mediation*, the focus of this and the next three chapters. In this chapter, [we'll explore] the *simple mediation model* and illustrate using ~~OLS regression-based~~ Bayesian path analysis how the effect of an antecedent variable $X$ on some final consequent $Y$ can be partitioned into two paths of influence, *direct* and *indirect*. (p. 78, *emphasis* in the original)
 
 ## The simple mediation model
 
@@ -20,14 +20,12 @@ Hayes closed the opening with:
 
 Given the simple three-term mediation model, the statistical model is expressed in the two equations
 
-$$
 \begin{align*}
 M & = i_M + a X + e_M \\
 Y & = i_Y + c' X + b M + e_Y.
 \end{align*}
-$$
 
-When using OLS software, as Hayes promotes throughout the text, these equations are estimated sequentially. However, the brms package has multivariate capabilities. As such, our results will be from a Bayesian multilevel model that simultaneously computes both equations at once. They are both part of a joint model. And when we consider more advanced models later in the text, our multivariate models will fit even more that two equations at once. None of this is a problem for brms.
+When using OLS software, as Hayes promotes throughout the text, these equations are estimated sequentially. However, the **brms** package has multivariate capabilities. As such, our results will be from a Bayesian multilevel model that simultaneously computes both equations at once. They are both part of a joint model. And when we consider more advanced models later in the text, our multivariate models will fit even more than two equations at once. None of this is a problem for **brms**.
 
 ## Example with dichotomous $X$: The influence of presumed media influence
 
@@ -48,7 +46,7 @@ pmi %>%
   count(gender)
 ```
 
-Here is the split by `condition`:
+Here is the split by `condition`.
 
 ```{r}
 pmi %>% 
@@ -59,9 +57,8 @@ Here is how to get the ungrouped mean and $SD$ values for `reaction` and `pmi`, 
 
 ```{r}
 pmi %>% 
-  select(reaction, pmi) %>% 
-  gather() %>% 
-  group_by(key) %>% 
+  pivot_longer(c(reaction, pmi)) %>% 
+  group_by(name) %>% 
   summarise(mean = mean(value),
             sd   = sd(value)) %>% 
   mutate_if(is.double, round, digits = 3)
@@ -69,25 +66,24 @@ pmi %>%
 
 You might get the mean and $SD$ values for `reaction` and `pmi` grouped by `cond` like this.
 
-```{r}
+```{r, warning = F, message = F}
 pmi %>% 
-  select(reaction, pmi, cond) %>% 
-  gather(key, value, -cond) %>% 
-  group_by(cond, key) %>% 
+  pivot_longer(c(reaction, pmi)) %>% 
+  group_by(cond, name) %>% 
   summarise(mean = mean(value),
             sd   = sd(value)) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
 
-Let's load our primary statistical package.
+Let's load our primary statistical package, **brms**.
 
 ```{r, message = F, warning = F}
 library(brms)
 ```
 
-Before we begin, I should acknowledge that I greatly benefited by [this great blog post on path analysis in brms](http://www.imachordata.com/bayesian-sem-with-brms/) by Jarrett Byrnes. In brms, we handle mediation models using the [multivariate syntax](https://cran.r-project.org/web/packages/brms/vignettes/brms_multivariate.html). There are a few ways to do this. Let's start simple. 
+Before we begin, I should acknowledge that I greatly benefited by [this great blog post on path analysis in brms](http://www.imachordata.com/bayesian-sem-with-brms/) by [Jarrett Byrnes](https://twitter.com/jebyrnes). With **brms**, we handle mediation models using the [multivariate syntax](https://cran.r-project.org/web/packages/brms/vignettes/brms_multivariate.html). There are a few ways to do this. Let's start simple. 
 
-If you look at the path model in Figure 3.3, you'll note that `reaction` is predicted by `pmi` and `cond`. `pmi`, in turn, is predicted solely by `cond`. So we have two regression models, which is just the kind of thing the brms multivariate syntax is for. So first let's specify both models, which we'll nest in `bf()` functions and save as objects.
+If you look at the path model in Figure 3.3, you'll note that `reaction` is predicted by `pmi` and `cond`. `pmi`, in turn, is predicted solely by `cond`. So we have two regression models, which is just the kind of thing the **brms** multivariate syntax is for. So first let's specify both models, which we'll nest in `bf()` functions and save as objects.
 
 ```{r}
 y_model <- bf(reaction ~ 1 + pmi + cond)
@@ -96,9 +92,17 @@ m_model <- bf(pmi ~ 1 + cond)
 
 Now we have our `bf()` objects in hand, we'll combine them with the `+` operator within the `brm()` function. We'll also specify `set_rescor(FALSE)`--we're not interested in adding a residual correlation between `reaction` and `pmi`.
 
-```{r model1, cache = T, message = F, warning = F}
-model1 <-
-  brm(data = pmi, family = gaussian,
+```{r model3.1}
+# save(model3.1, file = "fits/model3.1.rda")
+# rm(model3.1)
+
+load("fits/model3.1.rda")
+```
+
+```{r, eval = F}
+model3.1 <-
+  brm(data = pmi, 
+      family = gaussian,
       y_model + m_model + set_rescor(FALSE),
       cores = 4)
 ```
@@ -106,21 +110,21 @@ model1 <-
 Here are our results.
 
 ```{r}
-print(model1)
+print(model3.1)
 ```
 
-If you compare our model summary with the coefficients in the path model in Figure 3.3, you'll see our coefficients are the same. The brms summary also includes intercepts and residual variances, which are typically omitted in path diagrams even though they're still part of the model.
+If you compare our model summary with the coefficients in the path model in Figure 3.3, you'll see our coefficients are the same. The **brms** summary also includes intercepts and residual variances, which are typically omitted in path diagrams even though they're still part of the model.
 
 If you're getting lost in all the model output, try taking out the constant and error terms.
 
 ```{r}
-fixef(model1)[3:5, ] %>% round(digits = 3)
+fixef(model3.1)[3:5, ] %>% round(digits = 3)
 ```
 
 In his Table 3.2, Hayes included the $R^2$ values. Here are ours.
 
 ```{r}
-bayes_R2(model1) %>% round(digits = 3)
+bayes_R2(model3.1) %>% round(digits = 3)
 ```
 
 It's worth it to actually plot the $R^2$ distributions.
@@ -129,7 +133,7 @@ It's worth it to actually plot the $R^2$ distributions.
 # we'll get our color palette from ggthemes
 library(ggthemes)
 
-bayes_R2(model1, summary = F) %>% 
+bayes_R2(model3.1, summary = F) %>% 
   data.frame() %>% 
   gather() %>% 
   
@@ -137,12 +141,12 @@ bayes_R2(model1, summary = F) %>%
   geom_density(color = "transparent", alpha = 2/3) +
   scale_fill_colorblind() +  # we got this color palette from the ggthemes package
   coord_cartesian(xlim = 0:1) +
-  labs(title = expression(paste("The ", italic("R")^{2}, " distributions for fit0")),
+  labs(title = expression(paste("The ", italic("R")^{2}, " distributions for model3.1")),
        x = NULL) +
   theme_classic()
 ```
 
-We went through the trouble of plotting the $R^2$ distributions because it’s useful to understand that they won't often be symmetric when they're near their logical boundaries (i.e., 0 and 1). This is where asymmetric Bayesian credible intervals can really shine.
+We went through the trouble of plotting the $R^2$ distributions because it's useful to understand that they won't often be symmetric when they're near their logical boundaries (i.e., 0 and 1). This is where asymmetric Bayesian credible intervals can really shine.
 
 Let's get down to business and examine the indirect effect, the $ab$ pathway. In our model,
 
@@ -152,20 +156,20 @@ Let's get down to business and examine the indirect effect, the $ab$ pathway. In
 You can isolate them with `fixef()[i]`.
 
 ```{r}
-fixef(model1)[5 , ]
-fixef(model1)[3 , ]
+fixef(model3.1)[5 , ]
+fixef(model3.1)[3 , ]
 ```
 
 So the naive approach would be to just multiply them.
 
 ```{r}
-(fixef(model1)[5 , ] * fixef(model1)[3 , ]) %>% round(digits = 3)
+(fixef(model3.1)[5 , ] * fixef(model3.1)[3 , ]) %>% round(digits = 3)
 ```
 
 Now, this does get us the correct 'Estimate' (i.e., posterior mean). However, the posterior $SD$ and 95% intervals are off. If you want to do this properly, you need to work with the poster samples themselves. We do that with the `posterior_samples()` function.
 
 ```{r}
-post <- posterior_samples(model1)
+post <- posterior_samples(model3.1)
 
 glimpse(post)
 ```
@@ -194,7 +198,7 @@ post %>%
                fill = colorblind_pal()(3)[3]) +
   scale_y_continuous(NULL, breaks = NULL) +
   labs(title = expression(paste("Our indirect effect, the ", italic("ab"), " pathway")),
-       x = NULL) +
+       x     = NULL) +
   theme_classic()
 ```
 
@@ -209,20 +213,20 @@ post %>%
 
 Their magnitudes are similar, but this asymmetry will be a source of contrast to our estimates and those in the text. This is also something to consider when reporting on central tendency. When the indirect effect--or any other parameter, for that matter--is quite asymmetric, you might prefer reporting the median rather than the mean.
 
-On page 90, Hayes computed the *adjusted means* for $Y$. For both `cond == 1` and `cond == 0`, he computed the expected values for `reaction` when `pmi` was at its mean. A natural way to do that in brms is with `fitted()`. First we'll put our input values for `cond` and `pmi` in a tibble, which we'll call `nd`. Then we'll feed `nd` into the `newdata` argument within the `fitted()` function.
+On page 90, Hayes computed the *adjusted means* for $Y$. For both `cond == 1` and `cond == 0`, he computed the expected values for `reaction` when `pmi` was at its mean. A natural way to do that in **brms** is with `fitted()`. First we'll put our input values for `cond` and `pmi` in a tibble, which we'll call `nd`. Then we'll feed `nd` into the `newdata` argument within the `fitted()` function.
 
 ```{r}
 nd <-
   tibble(cond = 1:0,
-         pmi = mean(pmi$pmi))
+         pmi  = mean(pmi$pmi))
 
-fitted(model1, newdata = nd)
+fitted(model3.1, newdata = nd)
 ```
 
-Because `model1` is a multivariate model, `fitted()` returns the model-implied summaries for both `reaction` and `pmi`. If you just want the adjusted means for `reaction`, you can use the `resp` argument within `fitted()`.
+Because `model3.1` is a multivariate model, `fitted()` returned the model-implied summaries for both `reaction` and `pmi`. If you just want the adjusted means for `reaction`, you can use the `resp` argument within `fitted()`.
 
 ```{r}
-fitted(model1, newdata = nd, resp = "reaction") %>% round(digits = 3)
+fitted(model3.1, newdata = nd, resp = "reaction") %>% round(digits = 3)
 ```
 
 Note how this is where the two values in the $Y$ adjusted column in Table 3.1 came from. 
@@ -235,13 +239,13 @@ post <-
   mutate(total_effect = b_reaction_cond + ab)
 ```
 
-Here's the posterior mean with its 95% intervals
+Here's the posterior mean with its quantile-based 95% intervals
 
 ```{r}
 post %>% 
   summarize(mean = mean(total_effect),
-            ll = quantile(total_effect, prob = .025),
-            ul = quantile(total_effect, prob = .975))
+            ll   = quantile(total_effect, prob = .025),
+            ul   = quantile(total_effect, prob = .975))
 ```
 
 ### ~~Estimation of the model in PROCESS for SPSS and SAS.~~
@@ -280,21 +284,21 @@ post %>%
   geom_vline(xintercept = 0, color = "white", linetype = 2) +
   scale_y_continuous(NULL, breaks = NULL) +
   labs(title = expression(paste("Yep, 0 is a credible value for ", italic("c"), ".")),
-       x = NULL) +
+       x     = NULL) +
   theme_classic()
 ```
 
-If you wanted to quantify what proportion of the density was less than 0, you could do:
+If you wanted to quantify what proportion of the density was less than 0, you could execute something like this.
 
 ```{r}
 post %>% 
-  summarize(proportion_below_zero = filter(., b_reaction_cond < 0) %>% nrow()/nrow(.))
+  summarize(proportion_below_zero = mean(b_reaction_cond < 0))
 ```
 
 This is something like a Bayesian $p$-value. But of course, you could always just look at the posterior intervals.
 
 ```{r}
-posterior_interval(model1)["b_reaction_cond", ]
+posterior_interval(model3.1)["b_reaction_cond", ]
 ```
 
 ### Inference about the indirect of $X$ on $Y$ through $M$.
@@ -311,7 +315,7 @@ This is not our approach.
 
 However, Markov chain Monte Carlo (MCMC) methods are iterative and share some characteristics with boostrapping. On page 98, Hayes outlined 6 steps for constructing the $ab$ bootstrap confidence interval. Here are our responses to those steps w/r/t Bayes with MCMC--or in our case HMC (i.e., Hamiltonian Monte Carlo).
 
-If HMC or MCMC, in general, are new to you, you might check out [this lecture](https://www.youtube.com/watch?v=BWEtS3HuU5A&t=7s) or the [Stan reference manual](http://mc-stan.org/users/documentation/) if you're more technically oriented.
+If HMC or MCMC, in general, are new to you, you might check out [this lecture](https://www.youtube.com/watch?v=BWEtS3HuU5A&t=7s) or the [*Stan Reference Manual*](https://mc-stan.org/docs/2_21/reference-manual/index.html) if you're more technically oriented.
 
 Anyway, Hayes's 6 steps:
 
@@ -329,7 +333,7 @@ post %>%
   slice(1:10)
 ```
 
-Our data frame, `post`, has 4000 rows. Why 4000? By default, brms runs 4 HMC chains. Each chain has 2000 iterations, 1000 of which are warmups, which we always discard. As such, there are 1000 good iterations left in each chain and $1000 \times 4 = 4000$. We can change these defaults as needed. 
+Our data frame, `post`, has 4000 rows. Why 4000? By default, **brms** runs 4 HMC chains. Each chain has 2000 iterations, 1000 of which are warmups, which we always discard. As such, there are 1000 good iterations left in each chain and $1000 \times 4 = 4000$. We can change these defaults as needed. 
 
 Each row in `post` contains the parameter values based on one of those draws. And again, these are draws from the posterior distribution. They are not draws from the data.
 
@@ -371,14 +375,14 @@ ci <- 95
 Also, notice the headers in the rightmost two columns in our `posterior_summary()` output:
 
 ```{r}
-posterior_summary(model1)
+posterior_summary(model3.1)
 ```
 
 Those .025 and .975 quantiles from above are just what brms is giving us in our 95% Bayesian credible intervals.
 
 Here's our version of Figure 3.5.
 
-```{r, fig.width = 4.5, fig.height = 4}
+```{r, fig.width = 4.5, fig.height = 3.5}
 # these will come in handy in the subtitle
 ll <- quantile(post$ab, probs = .025) %>% round(digits = 3)
 ul <- quantile(post$ab, probs = .975) %>% round(digits = 3)
@@ -424,9 +428,17 @@ m_model <- bf(affect ~ 1 + estress)
 
 With our `y_model` and `m_model` defined, we're ready to fit.
 
-```{r model2, cache = T, message = F, warning = F}
-model2 <-
-  brm(data = estress, family = gaussian,
+```{r model3.2}
+# save(model3.2, file = "fits/model3.2.rda")
+# rm(model3.2)
+
+load("fits/model3.2.rda")
+```
+
+```{r, eval = F}
+model3.2 <-
+  brm(data = estress, 
+      family = gaussian,
       y_model + m_model + set_rescor(FALSE),
       cores = 4)
 ```
@@ -434,20 +446,20 @@ model2 <-
 Let's take a look at the results.
 
 ```{r}
-print(model2, digits = 3)
+print(model3.2, digits = 3)
 ```
 
 The 'Eff.Sample' and 'Rhat' values look great. Happily, the values in our summary cohere well with those Hayes reported in Table 3.5. Here are our $R^2$ values.
 
 ```{r}
-bayes_R2(model2)
+bayes_R2(model3.2)
 ```
 
 These are also quite similar to those in the text. Here's our indirect effect.
 
 ```{r}
 # putting the posterior draws into a data frame
-post <- posterior_samples(model2)
+post <- posterior_samples(model3.2)
 
 # computing the ab coefficient with multiplication
 post <-
@@ -471,14 +483,14 @@ post %>%
                      labels = quantile(post$ab, probs = c(.025, .5, .975)) %>% round(2) %>% as.character()) +
   scale_y_continuous(NULL, breaks = NULL) +
   labs(title = expression(paste("Behold our ", italic("ab"), "!")),
-       x = NULL) +
+       x     = NULL) +
   theme_classic()
 ```
 
 Here's $c'$, the direct effect of `esterss` predicting `withdraw`.
 
 ```{r}
-posterior_summary(model2)["b_withdraw_estress", ]
+posterior_summary(model3.2)["b_withdraw_estress", ]
 ```
 
 It has wide flapping intervals which do straddle zero. A little addition will give us the direct effect, $c$.

@@ -36,7 +36,7 @@ The `lowerCor()` function from the psych package makes it easy to estimate the l
 psych::lowerCor(estress, digits = 3)
 ```
 
-Let's open brms.
+Let's open **brms**.
 
 ```{r, message = F, warning = F}
 library(brms)
@@ -44,8 +44,15 @@ library(brms)
 
 Recall that if you want the correlations with Bayesian estimation and those sweet Bayesian credible intervals, you set up an intercept-only multivariate model.
 
-```{r model1, cache = T, message = F, warning = F}
-model1 <- 
+```{r model4.1}
+# save(model4.1, file = "fits/model04.01.rda")
+# rm(model4.1)
+
+load("fits/model04.01.rda")
+```
+
+```{r, eval = F}
+model4.1 <- 
   brm(data = estress, 
       family = gaussian,
       mvbind(ese, estress, affect, withdraw) ~ 1,
@@ -55,17 +62,16 @@ model1 <-
 Behold the summary.
 
 ```{r}
-print(model1, digits = 3)
+print(model4.1, digits = 3)
 ```
 
-Since we have posteriors for the correlations, why not plot them? Here we use the `theme_black()` from brms and a color scheme from the [viridis package](https://cran.r-project.org/web/packages/viridis/index.html).
+Since we have posteriors for the correlations, why not plot them? Here we use the `theme_black()` from **brms** and a color scheme from the [viridis package](https://cran.r-project.org/web/packages/viridis/index.html).
 
 ```{r, message = F, warning = F, fig.width = 10, fig.height = 1.75}
-posterior_samples(model1) %>% 
-  select(rescor__ese__estress, rescor__ese__affect, rescor__estress__withdraw) %>% 
-  gather() %>% 
+posterior_samples(model4.1) %>% 
+  pivot_longer(c(rescor__ese__estress, rescor__ese__affect, rescor__estress__withdraw)) %>% 
   
-  ggplot(aes(x = value, fill = key)) +
+  ggplot(aes(x = value, fill = name)) +
   geom_density(alpha = .85, color = "transparent") +
   scale_fill_viridis_d(option = "D", direction = -1,
                        labels = c(expression(paste(rho["ese, affect"])),
@@ -77,7 +83,7 @@ posterior_samples(model1) %>%
   xlim(-1, 1) +
   scale_y_continuous(NULL, breaks = NULL) +
   labs(title = "Our correlation density plot",
-       x = NULL) +
+       x     = NULL) +
   theme_black() +
   theme(panel.grid   = element_blank(),
         axis.text.y  = element_text(hjust = 0),
@@ -87,8 +93,15 @@ posterior_samples(model1) %>%
 
 In the last chapter, we said there were multiple ways to set up a multivariate model in brms. Our first approach was to externally define the submodels using the `bf()` function, save them as objects, and then include those objects within the `brm()` function. Another approach is to just define the separate `bf()` submodels directly in the `brm()` function, combining them with the `+` operator. That's the approach we will practice in this chapter. Here's what it looks like for our first mediation model.
 
-```{r model2, cache = T, message = F, warning = F}
-model2 <-
+```{r model4.2}
+# save(model4.2, file = "fits/model04.02.rda")
+# rm(model4.2)
+
+load("fits/model04.02.rda")
+```
+
+```{r, eval = F}
+model4.2 <-
   brm(data = estress, 
       family = gaussian,
       bf(withdraw ~ 1 + estress + affect + ese + sex + tenure) +
@@ -100,7 +113,7 @@ model2 <-
 Worked like a charm. Here's the summary.
 
 ```{r}
-print(model2, digits = 3)
+print(model4.2, digits = 3)
 ```
 
 In the printout, notice how first within intercepts and then with covariates and sigma, the coefficients are presented as for `withdraw` first and then `affect`. Also notice how the coefficients for the covariates are presented in the same order for each criterions. Hopefully that'll make it easier to sift through the printout. Happily, our coefficients are quite similar to those in Table 4.1.
@@ -108,24 +121,24 @@ In the printout, notice how first within intercepts and then with covariates and
 Here are the $R^2$ summaries.
 
 ```{r}
-bayes_R2(model2) %>% round(digits = 3)
+bayes_R2(model4.2) %>% round(digits = 3)
 ```
 
 These are also in the same ballpark, but a little higher. Why not glance at their densities?
 
 ```{r, fig.width = 6, fig.height = 2}
-bayes_R2(model2, summary = F) %>% 
+bayes_R2(model4.2, summary = F) %>% 
   data.frame() %>% 
-  gather() %>% 
+  pivot_longer(everything()) %>% 
   
-  ggplot(aes(x = value, fill = key)) +
+  ggplot(aes(x = value, fill = name)) +
   geom_density(color = "transparent", alpha = .85) +
   scale_fill_viridis_d(option = "A", begin = .33, direction = -1,
                        labels = c("affect", "withdaw"),
                        guide  = guide_legend(title.theme = element_blank())) +
   scale_y_continuous(NULL, breaks = NULL) +
   xlim(0:1) +
-  labs(title = expression(paste("The ", italic("R")^{2}, " distributions for model2")),
+  labs(title = expression(paste("The ", italic("R")^{2}, " distributions for model4.2")),
        x = NULL) +
   theme_black() +
   theme(panel.grid = element_blank())
@@ -135,7 +148,7 @@ Here we retrieve the posterior samples, compute the indirect effect, and summari
 
 ```{r}
 post <-
-  posterior_samples(model2) %>% 
+  posterior_samples(model4.2) %>% 
   mutate(ab = b_affect_estress * b_withdraw_affect)
 
 quantile(post$ab, probs = c(.5, .025, .975)) %>% 
@@ -164,14 +177,13 @@ Here's a way to get both the direct effect, $c'$ (i.e., `b_withdraw_estress`), a
 
 ```{r}
 post %>% 
-  mutate(c = b_withdraw_estress + ab) %>% 
-  rename(c_prime = b_withdraw_estress) %>% 
-  select(c_prime, c) %>% 
-  gather() %>%
-  group_by(key) %>% 
+  mutate(c       = b_withdraw_estress + ab,
+         c_prime = b_withdraw_estress) %>% 
+  pivot_longer(c(c_prime, c)) %>% 
+  group_by(name) %>% 
   summarize(mean = mean(value), 
-            ll = quantile(value, probs = .025),
-            ul = quantile(value, probs = .975)) %>% 
+            ll   = quantile(value, probs = .025),
+            ul   = quantile(value, probs = .975)) %>% 
   mutate_if(is_double, round, digits = 3)
 ```
 
@@ -198,13 +210,12 @@ post %>%
   mutate(c_prime_ps = b_withdraw_estress / sd_y,
          ab_ps      = ab / sd_y) %>% 
   mutate(c_ps       = c_prime_ps + ab_ps) %>% 
-  select(c_prime_ps, ab_ps, c_ps) %>% 
-  gather() %>%
-  group_by(key) %>% 
+  pivot_longer(c(c_prime_ps, ab_ps, c_ps)) %>% 
+  group_by(name) %>% 
   summarize(mean   = mean(value), 
             median = median(value),
-            ll = quantile(value, probs = .025),
-            ul = quantile(value, probs = .975)) %>% 
+            ll     = quantile(value, probs = .025),
+            ul     = quantile(value, probs = .975)) %>% 
   mutate_if(is_double, round, digits = 3)
 ```
 
@@ -215,19 +226,18 @@ post %>%
   mutate(c_prime_ps = b_withdraw_estress / sd_y,
          ab_ps      = ab / sd_y) %>% 
   mutate(c_ps       = c_prime_ps + ab_ps) %>% 
-  select(c_prime_ps, ab_ps, c_ps) %>% 
-  gather() %>% 
-  
-  ggplot(aes(x = value, fill = key)) +
+  pivot_longer(c(c_prime_ps, ab_ps, c_ps)) %>% 
+
+  ggplot(aes(x = value, fill = name)) +
   geom_density(alpha = .85, color = "transparent") +
   scale_fill_viridis_d(option = "D") +
   scale_y_continuous(NULL, breaks = NULL) +
   labs(title = "Partially-standardized coefficients",
-       x = NULL) +
+       x     = NULL) +
   theme_black() +
   theme(panel.grid = element_blank(),
         legend.position = "none") +
-  facet_wrap(~key, ncol = 3)
+  facet_wrap(~name, ncol = 3)
 ```
 
 On page 135, Hayes revisited the model from section 3.3. We'll have to reload the data and refit that model to follow along. First, load the data.
@@ -238,8 +248,15 @@ pmi <- read_csv("data/pmi/pmi.csv")
 
 Refit the model, this time with the `bf()` statements defined right within `brm()`.
 
-```{r model3, cache = T, message = F, warning = F}
-model3 <-
+```{r model4.3}
+# save(model4.3, file = "fits/model04.03.rda")
+# rm(model4.3)
+
+load("fits/model04.03.rda")
+```
+
+```{r, eval = F}
+model4.3 <-
   brm(data = pmi, 
       family = gaussian,
        bf(reaction ~ 1 + pmi + cond) + 
@@ -251,7 +268,7 @@ model3 <-
 The partially-standardized parameters require some `posterior_samples()` wrangling.
 
 ```{r}
-post <- posterior_samples(model3)
+post <- posterior_samples(model4.3)
 
 sd_y <- sd(pmi$reaction)
 
@@ -261,13 +278,12 @@ post %>%
   mutate(ab_ps      = ab / sd_y,
          c_prime_ps = c_prime / sd_y) %>% 
   mutate(c_ps       = c_prime_ps + ab_ps) %>% 
-  select(c_prime_ps, ab_ps, c_ps) %>% 
-  gather() %>%
-  group_by(key) %>% 
+  pivot_longer(c(c_prime_ps, ab_ps, c_ps)) %>%
+  group_by(name) %>% 
   summarize(mean   = mean(value), 
             median = median(value),
-            ll = quantile(value, probs = .025),
-            ul = quantile(value, probs = .975)) %>% 
+            ll     = quantile(value, probs = .025),
+            ul     = quantile(value, probs = .975)) %>% 
   mutate_if(is_double, round, digits = 3)
 ```
 
@@ -277,10 +293,10 @@ Happily, these results are closer to those in the text than with the previous ex
 
 **Note**. Hayes could have made this clearer in the text, but the `estress` model he referred to in this section was the one from way back in section 3.5, _not_ the one from earlier in this chapter.
 
-One way to get a standardized solution is to standardize the variables in the data and then fit the model with those standardized variables. To do so, we'll revisit our custom `standardize()`, put it to work, and fit the standardized version of the model from section 3.5, which we'll call `model4`.
+One way to get a standardized solution is to standardize the variables in the data and then fit the model with those standardized variables. To do so, we'll revisit our custom `standardize()`, put it to work, and fit the standardized version of the model from section 3.5, which we'll call `model4.4`.
 
 ```{r, message = F, warning = F}
-sandardize <- function(x){
+sandardize <- function(x) {
   (x - mean(x)) / sd(x)
 }
 
@@ -293,8 +309,15 @@ estress <-
 
 Fit the model.
 
-```{r model4, cache = T, message = F, warning = F}
-model4 <-
+```{r model4.4}
+# save(model4.4, file = "fits/model04.04.rda")
+# rm(model4.4)
+
+load("fits/model04.04.rda")
+```
+
+```{r, eval = F}
+model4.4 <-
   brm(data = estress, 
       family = gaussian,
       bf(withdraw_z ~ 1 + estress_z + affect_z) + 
@@ -306,30 +329,36 @@ model4 <-
 Here they are, our newly standardized coefficients.
 
 ```{r}
-fixef(model4) %>% round(digits = 3)
+fixef(model4.4) %>% round(digits = 3)
 ```
 
 Here we do the wrangling necessary to spell out the standardized effects for $ab$, $c'$, and $c$.
 
 ```{r}
-posterior_samples(model4) %>% 
+posterior_samples(model4.4) %>% 
   mutate(ab_s      = b_affectz_estress_z * b_withdrawz_affect_z,
          c_prime_s = b_withdrawz_estress_z) %>%
   mutate(c_s       = ab_s + c_prime_s) %>% 
-  select(c_prime_s, ab_s, c_s) %>% 
-  gather() %>%
-  group_by(key) %>% 
+  pivot_longer(c(c_prime_s, ab_s, c_s)) %>%
+  group_by(name) %>% 
   summarize(mean   = mean(value), 
             median = median(value),
-            ll = quantile(value, probs = .025),
-            ul = quantile(value, probs = .975)) %>% 
+            ll     = quantile(value, probs = .025),
+            ul     = quantile(value, probs = .975)) %>% 
   mutate_if(is_double, round, digits = 3)
 ```
 
 Let's confirm that we can recover these values by applying the formulas on page 135 to the unstandardized model, which we'll call `model5`. First, we'll have to fit that model since we haven't fit that one since Chapter 3.
 
-```{r, message = F, warning = F}
-model5 <-
+```{r model4.5}
+# save(model4.5, file = "fits/model04.05.rda")
+# rm(model4.5)
+
+load("fits/model04.05.rda")
+```
+
+```{r, eval = F}
+model4.5 <-
   brm(data = estress, 
       family = gaussian,
       bf(withdraw ~ 1 + estress + affect) + 
@@ -341,38 +370,35 @@ model5 <-
 Check the unstandardized coefficient summaries.
 
 ```{r}
-fixef(model5) %>% round(digits = 3)
+fixef(model4.5) %>% round(digits = 3)
 ```
 
-On pages 135--136, Hayes provided the formulas to compute the standardized effects:
+On pages 135--136, Hayes provided the formulas to compute the standardized effects, which are
 
-$$
 \begin{align*}
-c'_{cs} & = \frac{SD_X(c')}{SD_{Y}} = SD_{X}(c'_{ps}) \\
-ab_{cs} & = \frac{SD_X(ab)}{SD_{Y}} = SD_{X}(ab_{ps}) \\
-c_{cs}  & = \frac{SD_X(c)}{SD_{Y}} = c'_{cs} + ab_{ps}
+c'_{cs} & = \frac{SD_X(c')}{SD_{Y}} = SD_{X}(c'_{ps}), \\
+ab_{cs} & = \frac{SD_X(ab)}{SD_{Y}} = SD_{X}(ab_{ps}), \text{and} \\
+c_{cs}  & = \frac{SD_X(c)}{SD_{Y}} = c'_{cs} + ab_{ps},
 \end{align*}
-$$
 
-Here we put them in action to standardize the unstandardized results.
+where the $ps$ subscript indicates *partially standardized*. Here we put them in action to standardize the unstandardized results.
 
 ```{r}
 sd_x <- sd(estress$estress)
 sd_y <- sd(estress$withdraw)
 
-posterior_samples(model5) %>% 
+posterior_samples(model4.5) %>% 
   mutate(ab        = b_affect_estress * b_withdraw_affect,
          c_prime   = b_withdraw_estress) %>% 
   mutate(ab_s      = (sd_x * ab) / sd_y,
          c_prime_s = (sd_x * c_prime) / sd_y) %>% 
   mutate(c_s       = ab_s + c_prime_s) %>% 
-  select(c_prime_s, ab_s, c_s) %>% 
-  gather() %>%
-  group_by(key) %>% 
+  pivot_longer(c(c_prime_s, ab_s, c_s)) %>%
+  group_by(name) %>% 
   summarize(mean   = mean(value), 
             median = median(value),
-            ll = quantile(value, probs = .025),
-            ul = quantile(value, probs = .975)) %>% 
+            ll     = quantile(value, probs = .025),
+            ul     = quantile(value, probs = .975)) %>% 
   mutate_if(is_double, round, digits = 3)
 ```
 
@@ -384,7 +410,7 @@ Hayes recommended against these, so I'm not going to bother working any examples
 
 ## Statistical power
 
-As Hayes discussed, power is an important but thorny issue within the frequentist paradigm. Given that we’re not particularly interested in rejecting the point-null hypothesis as Bayesians and that we bring in priors (which we've largely avoided explicitly mentioning in his project but have been quietly using all along), the issue is even more difficult for Bayesians. To learn more on the topic, check out chapter 13 in [Kruschke's text](http://www.indiana.edu/~kruschke/DoingBayesianDataAnalysis/), [Miočević, MacKinnon, and Levy's paper](https://www.tandfonline.com/doi/abs/10.1080/10705511.2017.1312407?src=recsys&journalCode=hsem20) on power in small-sample Bayesian analyses or [Gelman and Carlin's paper](http://journals.sagepub.com/doi/pdf/10.1177/1745691614551642) offering an alternative to the power paradigm. You might look at Matti Vuorre's [Sample size planning with brms project](https://gitlab.com/vuorre/bayesplan). And finally, I have a series of blog posts on Bayesian power analyses. You can find the first post [here](https://solomonkurz.netlify.com/post/bayesian-power-analysis-part-i/).
+As Hayes discussed, power is an important but thorny issue within the frequentist paradigm. Given that we’re not particularly interested in rejecting the point-null hypothesis as Bayesians and that we bring in priors (which we've largely avoided explicitly mentioning in his project but have been quietly using all along), the issue is even more difficult for Bayesians. To learn more on the topic, check out Chapter 13 in [Kruschke's text](http://www.indiana.edu/~kruschke/DoingBayesianDataAnalysis/), [Miočević, MacKinnon, and Levy's paper](https://www.tandfonline.com/doi/abs/10.1080/10705511.2017.1312407?src=recsys&journalCode=hsem20) on power in small-sample Bayesian analyses or [Gelman and Carlin's paper](http://journals.sagepub.com/doi/pdf/10.1177/1745691614551642) offering an alternative to the power paradigm. You might look at Matti Vuorre's [Sample size planning with brms project](https://gitlab.com/vuorre/bayesplan). And finally, I have a series of blog posts on Bayesian power analyses. You can find the first post [here](https://solomonkurz.netlify.com/post/bayesian-power-analysis-part-i/).
 
 ## Multiple $X$s or $Y$s: Analyze separately or simultaneously?
 
@@ -398,10 +424,10 @@ The same basic problems with multicollinearity applies to the Bayesian paradigm,
 
 ### Estimation of a model with multiple $X$ variables in ~~PROCESS~~ brms.
 
-Hayes discussed the limitation that his PROCESS program may only handle a single $X$ variable in the `x=` part of the command line, for which he displayed a workaround. We don't have such a limitation in brms. Using Hayes's hypothetical data syntax for a model with three $X$s, the brms code would be like this.
+Hayes discussed the limitation that his PROCESS program may only handle a single $X$ variable in the `x=` part of the command line, for which he displayed a workaround. We don't have such a limitation in **brms**. Using Hayes's hypothetical data syntax for a model with three $X$s, the brms code would be like this.
 
 ```{r, eval = F}
-model6 <-
+model4.6 <-
   brm(data = data, 
       family = gaussian,
       bf(dv ~ 1 + iv1 + iv2 + iv3 + med) + 
@@ -426,12 +452,19 @@ d <-
 head(d)
 ```
 
-Before we proceed, if data simulation is new to you, you might check out [Roger Peng's helpful tutorial](https://www.youtube.com/watch?v=tvv4IA8PEzw) or [this great post](https://aosmith.rbind.io/2018/08/29/getting-started-simulating-data/) by Ariel Muldoon.
+Before we proceed, if data simulation is new to you, you might check out [Roger Peng](https://twitter.com/rdpeng)'s [helpful tutorial](https://www.youtube.com/watch?v=tvv4IA8PEzw) or [this great post](https://aosmith.rbind.io/2018/08/29/getting-started-simulating-data/) by [Ariel Muldoon](https://twitter.com/aosmith16).
 
 Here we fit the model.
 
-```{r model7, cache = T, message = F, warning = F}
-model7 <-
+```{r model4.6}
+# save(model4.6, file = "fits/model04.06.rda")
+# rm(model4.6)
+
+load("fits/model04.06.rda")
+```
+
+```{r, eval = F}
+model4.6 <-
   brm(data = d, 
       family = gaussian,
       bf(dv ~ 1 + iv1 + iv2 + iv3 + med) + 
@@ -443,10 +476,10 @@ model7 <-
 Behold the results.
 
 ```{r}
-print(model7)
+print(model4.6)
 ```
 
-Good old `brms::brm()` came through just fine. If you wanted to simulate data with a particular correlation structure for the `iv` variables, you might use the `mvnorm()` function from the [MASS package](https://cran.r-project.org/web/packages/MASS/index.html), which you can learn more about [here](http://blog.revolutionanalytics.com/2016/02/multivariate_data_with_r.html).
+Good old `brms::brm()` came through just fine. If you wanted to simulate data with a particular correlation structure for the `iv` variables, you might use the `mvnorm()` function from the [**MASS** package](https://cran.r-project.org/web/packages/MASS/index.html), which you can learn more about [here](http://blog.revolutionanalytics.com/2016/02/multivariate_data_with_r.html).
 
 ### Multiple $Y$ variables.
 
@@ -468,8 +501,15 @@ head(d)
 
 Fitting this requires a slew of `bf()` statements.
 
-```{r model8, cache = T, message = F, warning = F}
-model8 <-
+```{r model4.7}
+# save(model4.7, file = "fits/model04.07.rda")
+# rm(model4.7)
+
+load("fits/model04.07.rda")
+```
+
+```{r, eval = F}
+model4.7 <-
   brm(data = d, 
       family = gaussian,
       bf(dv1 ~ 1 + iv + med) + 
@@ -481,16 +521,16 @@ model8 <-
 ```
 
 ```{r}
-print(model8)
+print(model4.7)
 ```
 
-Once again, brms to the rescue!
+Once again, **brms** to the rescue!
 
 ## Chapter summary
 
 > Statistical mediation analysis has changed since the publication of Baron and Kenny (1986). The heyday of the causal steps "criteria to establish mediation" approach is over. Also disappearing in the 21 century is a concern about whether a process can be labeled as complete or partial mediation. Modern mediation analysis emphasizes an explicit estimation of the indirect effect, inferential tests of the indirect effect that don't make unnecessary assumptions, and an acknowledgement that evidence of a statistically significant association between $X$ and $Y$ is not necessary to talk about a model intervening variable process (in which case the concepts of complete and partial mediation simply don't make sense). (p. 146)
 
-To this, I'll just point out Hayes is speaking from a frequentist hypothesis-testing orientation. If you would like to dwell on significance tests, you certainty can. But particularly from within the Bayesian paradigm, you don't need to.
+To this, I'll just point out Hayes is speaking from a frequentist hypothesis-testing orientation. If you would like to dwell on significance tests, you certainty can. But particularly from within the Bayesian paradigm, you just don't need to.
 
 ## References {-}
 
@@ -501,3 +541,4 @@ To this, I'll just point out Hayes is speaking from a frequentist hypothesis-tes
 ```{r}
 sessionInfo()
 ```
+

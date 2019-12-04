@@ -69,10 +69,10 @@ library(brms)
 We'll start simple and just use the default priors and settings, but with the addition of parallel sampling via `cores = 4`.
 
 ```{r model2.1}
-# save(model2.1, file = "fits/model2.1.rda")
+# save(model2.1, file = "fits/model02.01.rda")
 # rm(model2.1)
 
-load("fits/model2.1.rda")
+load("fits/model02.01.rda")
 ```
 
 ```{r, eval = F}
@@ -136,10 +136,10 @@ summary(model2.2)
 Here's the Bayesian model in **brms**.
 
 ```{r model2.3}
-# save(model2.3, file = "fits/model2.3.rda")
+# save(model2.3, file = "fits/model02.03.rda")
 # rm(model2.3)
 
-load("fits/model2.3.rda")
+load("fits/model02.03.rda")
 ```
 
 ```{r, eval = F}
@@ -255,10 +255,10 @@ glbwarm %>%
 In these data, `sex` is coded females = 0, males = 1. Here we add `sex` to the model.
 
 ```{r model2.4}
-# save(model2.4, file = "fits/model2.4.rda")
+# save(model2.4, file = "fits/model02.04.rda")
 # rm(model2.4)
 
-load("fits/model2.4.rda")
+load("fits/model02.04.rda")
 ```
 
 ```{r, eval = F}
@@ -360,10 +360,10 @@ glbwarm <-
 Now fit the new model.
 
 ```{r model2.5}
-# save(model2.5, file = "fits/model2.5.rda")
+# save(model2.5, file = "fits/model02.05.rda")
 # rm(model2.5)
 
-load("fits/model2.5.rda")
+load("fits/model02.05.rda")
 ```
 
 ```{r, eval = F}
@@ -416,10 +416,10 @@ lm(data = glbwarm, govact_z ~ 1 + sex)
 Now we'll fit the model as Bayesians with `brms::brm()`.
 
 ```{r model2.6}
-# save(model2.6, file = "fits/model2.6.rda")
+# save(model2.6, file = "fits/model02.06.rda")
 # rm(model2.6)
 
-load("fits/model2.6.rda")
+load("fits/model02.06.rda")
 ```
 
 ```{r, eval = F}
@@ -460,10 +460,10 @@ cor(glbwarm$sex, glbwarm$govact)
 Again, if we wanted to get full Bayesian estimates, we'd fit an intercept-only multivariate model.
 
 ```{r model2.7}
-# save(model2.7, file = "fits/model2.7.rda")
+# save(model2.7, file = "fits/model02.07.rda")
 # rm(model2.7)
 
-load("fits/model2.7.rda")
+load("fits/model02.07.rda")
 ```
 
 ```{r, eval = F}
@@ -497,10 +497,10 @@ $$\hat Y = i_Y + b_1 X_1 + b_2 X_2 + b_3 X_3 + b_4 X_4 + b_4 X_5.$$
 For us, there's technically more involved because our Bayesian paradigm includes priors, which we're not focusing on at the moment. Anyway, there's nothing particularly special about jumping from univariable to multivariable models with **brms**. You just keep tacking on predictors with the `+` operator.
 
 ```{r model2.8}
-# save(model2.8, file = "fits/model2.8.rda")
+# save(model2.8, file = "fits/model02.08.rda")
 # rm(model2.8)
 
-load("fits/model2.8.rda")
+load("fits/model02.08.rda")
 ```
 
 ```{r, eval = F}
@@ -625,10 +625,10 @@ glbwarm <-
 Now we've got us our standardized variables, let's fit a standardized model.
 
 ```{r model2.9}
-# save(model2.9, file = "fits/model2.9.rda")
+# save(model2.9, file = "fits/model02.09.rda")
 # rm(model2.9)
 
-load("fits/model2.9.rda")
+load("fits/model02.09.rda")
 ```
 
 ```{r, eval = F}
@@ -650,10 +650,10 @@ Our coefficients match up nicely with those on page 52 in the text. Just as with
 Here's how we'd fit a *partially*-standardized model--a model in which all variables except for `sex` are standardized.
 
 ```{r model2.10}
-# save(model2.10, file = "fits/model2.10.rda")
+# save(model2.10, file = "fits/model02.10.rda")
 # rm(model2.10)
 
-load("fits/model2.10.rda")
+load("fits/model02.10.rda")
 ```
 
 ```{r, eval = F}
@@ -920,7 +920,7 @@ Throughout this project, I'm going to be lazy and default to conventional 95% in
 Here we'll make use of the `update()` function to hastily fit our reduced model, `model5`.
 
 ```{r model2.11}
-# save(model2.11, file = "fits/model2.11.rda")
+# save(model2.11, file = "fits/model02.11.rda")
 # rm(model2.11)
 
 load("fits/model2.11.rda")
@@ -1051,10 +1051,10 @@ glbwarm %>%
 We can make dummies with the `if_else()` function. We'll just go ahead and do that right within the `brm()` function.
 
 ```{r model2.12}
-# save(model2.12, file = "fits/model2.12.rda")
+# save(model2.12, file = "fits/model02.12.rda")
 # rm(model2.12)
 
-load("fits/model2.12.rda")
+load("fits/model02.12.rda")
 ```
 
 ```{r, eval = F}
@@ -1086,10 +1086,10 @@ There's no need to compute an $F$-test on our $R^2$. The posterior mean and it's
 We could also use information criteria. One method would be to compare the WAIC or LOO value of `model2.12` with an intercept-only model. First, we'll need to fit that model.
 
 ```{r model2.13}
-# save(model2.13, file = "fits/model2.13.rda")
+# save(model2.13, file = "fits/model02.13.rda")
 # rm(model2.13)
 
-load("fits/model2.13.rda")
+load("fits/model02.13.rda")
 ```
 
 ```{r, eval = F}

@@ -93,10 +93,10 @@ m_model <- bf(pmi ~ 1 + cond)
 Now we have our `bf()` objects in hand, we'll combine them with the `+` operator within the `brm()` function. We'll also specify `set_rescor(FALSE)`--we're not interested in adding a residual correlation between `reaction` and `pmi`.
 
 ```{r model3.1}
-# save(model3.1, file = "fits/model3.1.rda")
+# save(model3.1, file = "fits/model03.01.rda")
 # rm(model3.1)
 
-load("fits/model3.1.rda")
+load("fits/model03.01.rda")
 ```
 
 ```{r, eval = F}
@@ -429,10 +429,10 @@ m_model <- bf(affect ~ 1 + estress)
 With our `y_model` and `m_model` defined, we're ready to fit.
 
 ```{r model3.2}
-# save(model3.2, file = "fits/model3.2.rda")
+# save(model3.2, file = "fits/model03.02.rda")
 # rm(model3.2)
 
-load("fits/model3.2.rda")
+load("fits/model03.02.rda")
 ```
 
 ```{r, eval = F}

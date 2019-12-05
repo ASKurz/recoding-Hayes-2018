@@ -1,6 +1,6 @@
 # Mediation Analysis with a Multicategorical Antecedent
 
-```{r set-options, echo = FALSE, cache = FALSE}
+```{r, echo = FALSE, cache = FALSE}
 options(width = 110)
 ```
 
@@ -42,9 +42,8 @@ Here are the ungrouped means and $SD$s for `respappr` and `liking` shown at the 
 
 ```{r}
 protest %>%
-  select(liking:respappr) %>% 
-  gather(key, value) %>% 
-  group_by(key) %>% 
+  pivot_longer(liking:respappr) %>% 
+  group_by(name) %>% 
   summarize(mean = mean(value),
             sd   = sd(value)) %>% 
   mutate_if(is.double, round, digits = 3)
@@ -52,11 +51,10 @@ protest %>%
 
 We compute the summaries for `respappr` and `liking`, grouped by `protest`, like so.
 
-```{r}
+```{r, warning = F, message = F}
 protest %>%
-  select(protest, liking:respappr) %>% 
-  gather(key, value, -protest) %>% 
-  group_by(protest, key) %>% 
+  pivot_longer(liking:respappr) %>% 
+  group_by(protest, name) %>% 
   summarize(mean = mean(value),
             sd   = sd(value)) %>% 
   mutate_if(is.double, round, digits = 3)
@@ -66,13 +64,13 @@ It looks like Hayes has a typo in the $SD$ for `liking` when `protest == 0`. It 
 
 You'll have to wait a minute to see where the adjusted $Y$ values came from.
 
-With a little `ifelse()`, computing the dummies `d1` and `d2` is easy enough.
+With a little `if_else()`, computing the dummies `d1` and `d2` is easy enough.
 
 ```{r}
 protest <-
   protest %>% 
-  mutate(d1 = ifelse(protest == 1, 1, 0),
-         d2 = ifelse(protest == 2, 1, 0))
+  mutate(d1 = if_else(protest == 1, 1, 0),
+         d2 = if_else(protest == 2, 1, 0))
 ```
 
 We're almost ready to fit the model. Let's load **brms**.
@@ -81,10 +79,17 @@ We're almost ready to fit the model. Let's load **brms**.
 library(brms)
 ```
 
-This is the first time we've had a simple univariate regression model in a while. No special `mvbind()` syntax or multiple `bf()` formulas. Just straight up `brms::brm()`.
+This is the first time we've had a simple univariate regression model in a while--no special `mvbind()` syntax or multiple `bf()` formulas, just straight up `brms::brm()`.
 
-```{r model1, cache = T, message = F, warning = F}
-model1 <-
+```{r model6.1}
+# save(model6.1, file = "fits/model06.01.rda")
+# rm(model6.1)
+
+load("fits/model06.01.rda")
+```
+
+```{r, eval = F}
+model6.1 <-
   brm(data = protest, 
       family = gaussian,
       liking ~ 1 + d1 + d2,
@@ -94,13 +99,13 @@ model1 <-
 Check the coefficient summaries.
 
 ```{r}
-fixef(model1)
+fixef(model6.1)
 ```
 
 Our $R^2$ differences a bit from the OLS version in the text. This shouldn't be surprising when it's near the boundary. 
 
 ```{r}
-bayes_R2(model1)
+bayes_R2(model6.1)
 ```
 
 Here's its shape. For the plots in this chapter, we'll take a few formatting cues from [Edward Tufte](https://www.edwardtufte.com/tufte/books_vdqi), curtesy of the [**ggthemes** package](https://cran.r-project.org/web/packages/ggthemes/index.html). The `theme_tufte()` function will change the default font and remove some chart junk. We will take our color palette from [Pokemon](http://pokemonbyreview.blogspot.com/2017/02/311-312-plusle-minun.html) via the [**palettetown** package](https://cran.r-project.org/web/packages/palettetown/index.html).
@@ -109,7 +114,7 @@ Here's its shape. For the plots in this chapter, we'll take a few formatting cue
 library(ggthemes)
 library(palettetown)
 
-bayes_R2(model1, summary = F) %>% 
+bayes_R2(model6.1, summary = F) %>% 
   data.frame() %>% 
   
   ggplot(aes(x = R2)) +
@@ -118,23 +123,23 @@ bayes_R2(model1, summary = F) %>%
   coord_cartesian(xlim = 0:1) +
   xlab(expression(italic(R)^{2})) +
   theme_tufte() +
-  theme(legend.title = element_blank(),
+  theme(legend.title    = element_blank(),
         plot.background = element_rect(fill = pokepal(pokemon = "plusle")[8]))
 ```
 
 To use the model-implied equations to compute the means for each group on the criterion, we'll extract the posterior samples.
 
 ```{r}
-post <- posterior_samples(model1)
+post <- posterior_samples(model6.1)
 
 post %>% 
-  transmute(Y_np = b_Intercept + b_d1 * 0 + b_d2 * 0,
-            Y_ip = b_Intercept + b_d1 * 1 + b_d2 * 0,
-            Y_cp = b_Intercept + b_d1 * 0 + b_d2 * 1) %>% 
-  gather() %>%
+  mutate(Y_np = b_Intercept + b_d1 * 0 + b_d2 * 0,
+         Y_ip = b_Intercept + b_d1 * 1 + b_d2 * 0,
+         Y_cp = b_Intercept + b_d1 * 0 + b_d2 * 1) %>% 
+  pivot_longer(contains("Y_")) %>%
   # this line will order our output the same way Hayes did in the text (p. 197)
-  mutate(key = factor(key, levels = c("Y_np", "Y_ip", "Y_cp"))) %>% 
-  group_by(key) %>% 
+  mutate(name = factor(name, levels = c("Y_np", "Y_ip", "Y_cp"))) %>% 
+  group_by(name) %>% 
   summarize(mean = mean(value),
             sd   = sd(value))
 ```
@@ -150,8 +155,15 @@ y_model <- bf(liking   ~ 1 + d1 + d2 + respappr)
 
 There's a third way to fit multivariate models in **brms**. It uses either the `mvbrmsformula()` function, or its abbreviated version, `mvbf()`. With these, we first define our submodels in `br()` statements like before. We then combine them within `mvbf()`, separated with a comma. If we'd like to avoid estimating a residual correlation, which we do in this project--, we then set `rescore = FALSE`. Here's how it looks like for our second model.
 
-```{r model2, cache = T, message = F, warning = F}
-model2 <-
+```{r model6.2}
+# save(model6.2, file = "fits/model06.02.rda")
+# rm(model6.2)
+
+load("fits/model06.02.rda")
+```
+
+```{r, eval = F}
+model6.2 <-
   brm(data = protest, 
       family = gaussian,
       mvbf(m_model, y_model, rescor = FALSE),
@@ -159,17 +171,17 @@ model2 <-
 ```
 
 ```{r}
-print(model2)
+print(model6.2)
 ```
 
 Behold the Bayesian $R^2$ posteriors.
 
 ```{r, fig.width = 6, fig.height = 2.5}
-bayes_R2(model2, summary = F) %>% 
+bayes_R2(model6.2, summary = F) %>% 
   data.frame() %>% 
-  gather() %>% 
+  pivot_longer(everything()) %>% 
   
-  ggplot(aes(x = value, fill = key)) +
+  ggplot(aes(x = value, fill = name)) +
   geom_density(size = 0, alpha = 2/3) +
   annotate("text", x = .18, y = 6.75, label = "liking", color = pokepal(pokemon = "plusle")[2], family = "Times") +
   annotate("text", x = .355, y = 6.75, label = "respappr", color = pokepal(pokemon = "plusle")[6], family = "Times") +
@@ -189,7 +201,7 @@ To get the model summaries as presented in the second two columns in Table 6.2, 
 library(tidybayes)
 
 post <-
-  posterior_samples(model2) %>% 
+  posterior_samples(model6.2) %>% 
   mutate(a1       = b_respappr_d1,
          a2       = b_respappr_d2,
          b        = b_liking_respappr,
@@ -199,29 +211,28 @@ post <-
          i_y      = b_liking_Intercept)
 
 post %>% 
-  select(a1:i_y) %>% 
-  gather() %>%
-  group_by(key) %>% 
-  mean_qi() %>% 
+  pivot_longer(a1:i_y) %>% 
+  group_by(name) %>% 
+  mean_qi(value) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
 
-Working with the $\overline{M}_{ij}$ formulas in page 199 is quite similar to what we did above.
+Working with the $\overline M_{ij}$ formulas in page 199 is quite similar to what we did above.
 
 ```{r}
 post %>% 
-  transmute(M_np = b_respappr_Intercept + b_respappr_d1 * 0 + b_respappr_d2 * 0,
-            M_ip = b_respappr_Intercept + b_respappr_d1 * 1 + b_respappr_d2 * 0,
-            M_cp = b_respappr_Intercept + b_respappr_d1 * 0 + b_respappr_d2 * 1) %>% 
-  gather() %>%
+  mutate(M_np = b_respappr_Intercept + b_respappr_d1 * 0 + b_respappr_d2 * 0,
+         M_ip = b_respappr_Intercept + b_respappr_d1 * 1 + b_respappr_d2 * 0,
+         M_cp = b_respappr_Intercept + b_respappr_d1 * 0 + b_respappr_d2 * 1) %>% 
+  pivot_longer(starts_with("M_")) %>%
   # this line will order our output the same way Hayes did in the text (p. 199)
-  mutate(key = factor(key, levels = c("M_np", "M_ip", "M_cp"))) %>% 
-  group_by(key) %>% 
+  mutate(name = factor(name, levels = c("M_np", "M_ip", "M_cp"))) %>% 
+  group_by(name) %>% 
   summarize(mean = mean(value),
             sd   = sd(value))
 ```
 
-The $\overline{Y}^*_{ij}$ formulas are more of the same.
+The $\overline Y^*_{ij}$ formulas are more of the same.
 
 ```{r}
 post <-
@@ -231,24 +242,22 @@ post <-
          Y_cp = b_liking_Intercept + b_liking_d1 * 0 + b_liking_d2 * 1 + b_liking_respappr * mean(protest$respappr))
 
 post %>% 
-  select(starts_with("Y_")) %>% 
-  gather() %>%
-  mutate(key = factor(key, levels = c("Y_np", "Y_ip", "Y_cp"))) %>% 
-  group_by(key) %>% 
+  pivot_longer(starts_with("Y_")) %>% 
+  mutate(name = factor(name, levels = c("Y_np", "Y_ip", "Y_cp"))) %>% 
+  group_by(name) %>% 
   summarize(mean = mean(value),
             sd   = sd(value))
 ```
 
 Note, these are where the adjusted $Y$ values came from in Table 6.1.
 
-This is as fine a spot as any to introduce coefficient plots. **brms**, **tidybayes**, and the [**bayesplot** package](https://github.com/stan-dev/bayesplot) offer convenience functions for coefficient plots. It's good to know how to make them by hand. Here's ours for those last three $\overline{Y}^*_{ij}$-values.
+This is as fine a spot as any to introduce coefficient plots. **brms**, **tidybayes**, and the [**bayesplot** package](https://github.com/stan-dev/bayesplot) all offer convenience functions for coefficient plots. Before we get all lazy using convenience functions, it's good to know how to make coefficient plots by hand. Here's ours for those last three $\overline Y^*_{ij}$-values.
 
 ```{r, fig.width = 6, fig.height = 1}
 post %>% 
-  select(starts_with("Y_")) %>% 
-  gather() %>% 
+  pivot_longer(starts_with("Y_")) %>% 
   
-  ggplot(aes(x = key, y = value, color = key)) +
+  ggplot(aes(x = name, y = value, color = name)) +
   stat_summary(geom = "pointrange",
                fun.y = median,
                fun.ymin = function(x){quantile(x, probs = .025)},
@@ -271,8 +280,15 @@ The points are the posterior medians, the thick inner lines the 50% intervals, a
 
 If we want to examine $R^2$ change for dropping the dummy variables, we'll first fit a model that omits them.
 
-```{r model3, cache = T, message = F, warning = F}
-model3 <-
+```{r model6.3}
+# save(model6.3, file = "fits/model06.03.rda")
+# rm(model6.3)
+
+load("fits/model06.03.rda")
+```
+
+```{r, eval = F}
+model6.3 <-
   brm(data = protest, 
       family = gaussian,
       liking ~ 1 + respappr,
@@ -283,18 +299,18 @@ Here are the competing $R^2$ distributions.
 
 ```{r, fig.width = 6, fig.height = 2.5}
 # get the R2 draws and wrangle
-R2s <-
-  bayes_R2(model2, resp = "liking", summary = F) %>%
+r2 <-
+  bayes_R2(model6.2, resp = "liking", summary = F) %>%
   data.frame() %>% 
   set_names("R2") %>% 
   bind_rows(
-    bayes_R2(model3, summary = F) %>% 
+    bayes_R2(model6.3, summary = F) %>% 
       data.frame()
   ) %>% 
-  mutate(fit = rep(c("model2", "model3"), each = 4000))
+  mutate(fit = rep(c("model6.2", "model6.3"), each = 4000))
 
 # plot!
-R2s %>% 
+r2 %>% 
   ggplot(aes(x = R2, fill = fit)) +
   geom_density(size = 0, alpha = 2/3) +
   scale_fill_manual(values = pokepal(pokemon = "plusle")[c(6, 7)]) +
@@ -303,7 +319,7 @@ R2s %>%
   scale_y_continuous(NULL, breaks = NULL) +
   coord_cartesian(xlim = 0:1) +
   labs(title = expression(paste("The ", italic(R)^{2}, " densities for LIKING overlap a lot.")),
-       x = NULL) +
+       x     = NULL) +
   theme_tufte() +
   theme(legend.position = "none",
         plot.background = element_rect(fill = pokepal(pokemon = "plusle")[8]))
@@ -312,10 +328,10 @@ R2s %>%
 If you want to compare then with a change score, do something like this.
 
 ```{r, fig.width = 4, fig.height = 2.5}
-R2s %>%
+r2 %>%
   mutate(iter = rep(1:4000, times = 2)) %>% 
-  spread(key = fit, value = R2) %>% 
-  mutate(difference = model2 - model3) %>% 
+  pivot_wider(names_from = fit, values_from = R2) %>% 
+  mutate(difference = model6.2 - model6.3) %>% 
   
   ggplot(aes(x = difference)) +
   geom_density(size = 0, fill = pokepal(pokemon = "plusle")[4]) +
@@ -331,14 +347,13 @@ R2s %>%
 
 Now compute the posterior means and 95% intervals for $a_1 b$ and $a_2 b$, the conditional indirect effects.
 
-```{r}
+```{r, warning = F}
 post %>% 
   mutate(a1b = a1 * b,
          a2b = a2 * b) %>%
-  select(a1b:a2b) %>% 
-  gather() %>%
-  group_by(key) %>% 
-  mean_qi() %>% 
+  pivot_longer(a1b:a2b) %>% 
+  group_by(name) %>% 
+  mean_qi(value) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
 
@@ -349,9 +364,9 @@ Here we'll make our alternative dummies, what we'll call `d_1` and `d_2`, with o
 ```{r}
 protest <-
   protest %>% 
-  mutate(d_1 = ifelse(protest == 0, -2/3, 1/3),
-         d_2 = ifelse(protest == 0, 0, 
-                      ifelse(protest == 1, -1/2, 1/2)))
+  mutate(d_1 = if_else(protest == 0, -2/3, 1/3),
+         d_2 = if_else(protest == 0, 0, 
+                       if_else(protest == 1, -1/2, 1/2)))
 ```
 
 Here are the sub-models.
@@ -363,8 +378,15 @@ y_model <- bf(liking   ~ 1 + d_1 + d_2 + respappr)
 
 Now we fit using the `mvbf()` approach.
 
-```{r model4, cache = T, message = F, warning = F}
-model4 <-
+```{r model6.4}
+# save(model6.4, file = "fits/model06.04.rda")
+# rm(model6.4)
+
+load("fits/model06.04.rda")
+```
+
+```{r, eval = F}
+model6.4 <-
   brm(data = protest, 
       family = gaussian,
       mvbf(m_model, y_model, rescor = FALSE),
@@ -374,7 +396,7 @@ model4 <-
 Here are our intercepts and regression coefficient summaries.
 
 ```{r}
-fixef(model4)
+fixef(model6.4)
 ```
 
 It's important to note that these will not correspond to the "TOTAL EFFECT MODEL" section of the PROCESS output of Figure 6.3. Hayes's PROCESS has the `mcx=3` command which tells the program to reparametrize the orthogonal contrasts. **brms** doesn't have such a command.
@@ -382,26 +404,25 @@ It's important to note that these will not correspond to the "TOTAL EFFECT MODEL
 For now, we'll have to jump to Equation 6.8 towards the bottom of page 207. Those parameters are evident in our output. For good measure, here we'll practice with `posterior_summary()`.
 
 ```{r}
-posterior_summary(model4) %>% 
+posterior_summary(model6.4) %>% 
   data.frame() %>% 
   rownames_to_column("parameter") %>% 
   filter(str_detect(parameter, "b_respappr"))
 ```
 
-Thus it's easy to get the $\overline{M}_{ij}$ means with a little posterior manipulation.
+Thus it's easy to get the $\overline M_{ij}$ means with a little posterior manipulation.
 
 ```{r}
 post <-
-  posterior_samples(model4) %>% 
+  posterior_samples(model6.4) %>% 
   mutate(M_np = b_respappr_Intercept + b_respappr_d_1 * -2/3 + b_respappr_d_2 *    0,
          M_ip = b_respappr_Intercept + b_respappr_d_1 *  1/3 + b_respappr_d_2 * -1/2,
          M_cp = b_respappr_Intercept + b_respappr_d_1 *  1/3 + b_respappr_d_2 *  1/2)
 
 post %>% 
-  select(starts_with("M_")) %>% 
-  gather() %>%
-  mutate(key = factor(key, levels = c("M_np", "M_ip", "M_cp"))) %>% 
-  group_by(key) %>% 
+  pivot_longer(starts_with("M_")) %>% 
+  mutate(name = factor(name, levels = c("M_np", "M_ip", "M_cp"))) %>% 
+  group_by(name) %>% 
   summarize(mean = mean(value),
             sd   = sd(value))
 ```
@@ -415,14 +436,13 @@ post <-
          a2 = M_cp - M_ip)
 
 post %>% 
-  select(a1:a2) %>% 
-  gather() %>%
-  group_by(key) %>% 
+  pivot_longer(a1:a2) %>% 
+  group_by(name) %>% 
   summarize(mean = mean(value),
             sd   = sd(value))
 ```
 
-Happily, our model output will allow us to work with Hayes's $\overline{Y}^*_{ij}$ equations in the middle of page 210.
+Happily, our model output will allow us to work with Hayes's $\overline Y^*_{ij}$ equations in the middle of page 210.
 
 ```{r}
 post <-
@@ -432,10 +452,9 @@ post <-
          Y_cp = b_liking_Intercept + b_liking_d_1 *  1/3 + b_liking_d_2 *  1/2 + b_liking_respappr * mean(protest$respappr))
 
 post %>% 
-  select(starts_with("Y_")) %>% 
-  gather() %>%
-  mutate(key = factor(key, levels = c("Y_np", "Y_ip", "Y_cp"))) %>% 
-  group_by(key) %>% 
+  pivot_longer(starts_with("Y_")) %>% 
+  mutate(name = factor(name, levels = c("Y_np", "Y_ip", "Y_cp"))) %>% 
+  group_by(name) %>%
   summarize(mean = mean(value),
             sd   = sd(value))
 ```
@@ -449,18 +468,17 @@ post <-
          c2_prime = Y_cp - Y_ip)
 
 post %>% 
-  select(c1_prime:c2_prime) %>% 
-  gather() %>%
-  group_by(key) %>% 
+  pivot_longer(c1_prime:c2_prime) %>% 
+  group_by(name) %>% 
   summarize(mean = mean(value),
             sd   = sd(value))
 ```
 
-It appears Hayes has a typo in the formula for $c'_2$ on page 211. The value he has down for $\overline{Y}^*_{IP}$, 5.145, is incorrect. It's not the one he displayed at the bottom of the previous page and it also contradicts the analyses herein. So it goes... These things happen.
+It appears Hayes has a typo in the formula for $c'_2$ on page 211. The value he has down for $\overline Y^*_{IP}$, 5.145, is incorrect. It's not the one he displayed at the bottom of the previous page and it also contradicts the analyses herein. So it goes... These things happen.
 
 We haven't spelled it out, but the $b$ parameter is currently labeled `b_liking_respappr` in our `post` object. Here we'll make a `b` column to make things easier. While we're at it, we'll compute the indirect effects, too.
 
-```{r}
+```{r, warning = F}
 post <-
   post %>%
   mutate(b   = b_liking_respappr) %>% 
@@ -468,10 +486,9 @@ post <-
          a2b = a2 * b)
 
 post %>% 
-  select(a1b:a2b) %>% 
-  gather() %>%
-  group_by(key) %>% 
-  mean_qi() %>% 
+  pivot_longer(a1b:a2b) %>% 
+  group_by(name) %>% 
+  mean_qi(value) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
 
@@ -484,9 +501,8 @@ post <-
          c2 = c2_prime + a2b)
 
 post %>% 
-  select(c1:c2) %>% 
-  gather() %>%
-  group_by(key) %>% 
+  pivot_longer(c1:c2) %>% 
+  group_by(name) %>% 
   summarize(mean = mean(value),
             sd   = sd(value))
 ```
@@ -506,10 +522,17 @@ protest %>%
   select(protest, group)
 ```
 
-Before we fit a full mediation model, we should warm up. Here we fit a univariable model for `liking`. This is an alternative to what we did way back with `model1`.
+Before we fit a full mediation model, we should warm up. Here we fit a univariable model for `liking`. This is an alternative to what we did way back with `model6.1`.
 
-```{r model5, cache = T, message = F, warning = F}
-model5 <-
+```{r model6.5}
+# save(model6.5, file = "fits/model06.05.rda")
+# rm(model6.5)
+
+load("fits/model06.05.rda")
+```
+
+```{r, eval = F}
+model6.5 <-
   brm(data = protest, 
       family = gaussian,
       liking ~ 0 + group,
@@ -519,7 +542,7 @@ model5 <-
 Check the summary.
 
 ```{r}
-print(model5)
+print(model6.5)
 ```
 
 There's no conventional intercept parameter. Rather, each of the each of the levels of `group` get its own conditional intercept. To get a sense of what this model is, let's practice our coefficient plotting skills. This time we'll compute the necessary values before plugging them into **ggplot2**.
@@ -532,13 +555,14 @@ group_means <-
   summarize(mu_liking = mean(liking))
 
 # pull the posterior summaries and wrangle
-fixef(model5) %>% 
+fixef(model6.5) %>% 
   data.frame() %>% 
   rownames_to_column("parameter") %>% 
   mutate(group = str_remove(parameter, "group")) %>% 
   
   # plot!
   ggplot(aes(x = group)) +
+  # this is the main function for our coefficient plots
   geom_pointrange(aes(y = Estimate, ymin = Q2.5, ymax = Q97.5,
                       color = group),
                   size = 3/4) +
@@ -565,8 +589,15 @@ y_model <- bf(liking   ~ 0 + group + respappr)
 
 Now fit `model6` using the `mvbf()` approach.
 
-```{r model6, cache = T, message = F, warning = F}
-model6 <-
+```{r model6.6}
+# save(model6.6, file = "fits/model06.06.rda")
+# rm(model6.6)
+
+load("fits/model06.06.rda")
+```
+
+```{r, eval = F}
+model6.6 <-
   brm(data = protest, 
       family = gaussian,
       mvbf(m_model, y_model, rescor = FALSE),
@@ -576,16 +607,16 @@ model6 <-
 What will the summary hold?
 
 ```{r}
-print(model6)
+print(model6.6)
 ```
 
 If you flip back to page 199, you'll notice the posterior mean in the first three rows (i.e., `respappr_groupnone` through `respappr_groupcollective`) correspond to the estimates for $\overline M_{NP}$, $\overline M_{IP}$, and $\overline M_{CP}$, respectively.
 
 Let's get to the $a_j b$ estimates.
 
-```{r}
+```{r, warning = F}
 post <- 
-  posterior_samples(model6) %>% 
+  posterior_samples(model6.6) %>% 
   mutate(a1 = b_respappr_groupnone,
          a2 = b_respappr_groupindividual,
          a3 = b_respappr_groupcollective,
@@ -595,33 +626,31 @@ post <-
          a3b = a3 * b)
 
 post %>% 
-  select(a1b:a3b) %>% 
-  gather() %>% 
-  group_by(key) %>% 
-  mean_qi() %>% 
+  pivot_longer(a1b:a3b) %>% 
+  group_by(name) %>% 
+  mean_qi(value) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
 
 With this parameterization, it's a little difficult to the $a_j b$ estimates. None of them are in comparison to anything. However, this approach is quite useful once you compute their various difference scores.
 
-```{r}
+```{r, warning = F}
 # compute the difference scores
 post <- 
   post %>% 
-  mutate(diff_individual_minus_none = a2b - a1b,
-         diff_collective_minus_none = a3b - a1b,
+  mutate(diff_individual_minus_none       = a2b - a1b,
+         diff_collective_minus_none       = a3b - a1b,
          diff_collective_minus_individual = a3b - a2b)
 
 # summarize
 post %>% 
-  select(contains("diff")) %>% 
-  gather() %>% 
-  group_by(key) %>% 
-  mean_qi() %>% 
+  pivot_longer(contains("diff")) %>% 
+  group_by(name) %>% 
+  mean_qi(value) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
 
-If you look back to our results from `model2`, you'll see that `diff_individual_minus_none` and `diff_collective_minus_none` correspond to `a1b` and `a2b`, respectively. But with our `model6` approach, we get the additional information of what kind of indirect effect we might have yielded had we used a different coding scheme for our original set of dummy variables. That is, we get `diff_collective_minus_individual`.
+If you look back to our results from `model6.2`, you'll see that `diff_individual_minus_none` and `diff_collective_minus_none` correspond to `a1b` and `a2b`, respectively. But with our `model6.6` approach, we get the additional information of what kind of indirect effect we might have yielded had we used a different coding scheme for our original set of dummy variables. That is, we get `diff_collective_minus_individual`.
 
 ## References {-}
 

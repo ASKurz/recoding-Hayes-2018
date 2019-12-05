@@ -1,6 +1,6 @@
 # More Than One Mediator
 
-```{r set_options_5, echo = FALSE, cache = FALSE}
+```{r, echo = FALSE, cache = FALSE}
 options(width = 110)
 ```
 
@@ -34,7 +34,7 @@ pmi <- read_csv("data/pmi/pmi.csv")
 glimpse(pmi)
 ```
 
-Now load brms.
+Now load **brms**.
 
 ```{r, message = F, warning = F}
 library(brms)
@@ -42,8 +42,15 @@ library(brms)
 
 Bayesian correlations, recall, just take an intercepts-only multivariate model.
 
-```{r model1, cache = T, message = F, warning = F}
-model1 <- 
+```{r model5.1}
+# save(model5.1, file = "fits/model05.01.rda")
+# rm(model5.1)
+
+load("fits/model05.01.rda")
+```
+
+```{r, eval = F}
+model5.1 <- 
   brm(data = pmi, 
       family = gaussian,
       mvbind(pmi, import) ~ 1,
@@ -53,7 +60,7 @@ model1 <-
 A little indexing with the `posterior_summary()` function will get us the Bayesian correlation with its posterior $SD$ and intervals.
 
 ```{r}
-posterior_summary(model1)["rescor__pmi__import", ] %>% round(digits = 3)
+posterior_summary(model5.1)["rescor__pmi__import", ] %>% round(digits = 3)
 ```
 
 As with single mediation models, the multiple mediation model requires we carefully construct the formula for each criterion. Here we'll use the multiple `bf()` approach from Chapter 3.
@@ -66,8 +73,15 @@ y_model  <- bf(reaction ~ 1 + import + pmi + cond)
 
 And now we fit the model.
 
-```{r model2, cache = T, message = F, warning = F}
-model2 <-
+```{r model5.2}
+# save(model5.2, file = "fits/model05.02.rda")
+# rm(model5.2)
+
+load("fits/model05.02.rda")
+```
+
+```{r, eval = F}
+model5.2 <-
   brm(data = pmi, 
       family = gaussian,
       y_model + m1_model + m2_model + set_rescor(FALSE),
@@ -75,7 +89,7 @@ model2 <-
 ```
 
 ```{r}
-print(model2, digits = 3)
+print(model5.2, digits = 3)
 ```
 
 Because we have three criterion variables, we'll have three Bayesian $R^2$ posteriors.
@@ -83,18 +97,18 @@ Because we have three criterion variables, we'll have three Bayesian $R^2$ poste
 ```{r, fig.width = 8, fig.height = 2}
 library(ggthemes)
 
-bayes_R2(model2, summary = F) %>% 
+bayes_R2(model5.2, summary = F) %>% 
   data.frame() %>% 
-  gather() %>% 
-  mutate(key = str_remove(key, "R2")) %>% 
+  pivot_longer(everything()) %>% 
+  mutate(name = str_remove(name, "R2")) %>% 
   
-  ggplot(aes(x = value, color = key, fill = key)) +
+  ggplot(aes(x = value, color = name, fill = name)) +
   geom_density(alpha = .5) +
   scale_color_ptol() +
   scale_fill_ptol() +
   scale_y_continuous(NULL, breaks = NULL) +
   coord_cartesian(xlim = 0:1) +
-  labs(title    = expression(paste("Our ", italic("R")^{2}, " distributions")),
+  labs(title    = expression(paste("Our ", italic(R)^{2}, " distributions")),
        subtitle = "The densities for import and pmi are asymmetric, small, and largely overlapping.\nThe density for reaction is approximately Gaussian and more impressive in magnitude.",
        x = NULL) +
   theme_minimal() +
@@ -104,7 +118,7 @@ bayes_R2(model2, summary = F) %>%
 It'll take a bit of data wrangling to rename our model parameters to the $a$, $b$... configuration. We'll compute the indirect effects and $c$, too.
 
 ```{r}
-post <- posterior_samples(model2)
+post <- posterior_samples(model5.2)
 
 post <-
   post %>% 
@@ -118,7 +132,7 @@ post <-
   mutate(c    = c_prime + a1b1 + a2b2)
 ```
 
-Here are their summaries. Since Bayesians use means, medians, and sometimes the mode to describe the central tendencies of a parameter, this time we'll mix it up and just use the median. 
+Next we compute their summaries. Since Bayesians use means, medians, and sometimes the mode to describe the central tendencies of a parameter, this time we'll mix it up and just use the median. 
 
 We've been summarising our posteriors within the `summarize()` function. This approach gives us a lot of control. It's also on the verbose side. Another approach is to use a family of functions from the [**tidybayes** package](https://mjskay.github.io/tidybayes/index.html). Here we'll use `median_qi()` to give us the posterior medians and quantile-based 95% intervals for our parameters of interest.
 
@@ -126,25 +140,23 @@ We've been summarising our posteriors within the `summarize()` function. This ap
 library(tidybayes)
 
 post %>% 
-  select(a1:c) %>% 
-  gather() %>% 
-  group_by(key) %>% 
-  median_qi()
+  pivot_longer(a1:c) %>% 
+  group_by(name) %>% 
+  median_qi(value)
 ```
 
-In the `value` column, we have our measure of central tendency (i.e., median). The 95% intervals are in the next two columns. With tidybayes, we can ask for different kinds of intervals and different kinds of measures of central tendency, as indicated by the `.width` and `.point` columns, respectively. For example, here's the output for the same variables when we ask for posterior means and 80% intervals.
+In the `value` column, we have our measure of central tendency (i.e., median). The 95% intervals are in the next two columns. With **tidybayes**, we can ask for different kinds of intervals and different kinds of measures of central tendency, as indicated by the `.width` and `.point` columns, respectively. For example, here's the output for the same variables when we ask for posterior means and 80% intervals.
 
 ```{r}
 post %>% 
-  select(a1:c) %>% 
-  gather() %>% 
-  group_by(key) %>% 
-  mean_qi(.width = .8) %>% 
+  pivot_longer(a1:c) %>% 
+  group_by(name) %>% 
+  mean_qi(value, .width = .8) %>% 
   # for good measure
   mutate_if(is_double, round, digits = 3)
 ```
 
-For more in this family of **tidybayes** functions, check out the [*Point summaries and intervals*](https://mjskay.github.io/tidybayes/articles/tidy-brms.html#point-summaries-and-intervals) subsection of Matthew Kay's helpful document, [*Extracting and visualizing tidy draws from brms models*](https://mjskay.github.io/tidybayes/articles/tidy-brms.html#point-summaries-and-intervals).
+For more in this family of **tidybayes** functions, check out the [*Point summaries and intervals*](https://mjskay.github.io/tidybayes/articles/tidy-brms.html#point-summaries-and-intervals) subsection of Kay's helpful document, [*Extracting and visualizing tidy draws from brms models*](https://mjskay.github.io/tidybayes/articles/tidy-brms.html#point-summaries-and-intervals).
 
 In the middle paragraph of page 158, Hayes showed how the mean difference in `imprt` between the two `cond` groups multiplied by `b1`, the coefficient of `import` predicting `reaction`, is equal to the `a1b1` indirect effect. He did that with simple algebra using the group means and the point estimates, following the formula 
 
@@ -171,10 +183,9 @@ post %>%
   # use Hayes' formula to make a new vector, `handmade a1b1` 
   mutate(`handmade a1b1` = (cond_1_import_mean - cond_0_import_mean) * b1) %>% 
   # wragle as usual
-  select(a1b1, `handmade a1b1`) %>% 
-  gather() %>% 
-  group_by(key) %>% 
-  mean_qi() %>% 
+  pivot_longer(c(a1b1, `handmade a1b1`)) %>% 
+  group_by(name) %>% 
+  mean_qi(value) %>% 
   mutate_if(is_double, round, digits = 3)
 ```
 
@@ -194,52 +205,49 @@ cond_0_pmi_mean <- pmi_means[1, 2] %>% pull()
 cond_1_pmi_mean <- pmi_means[2, 2] %>% pull()
 ```
 
-```{r}
+```{r, warning = F}
 post %>% 
   mutate(`handmade a2b2` = (cond_1_pmi_mean - cond_0_pmi_mean) * b2) %>% 
-  select(a2b2, `handmade a2b2`) %>% 
-  gather() %>% 
-  group_by(key) %>% 
-  mean_qi() %>% 
+  pivot_longer(c(a2b2, `handmade a2b2`)) %>% 
+  group_by(name) %>% 
+  mean_qi(value) %>% 
   mutate_if(is_double, round, digits = 3)
 ```
 
 To get the total indirect effect as discussed on page 160, we simply add the `a1b1` and `a2b2` columns.
 
-```{r}
+```{r, warning = F}
 post <-
   post %>% 
   mutate(total_indirect_effect = a1b1 + a2b2) 
 
 post %>% 
-  select(total_indirect_effect) %>% 
-  mean_qi() %>% 
+  mean_qi(total_indirect_effect) %>% 
   mutate_if(is_double, round, digits = 3)
 ```
 
 To use the equations on the top of page 161, we'll just work directly with the original vectors in `post`.
 
-```{r}
+```{r, warning = F}
 post %>% 
   mutate(Y_bar_given_X_1 = b_import_Intercept + b_reaction_cond * 1 + b_reaction_import * b_import_Intercept + b_reaction_pmi * b_pmi_Intercept,
          Y_bar_given_X_0 = b_import_Intercept + b_reaction_cond * 0 + b_reaction_import * b_import_Intercept + b_reaction_pmi * b_pmi_Intercept) %>% 
   mutate(`c_prime by hand` = Y_bar_given_X_1 - Y_bar_given_X_0) %>% 
-  select(c_prime, `c_prime by hand`) %>% 
-  gather() %>% 
-  group_by(key) %>% 
-  mean_qi()
+  pivot_longer(c(c_prime, `c_prime by hand`)) %>% 
+  group_by(name) %>% 
+  mean_qi(value)
 ```
 
 We computed `c` a while ago.
 
-```{r}
+```{r, warning = F}
 post %>% 
   mean_qi(c)
 ```
 
 And `c` minus `c_prime` is straight subtraction.
 
-```{r}
+```{r, warning = F}
 post %>% 
   mutate(`c minus c_prime` = c - c_prime) %>% 
   mean_qi(`c minus c_prime`)
@@ -255,10 +263,9 @@ We're not going to bother with $p$-values and we've already computed the 95% Bay
 
 ```{r, fig.width = 8, fig.height = 2.5}
 post %>% 
-  select(c, c_prime) %>% 
-  gather() %>%
+  pivot_longer(c(c, c_prime)) %>%
   
-  ggplot(aes(x = value, fill = key, color = key)) +
+  ggplot(aes(x = value, fill = name, color = name)) +
   geom_vline(xintercept = 0, color = "black") +
   geom_density(alpha = .5) +
   scale_color_ptol(NULL) +
@@ -274,12 +281,11 @@ post %>%
 
 Again, no need to worry about bootstrapping within the Bayesian paradigm. We can compute high-quality percentile-based intervals with our HMC-based posterior samples.
 
-```{r}
+```{r, warning = F}
 post %>%
-  select(a1b1, a2b2) %>% 
-  gather() %>% 
-  group_by(key) %>% 
-  median_qi() %>% 
+  pivot_longer(c(a1b1, a2b2)) %>% 
+  group_by(name) %>% 
+  median_qi(value) %>% 
   mutate_if(is.double, round, digits = 3)
 ```  
 
@@ -287,7 +293,7 @@ post %>%
 
 Within the Bayesian paradigm, it's straightforward to compare indirect effects. All one has to do is compute a difference score and summarize it somehow. Here it is, `a1b1` minus `a2b2`.
 
-```{r}
+```{r, warning = F}
 post <-
   post %>% 
   mutate(difference = a1b1 - a2b2) 
@@ -338,14 +344,25 @@ post %>%
 
 ### Direct and indirect effects in a serial multiple mediator model.
 
+> In a serial multiple mediator model, the total effect of $X$ on $Y$ partitions into direct and indirect components, just as it does in the simple and parallel multiple mediator models. Regardless of the number of mediators in the model, the direct effect is $c'$ and interpreted as always--the estimated difference in $Y$ between two cases that differ by one unit on $X$ but that are equal on all mediators in the model. The indirect effects, of which there may be many depending on the number of mediators in the model, are all constructed by multiplying the regression weights corresponding to each step in an indirect pathway. And they are all interpreted as the estimated difference in $Y$ between two cases that differ by one unit on $X$ through the causal sequence from $X$ to mediator(s) to $Y$. Regardless of the number of mediators, the sum of all the specific indirect effects is the total indirect effect of $X$, and the direct and indirect effects sum to the total effect of $X$. (p. 170)
+
 ### Statistical inference.
+
+"In principle, Monte Carlo confidence intervals can be constructed for all indirect effects in a serial multiple mediator model" (p. 172). I'm pretty sure Hayes didn't intend this to refer to Bayesian estimation, but I couldn't resist the quote.
 
 ### Example from the presumed media influence study.
 
-The model syntax is similar to the earlier multiple mediator model. All we change is adding `import` to the list of predictors in the submodel for`m2`. But this time, let's take the approach from last chapter where we define our `bf()` formulas all within `brm()`.
+The model syntax is similar to the earlier multiple mediator model. All we change is adding `import` to the list of predictors in the submodel for `m2_model`. But this time, let's take the approach from last chapter where we define our `bf()` formulas all within `brm()`.
 
-```{r model3, cache = T, message = F, warning = F}
-model3 <-
+```{r model5.3}
+# save(model5.3, file = "fits/model05.03.rda")
+# rm(model5.3)
+
+load("fits/model05.03.rda")
+```
+
+```{r, eval = F}
+model5.3 <-
   brm(data = pmi, 
       family = gaussian,
       bf(import ~ 1 + cond) + 
@@ -356,25 +373,25 @@ model3 <-
 ```
 
 ```{r}
-print(model3)
+print(model5.3)
 ```
 
 Behold the $R^2$ posterior densities.
 
 ```{r, fig.width = 8, fig.height = 2}
-bayes_R2(model3, summary = F) %>% 
+bayes_R2(model5.3, summary = F) %>% 
   data.frame() %>% 
-  gather() %>% 
-  mutate(key = str_remove(key, "R2")) %>% 
+  pivot_longer(everything()) %>% 
+  mutate(name = str_remove(name, "R2")) %>% 
   
-  ggplot(aes(x = value, color = key, fill = key)) +
+  ggplot(aes(x = value, color = name, fill = name)) +
   geom_density(alpha = .5) +
   scale_color_ptol() +
   scale_fill_ptol() +
   scale_y_continuous(NULL, breaks = NULL) +
   coord_cartesian(xlim = 0:1) +
   labs(title = expression(paste("The ", italic("R")^{2}, " distributions for model3, the serial multiple mediator model")),
-       subtitle = "The density for reaction hasn't changed from model2. However, look how the pmi density separated from import.",
+       subtitle = "The density for reaction hasn't changed from model5.2. However, look how the pmi density separated from import.",
        x = NULL) +
   theme_minimal() +
   theme(legend.title = element_blank())
@@ -384,7 +401,7 @@ As before, here we'll save the posterior samples into a data frame and rename th
 
 ```{r}
 post <- 
-  posterior_samples(model3) %>% 
+  posterior_samples(model5.3) %>% 
   mutate(a1 = b_import_cond,
          a2 = b_pmi_cond,
          b1 = b_reaction_import,
@@ -395,28 +412,26 @@ post <-
 
 Here are the parameter summaries for the pathways depicted in Figure 5.6.
 
-```{r}
+```{r, warning = F}
 post %>% 
-  select(a1:d21) %>% 
-  gather() %>% 
-  group_by(key) %>% 
-  mean_qi() %>% 
+  pivot_longer(a1:d21) %>% 
+  group_by(name) %>% 
+  mean_qi(value) %>% 
   mutate_if(is_double, round, digits = 3)
 ```
 
 To get our version of the parameter summaries in Table 5.2, all you have to do is add the summaries for the intercepts to what we did above.
 
-```{r}
+```{r, warning = F}
 post %>% 
   rename(im1 = b_import_Intercept,
          im2 = b_pmi_Intercept,
          iy  = b_reaction_Intercept) %>% 
-  select(a1:d21, starts_with("i")) %>% 
-  gather() %>% 
-  group_by(key) %>% 
-  mean_qi() %>% 
+  pivot_longer(c(a1:d21, starts_with("i"))) %>% 
+  group_by(name) %>% 
+  mean_qi(value) %>% 
   # simplify the output
-  select(key:.upper) %>% 
+  select(name:.upper) %>% 
   mutate_if(is_double, round, digits = 3)
 ```
 
@@ -425,35 +440,34 @@ Here we compute the four indirect effects.
 ```{r}
 post <-
   post %>%  
-  mutate(a1b1 = a1 * b1,
-         a2b2 = a2 * b2,
+  mutate(a1b1    = a1 * b1,
+         a2b2    = a2 * b2,
          a1d21b2 = a1 * d21 * b2) %>% 
   mutate(total_indirect_effect = a1b1 + a2b2 + a1d21b2)
 ```
 
 Anticipating the skew typical of indirect effects, we’ll summarize these posteriors with medians rather than means.
 
-```{r}
+```{r, warning = F}
 post %>% 
-  select(a1b1:total_indirect_effect) %>% 
-  gather() %>% 
-  group_by(key) %>% 
-  median_qi() %>% 
-  select(key:.upper) %>% 
+  pivot_longer(a1b1:total_indirect_effect) %>% 
+  group_by(name) %>% 
+  median_qi(value) %>% 
+  select(name:.upper) %>% 
   mutate_if(is_double, round, digits = 3)
 ```
 
 To get the contrasts Hayes presented in page 179, we just do a little subtraction.
 
-```{r}
+```{r, warning = F}
 post %>%  
-  transmute(c1 = a1b1 - a2b2,
-            c2 = a1b1 - a1d21b2,
-            c3 = a2b2 - a1d21b2) %>% 
-  gather() %>% 
-  group_by(key) %>% 
-  median_qi() %>% 
-  select(key:.upper) %>% 
+  mutate(c1 = a1b1 - a2b2,
+         c2 = a1b1 - a1d21b2,
+         c3 = a2b2 - a1d21b2) %>% 
+  pivot_longer(c1:c3) %>% 
+  group_by(name) %>% 
+  median_qi(value) %>% 
+  select(name:.upper) %>% 
   mutate_if(is_double, round, digits = 3)
 ```
 
@@ -467,11 +481,10 @@ my_labels <- c(expression(paste(italic(a)[1], italic(b)[1])),
                "total indirect effect")
 # wrangle
 post %>% 
-  select(a1b1:total_indirect_effect) %>% 
-  gather() %>%
-  
+  pivot_longer(a1b1:total_indirect_effect) %>% 
+
   # plot!
-  ggplot(aes(x = value, fill = key, color = key)) +
+  ggplot(aes(x = value, fill = name, color = name)) +
   geom_density(alpha = .5) +
   scale_color_ptol(NULL, labels = my_labels,
                    guide = guide_legend(label.hjust = 0)) +
@@ -487,6 +500,13 @@ post %>%
 
 > In a model with two mediators, the only difference between a serial and a parallel multiple mediator model is the inclusion of a causal path from $M_1$ to $M_2$. The serial model estimates this effect, whereas the parallel model assumes it is zero, which is equivalent to leaving it out of the model entirely. With more than three mediators, a model can be a blend of parallel and serial mediation processes, depending on which paths between mediators are estimated and which are fixed to zero through their exclusion from the model. (p. 180)
 
+
+## Complementarity and competition among mediators
+
+> This chapter has been dedicated to mediation models containing more than one mediator. At this point, the benefits of estimating multiple mechanisms of influence in a single model are no doubt apparent. But the inclusion of more than one mediator in a model does entail certain risks as well, and at times the results of multiple mediator model may appear to contradict the results obtained when estimating a simpler model with a single mediator. Some of the risks, paradoxes, and contradictions that sometimes can occur are worth some acknowledgement and discussion. (p. 183)
+
+Tread carefully, friends.
+
 ## References {-}
 
 [Hayes, A. F. (2018). *Introduction to mediation, moderation, and conditional process analysis: A regression-based approach.* (2nd ed.). New York, NY, US: The Guilford Press.](http://afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html)
@@ -496,3 +516,4 @@ post %>%
 ```{r}
 sessionInfo()
 ```
+

@@ -1,6 +1,6 @@
 # Extending the Fundamental Principles of Moderation Analysis
 
-```{r set-options, echo = FALSE, cache = FALSE}
+```{r, echo = FALSE, cache = FALSE}
 options(width = 100)
 ```
 
@@ -19,10 +19,21 @@ disaster <- read_csv("data/disaster/disaster.csv")
 glimpse(disaster)
 ```
 
-We can fit our first moderation model like so.
+Regardless of whether the antecedent variables are continuous or binary, the equation for the simple moderation is still
 
-```{r model1, cache = T, message = F, warning = F}
-model1 <-
+$$Y = i_Y + b_1 X + b_2 W + b_3 XW + e_Y.$$
+
+We can use that equation to fit our first moderation model with a binary $W$ (i.e., `frame`) like so.
+
+```{r model8.1}
+# save(model8.1, file = "fits/model08.01.rda")
+# rm(model8.1)
+
+load("fits/model08.01.rda")
+```
+
+```{r, eval = F}
+model8.1 <-
   brm(data = disaster, 
       family = gaussian,
       justify ~ 1 + skeptic + frame + frame:skeptic,
@@ -32,14 +43,18 @@ model1 <-
 Check the summary.
 
 ```{r}
-print(model1, digits = 3)
+print(model8.1, digits = 3)
 ```
 
 We'll compute our Bayeisan $R^2$ in the typical way.
 
 ```{r}
-bayes_R2(model1) %>% round(digits = 3)
+bayes_R2(model8.1) %>% round(digits = 3)
 ```
+
+> This model should look familiar to you because it is exactly the same model estimated in the analysis presented in Chapter 7 (see Table 7.4, model 3). The only differences between these two analyses are how the corresponding question is framed, meaning which variable is deemed the focal antecedent and which is the moderator, and how these variables are symbolically labeled as $X$ and $W$. In the analysis in Chapter 7, the focal antecedent variable was a dichotomous variable coding the framing of the cause of the disaster (labeled $X$ then, but $W$ now), whereas in this analysis, the focal antecedent is a continuous variable placing each person on a continuum of climate change skepticism (labeled $W$ then, but $X$ now), with the moderator being a dichotomous variable coding experimental condition.
+>
+> So this example illustrates the symmetry property of interactions introduced in section 7.1. (p. 272)
 
 ### Visualizing and probing the interaction.
 
@@ -67,17 +82,16 @@ Behold our Figure 8.3.
 
 ```{r, fig.width = 5.5, fig.height = 4.75}
 # these will come in handy with `geom_text()`, below
-green_slope <- (fixef(model1)["skeptic", 1] + fixef(model1)[4, 1]) %>% round(digits = 3)
-blue_slope  <- fixef(model1)["skeptic", 1] %>% round(digits = 3)
+green_slope <- (fixef(model8.1)["skeptic", 1] + fixef(model8.1)[4, 1]) %>% round(digits = 3)
+blue_slope  <-  fixef(model8.1)["skeptic", 1] %>% round(digits = 3)
 
 # define the new data
 nd <-
-  tibble(frame = 0:1) %>% 
-  expand(frame,
-         skeptic = c(0, 7))
+  crossing(frame   = 0:1,
+           skeptic = c(0, 7))
 
 # extract the `fitted()` draws
-fitted(model1, 
+fitted(model8.1, 
        newdata = nd, 
        summary = F) %>% 
   data.frame() %>% 
@@ -118,12 +132,12 @@ fitted(model1,
 In addition to our fancy Australia-inspired colors, we'll also play around a bit with spaghetti plots in this chapter. To my knowledge, this use of spaghetti plots is uniquely Bayesian. If you're trying to wrap your head around what on earth we just did, take a look at the first few rows from `posterior_samples()` object, `post`.
 
 ```{r}
-post <- posterior_samples(model1)
+post <- posterior_samples(model8.1)
 
 head(post)
 ```
 
-`head()` returned six rows, each one corresponding to the credible parameter values from a given posterior draw. The `lp__` is uniquely Bayesian and beyond the scope of this project. You might think of `sigma` as the Bayesian analogue to what the OLS folks often refer to as error or the residual variance. Hayes doesn't tend to emphasize it in this text, but it's something you'll want to pay increasing attention to as you move along in your Bayesian career. All the columns starting with `b_` are the regression parameters, the model coefficients or the fixed effects. But anyways, notice that those `b_` columns correspond to the four parameter values in formula 8.2 on page 270. Here they are, but reformatted to more closely mimic the text:
+The `head()` function returned six rows, each one corresponding to the credible parameter values from a given posterior draw. The `lp__` is uniquely Bayesian and beyond the scope of this project. You might think of `sigma` as the Bayesian analogue to what the OLS folks often refer to as error or the residual variance. Hayes doesn't tend to emphasize it in this text, but it's something you'll want to pay increasing attention to as you move along in your Bayesian career. All the columns starting with `b_` are the regression parameters, the model coefficients or the fixed effects. But anyways, notice that those `b_` columns correspond to the four parameter values in Formula 8.2 on page 270. Here they are, but reformatted to more closely mimic the text:
 
 1. $\hat{Y}$ = `r round(post[1, 1], 3)` + `r round(post[1, 2], 3)`$X$ + `r round(post[1, 3], 3)`$W$ + `r round(post[1, 4], 3)`*XW*
 2. $\hat{Y}$ = `r round(post[2, 1], 3)` + `r round(post[2, 2], 3)`$X$ + `r round(post[2, 3], 3)`$W$ + `r round(post[2, 4], 3)`*XW*
@@ -138,7 +152,7 @@ The thing I like about spaghetti plots is that they give a three-dimensional sen
 
 Back to the text, on the bottom of page 274, Hayes pointed out the conditional effect of `skeptic` when `frame == 1` is $b_1 + b_3 = 0.306$. We can show that with a little arithmetic followed up with `tidybayes::mean_qi()`.
 
-```{r}
+```{r, warning = F}
 library(tidybayes)
 
 post <-
@@ -160,24 +174,31 @@ disaster <-
 
 With `frame_ep` in hand, we’re ready to refit the model.
 
-```{r model2, cache = T, message = F, warning = F}
-model2 <-
-  update(model1, 
+```{r model8.2}
+# save(model8.2, file = "fits/model08.02.rda")
+# rm(model8.2)
+
+load("fits/model08.02.rda")
+```
+
+```{r, eval = F}
+model8.2 <-
+  update(model8.1, 
          newdata = disaster,
          formula = justify ~ 1 + skeptic + frame_ep + frame_ep:skeptic,
          cores = 4)
 ```
 
 ```{r}
-print(model2)
+print(model8.2)
 ```
 
 Our results match nicely with the formula on page 275.
 
-If you want to follow along with Hayes on pate 276 and isolate the 95% credible intervals for the `skeptic` parameter, you can use the `posterior_interval()` function.
+If you want to follow along with Hayes on page 276 and isolate the 95% credible intervals for the `skeptic` parameter, you can use the `posterior_interval()` function.
 
 ```{r}
-posterior_interval(model2)["b_skeptic", ] %>% round(digits = 3)
+posterior_interval(model8.2)["b_skeptic", ] %>% round(digits = 3)
 ```
 
 ## Interaction between two quantitative variables
@@ -190,32 +211,39 @@ glbwarm <- read_csv("data/glbwarm/glbwarm.csv")
 glimpse(glbwarm)
 ```
 
-Although Hayes made a distinction between the $X$, $M$, and $C$ variables in the text, that distinction is conceptual and doesn't impact the way we enter them into `brm()`. Rather, the `brm()` formula clarifies they're all just predictors.
+In this section we add three covariates (i.e., $C$ variables) to the basic moderation model. Although Hayes made a distinction between the $X$, $M$, and $C$ variables in the text, that distinction is conceptual and doesn't impact the way we enter them into `brm()`. Rather, the `brm()` formula clarifies they're all just predictors.
 
-```{r model3, cache = T, message = F, warning = F}
-model3 <- 
+```{r model8.3}
+# save(model8.3, file = "fits/model08.03.rda")
+# rm(model8.3)
+
+load("fits/model08.03.rda")
+```
+
+```{r, eval = F}
+model8.3 <- 
   brm(data = glbwarm, 
       family = gaussian,
       govact ~ 1 + negemot + age + negemot:age + posemot + ideology + sex,
       cores = 4)
 ```
 
-Our results cohere nicely with the Hayes's formula in the middle of page 278 or in Table 8.2.
+Our results cohere nicely with the Hayes's formula in the middle of page 278 or with the results he displayed in Table 8.2.
 
 ```{r}
-print(model3, digits = 3)
+print(model8.3, digits = 3)
 ```
 
 Here's the $R^2$ summary.
 
 ```{r}
-bayes_R2(model3) %>% round(digits = 3)
+bayes_R2(model8.3) %>% round(digits = 3)
 ```
 
 As the $R^2$ is a good bit away from the boundaries, it's nicely Gaussian.
 
 ```{r, fig.width = 8, fig.height = 1.75}
-bayes_R2(model3, summary = F) %>% 
+bayes_R2(model8.3, summary = F) %>% 
   as_tibble() %>% 
 
   ggplot(aes(x = R2)) +
@@ -235,23 +263,23 @@ For our version of Figure 8.5, we'll need to adjust our `nd` data for `fitted()`
 ```{r}
 (
   nd <-
-  tibble(negemot  = rep(c(1, 6), each = 3),
-         age      = rep(c(30, 50, 70), times = 2),
-         posemot  = mean(glbwarm$posemot),
+  crossing(negemot  = c(1, 6),
+           age      = c(30, 50, 70)) %>% 
+  mutate(posemot  = mean(glbwarm$posemot),
          ideology = mean(glbwarm$ideology),
          sex      = mean(glbwarm$sex))
-  )
+)
 ```
 
 Our `fitted()` and **ggplot2** code will be quite similar to the last spaghetti plot. Only this time we'll use `filter()` to reduce the number of posterior draws we show in the plot.
 
-```{r, fig.width = 8, fig.height = 4.5}
+```{r, fig.width = 8, fig.height = 4.5, warning = F}
 # these will come in handy with `geom_text()`, below
-slope_30 <- (fixef(model3)["negemot", 1] + fixef(model3)["negemot:age", 1] * 30) %>% round(digits = 3)
-slope_50 <- (fixef(model3)["negemot", 1] + fixef(model3)["negemot:age", 1] * 50) %>% round(digits = 3)
-slope_70 <- (fixef(model3)["negemot", 1] + fixef(model3)["negemot:age", 1] * 70) %>% round(digits = 3)
+slope_30 <- (fixef(model8.3)["negemot", 1] + fixef(model8.3)["negemot:age", 1] * 30) %>% round(digits = 3)
+slope_50 <- (fixef(model8.3)["negemot", 1] + fixef(model8.3)["negemot:age", 1] * 50) %>% round(digits = 3)
+slope_70 <- (fixef(model8.3)["negemot", 1] + fixef(model8.3)["negemot:age", 1] * 70) %>% round(digits = 3)
 
-fitted(model3, newdata = nd, 
+fitted(model8.3, newdata = nd, 
        summary = F) %>% 
   data.frame() %>% 
   gather() %>% 
@@ -280,7 +308,7 @@ fitted(model3, newdata = nd,
   scale_x_continuous(breaks = 1:6, limits = c(1, 9)) +
   scale_y_continuous("Support for Government Action", limits = c(2.9, 6.1)) +
   labs(title = "The moderation effect of age on negemot",
-       x = expression(paste("Negative Emotions about Climate Change (", italic("X"), ")"))) +
+       x     = expression(paste("Negative Emotions about Climate Change (", italic("X"), ")"))) +
   theme_08 +
   theme(legend.position = "none")
 ```
@@ -292,12 +320,12 @@ We'll continue with our spaghetti plot approach for Figure 8.7. Again, when we m
 ```{r, fig.width = 6, fig.height = 4.5}
 # here is our primary data object
 post <-
-  posterior_samples(model3) %>% 
-  transmute(at_15 = b_negemot + `b_negemot:age`*15,
-            at_90 = b_negemot + `b_negemot:age`*90,
-            iter = 1:n()) %>% 
-  gather(key, value, -iter) %>% 
-  rename(age = key) %>% 
+  posterior_samples(model8.3) %>% 
+  transmute(at_15 = b_negemot + `b_negemot:age` * 15,
+            at_90 = b_negemot + `b_negemot:age` * 90,
+            iter  = 1:n()) %>% 
+  pivot_longer(-iter,
+               names_to = "age") %>% 
   mutate(age = str_remove(age, "at_") %>% as.double())
 
 # here we compute the points for the posterior mean
@@ -326,37 +354,49 @@ post %>%
   theme_08
 ```
 
+In other words, each of those orange lines is a credible expression of $\theta_{X \rightarrow Y}$ (i.e., $b_1 + b_3 W$) across a continuous range of $W$ values.
+
 ## Hierarchical versus simultaneous entry
 
-Here's our multivariable but non-moderation model, `model4`.
+> Many investigators test a moderation hypothesis in regression analysis using a method that on the surface seems different than the procedure described thus far. This alternative approach is to build a regression model by adding the product of $X$ and $W$ to a model already containing $X$ and $W$. This procedure is sometimes called *hierarchical regression* or *hierarchical variable entry* (and easily confused by name with *hierarchical linear modeling*, which is an entirely different thing). The goal using this method is to determine whether allowing $X$'s effect to be contingent on $W$ produces a better fitting model than one in which the effect of $X$ is constrained to be unconditional on $W$. According to the logic of hierarchical entry, if the contingent model accounts for more of the variation in Y than the model that forces $X$'s effect to be independent of $W$, then the better model is one in which $W$ is allowed to moderate $X$'s effect. Although this approach works, it is a widely believed myth that it is *necessary* to use this approach in order to test a moderation hypothesis. (p. 289, *emphasis* in the original)
 
-```{r model4, cache = T, message = F, warning = F}
-model4 <-
-  update(model1, 
+Although this method is not necessary, it can be handy to slowly build your model. This method can also serve nice rhetorical purposes in a paper. Anyway, here's our multivariable but non-moderation model, `model8.4`.
+
+```{r model8.4}
+# save(model8.4, file = "fits/model08.04.rda")
+# rm(model8.4)
+
+load("fits/model08.04.rda")
+```
+
+```{r, eval = F}
+model8.4 <-
+  update(model8.1, 
          formula = justify ~ 1 + skeptic + frame,
          cores = 4)
 ```
 
 Here we'll compute the corresponding $R^2$ and compare it with the one for the original interaction model with a difference score.
 
-```{r}
+```{r, warning = F}
 # the moderation model's R2
-r2s <-
-  bayes_R2(model1, summary = F) %>% 
+r2 <-
+  bayes_R2(model8.1, summary = F) %>% 
   data.frame() %>% 
-  rename(moderation_model = R2) %>% 
+  set_names("moderation_model") %>% 
   # here we add the multivaraible model's R2
   bind_cols(
-    bayes_R2(model4, summary = F) %>% 
+    bayes_R2(model8.4, summary = F) %>% 
       data.frame() %>% 
-      rename(multivariable_model = R2)
+      set_names("multivariable_model")
   ) %>% 
   # we'll need a difference score
   mutate(difference = moderation_model - multivariable_model) %>% 
   # putting the data in the long format and grouping will make summarizing easier
-  gather(R2, value)
+  pivot_longer(everything(),
+               names_to = "R2")
 
-r2s %>% 
+r2 %>% 
   group_by(R2) %>% 
   median_qi(value) %>% 
   mutate_if(is.double, round, digits = 3)
@@ -365,34 +405,33 @@ r2s %>%
 Note that the Bayesian $R^2$ performed differently than the $F$-test in the text. 
 
 ```{r, fig.width = 8, fig.height = 2.5}
-r2s %>% 
+r2 %>% 
   filter(R2 == "difference") %>% 
 
-  ggplot(aes(x = value)) +
-  geom_density(aes(fill = model), size = 0, fill = ochre_palettes[["olsen_seq"]][14]) +
+  ggplot(aes(x = value, fill = model)) +
+  geom_density(size = 0, fill = ochre_palettes[["olsen_seq"]][14]) +
+  scale_x_continuous(NULL, limits = c(-.4, .4)) +
   scale_y_continuous(NULL, breaks = NULL) +
-  labs(title = expression(paste("The Bayesian ", Delta, italic(R)^2, " distribution")),
-       subtitle = "Although most of the posterior mass is positive--suggesting the moderation model accounted for more variance than\nthe simple multivariable model--, a substantial portion of the postrior is within the negative parameter space. Sure,\nif we had to bet, the safer bet is on the moderation model. But that bet wouled be quite uncertain and we might well\nloose our shirts. Also, note the width of the distribution; credible values range from -0.1 to nearly 0.2.",
-       x = NULL) +
-  coord_cartesian(xlim = c(-.4, .4)) +
+  labs(title    = expression(paste("The Bayesian ", Delta, italic(R)^2, " distribution")),
+       subtitle = "Although most of the posterior mass is positive--suggesting the moderation model accounted for more variance than\nthe simple multivariable model--, a substantial portion of the postrior is within the negative parameter space. Sure,\nif we had to bet, the safer bet is on the moderation model. But that bet wouled be quite uncertain and we might well\nloose our shirts. Also, note the width of the distribution; credible values range from -0.1 to nearly 0.2.") +
   theme_08
 ```
 
 We can also compare these with the LOO, which, as is typical of information criteria, corrects for model complexity. First, we compute them and attach the results to the model fit objects.
 
-```{r loo_models_1_and_4, message = F, warning = F}
-model1 <- add_criterion(model1, "loo")
-model4 <- add_criterion(model4, "loo")
+```{r, message = F, warning = F}
+model8.1 <- add_criterion(model8.1, "loo")
+model8.4 <- add_criterion(model8.4, "loo")
 ```
 
 Now use the `loo_compare()` function to compare them directly.
 
 ```{r}
-loo_compare(model1, model4) %>% 
+loo_compare(model8.1, model8.4) %>% 
   print(simplify = F)
 ```
 
-As a reminder, we generally prefer models with lower information criteria, which in this case is clearly the moderation model (i.e., `model1`). However, the standard error value (i.e., `se_diff`) for the difference (i.e., `elpd_diff`) is quite large, which suggests that the model with the lowest value isn't the clear winner. Happily, these results match nicely with the Bayesian $R^2$ difference score. The moderation model appears somewhat better than the multivariable model, but its superiority is hardly decisive.  
+As a reminder, we generally prefer models with lower information criteria, which in this case is clearly the moderation model (i.e., `model8.1`). However, the standard error value (i.e., `se_diff`) for the difference (i.e., `elpd_diff`) is quite large, which suggests that the model with the lowest value isn't the clear winner. Happily, these results match nicely with the Bayesian $R^2$ difference score. The moderation model appears somewhat better than the multivariable model, but its superiority is hardly decisive.
 
 ## The equivalence between moderated regression analysis and a 2 X 2 factorial analysis of variance
 
@@ -404,10 +443,17 @@ caskets <- read_csv("data/caskets/caskets.csv")
 glimpse(caskets)
 ```
 
-Fit the model.
+Fit the moderation model.
 
-```{r model5, cache = T, message = F, warning = F}
-model5 <-
+```{r model8.5}
+# save(model8.5, file = "fits/model08.05.rda")
+# rm(model8.5)
+
+load("fits/model08.05.rda")
+```
+
+```{r, eval = F}
+model8.5 <-
   brm(data = caskets, 
       family = gaussian,
       interest ~ 1 + policy + kerry + policy:kerry,
@@ -415,14 +461,14 @@ model5 <-
 ```
 
 ```{r}
-print(model5)
+print(model8.5)
 ```
 
 Those results don't look anything like what Hayes reported in Tables 8.3 or 8.4. However, a little deft manipulation of the posterior samples can yield equivalent results to Hayes's Table 8.3. 
 
 ```{r}
 post <- 
-  posterior_samples(model5) %>% 
+  posterior_samples(model8.5) %>% 
   mutate(Y_bar_1 = b_Intercept + b_policy * 0 + b_kerry * 0 + `b_policy:kerry` * 0 * 0,
          Y_bar_3 = b_Intercept + b_policy * 0 + b_kerry * 1 + `b_policy:kerry` * 0 * 1,
          Y_bar_2 = b_Intercept + b_policy * 1 + b_kerry * 0 + `b_policy:kerry` * 1 * 0,
@@ -436,11 +482,10 @@ post <-
 
 Here are the cell-specific means in Table 8.3.
 
-```{r}
+```{r, warning = F}
 post %>% 
-  dplyr::select(Y_bar_1:Y_bar_4) %>% 
-  gather() %>% 
-  group_by(key) %>% 
+  pivot_longer(Y_bar_1:Y_bar_4) %>% 
+  group_by(name) %>% 
   median_qi(value) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
@@ -449,9 +494,8 @@ And here are the marginal means from Table 8.3.
 
 ```{r}
 post %>% 
-  dplyr::select(Y_bar_12:Y_bar_24) %>% 
-  gather() %>% 
-  group_by(key) %>% 
+  pivot_longer(Y_bar_12:Y_bar_24) %>% 
+  group_by(name) %>% 
   median_qi(value) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
@@ -460,15 +504,14 @@ For kicks and giggles, here are what the cell-specific means look like in box pl
 
 ```{r, fig.width = 3.25, fig.height = 3}
 post %>% 
-  dplyr::select(Y_bar_1:Y_bar_4) %>% 
-  gather() %>% 
-  
-  ggplot(aes(x = key, y = value, fill = key)) +
+  pivot_longer(Y_bar_1:Y_bar_4) %>% 
+
+  ggplot(aes(x = name, y = value, fill = name)) +
   geom_boxplot(size = 1/3) +
   scale_fill_manual(values = ochre_palettes[["olsen_qual"]][c(5, 6, 4, 3)]) +
   labs(title = "Cell-specific effects",
-       x = NULL, 
-       y = "interest") +
+       x     = NULL, 
+       y     = "interest") +
   theme_08 +
   theme(legend.position = "none")
 ```
@@ -477,35 +520,34 @@ And here are the same for the marginal means. This time we'll show the shapes of
 
 ```{r, fig.width = 3.25, fig.height = 3}
 post %>% 
-  dplyr::select(Y_bar_12:Y_bar_24) %>% 
-  gather() %>% 
-  
-  ggplot(aes(x = key, y = value, fill = key)) +
+  pivot_longer(Y_bar_12:Y_bar_24) %>% 
+
+  ggplot(aes(x = name, y = value, fill = name)) +
   geom_violin(draw_quantiles = c(.25, .5, .75),
               color = ochre_palettes[["olsen_seq"]][8]) +
   scale_fill_manual(values = ochre_palettes[["olsen_qual"]][c(5, 6, 4, 3)]) +
   labs(title = "Marginal means",
-       x = NULL, 
-       y = "interest") +
+       x     = NULL, 
+       y     = "interest") +
   theme_08 +
   theme(legend.position = "none")
 ```
 
 On page 294, Hayes used point estimates to compute the *simple effect* of policy information among Kerry supporters and then the same thing among Bush supporters. Here's how we'd do that when working with the full vector of posterior draws.
 
-```{r}
+```{r, warning = F}
 post %>% 
-  transmute(simple_effect_Kerry = Y_bar_4 - Y_bar_3,
-            simple_effect_Bush  = Y_bar_2 - Y_bar_1) %>% 
-  gather() %>% 
-  group_by(key) %>% 
+  mutate(simple_effect_Kerry = Y_bar_4 - Y_bar_3,
+         simple_effect_Bush  = Y_bar_2 - Y_bar_1) %>% 
+  pivot_longer(contains("simple")) %>% 
+  group_by(name) %>% 
   mean_qi(value) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
 
 So then computing the main effect for policy information using the simple effects is little more than an extension of those steps.
 
-```{r}
+```{r, warning = F}
 post %>% 
   transmute(main_effect = ((Y_bar_4 - Y_bar_3) + (Y_bar_2 - Y_bar_1))/2) %>% 
   mean_qi(main_effect) %>% 
@@ -514,16 +556,16 @@ post %>%
 
 And we get the same results by strategically subtracting the marginal means.
 
-```{r}
+```{r, warning = F}
 post %>% 
   transmute(main_effect = Y_bar_24 - Y_bar_13) %>% 
   mean_qi(main_effect) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
 
-The main effect of for candidate is similarly computed using either approach:
+The main effect of for candidate is similarly computed using either approach.
 
-```{r}
+```{r, warning = F}
 post %>% 
   transmute(main_effect = ((Y_bar_4 - Y_bar_2) + (Y_bar_3 - Y_bar_1))/2) %>% 
   mean_qi(main_effect) %>% 
@@ -542,21 +584,21 @@ post %>%
   ggplot(aes(x = `b_policy:kerry`)) +
   geom_density(size = 0,
                fill = ochre_palettes[["olsen_qual"]][2]) +
-  geom_vline(xintercept = fixef(model5)["policy:kerry", c(1, 3, 4)],
+  geom_vline(xintercept = fixef(model8.5)["policy:kerry", c(1, 3, 4)],
              color = ochre_palettes[["olsen_seq"]][8], linetype = c(1, 2, 2)) +
-  scale_x_continuous(breaks = fixef(model5)["policy:kerry", c(1, 3, 4)],
-                     labels = fixef(model5)["policy:kerry", c(1, 3, 4)] %>% round(digits = 2)) +
+  scale_x_continuous(NULL,
+                     breaks = fixef(model8.5)["policy:kerry", c(1, 3, 4)],
+                     labels = fixef(model8.5)["policy:kerry", c(1, 3, 4)] %>% round(digits = 2)) +
   scale_y_continuous(NULL, breaks = NULL) +
-  labs(title = "The interaction term, `policy:kerry`",
-       subtitle = "The solid vertical line is the posterior mean\nand the dashed lines to either end denote the\npercentile- based 95% intervals.",
-       x = NULL) +
+  labs(title    = "The interaction term, `policy:kerry`",
+       subtitle = "The solid vertical line is the posterior mean\nand the dashed lines to either end denote the\npercentile- based 95% intervals.") +
   theme_08 +
   theme(legend.position = "none")
 ```
 
 Following Hayes's work on the bottom of page 295, here's how you'd reproduce that by manipulating our $\overline Y$ vectors.
 
-```{r}
+```{r, warning = F}
 post %>% 
   transmute(reproduced_interaction_term = (Y_bar_4 - Y_bar_3) - (Y_bar_2 - Y_bar_1)) %>% 
   mean_qi(reproduced_interaction_term) %>% 
@@ -565,7 +607,7 @@ post %>%
 
 Extending that logic, we also get the answer this way.
 
-```{r}
+```{r, warning = F}
 post %>% 
   transmute(reproduced_interaction_term = (Y_bar_4 - Y_bar_2) - (Y_bar_3 - Y_bar_1)) %>% 
   mean_qi(reproduced_interaction_term) %>% 
@@ -574,32 +616,32 @@ post %>%
 
 ### Simple effects parameterization.
 
-We might reacquaint ourselves with the `formula` from `model5`.
+We might reacquaint ourselves with the `formula` from `model8.5`.
 
 ```{r}
-model5$formula
+model8.5$formula
 ```
 
 The results cohere nicely with the "Model 1" results at the top of Table 8.5.
 
 ```{r}
-fixef(model5) %>% round(digits = 3)
+fixef(model8.5) %>% round(digits = 3)
 ```
 
 The Bayesian $R^2$ portion looks on point, too.
 
 ```{r}
-bayes_R2(model5) %>% round(digits = 3)
+bayes_R2(model8.5) %>% round(digits = 3)
 ```
 
 Our various `Y_bar` transformations from before continue to cohere with the coefficients, above, just like in the text. E.g., the `policy` coefficient may be returned like so.
 
 ```{r}
 post %>% 
-  transmute(b1 = b_policy,
+  transmute(b1                  = b_policy,
             `Y_bar_2 - Y_bar_1` = Y_bar_2 - Y_bar_1) %>% 
-  gather() %>% 
-  group_by(key) %>% 
+  pivot_longer(everything()) %>% 
+  group_by(name) %>% 
   summarize(mean = mean(value),
             sd   = sd(value)) %>% 
   mutate_if(is.double, round, digits = 3)
@@ -609,10 +651,10 @@ We can continue to use Hayes's `Y_bar` transformations to return the `kerry` coe
 
 ```{r}
 post %>% 
-  transmute(b2 = b_kerry,
+  transmute(b2                  = b_kerry,
             `Y_bar_3 - Y_bar_1` = Y_bar_3 - Y_bar_1) %>% 
-  gather() %>% 
-  group_by(key) %>% 
+  pivot_longer(everything()) %>% 
+  group_by(name) %>% 
   summarize(mean = mean(value),
             sd   = sd(value)) %>% 
   mutate_if(is.double, round, digits = 3)
@@ -622,10 +664,10 @@ Here we compute $b_3$ with the difference between the simple effects of $X$ at l
 
 ```{r}
 post %>% 
-  transmute(b3 = `b_policy:kerry`,
+  transmute(b3                                          = `b_policy:kerry`,
             `(Y_bar_4 - Y_bar_3) - (Y_bar_2 - Y_bar_1)` = (Y_bar_4 - Y_bar_3) - (Y_bar_2 - Y_bar_1)) %>% 
-  gather() %>% 
-  group_by(key) %>% 
+  pivot_longer(everything()) %>% 
+  group_by(name) %>% 
   summarize(mean = mean(value),
             sd   = sd(value)) %>% 
   mutate_if(is.double, round, digits = 3)
@@ -635,10 +677,10 @@ And now $b_{3}$ with the difference between the simple effects of $W$ at levels 
 
 ```{r}
 post %>% 
-  transmute(b3 = `b_policy:kerry`,
+  transmute(b3                                          = `b_policy:kerry`,
             `(Y_bar_4 - Y_bar_2) - (Y_bar_3 - Y_bar_1)` = (Y_bar_4 - Y_bar_2) - (Y_bar_3 - Y_bar_1)) %>% 
-  gather() %>% 
-  group_by(key) %>% 
+  pivot_longer(everything()) %>% 
+  group_by(name) %>% 
   summarize(mean = mean(value),
             sd   = sd(value)) %>% 
   mutate_if(is.double, round, digits = 3)
@@ -648,9 +690,16 @@ post %>%
 
 A nice feature of **brms** is you can transform your data right within the `brm()` or `update()` functions. Here we'll make our two new main-effects-coded variables, `policy_me` and `kerry_me`, with the `mutate()` function right within `update()`.
 
-```{r model6, cache = T, message = F, warning = F}
-model6 <-
-  update(model5,
+```{r model8.6}
+# save(model8.6, file = "fits/model08.06.rda")
+# rm(model8.6)
+
+load("fits/model08.06.rda")
+```
+
+```{r, eval = F}
+model8.6 <-
+  update(model8.5,
          newdata = caskets %>%
            mutate(policy_me = policy - .5,
                   kerry_me  = kerry  - .5), 
@@ -659,25 +708,27 @@ model6 <-
          cores = 4)
 ```
 
-Transforming your data within the **brms** functions won’t change the original data structure. However, **brms** will save the data used to fit the model within the `brm()` object. You can access that data like so.
+Transforming your data within the **brms** functions won't change the original data structure. However, **brms** will save the data used to fit the model within the `brm()` object. You can access that data like so.
 
 ```{r}
-model6$data %>%
+model8.6$data %>%
   head()
 ```
 
 But we digress. Here's our analogue to the "Model 2" portion of Table 8.5.
 
 ```{r}
-fixef(model6) %>% round(digits = 3)
-bayes_R2(model6) %>% round(digits = 3)
+rbind(
+  fixef(model8.6) %>% round(digits = 3),
+  bayes_R2(model8.6) %>% round(digits = 3)
+  )
 ```
 
-Like with `model6`, above, we'll need a bit of algebra to compute our $\overline{Y_{i}}$ vectors.
+Like with `model8.6`, above, we'll need a bit of algebra to compute our $\overline Y_i$ vectors.
 
 ```{r}
 post <- 
-  posterior_samples(model6) %>% 
+  posterior_samples(model8.6) %>% 
   mutate(Y_bar_1 = b_Intercept + b_policy_me * -.5 + b_kerry_me * -.5 + `b_policy_me:kerry_me` * -.5 * -.5,
          Y_bar_3 = b_Intercept + b_policy_me * -.5 + b_kerry_me *  .5 + `b_policy_me:kerry_me` * -.5 *  .5,
          Y_bar_2 = b_Intercept + b_policy_me *  .5 + b_kerry_me * -.5 + `b_policy_me:kerry_me` *  .5 * -.5,
@@ -688,53 +739,61 @@ With our `post` for `fit5` in hand, we'll follow the formulas at the top of page
 
 ```{r}
 post %>% 
-  transmute(b1 = ((Y_bar_4 - Y_bar_3) + (Y_bar_2 - Y_bar_1))/2,
-            b2 = ((Y_bar_4 - Y_bar_2) + (Y_bar_3 - Y_bar_1))/2) %>% 
-  gather() %>% 
-  group_by(key) %>% 
+  transmute(b1 = ((Y_bar_4 - Y_bar_3) + (Y_bar_2 - Y_bar_1)) / 2,
+            b2 = ((Y_bar_4 - Y_bar_2) + (Y_bar_3 - Y_bar_1)) / 2) %>% 
+  pivot_longer(b1:b2) %>% 
+  group_by(name) %>% 
   summarize(mean = mean(value),
             sd   = sd(value)) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
 
-Hayes pointed out that the interaction effect, $b_3$, is the same across models his OLS Models 1 and 2. This is largely true for our Bayesian HMC `fit4` adn `fit5` models:
+Hayes pointed out that the interaction effect, $b_3$, is the same across models his OLS Models 1 and 2. This is largely true for our Bayesian HMC `model8.5` and `model8.6` models.
 
 ```{r}
-fixef(model5)[4, ] %>% round(digits = 3)
-fixef(model6)[4, ] %>% round(digits = 3)
+fixef(model8.5)[4, ] %>% round(digits = 3)
+fixef(model8.6)[4, ] %>% round(digits = 3)
 ```
 
 However, the results aren't exactly the same because of simulation error. If you were working on a project requiring high precision, increase the number of posterior iterations. To demonstrate, here we'll increase each chain's post-warmup iteration count by an order of magnitude, resulting in 80,000 post-warmup iterations rather than the default 4,000.
 
-```{r models5_and_6, cache = T, message = F, warning = F}
-model5 <-
-  update(model5,
+```{r model8.7_model_8.8}
+# save(model8.7, file = "fits/model08.07.rda")
+# rm(model8.7)
+# save(model8.8, file = "fits/model08.08.rda")
+# rm(model8.8)
+
+load("fits/model08.07.rda")
+load("fits/model08.08.rda")
+```
+
+```{r, eval = F}
+model8.7 <-
+  update(model8.5,
          chains = 4, cores = 4, warmup = 1000, iter = 21000)
 
-model6 <-
-  update(model6,
+model8.8 <-
+  update(model8.6,
          chains = 4, cores = 4, warmup = 1000, iter = 21000)
 ```
 
 Now they're quite a bit closer. 
 
 ```{r}
-fixef(model5)[4, ] %>% round(digits = 3)
-fixef(model6)[4, ] %>% round(digits = 3)
+fixef(model8.7)[4, ] %>% round(digits = 3)
+fixef(model8.8)[4, ] %>% round(digits = 3)
 ```
 
 And before you get fixate on how there are still differences after 80,000 iterations, each, consider comparing the two density plots.
 
 ```{r, fig.width = 4.5, fig.height = 3.25}
-posterior_samples(model5) %>% 
-  data.frame() %>% 
-  transmute(iteraction = `b_policy.kerry`) %>% 
+posterior_samples(model8.7) %>% 
+  transmute(iteraction = `b_policy:kerry`) %>% 
   bind_rows(
-    posterior_samples(model6) %>% 
-      data.frame() %>% 
-      transmute(iteraction = `b_policy_me.kerry_me`)
+    posterior_samples(model8.8) %>% 
+      transmute(iteraction = `b_policy_me:kerry_me`)
   ) %>% 
-  mutate(model = rep(c("model5", "model6"), each = 80000)) %>% 
+  mutate(model = rep(str_c("8.", 7:8), times = n() / 2)) %>% 
   
   ggplot(aes(x = iteraction, fill = model)) +
   geom_density(size = 0, alpha = 1/2) +
@@ -748,7 +807,7 @@ posterior_samples(model5) %>%
 
 ### Conducting ~~a $2 \times 2$ between-participants factorial ANOVA using PROCESS~~ another regression model with brms.
 
-Since we're square in regression land with **brms**, there's no direct analogue for us, here. However, notice the post-ANOVA $t$-tests Hayes presented on page 300. If we just want to consider the $2 \times 2$ structure of our two dummy variables as indicative of four groups, we have one more coding system available for the job. With the handy `str_c()` function, we'll concatenate the `policy` and `kerry` values into a nominal variable, `policy_kerry`. Here's what that looks like:
+Since we're square in single-level regression land with our **brms** approach, there's no direct analogue for us, here. However, notice the post-ANOVA $t$-tests Hayes presented on page 300. If we just want to consider the $2 \times 2$ structure of our two dummy variables as indicative of four groups, we have one more coding system available for the job. With the handy `str_c()` function, we'll concatenate the `policy` and `kerry` values into a nominal variable, `policy_kerry`. Here's what that looks like:
 
 ```{r}
 caskets <-
@@ -760,8 +819,15 @@ head(caskets)
 
 Now check out what happens if we reformat our formula to `interest ~ 0 + policy_kerry`.
 
-```{r model7, cache = T, message = F, warning = F}
-model7 <-
+```{r model8.9}
+# save(model8.9, file = "fits/model08.09.rda")
+# rm(model8.9)
+
+load("fits/model08.09.rda")
+```
+
+```{r, eval = F}
+model8.9 <-
   brm(data = caskets, 
       family = gaussian,
       interest ~ 0 + policy_kerry,
@@ -771,37 +837,36 @@ model7 <-
 The `brm()` function recnognized `policy_kerry` was a character vector and treated it as a nominal variable. The `0 + ` part of the function removed the model intercept. Here's how that effects the output.
 
 ```{r}
-print(model7)
+print(model8.9)
 ```
 
 Without the typical intercept, `brm()` estimated the means for each of the four `policy_kerry` groups. It's kinda like an intercept-only model, but with four intercepts. Here's what their densities look like:
 
 ```{r, fig.width = 8, fig.height = 2.5}
-post <- posterior_samples(model7)
+post <- posterior_samples(model8.9)
 
 post %>% 
-  dplyr::select(b_policy_kerry00:b_policy_kerry11) %>% 
-  gather() %>%
-  mutate(key = str_remove(key, "b_")) %>% 
+  pivot_longer(b_policy_kerry00:b_policy_kerry11) %>% 
+  mutate(name = str_remove(name, "b_")) %>% 
   
-  ggplot(aes(x = value, fill = key)) +
+  ggplot(aes(x = value, fill = name)) +
   geom_density(color = "transparent", alpha = 2/3) +
   scale_fill_manual(NULL,
                     values = ochre_palettes[["olsen_qual"]][c(5, 6, 4, 3)]) +
   scale_y_continuous(NULL, breaks = NULL) +
   labs(title = "Group means",
-       x = NULL) +
+       x     = NULL) +
   theme_08
 ```
 
 Since each of the four primary vectors in our `post` object is of a group mean, it's trivial to compute difference scores. To compute the difference score analogous to Hayes's two $t$-tests, we'd do the following.
 
-```{r}
+```{r, warning = F}
 post %>% 
-  transmute(difference_1 = b_policy_kerry10 - b_policy_kerry00,
-            difference_2 = b_policy_kerry11 - b_policy_kerry01) %>% 
-  gather() %>% 
-  group_by(key) %>% 
+  mutate(difference_1 = b_policy_kerry10 - b_policy_kerry00,
+         difference_2 = b_policy_kerry11 - b_policy_kerry01) %>% 
+  pivot_longer(starts_with("difference_")) %>% 
+  group_by(name) %>% 
   median_qi(value) %>% 
   mutate_if(is.double, round, digits = 3)
 ```

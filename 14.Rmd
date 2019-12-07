@@ -1,0 +1,29 @@
+# (PART) MISCELLANEA {-}
+
+# Miscellaneous Topics and Some Frequently Asked Questions
+
+```{r, echo = FALSE, cache = FALSE}
+options(width = 110)
+```
+
+
+I'm not sure if I'm going to add this to the project or not. 
+
+However, I would like to slip in one example of multilevel mediation. I asked for people's favorite examples [on twitter](https://twitter.com/SolomonKurz/status/1201948202817208322). One possible example is from [this online chapter](https://quantdev.ssri.psu.edu/sites/qdev/files/ILD_Ch07_2017_Within-PersonMedationWithMLM_0.html). The great [Matti Vuorre](https://twitter.com/vuorre) offered a link to his sweet new paper with [Niall Bolger](https://twitter.com/ardollam), [*Within-subject mediation analysis for experimental data in cognitive psychology and neuroscience*](https://link.springer.com/article/10.3758/s13428-017-0980-9) which introduced a package for Bayesian multilevel mediation models, [**bmlm**](https://cran.r-project.org/web/packages/bmlm/index.html). Do check these out.
+
+
+
+
+
+
+
+## Reference {-}
+
+[Hayes, A. F. (2018). *Introduction to mediation, moderation, and conditional process analysis: A regression-based approach.* (2nd ed.). New York, NY, US: The Guilford Press.](http://afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html)
+
+## Session info {-}
+
+```{r}
+sessionInfo()
+```
+

@@ -6,6 +6,72 @@
 options(width = 110)
 ```
 
+> The vast majority of scientists would probably argue that when push comes to shove, the theoretical horse should pull the statistical cart. Statis- tical methods are mathematical tools, some of them quite amazing in what they do, which can help us to discern order amid the apparent chaos in a batch of data. But ultimately, the stories that statistical methods help us tell are told by our brains, not by the mathematics, and our brains are good at making sense of things--of coming up with stories to explain what we perceive. The problem is that the same pattern of results can be interpreted in many different ways, especially if the pattern is found after an extensive round of exploratory data analysis. Without a theoretical orientation to guide our attempts at making sense of our data or, better still, to guide our research design and data collection efforts, our awesome storytelling ability can lead us astray by invoking explanations for findings that may sound good but that are mere conjecture even if we can find a theoretical hook on which to hang them post hoc.
+>
+> I won’t argue against this perspective, as I believe it is for the most part right on the money. But I also believe that statistical methods can play an important role in theory development as well--that the statistical cart need not always, should not always, and often does not follow the theoretical horse. When we learn something new analytically, this can change the way we think of things theoretically and how we then go about testing the ideas that our newfound awareness of an analytical method inspired (cf. [Slater, Hayes, & Snyder, 2008, p. 2](https://us.sagepub.com/en-us/nam/the-sage-sourcebook-of-advanced-data-analysis-methods-for-communication-research/book228339)). (pp. 507--508)
+
+## 14.1 A strategy for approaching a conditional process analysis
+
+> Things don't always turn out as we expected and articulated in hypotheses 1, 2, and 3. And sometimes after looking at the data, our thinking about the process at work changes and new hypotheses come to mind that are worth testing. Scientists routinely switch back and forth between the context of justification and the context of discovery, testing hypotheses conceived before the data were analyzed while also exploring one's data to see what else can be learned from patterns observed but not anticipated.
+
+In the next paragraph, we see Hayes anticipated criticism at this paragraph and some of the subsections to follow. My two cents are that problems arise when we approach statistics from a $p$-value-based hypothesis-testing perspective, when we pose exploratory research as confirmatory, when we engage in closed science practices, and when we only present the analyses that "worked." For some engaging thoughts on iterative Bayesian workflows, you might check out Navarro's blog series, *Paths in strange spaces*; here's [part 1](https://djnavarro.net/post/paths-in-strange-spaces/).
+
+### Step 1: Construct your conceptual diagram of the process.
+
+Build up your model slowly and with the aid of visuals.
+
+### Step 2: Translate the conceptual model into a statistical model.
+
+> We don't estimate the conceptual model. [Presuming mediation,] a conceptual model must be translated into a statistical model in the form of at least two equations, depending on the number of proposed mediators in the model. With an understanding of the principles of moderation and mediation analysis described in this book, you should be able to do this without too much difficulty. (p. 510)
+
+### Step 3: Estimate the statistical model.
+
+Hayes used OLS-based procedures throughout the text. We have been using Bayesian software. Though I prefer **brms**, you might also check out [**blavaan**](https://faculty.missouri.edu/~merklee/blavaan/), [**rstanarm**](https://mc-stan.org/users/interfaces/rstanarm), or [**rstan**](https://mc-stan.org/rstan/). As a group, these will allow you to fit many more kinds of regression models than available through the OLS paradigm.
+
+### Step 4: Determine whether expected moderation exists.
+
+I'm not a fan of this "whether [x] exists" talk. First, it seems way to black and white. For more thoughts along those lines, check out Gelman's [*The connection between varying treatment effects and the crisis of unreplicable research: A Bayesian perspective*](http://www.stat.columbia.edu/~gelman/research/published/bayes_management.pdf). Second, it places too much faith in the analyis of a single data set. For more on those lines, consider what Hayes wrote in the middle of this subsection:
+
+> Just because an interaction is not significant, that doesn't mean your proposed moderator does not moderate the path you proposed it moderates. Parsimony might dictate that your model should be cleansed of this interaction, but null hypotheses tests are fallible, and sometimes real effects are so weak that we don't have the power to detect them given the limitations of our resources or other things out of our control. (p. 511)
+
+This is all posed in the language of NHST, but the basic points still hold for other paradigms. If you have a theory-informed model, I recommend showing the results for that model regardless of the sizes of the parameters.
+
+I have concerns about the next subsection.
+
+#### Step 4A.
+
+> If you have decided to prune your model of nonsignificant interactions, then go back to step 1 and start fresh by redrawing your conceptual diagram in light of the evidence you now have and proceed through these steps again. A certain moral or ethical logic might dictate that you not pretend when describing your analysis that this is where you started in the first place. Yet Bem [(1987)](https://psychology.yale.edu/sites/default/files/bemempirical.pdf) makes the argument that spending lots of time talking about ideas that turned out to be "wrongheaded" isn’t going to produce a particularly interesting paper. You'll have to sort out for yourself where you stand on this continuum of scientific ethics. (p. 512)
+
+Hayes is quite right: "*You'll have to sort out for yourself where you stand on this continuum of scientific ethics*." At this point in the social-psychology replication crisis--a crisis of which Bem's shoddy work has played no small part (see [here](https://www.nature.com/news/replication-studies-bad-copy-1.10634) or [here](https://www.frontiersin.org/articles/10.3389/fpsyg.2015.00621/full) or [here](https://journals.sagepub.com/doi/full/10.1177/1745691612465253))--, it's shocking to read Hayes endorsing this advice. 
+
+At a bare minimum, I recommend presenting your failed theory-based models in supplemental materials. You can upload them to the [Open Science Framework](https://osf.io/) for free.
+
+### Step 5: Probe and interpret interactions involving components of the indirect effect.
+
+> At this stage, probe any interactions involving components of the indirect effect of $X$ so that you will have some understanding of the contingencies of the various effects that are the components of the larger conditional process model you are estimating. This exercise will help inform and clarify your interpretation of the conditional indirect effect(s) of $X$ later on. (p. 512)
+
+### Step 6: Quantify and test conditional indirect effects (if relevant).
+
+Within the paradigm I have introduces throughout this text, "testing" effects is never relevant. However, one can and should think in terms of the magnitudes of the parameters in the model. Think in terms of effect sizes. For a frequentist introduction to effect-size thinking, Geoff Cumming's work is a fine place to start, such as his [*The new statistics: Why and how*](https://journals.sagepub.com/doi/pdf/10.1177/0956797613504966). For a Bayesian alternative, check out Kruschke and Liddell's [*The Bayesian New Statistics: Hypothesis testing, estimation, meta-analysis, and power analysis from a Bayesian perspective*](https://link.springer.com/article/10.3758/s13423-016-1221-4).
+
+### Step 7: Quantify and test conditional direct effects (if relevant).
+
+"If your model includes moderation of the direct effect of X, you will want to probe this interaction by estimating the conditional direct effects" (p. 513).
+
+### Step 8: Tell your story.
+
+> Real science does not proceed in the manner described in re- search methods and statistics textbooks. Rather, we routinely straddle the fence between the hypothetico-deductive approach and a more discovery- oriented or inquisitive mindset that is open to any story the data may inform. Sometimes the story we originally conceived prior to data analysis is simply wrong and we know it after analyzing the data. No one wants to read (as Daryl Bem once put it rather bluntly) "a personal history about your stillborn thoughts" (Bem, 1987, p. 173). Sometimes our data speak to us in ways that change the story we thought we were going to tell into something much more interesting, and hopefully more accurate. (p. 514)
+
+I largely agree, though I still recommend against following Bem's recommendations. Yes, we need to present out work compellingly. But do resist the urge to un-transparently reinvent your research hypotheses for the sake of flashy rhetoric. If you have evidence agains one of the theoretical models in your field, let them know! For an example of scientists embracing the failure of theory, check out Klein and colleagues’ [*Many Labs 4: Failure to replicate mortality salience effect with and without original author involvement*](https://psyarxiv.com/vef2c).
+
+> Of course, there is always the danger of capitalizing on chance when you let your explorations of the data influence the story you tell. We are great at explaining patterns we see. Our brains are wired to do it. So replication is important, and it may be the only way of establishing the generality of our findings and claims in the end. (p. 514)
+
+Yes indeed. So please stop following the poor examples of Bem and others. Present your research honestly and transparently.
+
+
+
+
+
 
 I'm not sure if I'm going to add this to the project or not. 
 

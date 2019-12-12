@@ -38,8 +38,15 @@ library(brms)
 
 Recall that we fit mediation models with **brms** using multivariate syntax. In previous attempts, we've defined and saved the model components outside of the `brm()` function and then plugged then into `brm()` using their identifier. Just to shake things up a bit, we'll just do all the steps right in `brm()`, this time.
 
-```{r model1, cache = T, message = F, warning = F}
-model1 <-
+```{r model11.1}
+# save(model11.1, file = "fits/model11.01.rda")
+# rm(model11.1)
+
+load("fits/model11.01.rda")
+```
+
+```{r, eval = F}
+model11.1 <-
   brm(data = teams, family = gaussian,
       bf(negtone ~ 1 + dysfunc) +
         bf(perform ~ 1 + dysfunc + negtone + negexp + negtone:negexp) + 
@@ -48,13 +55,13 @@ model1 <-
 ```
 
 ```{r}
-print(model1, digits = 3)
+print(model11.1, digits = 3)
 ```
 
 Our model summary coheres nicely with Table 11.1 and the formulas on page 409. Here are the $R^2$ distribution summaries.
 
 ```{r}
-bayes_R2(model1) %>% round(digits = 3)
+bayes_R2(model11.1) %>% round(digits = 3)
 ```
 
 On page 410 Hayes reported two sample means. Compute them like so.
@@ -77,7 +84,7 @@ Here's our Figure 11.4, which uses only the first 40 HMC iterations for the spag
 
 ```{r, fig.width = 10, fig.height = 3.25, warning = F, message = F}
 # `fitted()`
-fitted(model1, 
+fitted(model11.1, 
        newdata = nd,
        resp = "perform", 
        summary = F) %>% 
@@ -116,7 +123,7 @@ $$\theta_{M \rightarrow Y} = b_1 + b_3 W,$$
 where $M$ is `negtone`, $Y$ is `perform`, and $W$ is `negexp`. We can extract our posterior summaries for $b_1$ and $b_3$ like so.
 
 ```{r}
-fixef(model1)[c("perform_negtone", "perform_negtone:negexp"), ]
+fixef(model11.1)[c("perform_negtone", "perform_negtone:negexp"), ]
 ```
 
 ## ~~Estimation of a conditional process model using PROCESS~~ 
@@ -133,7 +140,7 @@ One way to make a version of Table 11.2 is to work with the `posterior_samples()
 
 ```{r}
 post <-
-  posterior_samples(model1)
+  posterior_samples(model11.1)
 
 post %>% 
   mutate(a  = b_negtone_dysfunc,
@@ -185,7 +192,7 @@ Here the posterior distribution for each is on full display.
 The direct effect of $X$ on $Y$ (i.e., `dysfunc` on `perform`) for this model is `b_perform_dysfunc` in **brms**. Here's how to get its summary values from `posterior_summary()`.
 
 ```{r}
-posterior_summary(model1)["b_perform_dysfunc", ] %>% round(digits = 3)
+posterior_summary(model11.1)["b_perform_dysfunc", ] %>% round(digits = 3)
 ```
 
 ### Visualizing the direct and indirect effects.
@@ -200,8 +207,8 @@ post <-
   
 post %>% 
   select(b_perform_dysfunc, `-0.7`:`0.7`) %>% 
-  gather(key, value, -b_perform_dysfunc) %>% 
-  mutate(negexp = key %>% as.double(),
+  pivot_longer(-b_perform_dysfunc) %>% 
+  mutate(negexp = name %>% as.double(),
          iter = rep(1:4000, times = 2)) %>% 
   filter(iter < 401) %>% 
   

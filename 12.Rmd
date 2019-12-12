@@ -32,8 +32,15 @@ $$Y = b_0 + b_1 X + e_Y,$$
 
 where the $X$ is `frame` the $Y$ is `donate`. Here's the model.
 
-```{r model1, cache = T, message = F, warning = F}
-model1 <-
+```{r model12.1}
+# save(model12.1, file = "fits/model12.01.rda")
+# rm(model12.1)
+
+load("fits/model12.01.rda")
+```
+
+```{r, eval = F}
+model12.1 <-
   brm(data = disaster, 
       family = gaussian,
       donate ~ 1 + frame,
@@ -43,7 +50,7 @@ model1 <-
 Check the summary.
 
 ```{r}
-print(model1, digits = 3)
+print(model12.1, digits = 3)
 ```
 
 Hayes interpteted the coefficient for `frame` through the lens of a $t$ statistic and accompanying $p$-value. We'll just plot the posterior. For the figures in this chapter, we'll take theme cues from the vignettes from Matthew Kay's [**tidybayes** package](https://github.com/mjskay/tidybayes).
@@ -52,7 +59,7 @@ Hayes interpteted the coefficient for `frame` through the lens of a $t$ statisti
 library(tidybayes)
 theme_set(theme_tidybayes() + cowplot::panel_border())
 
-posterior_samples(model1) %>% 
+posterior_samples(model12.1) %>% 
   ggplot(aes(x = b_frame, y = 0)) +
   geom_halfeyeh() +
   geom_vline(xintercept = 0, linetype = 2) +
@@ -66,18 +73,25 @@ $$Y = b_0 + b_1 X + + b_2 W + b_3 XW + e_Y,$$
 
 where `skeptic` is the $W$ variable.
 
-```{r model2, cache = T, message = F, warning = F}
-model2 <-
+```{r model12.2}
+save(model12.2, file = "fits/model12.02.rda")
+rm(model12.2)
+
+load("fits/model12.02.rda")
+```
+
+```{r, eval = F}
+model12.2 <-
   brm(data = disaster, 
       family = gaussian,
       donate ~ 1 + frame + skeptic + frame:skeptic,
       chains = 4, cores = 4)
 ```
 
-Our `model2` summary matches nicely with the text.
+Our `model12.2` summary matches nicely with the text.
 
 ```{r}
-print(model2, digits = 3)
+print(model12.2, digits = 3)
 ```
 
 Here's our Figure 12.2.
@@ -88,7 +102,7 @@ nd <-
          skeptic = rep(seq(from = 0, to = 7, length.out = 30),
                        times = 2))
 
-fitted(model2, newdata = nd) %>% 
+fitted(model12.2, newdata = nd) %>% 
   as_tibble() %>% 
   bind_cols(nd) %>% 
   mutate(frame = ifelse(frame == 0, str_c("Natural causes (X = ", frame, ")"),
@@ -119,7 +133,7 @@ nd <-
   crossing(frame   = 0:1,
            skeptic = quantile(disaster$skeptic, probs = c(.16, .5, .86)))
 
-fitted(model2, summary = F,
+fitted(model12.2, summary = F,
        newdata = nd) %>% 
   as_tibble() %>% 
   gather() %>% 
@@ -129,7 +143,7 @@ fitted(model2, summary = F,
              iter = 1:4000)
   ) %>% 
   select(-key) %>% 
-  spread(key = frame, value = value) %>% 
+  pivot_wider(names_from = frame, values_from = value) %>% 
   mutate(difference = `1` - `0`) %>% 
   
   ggplot(aes(x = difference, y = skeptic, fill = skeptic %>% as.character())) +
@@ -140,10 +154,17 @@ fitted(model2, summary = F,
   theme(legend.position = "none")
 ```
 
-Here's our simple mediation model, `model3`, using the multivariate syntax right in the `brm()` function.
+Here's our simple mediation model, `model12.3`, using the multivariate syntax right in the `brm()` function.
 
-```{r model3, cache = T, message = F, warning = F}
-model3 <-
+```{r model12.3}
+# save(model12.3, file = "fits/model12.03.rda")
+# rm(model12.3)
+
+load("fits/model12.03.rda")
+```
+
+```{r, eval = F}
+model12.3 <-
   brm(data = disaster, 
       family = gaussian,
       bf(justify ~ 1 + frame) +
@@ -153,19 +174,19 @@ model3 <-
 ```
 
 ```{r}
-print(model3, digits = 3)
+print(model12.3, digits = 3)
 ```
 
 Consider the Bayesian $R^2$ summaries.
 
 ```{r}
-bayes_R2(model3) %>% round(digits = 3)
+bayes_R2(model12.3) %>% round(digits = 3)
 ```
 
 If you want the indirect effect with its intervals, you use `posterior_samples()` and data wrangle, as usual.
 
 ```{r, warning = F, message = F}
-posterior_samples(model3) %>% 
+posterior_samples(model12.3) %>% 
   mutate(ab = b_justify_frame * b_donate_justify) %>% 
   mean_qi(ab)
 ```
@@ -174,17 +195,22 @@ posterior_samples(model3) %>%
 
 Our conditional process model follows the form
 
-$$
 \begin{align*}
 M & = i_M + a_1 X + a_2 W + a_3 XW + e_M \\
 Y & = i_Y + c_1' X + c_2' W + c_3' XW + b M + e_Y.
 \end{align*}
-$$
 
 We don't need to do anything particularly special to fit a model like this with **brms**. It just requires we do a careful job specifying the formulas in our `bf()` arguments. If you find this syntax a little too cumbersome, you can always specify the formulas outside of `brm()`, save them as one or multiple objects, and plug those objects into `brm()`.
 
-```{r model4, cache = T, message = F, warning = F}
-model4 <-
+```{r model12.4}
+# save(model12.4, file = "fits/model12.04.rda")
+# rm(model12.4)
+
+load("fits/model12.04.rda")
+```
+
+```{r, eval = F}
+model12.4 <-
   brm(data = disaster, 
       family = gaussian,
       bf(justify ~ 1 + frame + skeptic + frame:skeptic) +
@@ -196,46 +222,45 @@ model4 <-
 The model summary:
 
 ```{r}
-print(model4, digits = 3)
+print(model12.4, digits = 3)
 ```
 
 Here are the Bayesian $R^2$ summaries.
 
 ```{r}
-bayes_R2(model4)
+bayes_R2(model12.4)
 ```
 
 ### ~~Estimation using PROCESS~~.
 
-We just fit the model. Next!
+We just fit that model. Next!
 
 ### Quantifying direct and indirect effects.
 
 Here are summaries for $a_1$ through $a_3$.
 
 ```{r}
-fixef(model4)[c(3:5), ] %>% round(digits = 3)
+fixef(model12.4)[c(3:5), ] %>% round(digits = 3)
 ```
 
 This is $b$.
 
 ```{r}
-fixef(model4)["donate_justify", ] %>% round(digits = 3)
+fixef(model12.4)["donate_justify", ] %>% round(digits = 3)
 ```
 
 We'll need to employ `posterior_samples()` to compute $(a_1 + a_3 W)b$, as shown in Table 12.2.
 
 ```{r, warning = F, message = F}
 post <- 
-  posterior_samples(model4) %>% 
+  posterior_samples(model12.4) %>% 
   mutate(`indirect effect when W is 1.592` = (b_justify_frame + `b_justify_frame:skeptic` * 1.592) * b_donate_justify,
          `indirect effect when W is 2.800` = (b_justify_frame + `b_justify_frame:skeptic` * 2.800) * b_donate_justify,
          `indirect effect when W is 5.200` = (b_justify_frame + `b_justify_frame:skeptic` * 5.200) * b_donate_justify)
 
 post %>% 
-  select(starts_with("indirect")) %>% 
-  gather() %>% 
-  group_by(key) %>% 
+  pivot_longer(starts_with("indirect")) %>% 
+  group_by(name) %>% 
   median_qi(value, .prob = .95) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
@@ -275,12 +300,11 @@ post <-
          `direct effect when W is 5.200` = b_donate_frame + `b_donate_frame:skeptic` * 5.200)
 
 post %>% 
-  select(starts_with("direct")) %>% 
-  gather() %>% 
-  group_by(key) %>% 
+  pivot_longer(starts_with("direct")) %>% 
+  group_by(name) %>% 
   median_qi(value, .width = .95) %>% 
   mutate_if(is.double, round, digits = 3) %>% 
-  select(key:.upper)
+  select(name:.upper)
 ```
 
 We can always plot, too.
@@ -311,7 +335,7 @@ effects <-
          w = seq(from = 0, to = 6, length.out = 30)) %>% 
   mutate(`direct effect`   = b_donate_frame + `b_donate_frame:skeptic` * w,
          `indirect effect` = (b_justify_frame + `b_justify_frame:skeptic` * w) * b_donate_justify) %>% 
-  pivot_longer(cols = c(`direct effect`, `indirect effect`)) %>% 
+  pivot_longer(c(`direct effect`, `indirect effect`)) %>% 
   mutate(name = factor(name,
                        levels = c("direct effect", "indirect effect"))) %>% 
   select(w:value)
@@ -359,11 +383,10 @@ We've already computed the 95% intervals for the direct effect, $\theta_{X \righ
 
 ```{r, fig.width = 6, fig.height = 4}
 post %>% 
-  select(starts_with("direct")) %>% 
-  gather() %>% 
-  mutate(key = str_remove(key, "direct effect when W is ") %>% as.double()) %>% 
+  pivot_longer(starts_with("direct")) %>% 
+  mutate(name = str_remove(name, "direct effect when W is ") %>% as.double()) %>% 
   
-  ggplot(aes(x = key, y = value, group = key)) +
+  ggplot(aes(x = name, y = value, group = name)) +
   stat_interval(.width = c(.95, .80, .5)) +
   scale_color_brewer("Interval") +
   coord_cartesian(xlim = c(1, 5.5)) +
@@ -412,10 +435,9 @@ We computed and inspected these 95% intervals, above. Here's another way we migh
 
 ```{r, fig.width = 5, fig.height = 3}
 post %>% 
-  select(starts_with("indirect")) %>% 
-  gather() %>% 
+  pivot_longer(starts_with("indirect")) %>% 
   rename(`conditional indirect effect` = value) %>% 
-  mutate(W = str_remove(key, "indirect effect when W is ") %>% as.double()) %>% 
+  mutate(W = str_remove(name, "indirect effect when W is ") %>% as.double()) %>% 
   
   
   ggplot(aes(x = `conditional indirect effect`, y = W, fill = W %>% as.character())) +
@@ -434,8 +456,15 @@ post %>%
 
 Fitting the model without the interaction term is just a small change to one of our `formula` arguments.
 
-```{r model5, cache = T, message = F, warning = F}
-model5 <-
+```{r model12.5}
+# save(model12.5, file = "fits/model12.05.rda")
+# rm(model12.5)
+
+load("fits/model12.05.rda")
+```
+
+```{r, eval = F}
+model12.5 <-
   brm(data = disaster, 
       family = gaussian,
       bf(justify ~ 1 + frame + skeptic + frame:skeptic) +
@@ -447,20 +476,20 @@ model5 <-
 Here are the results.
 
 ```{r}
-print(model5, digits = 3)
+print(model12.5, digits = 3)
 ```
 
 Since we're altering the model, we may as well use information criteria to compare the two versions.
 
 ```{r}
-model4 <- add_criterion(model4, "loo")
-model5 <- add_criterion(model5, "loo")
+model12.4 <- add_criterion(model12.4, "loo")
+model12.5 <- add_criterion(model12.5, "loo")
 
-loo_compare(model4, model5) %>% 
+loo_compare(model12.4, model12.5) %>% 
   print(simplify = F)
 ```
 
-The difference in LOO-CV values for the two models was modest. There's little predictive reason to choose one over the other. You could argue in favor of `model5` because it's simpler than `model4`. Since we've got a complex model either way, one might also consider which one was of primary theoretical interest.
+The difference in LOO-CV values for the two models was modest. There's little predictive reason to choose one over the other. You could argue in favor of `model12.5` because it's simpler than `model12.4`. Since we've got a complex model either way, one might also consider which one was of primary theoretical interest.
 
 ## Mediated moderation
 
@@ -472,10 +501,10 @@ Hayes later opined:
 
 ### Mediated moderation as the indirect effect of a product.
 
-Hayes explains this in the next subsection, but we've already fit this model presented in this subsection. We called it `model4`. Here's the summary.
+Hayes explains this in the next subsection, but we've already fit this model presented in this subsection. We called it `model12.4`. Here's the summary.
 
 ```{r}
-print(model4, digits = 3)
+print(model12.4, digits = 3)
 ```
 
 ### Why mediated moderation is neither interesting nor meaningful.

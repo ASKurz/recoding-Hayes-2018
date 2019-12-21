@@ -1,6 +1,6 @@
 # Causal Steps, Confounding, and Causal Order
 
-```{r set-options, echo = FALSE, cache = FALSE}
+```{r, echo = FALSE, cache = FALSE}
 options(width = 110)
 ```
 
@@ -44,7 +44,7 @@ library(brms)
 
 Recall that if you want the correlations with Bayesian estimation and those sweet Bayesian credible intervals, you set up an intercept-only multivariate model.
 
-```{r model4.1}
+```{r model4.1, echo = F}
 # save(model4.1, file = "fits/model04.01.rda")
 # rm(model4.1)
 
@@ -93,7 +93,7 @@ posterior_samples(model4.1) %>%
 
 In the last chapter, we said there were multiple ways to set up a multivariate model in brms. Our first approach was to externally define the submodels using the `bf()` function, save them as objects, and then include those objects within the `brm()` function. Another approach is to just define the separate `bf()` submodels directly in the `brm()` function, combining them with the `+` operator. That's the approach we will practice in this chapter. Here's what it looks like for our first mediation model.
 
-```{r model4.2}
+```{r model4.2, echo = F}
 # save(model4.2, file = "fits/model04.02.rda")
 # rm(model4.2)
 
@@ -138,7 +138,7 @@ bayes_R2(model4.2, summary = F) %>%
                        guide  = guide_legend(title.theme = element_blank())) +
   scale_y_continuous(NULL, breaks = NULL) +
   xlim(0:1) +
-  labs(title = expression(paste("The ", italic("R")^{2}, " distributions for model4.2")),
+  labs(title = expression(paste("The ", italic("R")^{2}, " distributions for model 4.2")),
        x = NULL) +
   theme_black() +
   theme(panel.grid = element_blank())
@@ -248,7 +248,7 @@ pmi <- read_csv("data/pmi/pmi.csv")
 
 Refit the model, this time with the `bf()` statements defined right within `brm()`.
 
-```{r model4.3}
+```{r model4.3, echo = F}
 # save(model4.3, file = "fits/model04.03.rda")
 # rm(model4.3)
 
@@ -296,10 +296,12 @@ Happily, these results are closer to those in the text than with the previous ex
 One way to get a standardized solution is to standardize the variables in the data and then fit the model with those standardized variables. To do so, we'll revisit our custom `standardize()`, put it to work, and fit the standardized version of the model from section 3.5, which we'll call `model4.4`.
 
 ```{r, message = F, warning = F}
+# make the function
 sandardize <- function(x) {
   (x - mean(x)) / sd(x)
 }
 
+# use the function
 estress <-
   estress %>% 
   mutate(withdraw_z = sandardize(withdraw), 
@@ -309,7 +311,7 @@ estress <-
 
 Fit the model.
 
-```{r model4.4}
+```{r model4.4, echo = F}
 # save(model4.4, file = "fits/model04.04.rda")
 # rm(model4.4)
 
@@ -350,7 +352,7 @@ posterior_samples(model4.4) %>%
 
 Let's confirm that we can recover these values by applying the formulas on page 135 to the unstandardized model, which we'll call `model5`. First, we'll have to fit that model since we haven't fit that one since Chapter 3.
 
-```{r model4.5}
+```{r model4.5, echo = F}
 # save(model4.5, file = "fits/model04.05.rda")
 # rm(model4.5)
 
@@ -424,7 +426,7 @@ The same basic problems with multicollinearity applies to the Bayesian paradigm,
 
 ### Estimation of a model with multiple $X$ variables in ~~PROCESS~~ brms.
 
-Hayes discussed the limitation that his PROCESS program may only handle a single $X$ variable in the `x=` part of the command line, for which he displayed a workaround. We don't have such a limitation in **brms**. Using Hayes's hypothetical data syntax for a model with three $X$s, the brms code would be like this.
+Hayes discussed the limitation that his PROCESS program may only handle a single $X$ variable in the `x=` part of the command line, for which he displayed a workaround. We don't have such a limitation in **brms**. Using Hayes's hypothetical data syntax for a model with three $X$s, the **brms** code would be like this.
 
 ```{r, eval = F}
 model4.6 <-
@@ -456,7 +458,7 @@ Before we proceed, if data simulation is new to you, you might check out [Roger 
 
 Here we fit the model.
 
-```{r model4.6}
+```{r model4.6, echo = F}
 # save(model4.6, file = "fits/model04.06.rda")
 # rm(model4.6)
 
@@ -501,7 +503,7 @@ head(d)
 
 Fitting this requires a slew of `bf()` statements.
 
-```{r model4.7}
+```{r model4.7, echo = F}
 # save(model4.7, file = "fits/model04.07.rda")
 # rm(model4.7)
 

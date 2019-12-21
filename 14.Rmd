@@ -10,7 +10,7 @@ options(width = 110)
 >
 > I won't argue against this perspective, as I believe it is for the most part right on the money. But I also believe that statistical methods can play an important role in theory development as well--that the statistical cart need not always, should not always, and often does not follow the theoretical horse. When we learn something new analytically, this can change the way we think of things theoretically and how we then go about testing the ideas that our newfound awareness of an analytical method inspired (cf. [Slater, Hayes, & Snyder, 2008, p. 2](https://us.sagepub.com/en-us/nam/the-sage-sourcebook-of-advanced-data-analysis-methods-for-communication-research/book228339)). (pp. 507--508)
 
-## 14.1 A strategy for approaching a conditional process analysis
+## A strategy for approaching a conditional process analysis
 
 > Things don't always turn out as we expected and articulated in hypotheses 1, 2, and 3. And sometimes after looking at the data, our thinking about the process at work changes and new hypotheses come to mind that are worth testing. Scientists routinely switch back and forth between the context of justification and the context of discovery, testing hypotheses conceived before the data were analyzed while also exploring one's data to see what else can be learned from patterns observed but not anticipated.
 
@@ -108,7 +108,7 @@ Other than that, *please consider plotting your interactions*. Hayes gave some e
 >
 > That said, I would err on the side of presenting more information rather than less whenever space allows it. (p. 526)
 
-As recommended just above, you can also cover all this with online supplemental material posted to a stable online repository, such as the [Open Science Framework](https://osf.io/). I cant' recommend this enough.
+As recommended just above, you can also cover all this with online supplemental material posted to a stable online repository, such as the [Open Science Framework](https://osf.io/). I can't recommend this enough.
 
 ## Should I use structural equation modeling instead of regression analysis?
 

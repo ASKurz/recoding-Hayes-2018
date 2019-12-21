@@ -1,5 +1,5 @@
 --- 
-title: "recoding *Introduction to Mediation, Moderation, and Conditional Process Analysis*"
+title: "Recoding *Introduction to Mediation, Moderation, and Conditional Process Analysis*"
 subtitle: "version 1.1.0"
 author: ["A Solomon Kurz"]
 date: "`r Sys.Date()`"
@@ -47,13 +47,13 @@ I reproduce the bulk of the figures in the text, too. The plots in the first few
 
 In this project, I use a handful of formatting conventions gleaned from [*R4DS*](http://r4ds.had.co.nz/introduction.html#running-r-code) and [*R Markdown: The Definitive Guide*](https://bookdown.org/yihui/rmarkdown/software-info.html). 
 
+* I put **R** and **R** packages (e.g., **tidybayes**) in **boldface**.
 * **R** code blocks and their output appear in a gray background. E.g., 
 
 ```{r}
 2 + 2
 ```
 
-* I put **R** and **R** packages (e.g., **tidybayes**) in **boldface**.
 * Functions are in a typewriter font and followed by parentheses, all atop a gray background (e.g., `brm()`).
 * When I want to make explicit what packages a given function comes from, I insert the double-colon operator `::` between the package name and the function (e.g., `tidyr::gather()`).
 * **R** objects, such as data or function arguments, are in typewriter font atop a gray background (e.g., `d` or `size = 2`).
@@ -68,10 +68,11 @@ I released the 1.0.0 version of this book in July of 2018. This 1.1.0 version in
 * I have updated the multivariate model code with the `mvbind()` and `mvbf()` functions,
 * I have made greater use of the handy **tidybayes** package for post-processing models,
 * I have updated and simplified a lot of the **tidyverse** code,
-all fit objects in the book are new saved in `.rda` files in the [`fits` folder](https://github.com/ASKurz/recoding-Hayes-2018/tree/master/fits) on GitHub,
+* all fit objects have sequential names and are now saved in `.rda` files in the [`fits` folder](https://github.com/ASKurz/recoding-Hayes-2018/tree/master/fits) on GitHub,
 * I have substantially increased the amount of Hayes quotes,
-* I have added more statistical formulas throughout the text, and
-* I have added a version of Chapter 14, which includes warnings about relying on cross-sectional mediation.
+* I added more statistical formulas throughout the text,
+* I added a version of Chapter 14, which includes warnings about relying on cross-sectional mediation, and
+* the various **R** objects enjoy simpler and more standardized names.
 
 It's unclear what future versions of this book may hold. Candidates include
 
@@ -80,5 +81,5 @@ It's unclear what future versions of this book may hold. Candidates include
 * examples of longitudinal mediation, and
 * sterner warnings against cross-sectional mediation.
 
-We'll see. In the meantime, feel free to make suggestions or report typos or coding goofs [here](https://github.com/ASKurz/recoding-Hayes-2018/issues).
+We'll see. In the meantime, feel free to make suggestions or report typos and coding goofs [here](https://github.com/ASKurz/recoding-Hayes-2018/issues).
 

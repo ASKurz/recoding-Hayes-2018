@@ -176,7 +176,7 @@ library(brms)
 
 Now fit the simple univariable model.
 
-```{r model7.1}
+```{r model7.1, echo = F}
 # save(model7.1, file = "fits/model07.01.rda")
 # rm(model7.1)
 
@@ -238,7 +238,7 @@ post %>%
 
 We'll use the `update()` function to hastily fit `model7.2` and `model7.3`.
 
-```{r model7.2_model7.3}
+```{r model7.2_model7.3, echo = F}
 # save(model7.2, file = "fits/model07.02.rda")
 # rm(model7.2)
 # save(model7.3, file = "fits/model07.03.rda")
@@ -402,7 +402,7 @@ disaster <-
 
 And here's how we might fit the model.
 
-```{r model7.4}
+```{r model7.4, echo = F}
 # save(model7.4, file = "fits/model07.04.rda")
 # rm(model7.4)
 
@@ -452,7 +452,7 @@ disaster <-
 
 Time to fit `model5`.
 
-```{r model7.5}
+```{r model7.5, echo = F}
 # save(model7.5, file = "fits/model07.05.rda")
 # rm(model7.5)
 
@@ -497,7 +497,7 @@ On page 244, Hayes discussed using the 16th, 50th, and 84th percentiles for the 
 quantile(disaster$skeptic, probs = c(.16, .5, .84))
 ```
 
-The first two columns in Hayes' Table 7.5 contain the values he combined with the point estimates of his model to get the $\hat Y$ column. The way we'll push those values through `model7.3`'s posterior is with `brms::fitted()`. As a preparatory step, we'll put the predictor values in a data object, `nd`.
+The first two columns in Hayes's Table 7.5 contain the values he combined with the point estimates of his model to get the $\hat Y$ column. The way we'll push those values through `model7.3`'s posterior is with `brms::fitted()`. As a preparatory step, we'll put the predictor values in a data object, `nd`.
 
 ```{r}
 (
@@ -772,7 +772,7 @@ I think this is valuable advice, particularly when working within the Bayesian p
 
 ## The difference between testing for moderation and probing it
 
-This is another section where the NHST-type paradigm contrasts with many within the contemporary Bayesian paradigm. E.g., Hayes opened the section with: "We test for evidence of moderation when we want to know whether the relationship between $X$ and $Y$ varies systematically as a function of a proposed moderator $W$". His use of "whether" suggests we are talking about a binary answer--either there is an effect or there isn't. But, as [Gelman argued](http://www.stat.columbia.edu/~gelman/research/published/bayes_management.pdf), the default presumption in social science [and warning, I'm a psychologist and thus biased towards thinking in terms of social science] is that treatment effects--and more generally, causal effects--vary across contexts [^1] . As such, asking "whether" there's a difference or an interaction effect isn't really the right question. Rather, we should presume variation at the outset and ask instead what the magnitude of that variation is and how much accounting for it matters for our given purposes. If the variation--read *interaction effect*--is tiny and of little theoretical interest, perhaps we might just ignore it and not include it in the model. Alternatively, if the variation is large or of theoretical interest, we might should include it in the model regardless of statistical significance.
+This is another section where the NHST-type paradigm contrasts with many within the contemporary Bayesian paradigm. E.g., Hayes opened the section with: "We test for evidence of moderation when we want to know whether the relationship between $X$ and $Y$ varies systematically as a function of a proposed moderator $W$". His use of "whether" suggests we are talking about a binary answer--either there is an effect or there isn't. But, as [Gelman argued](http://www.stat.columbia.edu/~gelman/research/published/bayes_management.pdf), the default presumption in social science [and warning, I'm a psychologist and thus biased towards thinking in terms of social science] is that treatment effects--and more generally, causal effects--vary across contexts [^7.1] . As such, asking "whether" there's a difference or an interaction effect isn't really the right question. Rather, we should presume variation at the outset and ask instead what the magnitude of that variation is and how much accounting for it matters for our given purposes. If the variation--read *interaction effect*--is tiny and of little theoretical interest, perhaps we might just ignore it and not include it in the model. Alternatively, if the variation is large or of theoretical interest, we might should include it in the model regardless of statistical significance.
 
 Another way into this topic is posterior predictive checking. We've already done a bit of this in previous chapters. The basic idea, recall, is that better models should give us a better sense of the patterns in the data. In the plot below, we continue to show the interaction effect with two regression lines, but this time we separate them into their own panels by `frame`. In addition, we add the original data which we also separate and color code by `frame`.
 
@@ -914,7 +914,7 @@ disaster <-
 
 With our dummy in hand, we're ready to fit the two models.
 
-```{r model7.6_model7.7}
+```{r model7.6_model7.7, echo = F}
 # save(model7.6, file = "fits/model07.06.rda")
 # rm(model7.6)
 # save(model7.7, file = "fits/model07.07.rda")
@@ -992,5 +992,5 @@ sessionInfo()
 
 ## Footnote {-}
 
-[^1]: If you're an experimental psychologist, check out the [great paper](https://www.researchgate.net/profile/Niall_Bolger/publication/332358948_Causal_processes_in_psychology_are_heterogeneous/links/5cd9b471a6fdccc9ddaa7879/Causal-processes-in-psychology-are-heterogeneous.pdf) by Bolger, Zee, Rossignac-Milon, and Hassin, *Causal processes in psychology are heterogeneous*. The rest of you social scientists aren't off the hook. Check out Ellen Hamaker's excellent book chapter, [*Why researchers should think "within-person": A paradigmatic rationale*](https://www.researchgate.net/publication/266896375_Why_researchers_should_think_within-person_A_paradigmatic_rationale?fbclid=IwAR2Zw3DEI3QDVSYyw2yj0LiioGi-IOUkh0xWalE9aFqjX8k50s6Vyfgm5bg). Both works suggest researchers might do well to switch out their fixed-effects models for multilevel models. Does this mean the methods we've been covering are of no use? No. But don't stop here, friends. Keep learning!
+[^7.1]: If you're an experimental psychologist, check out the [great paper](https://www.researchgate.net/profile/Niall_Bolger/publication/332358948_Causal_processes_in_psychology_are_heterogeneous/links/5cd9b471a6fdccc9ddaa7879/Causal-processes-in-psychology-are-heterogeneous.pdf) by Bolger, Zee, Rossignac-Milon, and Hassin, *Causal processes in psychology are heterogeneous*. The rest of you social scientists aren't off the hook. Check out Ellen Hamaker's excellent book chapter, [*Why researchers should think "within-person": A paradigmatic rationale*](https://www.researchgate.net/publication/266896375_Why_researchers_should_think_within-person_A_paradigmatic_rationale?fbclid=IwAR2Zw3DEI3QDVSYyw2yj0LiioGi-IOUkh0xWalE9aFqjX8k50s6Vyfgm5bg). Both works suggest researchers might do well to switch out their fixed-effects models for multilevel models. Does this mean the methods we've been covering are of no use? No. But don't stop here, friends. Keep learning!
 

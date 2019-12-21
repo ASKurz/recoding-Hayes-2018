@@ -92,7 +92,7 @@ m_model <- bf(pmi ~ 1 + cond)
 
 Now we have our `bf()` objects in hand, we'll combine them with the `+` operator within the `brm()` function. We'll also specify `set_rescor(FALSE)`--we're not interested in adding a residual correlation between `reaction` and `pmi`.
 
-```{r model3.1}
+```{r model3.1, echo = F}
 # save(model3.1, file = "fits/model03.01.rda")
 # rm(model3.1)
 
@@ -211,7 +211,7 @@ post %>%
   round(digits = 3)
 ```
 
-Their magnitudes are similar, but this asymmetry will be a source of contrast to our estimates and those in the text. This is also something to consider when reporting on central tendency. When the indirect effect--or any other parameter, for that matter--is quite asymmetric, you might prefer reporting the median rather than the mean.
+Their magnitudes are similar, but this asymmetry will be a source of contrast to our estimates and the OLS estimates Hayes reported in the text. This is also something to consider when reporting on central tendency. When the indirect effect--or any other parameter, for that matter--is quite asymmetric, you might prefer reporting the median rather than the mean.
 
 On page 90, Hayes computed the *adjusted means* for $Y$. For both `cond == 1` and `cond == 0`, he computed the expected values for `reaction` when `pmi` was at its mean. A natural way to do that in **brms** is with `fitted()`. First we'll put our input values for `cond` and `pmi` in a tibble, which we'll call `nd`. Then we'll feed `nd` into the `newdata` argument within the `fitted()` function.
 
@@ -428,7 +428,7 @@ m_model <- bf(affect ~ 1 + estress)
 
 With our `y_model` and `m_model` defined, we're ready to fit.
 
-```{r model3.2}
+```{r model3.2, echo = F}
 # save(model3.2, file = "fits/model03.02.rda")
 # rm(model3.2)
 

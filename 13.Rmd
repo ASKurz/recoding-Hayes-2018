@@ -54,7 +54,7 @@ y_model <- bf(liking   ~ 1 + d1 + d2 + sexism + d1:sexism + d2:sexism + respappr
 
 Now we're ready to fit our primary model, the conditional process model with a multicategorical antecedent.
 
-```{r model13.1}
+```{r model13.1, echo = F}
 # save(model13.1, file = "fits/model13.01.rda")
 # rm(model13.1)
 
@@ -171,7 +171,7 @@ y_model <- bf(liking   ~ 1 + d1 + d2 + respappr + sexism + d1:sexism + d2:sexism
 
 Now we fit `model13.2`.
 
-```{r model13.2}
+```{r model13.2, echo = F}
 # save(model13.2, file = "fits/model13.02.rda")
 # rm(model13.2)
 
@@ -230,7 +230,7 @@ The Bayesian $R^2$, the LOO-CV, and the WAIC all suggest there's little differen
 
 Within our Bayesian modeling paradigm, we don't have a direct analogue to the $F$-tests Hayes presented on page 483. But a little `fitted()` and follow-up wrangling will give us some difference scores.
 
-```{r, fig.width = 10, fig.height = 4.5}
+```{r, fig.width = 10, fig.height = 4.5, warning = F}
 # we need new `nd` data
 nd <-
   tibble(d1 = c(1/3, -2/3, 1/3),
@@ -481,7 +481,7 @@ post %>%
 
 In order to get the $R^2$ difference distribution analogous to the change in $R^2$ $F$-test Hayes discussed on pages 495--496, we'll have to first refit the model without the interaction for the $Y$ criterion, `liking`.
 
-```{r model13.3}
+```{r model13.3, echo = F}
 # save(model13.3, file = "fits/model13.03.rda")
 # rm(model13.3)
 

@@ -42,7 +42,7 @@ library(brms)
 
 Bayesian correlations, recall, just take an intercepts-only multivariate model.
 
-```{r model5.1}
+```{r model5.1, echo = F}
 # save(model5.1, file = "fits/model05.01.rda")
 # rm(model5.1)
 
@@ -73,7 +73,7 @@ y_model  <- bf(reaction ~ 1 + import + pmi + cond)
 
 And now we fit the model.
 
-```{r model5.2}
+```{r model5.2, echo = F}
 # save(model5.2, file = "fits/model05.02.rda")
 # rm(model5.2)
 
@@ -147,7 +147,7 @@ post %>%
 
 In the `value` column, we have our measure of central tendency (i.e., median). The 95% intervals are in the next two columns. With **tidybayes**, we can ask for different kinds of intervals and different kinds of measures of central tendency, as indicated by the `.width` and `.point` columns, respectively. For example, here's the output for the same variables when we ask for posterior means and 80% intervals.
 
-```{r}
+```{r, warning = F, message = F}
 post %>% 
   pivot_longer(a1:c) %>% 
   group_by(name) %>% 
@@ -178,9 +178,9 @@ Let's follow along. First, we'll get those two group means and save them as numb
 
 Here we follow the formula in the last sentence of the paragraph and then compare the results to the posterior for `a1b1`.
 
-```{r}
+```{r, warning = F, message = F}
 post %>% 
-  # use Hayes' formula to make a new vector, `handmade a1b1` 
+  # use Hayes's formula to make a new vector, `handmade a1b1` 
   mutate(`handmade a1b1` = (cond_1_import_mean - cond_0_import_mean) * b1) %>% 
   # wragle as usual
   pivot_longer(c(a1b1, `handmade a1b1`)) %>% 
@@ -230,8 +230,8 @@ To use the equations on the top of page 161, we'll just work directly with the o
 
 ```{r, warning = F}
 post %>% 
-  mutate(Y_bar_given_X_1 = b_import_Intercept + b_reaction_cond * 1 + b_reaction_import * b_import_Intercept + b_reaction_pmi * b_pmi_Intercept,
-         Y_bar_given_X_0 = b_import_Intercept + b_reaction_cond * 0 + b_reaction_import * b_import_Intercept + b_reaction_pmi * b_pmi_Intercept) %>% 
+  mutate(Y_bar_given_X_1   = b_import_Intercept + b_reaction_cond * 1 + b_reaction_import * b_import_Intercept + b_reaction_pmi * b_pmi_Intercept,
+         Y_bar_given_X_0   = b_import_Intercept + b_reaction_cond * 0 + b_reaction_import * b_import_Intercept + b_reaction_pmi * b_pmi_Intercept) %>% 
   mutate(`c_prime by hand` = Y_bar_given_X_1 - Y_bar_given_X_0) %>% 
   pivot_longer(c(c_prime, `c_prime by hand`)) %>% 
   group_by(name) %>% 
@@ -354,7 +354,7 @@ post %>%
 
 The model syntax is similar to the earlier multiple mediator model. All we change is adding `import` to the list of predictors in the submodel for `m2_model`. But this time, let's take the approach from last chapter where we define our `bf()` formulas all within `brm()`.
 
-```{r model5.3}
+```{r model5.3, echo = F}
 # save(model5.3, file = "fits/model05.03.rda")
 # rm(model5.3)
 

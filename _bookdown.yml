@@ -1,6 +1,0 @@
-book_filename: "recoding Hayes (2018)"
-language:
-  ui:
-    chapter_name: "Chapter "
-delete_merged_file: true
-new_session: yes

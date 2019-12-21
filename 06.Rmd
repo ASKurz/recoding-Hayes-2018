@@ -81,7 +81,7 @@ library(brms)
 
 This is the first time we've had a simple univariate regression model in a while--no special `mvbind()` syntax or multiple `bf()` formulas, just straight up `brms::brm()`.
 
-```{r model6.1}
+```{r model6.1, echo = F}
 # save(model6.1, file = "fits/model06.01.rda")
 # rm(model6.1)
 
@@ -155,7 +155,7 @@ y_model <- bf(liking   ~ 1 + d1 + d2 + respappr)
 
 There's a third way to fit multivariate models in **brms**. It uses either the `mvbrmsformula()` function, or its abbreviated version, `mvbf()`. With these, we first define our submodels in `br()` statements like before. We then combine them within `mvbf()`, separated with a comma. If we'd like to avoid estimating a residual correlation, which we do in this project--, we then set `rescore = FALSE`. Here's how it looks like for our second model.
 
-```{r model6.2}
+```{r model6.2, echo = F}
 # save(model6.2, file = "fits/model06.02.rda")
 # rm(model6.2)
 
@@ -280,7 +280,7 @@ The points are the posterior medians, the thick inner lines the 50% intervals, a
 
 If we want to examine $R^2$ change for dropping the dummy variables, we'll first fit a model that omits them.
 
-```{r model6.3}
+```{r model6.3, echo = F}
 # save(model6.3, file = "fits/model06.03.rda")
 # rm(model6.3)
 
@@ -378,7 +378,7 @@ y_model <- bf(liking   ~ 1 + d_1 + d_2 + respappr)
 
 Now we fit using the `mvbf()` approach.
 
-```{r model6.4}
+```{r model6.4, echo = F}
 # save(model6.4, file = "fits/model06.04.rda")
 # rm(model6.4)
 
@@ -524,7 +524,7 @@ protest %>%
 
 Before we fit a full mediation model, we should warm up. Here we fit a univariable model for `liking`. This is an alternative to what we did way back with `model6.1`.
 
-```{r model6.5}
+```{r model6.5, echo = F}
 # save(model6.5, file = "fits/model06.05.rda")
 # rm(model6.5)
 
@@ -589,7 +589,7 @@ y_model <- bf(liking   ~ 0 + group + respappr)
 
 Now fit `model6` using the `mvbf()` approach.
 
-```{r model6.6}
+```{r model6.6, echo = F}
 # save(model6.6, file = "fits/model06.06.rda")
 # rm(model6.6)
 

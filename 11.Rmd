@@ -38,7 +38,7 @@ library(brms)
 
 Recall that we fit mediation models with **brms** using multivariate syntax. In previous attempts, we've defined and saved the model components outside of the `brm()` function and then plugged then into `brm()` using their identifier. Just to shake things up a bit, we'll just do all the steps right in `brm()`, this time.
 
-```{r model11.1}
+```{r model11.1, echo = F}
 # save(model11.1, file = "fits/model11.01.rda")
 # rm(model11.1)
 
@@ -116,7 +116,7 @@ fitted(model11.1,
 
 Also, the plot theme in this chapter is a nod to the style [John Kruschke](http://www.indiana.edu/~kruschke/DoingBayesianDataAnalysis/) frequently uses in his papers and texts.
 
-Using Hayes' notation from the top of page 412, we can express $M$'s conditional effect on $Y$ as
+Using Hayes's notation from the top of page 412, we can express $M$'s conditional effect on $Y$ as
 
 $$\theta_{M \rightarrow Y} = b_1 + b_3 W,$$
 
@@ -327,7 +327,7 @@ post %>%
 
 And we might plot these with something like this.
 
-```{r, fig.width = 6, fig.height = 3}
+```{r, fig.width = 6, fig.height = 3, warning = F}
 post %>% 
   mutate(a  = b_negtone_dysfunc,
          b1 = b_perform_negtone,

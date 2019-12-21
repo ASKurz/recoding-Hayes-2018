@@ -25,7 +25,7 @@ $$Y = i_Y + b_1 X + b_2 W + b_3 XW + e_Y.$$
 
 We can use that equation to fit our first moderation model with a binary $W$ (i.e., `frame`) like so.
 
-```{r model8.1}
+```{r model8.1, echo = F}
 # save(model8.1, file = "fits/model08.01.rda")
 # rm(model8.1)
 
@@ -174,7 +174,7 @@ disaster <-
 
 With `frame_ep` in hand, we’re ready to refit the model.
 
-```{r model8.2}
+```{r model8.2, echo = F}
 # save(model8.2, file = "fits/model08.02.rda")
 # rm(model8.2)
 
@@ -213,7 +213,7 @@ glimpse(glbwarm)
 
 In this section we add three covariates (i.e., $C$ variables) to the basic moderation model. Although Hayes made a distinction between the $X$, $M$, and $C$ variables in the text, that distinction is conceptual and doesn't impact the way we enter them into `brm()`. Rather, the `brm()` formula clarifies they're all just predictors.
 
-```{r model8.3}
+```{r model8.3, echo = F}
 # save(model8.3, file = "fits/model08.03.rda")
 # rm(model8.3)
 
@@ -362,7 +362,7 @@ In other words, each of those orange lines is a credible expression of $\theta_{
 
 Although this method is not necessary, it can be handy to slowly build your model. This method can also serve nice rhetorical purposes in a paper. Anyway, here's our multivariable but non-moderation model, `model8.4`.
 
-```{r model8.4}
+```{r model8.4, echo = F}
 # save(model8.4, file = "fits/model08.04.rda")
 # rm(model8.4)
 
@@ -445,7 +445,7 @@ glimpse(caskets)
 
 Fit the moderation model.
 
-```{r model8.5}
+```{r model8.5, echo = F}
 # save(model8.5, file = "fits/model08.05.rda")
 # rm(model8.5)
 
@@ -492,7 +492,7 @@ post %>%
 
 And here are the marginal means from Table 8.3.
 
-```{r}
+```{r, warning = F, message = F}
 post %>% 
   pivot_longer(Y_bar_12:Y_bar_24) %>% 
   group_by(name) %>% 
@@ -690,7 +690,7 @@ post %>%
 
 A nice feature of **brms** is you can transform your data right within the `brm()` or `update()` functions. Here we'll make our two new main-effects-coded variables, `policy_me` and `kerry_me`, with the `mutate()` function right within `update()`.
 
-```{r model8.6}
+```{r model8.6, echo = F}
 # save(model8.6, file = "fits/model08.06.rda")
 # rm(model8.6)
 
@@ -757,7 +757,7 @@ fixef(model8.6)[4, ] %>% round(digits = 3)
 
 However, the results aren't exactly the same because of simulation error. If you were working on a project requiring high precision, increase the number of posterior iterations. To demonstrate, here we'll increase each chain's post-warmup iteration count by an order of magnitude, resulting in 80,000 post-warmup iterations rather than the default 4,000.
 
-```{r model8.7_model_8.8}
+```{r model8.7_model_8.8, echo = F}
 # save(model8.7, file = "fits/model08.07.rda")
 # rm(model8.7)
 # save(model8.8, file = "fits/model08.08.rda")
@@ -819,7 +819,7 @@ head(caskets)
 
 Now check out what happens if we reformat our formula to `interest ~ 0 + policy_kerry`.
 
-```{r model8.9}
+```{r model8.9, echo = F}
 # save(model8.9, file = "fits/model08.09.rda")
 # rm(model8.9)
 

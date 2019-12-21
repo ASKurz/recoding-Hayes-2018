@@ -32,7 +32,7 @@ $$Y = b_0 + b_1 X + e_Y,$$
 
 where the $X$ is `frame` the $Y$ is `donate`. Here's the model.
 
-```{r model12.1}
+```{r model12.1, echo = F}
 # save(model12.1, file = "fits/model12.01.rda")
 # rm(model12.1)
 
@@ -73,9 +73,9 @@ $$Y = b_0 + b_1 X + + b_2 W + b_3 XW + e_Y,$$
 
 where `skeptic` is the $W$ variable.
 
-```{r model12.2}
-save(model12.2, file = "fits/model12.02.rda")
-rm(model12.2)
+```{r model12.2, echo = F}
+# save(model12.2, file = "fits/model12.02.rda")
+# rm(model12.2)
 
 load("fits/model12.02.rda")
 ```
@@ -128,7 +128,7 @@ fitted(model12.2, newdata = nd) %>%
 
 In Hayes's Figure 12.2, he emphasized the differences at the three levels of `skeptic`. If you want the full difference score distributions in a pick-a-point-approach sort of way, you might plot the densities with `tidybayes::geom_halfeyeh()`, which places coefficient plots at the base of the densities. In this case, we show the posterior medians with the dots, the 50% intervals with the thick horizontal lines, and the 95% intervals with the thinner horizontal lines.
 
-```{r, fig.width = 6, fig.height = 2.5}
+```{r, fig.width = 6, fig.height = 2.5, warning = F}
 nd <-
   crossing(frame   = 0:1,
            skeptic = quantile(disaster$skeptic, probs = c(.16, .5, .86)))
@@ -156,7 +156,7 @@ fitted(model12.2, summary = F,
 
 Here's our simple mediation model, `model12.3`, using the multivariate syntax right in the `brm()` function.
 
-```{r model12.3}
+```{r model12.3, echo = F}
 # save(model12.3, file = "fits/model12.03.rda")
 # rm(model12.3)
 
@@ -202,7 +202,7 @@ Y & = i_Y + c_1' X + c_2' W + c_3' XW + b M + e_Y.
 
 We don't need to do anything particularly special to fit a model like this with **brms**. It just requires we do a careful job specifying the formulas in our `bf()` arguments. If you find this syntax a little too cumbersome, you can always specify the formulas outside of `brm()`, save them as one or multiple objects, and plug those objects into `brm()`.
 
-```{r model12.4}
+```{r model12.4, echo = F}
 # save(model12.4, file = "fits/model12.04.rda")
 # rm(model12.4)
 
@@ -456,7 +456,7 @@ post %>%
 
 Fitting the model without the interaction term is just a small change to one of our `formula` arguments.
 
-```{r model12.5}
+```{r model12.5, echo = F}
 # save(model12.5, file = "fits/model12.05.rda")
 # rm(model12.5)
 

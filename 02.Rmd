@@ -68,7 +68,7 @@ library(brms)
 
 We'll start simple and just use the default priors and settings, but with the addition of parallel sampling via `cores = 4`.
 
-```{r model2.1}
+```{r model2.1, echo = F}
 # save(model2.1, file = "fits/model02.01.rda")
 # rm(model2.1)
 
@@ -91,26 +91,26 @@ print(model2.1)
 
 In regression models, we typically use predictor variables to explain variation in our criterion variables. It's pretty much never the case that our predictors explain all the variation. The variation that's left over is often called residual variation, residual variance, residuals, error, or even $\epsilon$. Throughout the text, Hayes typically referred to it as $e$.
 
-More formally, when we use likelihood-based estimators, such as maximum likelihood (popular with multilevel modeling and structural equation modeling) or Bayesian estimators, we express the models for our criterion variables in terms of likelihood functions. Probably the  most common likelihood function, and the one consistent with the models in Hayes’ text, is the Gaussian likelihood. With that likelihood we say our criterion variable $y_i$ is normally distributed with a mean $\mu$ and standard deviation $\sigma$. We might express that formally as
+More formally, when we use likelihood-based estimators, such as maximum likelihood (popular with multilevel modeling and structural equation modeling) or Bayesian estimators, we express the models for our criterion variables in terms of likelihood functions. Probably the  most common likelihood function, and the one consistent with the models in Hayes's text, is the Gaussian likelihood. With that likelihood we say our criterion variable $y_i$ is normally distributed with a mean $\mu$ and standard deviation $\sigma$. We might express that formally as
 
 $$
 y_i \sim \text{Normal} (\mu, \sigma),
 $$
 
-Where $\sim$ stands for "is distributed as" and $i$ indexes the $i^\text{th}$ row in the data. When we add predictors to the model, they are typically used to model the mean $\mu$. Thus, in the case there we have a sole predictor $x_i$ which varies across participants, we'd expand our model formula to
+where $\sim$ stands for "is distributed as" and $i$ indexes the $i^\text{th}$ row in the data. When we add predictors to the model, they are typically used to model the mean $\mu$. Thus, in the case there we have a sole predictor $x_i$ which varies across participants, we'd expand our model formula to
 
 \begin{align*}
 y_i & \sim \text{Normal} (\mu_i, \sigma) \\
 \mu_i & = \beta_0 + \beta_1 x_i,
 \end{align*}
 
-where $\beta_0$ is the intercept and $\beta_1$ is the slope for predictor $x$, which varies across cases. In this formulation, $\sigma$ is the standard deviation after accounting for the systemic variation explained by $x_i$. That is, it's the residual variance (i.e., $\epsilon$), but in a standard-deviation metric. *Why in a standard deviation metric?*, you ask. There are technical reasons why **brms** expresses it as a standard deviation which I'm not going to go into, here. But just beware that whereas many frequentist software packages the express the residual variation in a variance metric, it's expressed in a standard-deviation metric in **brms**. Just go with it and move on. 
+where $\beta_0$ is the intercept and $\beta_1$ is the slope for predictor $x$, which varies across cases. In this formulation, $\sigma$ is the standard deviation after accounting for the systemic variation explained by $x_i$. That is, it's the residual variance (i.e., $\epsilon$), but in a standard-deviation metric. *Why in a standard deviation metric?*, you ask. There are technical reasons why **brms** expresses it as a standard deviation which I'm not going to go into, here. Just beware that whereas many frequentist software packages express the residual variation in a variance metric, it's expressed in a standard-deviation metric in **brms**. Just go with it and move on. 
 
-Within the **brms** framework, $\sigma$ of the Gaussian likelihood is considered a family-specific parameter. As it turns out, there are many other fine likelihood functions in addition to the Gaussian and not all of them have a $\sigma$ parameter. For example, there is no $\sigma$ for the Poisson [^1] distribution, which is popular likelihood function for count variables. Because Bürkner made the **brms** package capable of a variety of likelihood functions, it behooved him to give this section of the output a generic name.
+Within the **brms** framework, $\sigma$ of the Gaussian likelihood is considered a "family-specific" parameter. As it turns out, there are many other fine likelihood functions in addition to the Gaussian and not all of them have a $\sigma$ parameter. For example, there is no $\sigma$ for the Poisson [^2.1] distribution, which is popular likelihood function for count variables. Because Bürkner made the **brms** package capable of a variety of likelihood functions, it behooved him to give this section of the output a generic name.
 
-When you have a regression model with multiple Gaussian criterion variables, those variables will typically have some degree of covariation. It's often termed residual covariance, particularly within the structural equation modeling paradigm [^2]. But when you have an intercept-only regression model with multiple variables, that residual covariance is just a covariance. And when you express those variation parameters in terms of standard deviations $\sigma$, their covariance is expressed as a correlation $\rho$. Since our multivariate model is of two variables, we have one $\rho$ parameter for the $\sigma$s, `rescor(negemot,govact)`, which is our Bayesian analogue to the Pearson's correlation.
+When you have a regression model with multiple Gaussian criterion variables, those variables will typically have some degree of covariation. It's often termed residual covariance, particularly within the structural equation modeling paradigm [^2.2]. But when you have an intercept-only regression model with multiple variables, that residual covariance is just a covariance. And when you express those variation parameters in terms of standard deviations $\sigma$, their covariance is expressed as a correlation $\rho$. Since our multivariate model is of two variables, we have one $\rho$ parameter for the $\sigma$s, `rescor(negemot,govact)`, which is our Bayesian analogue to the Pearson's correlation.
 
-To learn more about the multivariate syntax in **brms**, click [here](https://cran.r-project.org/web/packages/brms/vignettes/brms_multivariate.html) or execute `vignette("brms_multivariate")`.
+To learn more about the multivariate syntax in **brms**, click [here](https://cran.r-project.org/web/packages/brms/vignettes/brms_multivariate.html) or execute `vignette("brms_multivariate")`. Or just hold your horses until we get into mediation. All of our mediation models will use one version of the multivariate syntax or another.
 
 But to clarify the output, above:
 
@@ -135,7 +135,7 @@ summary(model2.2)
 
 Here's the Bayesian model in **brms**.
 
-```{r model2.3}
+```{r model2.3, echo = F}
 # save(model2.3, file = "fits/model02.03.rda")
 # rm(model2.3)
 
@@ -254,7 +254,7 @@ glbwarm %>%
 
 In these data, `sex` is coded females = 0, males = 1. Here we add `sex` to the model.
 
-```{r model2.4}
+```{r model2.4, echo = F}
 # save(model2.4, file = "fits/model02.04.rda")
 # rm(model2.4)
 
@@ -359,7 +359,7 @@ glbwarm <-
 
 Now fit the new model.
 
-```{r model2.5}
+```{r model2.5, echo = F}
 # save(model2.5, file = "fits/model02.05.rda")
 # rm(model2.5)
 
@@ -415,7 +415,7 @@ lm(data = glbwarm, govact_z ~ 1 + sex)
 
 Now we'll fit the model as Bayesians with `brms::brm()`.
 
-```{r model2.6}
+```{r model2.6, echo = F}
 # save(model2.6, file = "fits/model02.06.rda")
 # rm(model2.6)
 
@@ -459,7 +459,7 @@ cor(glbwarm$sex, glbwarm$govact)
 
 Again, if we wanted to get full Bayesian estimates, we'd fit an intercept-only multivariate model.
 
-```{r model2.7}
+```{r model2.7, echo = F}
 # save(model2.7, file = "fits/model02.07.rda")
 # rm(model2.7)
 
@@ -496,7 +496,7 @@ $$\hat Y = i_Y + b_1 X_1 + b_2 X_2 + b_3 X_3 + b_4 X_4 + b_4 X_5.$$
 
 For us, there's technically more involved because our Bayesian paradigm includes priors, which we're not focusing on at the moment. Anyway, there's nothing particularly special about jumping from univariable to multivariable models with **brms**. You just keep tacking on predictors with the `+` operator.
 
-```{r model2.8}
+```{r model2.8, echo = F}
 # save(model2.8, file = "fits/model02.08.rda")
 # rm(model2.8)
 
@@ -515,7 +515,7 @@ model2.8 <-
 print(model2.8)
 ```
 
-Following Hayes on pages 50 and 51, here is the posterior mean, what you might call the Bayesian point estimate, for someone with:
+Following Hayes on pages 50 and 51, here is the posterior mean (i.e., what you might call the Bayesian point estimate) for someone with
 
 * negative emotions = 3,
 * positive emotions = 4,
@@ -545,7 +545,7 @@ fixef(model2.8)[1] +
 
 If you want a full expression of the model uncertaintly in terms of the shape of the posterior distribution and the 95% intervals, you'll probably just want to use `posterior_samples()` and do a little data processing.
 
-```{r, fig.width = 4, fig.height = 3}
+```{r, fig.width = 4, fig.height = 3, warning = F, message = F}
 post <- posterior_samples(model2.8)
 
 post <-
@@ -608,7 +608,7 @@ sandardize <- function(x) {
 }
 ```
 
-Go [here](http://r4ds.had.co.nz/functions.html) to learn more about making custom functions in **R*.
+Go [here](http://r4ds.had.co.nz/functions.html) to learn more about making custom functions in **R**.
 
 Here we'll employ our custom `standardize()` function to make standardized versions of our variables.
 
@@ -624,7 +624,7 @@ glbwarm <-
 
 Now we've got us our standardized variables, let's fit a standardized model.
 
-```{r model2.9}
+```{r model2.9, echo = F}
 # save(model2.9, file = "fits/model02.09.rda")
 # rm(model2.9)
 
@@ -649,7 +649,7 @@ Our coefficients match up nicely with those on page 52 in the text. Just as with
 
 Here's how we'd fit a *partially*-standardized model--a model in which all variables except for `sex` are standardized.
 
-```{r model2.10}
+```{r model2.10, echo = F}
 # save(model2.10, file = "fits/model02.10.rda")
 # rm(model2.10)
 
@@ -714,7 +714,7 @@ posterior_samples(model2.8) %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
-Our summary confirms that we can apply Hayes' formula to a `posterior_samples()` column in order to get fuller summary statistics for a hand-converted standardized coefficient. This would be in full compliance with, say, APA recommendations to include 95% intervals with all effect sizes--the standardized regression coefficient being the effect size, here.
+Our summary confirms that we can apply Hayes's formula to a `posterior_samples()` column in order to get fuller summary statistics for a hand-converted standardized coefficient. This would be in full compliance with, say, APA recommendations to include 95% intervals with all effect sizes--the standardized regression coefficient being the effect size, here.
 
 ## Measures of model fit
 
@@ -919,11 +919,11 @@ Throughout this project, I'm going to be lazy and default to conventional 95% in
 
 Here we'll make use of the `update()` function to hastily fit our reduced model, `model5`.
 
-```{r model2.11}
+```{r model2.11, echo = F}
 # save(model2.11, file = "fits/model02.11.rda")
 # rm(model2.11)
 
-load("fits/model2.11.rda")
+load("fits/model02.11.rda")
 ```
 
 ```{r, eval = F}
@@ -1050,7 +1050,7 @@ glbwarm %>%
 
 We can make dummies with the `if_else()` function. We'll just go ahead and do that right within the `brm()` function.
 
-```{r model2.12}
+```{r model2.12, echo = F}
 # save(model2.12, file = "fits/model02.12.rda")
 # rm(model2.12)
 
@@ -1085,7 +1085,7 @@ There's no need to compute an $F$-test on our $R^2$. The posterior mean and it's
 
 We could also use information criteria. One method would be to compare the WAIC or LOO value of `model2.12` with an intercept-only model. First, we'll need to fit that model.
 
-```{r model2.13}
+```{r model2.13, echo = F}
 # save(model2.13, file = "fits/model02.13.rda")
 # rm(model2.13)
 
@@ -1167,7 +1167,7 @@ sessionInfo()
 
 ## Footnote {-}
 
-[^1]: Hayes did not cover count regression with the Poisson likelihood in this textbook. If you'd like to learn more, one place to start is with [McElreath's lecture on binomial and Poisson models](https://www.youtube.com/watch?v=hRJtKCIDTwc).
+[^2.1]: Hayes did not cover count regression with the Poisson likelihood in this textbook. If you'd like to learn more, one place to start is with [McElreath's lecture on binomial and Poisson models](https://www.youtube.com/watch?v=hRJtKCIDTwc).
 
-[^2]: We will not be covering structural equation modeling (SEM) in this project. If you’re interested, you might check out [this video series](https://www.youtube.com/playlist?list=PLw93TUuxrFAZkJVc5dhgTZpOT7qmTjlT7) by Erin M. Buchanan on SEM within **R**, particularly with the handy [**lavaan**](http://lavaan.ugent.be/) package.
+[^2.2]: We will not be covering structural equation modeling (SEM) in this project. If you’re interested, you might check out [this video series](https://www.youtube.com/playlist?list=PLw93TUuxrFAZkJVc5dhgTZpOT7qmTjlT7) by Erin M. Buchanan on SEM within **R**, particularly with the handy [**lavaan**](http://lavaan.ugent.be/) package.
 

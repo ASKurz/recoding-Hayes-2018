@@ -1,15 +1,33 @@
+---
+title: "Chapter 01. Introduction"
+author: "A Solomon Kurz"
+date: "`r format(Sys.Date())`"
+output:
+  github_document
+---
+
 # (PART) FUNDAMENTALS {-}
 
 # Introduction
 
-Since there's no code or data plots in this chapter, there's nothing to translate. Enjoy an old [video of Hayes promoting conditional process analysis](https://www.youtube.com/watch?v=P0YdlBh1pqs&frags=pl%2Cwn), instead.
+> Research that establishes the mechanism or mechanisms by which effects operate or the conditions that facilitate and inhibit such effects deepens our understanding of the phenomena scientists study. Mediation analysis and moderation analysis are used to establish evidence or test hypotheses about such mechanisms and boundary conditions. Conditional process analysis is used when one's research goal is to describe the boundary conditions of the mechanism or mechanisms by which a variable transmits its effect on another. Using a regression-based path-analytic framework, this book introduces the principles of mediation analysis, moderation analysis, and their unification as conditional process analysis. [@hayesIntroductionMediationModeration2018, p. 3]
 
-## References {-}
+Since there's no code or data plots in this chapter, there's nothing to translate. Enjoy an old video of Hayes promoting conditional process analysis, instead.
 
-[Hayes, A. F. (2018). *Introduction to mediation, moderation, and conditional process analysis: A regression-based approach.* (2nd ed.). New York, NY, US: The Guilford Press.](http://afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html)
+```{r, echo = F, message = F}
+library(magrittr)
+
+vembedr::embed_url("https://www.youtube.com/watch?v=P0YdlBh1pqs&frags=pl%2Cwn") %>%
+  vembedr::use_align("center")
+```
 
 ## Session info {-}
 
 ```{r}
 sessionInfo()
 ```
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```
+

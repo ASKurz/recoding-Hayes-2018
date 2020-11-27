@@ -1,10 +1,18 @@
+---
+title: "Chapter 02. Fundamentals of Linear Regression"
+author: "A Solomon Kurz"
+date: "`r format(Sys.Date())`"
+output:
+  github_document
+---
+
 # Fundamentals of Linear Regression
 
 ```{r, echo = FALSE, cache = FALSE}
 options(width = 110)
 ```
 
-> Linear regression is the foundation of most of the methods [Hayes described in his] book, so a solid understanding of the fundamentals of linear regression is essential. I assume that most readers have been exposed to linear regression in some form before discovering this book, and so some of the material will be review. Even so, I encourage everyone to read this chapter. (p. 30)
+> Linear regression is the foundation of most of the methods [Hayes described in his] book, so a solid understanding of the fundamentals of linear regression is essential. I assume that most readers have been exposed to linear regression in some form before discovering this book, and so some of the material will be review. Even so, I encourage everyone to read this chapter. [@hayesIntroductionMediationModeration2018, p. 30]
 
 Since we're adding Bayes and the **tidyverse** into the mix, walking through this chapter will be double important, for us.
 
@@ -20,7 +28,7 @@ glbwarm <- read_csv("data/glbwarm/glbwarm.csv")
 glimpse(glbwarm)
 ```
 
-If you are new to **tidyverse**-style syntax, possibly the oddest component is the pipe (i.e., `%>%`). I'm not going to explain the `%>%` in this project, but you might learn more about in [this brief clip](https://www.youtube.com/watch?v=9yjhxvu-pDg), starting around [minute 21:25 in this talk by Wickham](https://www.youtube.com/watch?v=K-ss_ag2k9E&t=1285s), or in [section 5.6.1 from Grolemund and Wickham’s *R for Data Science*](http://r4ds.had.co.nz/transform.html#combining-multiple-operations-with-the-pipe). Really, all of chapter 5 of *R4DS* is great for new **R** and new **tidyverse** users, and their chapter 3 is a nice introduction to plotting with **ggplot2**.
+If you are new to **tidyverse**-style syntax, possibly the oddest component is the pipe (i.e., `%>%`). I'm not going to explain the `%>%` in this project, but you might learn more about in [this brief clip](https://www.youtube.com/watch?v=9yjhxvu-pDg), starting around [minute 21:25 in this talk by Wickham](https://www.youtube.com/watch?v=K-ss_ag2k9E&t=1285s), or in [Section 5.6.1](https://r4ds.had.co.nz/transform.html#combining-multiple-operations-with-the-pipe) from @grolemundDataScience2017. Really, all of [Chapter 5](https://r4ds.had.co.nz/transform.html) of *R4DS* is great for new **R** and new **tidyverse** users, and [Chapter 3](https://r4ds.had.co.nz/data-visualisation.html) is a nice introduction to plotting with **ggplot2**.
 
 Here is our version of Figure 2.1. 
 
@@ -36,7 +44,7 @@ glbwarm %>%
   theme_bw()
 ```
 
-There are other ways to handle the [overplotting issue, such as jittering](http://ggplot2.tidyverse.org/reference/position_jitter.html). 
+There are other ways to handle the [overplotting issue, such as jittering](https://ggplot2.tidyverse.org/reference/position_jitter.html). 
 
 ```{r, fig.width = 5, fig.height = 4}
 glbwarm %>% 
@@ -60,27 +68,21 @@ If you want more plentiful output, the `cor.test()` function returns a $t$-value
 cor.test(glbwarm$negemot, glbwarm$govact)
 ```
 
-To get the Bayesian version, we'll open our focal statistical package, Bürkner's [**brms**](https://github.com/paul-buerkner/brms). [And I'll briefly note that you could also do many of these analyses with other packages, such as [**blavaan**](https://cran.r-project.org/web/packages/blavaan/index.html) or [**rstanarm**](https://github.com/stan-dev/rstanarm). I just prefer **brms**.]
+To get the Bayesian version, we'll open our focal statistical package, Bürkner's [**brms**](https://github.com/paul-buerkner/brms). I should briefly note that you could also do many of these analyses with other packages, such as [**blavaan**](https://cran.r-project.org/web/packages/blavaan/index.html) [@Merkle2018blavaan; @R-blavaan] or [**rstanarm**](https://github.com/stan-dev/rstanarm) [@R-rstanarm; @rstanarm2018]. I just prefer **brms**.
 
 ```{r, message = F, warning = F}
 library(brms)
 ```
 
-We'll start simple and just use the default priors and settings, but with the addition of parallel sampling via `cores = 4`.
+We'll start simple and just use the default priors and settings, but with the addition of parallel sampling via `cores = 4` and telling **brms** to save our output as an exterman file with the `file` argument.
 
-```{r model2.1, echo = F}
-# save(model2.1, file = "fits/model02.01.rda")
-# rm(model2.1)
-
-load("fits/model02.01.rda")
-```
-
-```{r, eval = F}
+```{r, model2.1}
 model2.1 <- 
   brm(data = glbwarm, 
       family = gaussian,
       mvbind(negemot, govact) ~ 1,
-      cores = 4)
+      cores = 4,
+      file = "fits/model02.01")
 ```
 
 We can examine a summary of the output with the `print()` function.
@@ -94,23 +96,23 @@ In regression models, we typically use predictor variables to explain variation 
 More formally, when we use likelihood-based estimators, such as maximum likelihood (popular with multilevel modeling and structural equation modeling) or Bayesian estimators, we express the models for our criterion variables in terms of likelihood functions. Probably the  most common likelihood function, and the one consistent with the models in Hayes's text, is the Gaussian likelihood. With that likelihood we say our criterion variable $y_i$ is normally distributed with a mean $\mu$ and standard deviation $\sigma$. We might express that formally as
 
 $$
-y_i \sim \text{Normal} (\mu, \sigma),
+y_i \sim \operatorname{Normal} (\mu, \sigma),
 $$
 
-where $\sim$ stands for "is distributed as" and $i$ indexes the $i^\text{th}$ row in the data. When we add predictors to the model, they are typically used to model the mean $\mu$. Thus, in the case there we have a sole predictor $x_i$ which varies across participants, we'd expand our model formula to
+where $\sim$ stands for "is distributed as" and $i$ indexes the $i$th row in the data. When we add predictors to the model, they are typically used to model the mean $\mu$. Thus, in the case there we have a sole predictor $x_i$ which varies across participants, we'd expand our model formula to
 
 \begin{align*}
-y_i & \sim \text{Normal} (\mu_i, \sigma) \\
+y_i & \sim \operatorname{Normal} (\mu_i, \sigma) \\
 \mu_i & = \beta_0 + \beta_1 x_i,
 \end{align*}
 
-where $\beta_0$ is the intercept and $\beta_1$ is the slope for predictor $x$, which varies across cases. In this formulation, $\sigma$ is the standard deviation after accounting for the systemic variation explained by $x_i$. That is, it's the residual variance (i.e., $\epsilon$), but in a standard-deviation metric. *Why in a standard deviation metric?*, you ask. There are technical reasons why **brms** expresses it as a standard deviation which I'm not going to go into, here. Just beware that whereas many frequentist software packages express the residual variation in a variance metric, it's expressed in a standard-deviation metric in **brms**. Just go with it and move on. 
+where $\beta_0$ is the intercept and $\beta_1$ is the slope for predictor $x$, which varies across cases. In this formulation, $\sigma$ is the standard deviation after accounting for the systemic variation explained by $x_i$. That is, it's the residual variance (i.e., $\epsilon$), but in a standard-deviation metric. *Why in a standard deviation metric?*, you ask. There are technical reasons why **brms** expresses it as a standard deviation which I'm not going to go into, here. Just beware that whereas many frequentist software packages express the residual variation in a variance metric, it's expressed in a standard-deviation metric in **brms**. Just go with it and move on.
 
 Within the **brms** framework, $\sigma$ of the Gaussian likelihood is considered a "family-specific" parameter. As it turns out, there are many other fine likelihood functions in addition to the Gaussian and not all of them have a $\sigma$ parameter. For example, there is no $\sigma$ for the Poisson [^2.1] distribution, which is popular likelihood function for count variables. Because Bürkner made the **brms** package capable of a variety of likelihood functions, it behooved him to give this section of the output a generic name.
 
 When you have a regression model with multiple Gaussian criterion variables, those variables will typically have some degree of covariation. It's often termed residual covariance, particularly within the structural equation modeling paradigm [^2.2]. But when you have an intercept-only regression model with multiple variables, that residual covariance is just a covariance. And when you express those variation parameters in terms of standard deviations $\sigma$, their covariance is expressed as a correlation $\rho$. Since our multivariate model is of two variables, we have one $\rho$ parameter for the $\sigma$s, `rescor(negemot,govact)`, which is our Bayesian analogue to the Pearson's correlation.
 
-To learn more about the multivariate syntax in **brms**, click [here](https://cran.r-project.org/web/packages/brms/vignettes/brms_multivariate.html) or execute `vignette("brms_multivariate")`. Or just hold your horses until we get into mediation. All of our mediation models will use one version of the multivariate syntax or another.
+To learn more about the multivariate syntax in **brms**, check out Bürkner's [-@Bürkner2020Multivariate] vignette,  [*Estimating multivariate models with brms*](https://CRAN.R-project.org/package=brms/vignettes/brms_multivariate.html), or execute `vignette("brms_multivariate")`. Or just hold your horses until we get into mediation. All of our mediation models will use one version of the multivariate syntax or another.
 
 But to clarify the output, above:
 
@@ -142,12 +144,13 @@ Here's the Bayesian model in **brms**.
 load("fits/model02.03.rda")
 ```
 
-```{r, eval = F}
+```{r model2.3}
 model2.3 <- 
   brm(data = glbwarm, 
       family = gaussian,
       govact ~ 1 + negemot,
-      cores = 4)
+      cores = 4,
+      file = "fits/model02.03")
 ```
 
 There are several ways to get a **brms** model summary. A go-to is with the `summary()` function, just like we did with our OLS model.
@@ -162,7 +165,12 @@ The `print()` function works very much the same way. To get a more focused look,
 posterior_summary(model2.3)
 ```
 
-That also yields the log posterior, `lp__`, which you can learn more about [here](https://cran.r-project.org/web/packages/rstan/vignettes/rstan.html#the-log-posterior-function-and-gradient) or [here](https://www.jax.org/news-and-insights/jax-blog/2015/october/lp-in-stan-output). We won't focus on the `lp__` directly in this project. But its influence will be lurking in the shadows.
+https://CRAN.R-project.org/package=rstanarm.html#the-log-posterior-function-and-gradient
+
+https://CRAN.R-project.org/package=rstan/vignettes/rstan.html#the-log-posterior-function-and-gradient
+
+
+That also yields the log posterior, `lp__`, which you can learn more about in [this section](https://CRAN.R-project.org/package=rstan/vignettes/rstan.html#the-log-posterior-function-and-gradient) of the [-@standevelopmentteamRStanInterfaceStan2020] vignette by the Stan Development Team,  [*RStan: the R interface to Stan*](https://cran.r-project.org/web/packages/rstan/vignettes/rstan.html) or [this brief blog post](https://www.jax.org/news-and-insights/jax-blog/2015/october/lp-in-stan-output) by Xulong Wang. We won't focus on the `lp__` directly in this project. But its influence will be lurking in the shadows.
 
 But anyways, the `Q2.5` and `Q97.5`, are the lower- and upper-levels of the 95% credible intervals. The `Q` prefix stands for quantile ([see this thread](https://github.com/paul-buerkner/brms/issues/425)). In this case, these are a renamed version of the `l-95% CI` and `u-95% CI` columns from our `summary()` output.
 
@@ -223,8 +231,8 @@ glbwarm %>%
             aes(y = Estimate)) +
   annotate("text", x = 2.2, y = 7.5, label = "Cases with positive residuals", color = "red3") +
   annotate("text", x = 4.75, y = .8, label = "Cases with negative residuals", color = "blue3") +
-  labs(x = expression(paste("NEGEMOT: Negative emotions about climate change (", italic("X"), ")")),
-       y = expression(paste("GOVACT: Support for governmentaction (", italic("Y"), ")"))) +
+  labs(x = expression("NEGEMOT: Negative emotions about climate change ("*italic("X")*")"),
+       y = expression("GOVACT: Support for governmentaction ("*italic("Y")*")")) +
   coord_cartesian(xlim = range(glbwarm$negemot)) +
   theme_bw()
 ```
@@ -254,19 +262,13 @@ glbwarm %>%
 
 In these data, `sex` is coded females = 0, males = 1. Here we add `sex` to the model.
 
-```{r model2.4, echo = F}
-# save(model2.4, file = "fits/model02.04.rda")
-# rm(model2.4)
-
-load("fits/model02.04.rda")
-```
-
-```{r, eval = F}
+```{r model2.4}
 model2.4 <- 
   brm(data = glbwarm, 
       family = gaussian,
       govact ~ 1 + sex,
-      cores = 4)
+      cores = 4,
+      file = "fits/model02.04")
 ```
 
 Check the summary.
@@ -289,7 +291,7 @@ But since Bayesian estimation yields an entire posterior distribution, you can v
 post <- posterior_samples(model2.4)
 ```
 
-We could summarize the posterior with boxplots
+We could summarize the posterior with box plots
 
 ```{r, fig.width = 3, fig.height = 3}
 post %>% 
@@ -326,9 +328,9 @@ post %>%
   
   ggplot(aes(x = name, y = value)) +
   geom_violin(aes(fill = name), color = "transparent", alpha = 3/4) +
-  stat_summary(fun.y = median,
-               fun.ymin = function(i){quantile(i, probs = .025)},
-               fun.ymax = function(i){quantile(i, probs = .975)}) +
+  stat_summary(fun = median,
+               fun.min = function(i){quantile(i, probs = .025)},
+               fun.max = function(i){quantile(i, probs = .975)}) +
   theme_bw() +
   theme(legend.position = "none")
 ```
@@ -359,19 +361,13 @@ glbwarm <-
 
 Now fit the new model.
 
-```{r model2.5, echo = F}
-# save(model2.5, file = "fits/model02.05.rda")
-# rm(model2.5)
-
-load("fits/model02.05.rda")
-```
-
-```{r, eval = F}
+```{r model2.5}
 model2.5 <- 
   brm(data = glbwarm, 
       family = gaussian,
       govact ~ 1 + sex_recode,
-      cores = 4)
+      cores = 4,
+      file = "fits/model02.05")
 ```
 
 Check the primary coefficients.
@@ -415,19 +411,13 @@ lm(data = glbwarm, govact_z ~ 1 + sex)
 
 Now we'll fit the model as Bayesians with `brms::brm()`.
 
-```{r model2.6, echo = F}
-# save(model2.6, file = "fits/model02.06.rda")
-# rm(model2.6)
-
-load("fits/model02.06.rda")
-```
-
-```{r, eval = F}
+```{r model2.6}
 model2.6 <- 
   brm(data = glbwarm, 
       family = gaussian,
       govact_z ~ 1 + sex,
-      cores = 4)
+      cores = 4,
+      file = "fits/model02.06")
 ```
 
 ```{r}
@@ -448,7 +438,7 @@ Ultimately, the symbols we use are for the most part arbitrary. We can use any s
 
 ## Alternative explanations for association
 
-> That "correlation does not imply causation" is etched into the brains of all scientists. If variables $X$ and $Y$ are correlated, that doesn’t mean that $X$ causes $Y$ or that $Y$ causes $X$. The ability to infer cause–effect is not even a statistical matter in the end. Rather, it is the design of one's study, the data collection procedures one employs, and theoretical plausibility that most directly influence whether a cause–effect claim can be made and with what degree of confidence, not the size or sign of a statistical index of association. (p. 45)
+> That "correlation does not imply causation" is etched into the brains of all scientists. If variables $X$ and $Y$ are correlated, that doesn’t mean that $X$ causes $Y$ or that $Y$ causes $X$. The ability to infer cause--effect is not even a statistical matter in the end. Rather, it is the design of one's study, the data collection procedures one employs, and theoretical plausibility that most directly influence whether a cause--effect claim can be made and with what degree of confidence, not the size or sign of a statistical index of association. (p. 45)
 
 On page 46, Hayes produced a couple correlations. Here's how to get them from base **R**.
 
@@ -459,19 +449,13 @@ cor(glbwarm$sex, glbwarm$govact)
 
 Again, if we wanted to get full Bayesian estimates, we'd fit an intercept-only multivariate model.
 
-```{r model2.7, echo = F}
-# save(model2.7, file = "fits/model02.07.rda")
-# rm(model2.7)
-
-load("fits/model02.07.rda")
-```
-
-```{r, eval = F}
+```{r model2.7}
 model2.7 <- 
   brm(data = glbwarm, 
       family = gaussian,
       mvbind(negemot, govact, sex) ~ 1,
-      cores = 4)
+      cores = 4,
+      file = "fits/model02.07")
 ```
 
 ```{r}
@@ -496,19 +480,13 @@ $$\hat Y = i_Y + b_1 X_1 + b_2 X_2 + b_3 X_3 + b_4 X_4 + b_4 X_5.$$
 
 For us, there's technically more involved because our Bayesian paradigm includes priors, which we're not focusing on at the moment. Anyway, there's nothing particularly special about jumping from univariable to multivariable models with **brms**. You just keep tacking on predictors with the `+` operator.
 
-```{r model2.8, echo = F}
-# save(model2.8, file = "fits/model02.08.rda")
-# rm(model2.8)
-
-load("fits/model02.08.rda")
-```
-
-```{r, eval = F}
+```{r model2.8}
 model2.8 <- 
   brm(data = glbwarm, 
       family = gaussian,
       govact ~ 1 + negemot + posemot + ideology + sex + age,
-      cores = 4)
+      cores = 4,
+      file = "fits/model02.08")
 ```
 
 ```{r}
@@ -543,7 +521,7 @@ fixef(model2.8)[1] +
   fixef(model2.8)[6] * 30
 ```
 
-If you want a full expression of the model uncertaintly in terms of the shape of the posterior distribution and the 95% intervals, you'll probably just want to use `posterior_samples()` and do a little data processing.
+If you want a full expression of the model uncertainty in terms of the shape of the posterior distribution and the 95% intervals, you'll probably just want to use `posterior_samples()` and do a little data processing.
 
 ```{r, fig.width = 4, fig.height = 3, warning = F, message = F}
 post <- posterior_samples(model2.8)
@@ -608,7 +586,7 @@ sandardize <- function(x) {
 }
 ```
 
-Go [here](http://r4ds.had.co.nz/functions.html) to learn more about making custom functions in **R**.
+To learn more about making custom functions in **R**, check our [Chapter 19](https://r4ds.had.co.nz/functions.html) of *R4DS*.
 
 Here we'll employ our custom `standardize()` function to make standardized versions of our variables.
 
@@ -624,19 +602,13 @@ glbwarm <-
 
 Now we've got us our standardized variables, let's fit a standardized model.
 
-```{r model2.9, echo = F}
-# save(model2.9, file = "fits/model02.09.rda")
-# rm(model2.9)
-
-load("fits/model02.09.rda")
-```
-
-```{r, eval = F}
+```{r model2.9}
 model2.9 <- 
   brm(data = glbwarm, 
       family = gaussian,
       govact_z ~ 1 + negemot_z + posemot_z + ideology_z + sex_z + age_z,
-      cores = 4)
+      cores = 4,
+      file = "fits/model02.09")
 ```
 
 Here are the newly standardized coefficient summaries, minus the `Intercept`.
@@ -649,22 +621,16 @@ Our coefficients match up nicely with those on page 52 in the text. Just as with
 
 Here's how we'd fit a *partially*-standardized model--a model in which all variables except for `sex` are standardized.
 
-```{r model2.10, echo = F}
-# save(model2.10, file = "fits/model02.10.rda")
-# rm(model2.10)
-
-load("fits/model02.10.rda")
-```
-
-```{r, eval = F}
+```{r model2.10}
 model2.10 <- 
   update(model2.9,
          newdata = glbwarm,
          formula = govact_z ~ 1 + negemot_z + posemot_z + ideology_z + sex + age_z,
-         cores = 4)
+         cores = 4,
+         file = "fits/model02.10")
 ```
 
-Notice our use of the `update()` function. If you want to hastily fit a **brms** model of the same basic form of a prior model, you can just update some of the parameters of that original fit. In this case, all we did was swap out one of the predictors. To accommodate that change, we used the `newdata` argument so the model had access to the new variable and then we fed in the new formula. 
+Notice our use of the `update()` function. If you want to hastily fit a **brms** model of the same basic form of a prior model, you can just update some of the parameters of that original fit. In this case, all we did was swap out one of the predictors. To accommodate that change, we used the `newdata` argument so the model had access to the new variable and then we fed in the new formula.
 
 Anyway, here are the coefficient summaries, including the `Intercept`, for the partially-standardized model.
 
@@ -695,7 +661,7 @@ fixef(model2.8)["negemot", "Estimate"] * (sd(glbwarm$negemot) / sd(glbwarm$govac
 
 Looks like we got it within rounding error--pretty good! However, that was just the posterior mean, the Bayesian point estimate. If we want to more fully express the uncertainty around the mean--and we do--, we'll need to work with the posterior draws.
 
-```{r}
+```{r, message = F}
 # the posterior draws from the unstandardized model
 posterior_samples(model2.8) %>% 
   # using Hayes' formula to standardize `b_negemot`
@@ -718,7 +684,7 @@ Our summary confirms that we can apply Hayes's formula to a `posterior_samples()
 
 ## Measures of model fit
 
-In the Bayesian world, we don't tend to appeal to the $SS_{residual}$, the $MS_{residual}$, or the standard error of estimate. We do sometimes, however, appeal to the $R^2$. I'm not going to go into the technical details here, but you should be aware that the Bayesian $R^2$ is not calculated the same as the OLS $R^2$. If you want to dive in, check out the paper by [Gelman, Goodrich, Gabry, and Vehtari](https://www.tandfonline.com/doi/abs/10.1080/00031305.2018.1549100?journalCode=utas20). Here's how to get it with **brms**.
+In the Bayesian world, we don't tend to appeal to the $SS_{residual}$, the $MS_{residual}$, or the standard error of estimate. We do sometimes, however, appeal to the $R^2$. I'm not going to go into the technical details here, but you should be aware that the Bayesian $R^2$ is not calculated the same as the OLS $R^2$. If you want to dive in, check out the [-@gelmanRsquaredBayesianRegression2019] paper by Gelman, Goodrich, Gabry, and Vehtari, [*R-squared for Bayesian regression models*](https://www.tandfonline.com/doi/abs/10.1080/00031305.2018.1549100?journalCode=utas20). Here's how to get it with **brms**.
 
 ```{r}
 bayes_R2(model2.8, summary = T) %>% round(digits = 3)
@@ -739,7 +705,7 @@ bayes_R2(model2.8, summary = F) %>%
   theme_bw()
 ```
 
-Another way we examine model fit is with graphical posterior predictive checks. Posterior predictive checking is a very general approach, which you might learn more about [here](http://www.stat.columbia.edu/~gelman/research/published/bayes-vis.pdf) or with a few keyword searches in on [Gelman's blog](http://andrewgelman.com). One basic way is to use the model in order to simulate data and then compare those data with the original data--the basic idea being that good fitting models should produce data similar to the original data.
+Another way we examine model fit is with graphical posterior predictive checks. Posterior predictive checking is a very general approach, which you might learn more about from @gabry2019visualization or with a few keyword searches in on [Gelman's blog](https://statmodeling.stat.columbia.edu/). One basic way is to use the model in order to simulate data and then compare those data with the original data--the basic idea being that good fitting models should produce data similar to the original data.
 
 Recall how we've used `fitted()` to make regression lines and expected values? We'll, now we'll use `predict()` to simulate data based on our models.
 
@@ -763,7 +729,7 @@ predict(model2.8,
   ggplot(aes(x = negemot, y = govact)) +
   geom_jitter(height = .05, width = .05, 
               alpha = 1/2, size = 1/3) +
-  coord_cartesian(ylim = 0:9) +
+  coord_cartesian(ylim = c(0, 9)) +
   theme_bw() +
   facet_wrap(~simulation, ncol = 3)
 ```
@@ -775,22 +741,22 @@ glbwarm %>%
   ggplot(aes(x = negemot, y = govact)) +
   geom_jitter(height = .05, width = .05, 
               alpha = 1/2, size = 1/3) +
-  coord_cartesian(ylim = 0:9) +
+  coord_cartesian(ylim = c(0, 9)) +
   theme_bw()
 ```
 
-Overall, the simulations aren't bad. But in all three `govact` tends to veer above 7.5, which is where the original data appear to be bounded. But otherwise the overall shape is pretty close, at least with respect to `negemot`. 
+Overall, the simulations aren't bad. But in all three `govact` tends to veer above 7.5, which is where the original data appear to be bounded. But otherwise the overall shape is pretty close, at least with respect to `negemot`.
 
 There's nothing special about three simulations. Three is just more than one and gives you a sense of the variance across simulations. Also, we only examined the model fit with respect to `negemot`. Since there are other variables in the model, we might also assess the model based on them.
 
-Another method is with the `brms::pp_check()` function, which allows users to access a variety of convenience functions from the [bayesplot package](https://github.com/stan-dev/bayesplot). Here we'll use the default settings and just tack on `theme_bw()` for aesthetics.
+Another method is with the `brms::pp_check()` function, which allows users to access a variety of convenience functions from the [**bayesplot** package](https://CRAN.R-project.org/package=bayesplot) [@R-bayesplot; @gabry2019visualization]. Here we'll use the default settings and just tack on `theme_bw()` for aesthetics.
 
 ```{r, fig.width = 6, fig.height = 3, message = F}
 pp_check(model2.8) +
   theme_bw()
 ```
 
-What we did was simulate 10 data sets worth of `govact` values, plot their densities (i.e., the thin blue lines) and compare them with the density of the original `govact` values. What we want is for the thin blue lines to largely align with the thick blue line. Though not perfect, the simulations from our `model2.8` did a pretty okay job of reproducing the original `govact` distribution. For more ideas on this method, see the **brms** [reference manual](https://cran.r-project.org/web/packages/brms/brms.pdf) and [this vignette](https://cran.r-project.org/web/packages/bayesplot/vignettes/graphical-ppcs.html) for the [**bayesplot** package](https://mc-stan.org/bayesplot/).
+What we did was simulate 10 data sets worth of `govact` values, plot their densities (i.e., the thin blue lines) and compare them with the density of the original `govact` values. What we want is for the thin blue lines to largely align with the thick blue line. Though not perfect, the simulations from our `model2.8` did a pretty okay job of reproducing the original `govact` distribution. For more ideas on this method, see the [**brms** reference manual](https://CRAN.R-project.org/package=brms/brms.pdf) [@brms2020RM] and Gabry's [-@gabryGraphicalPosteriorPredictive2019] vignette, [*Graphical posterior predictive checks using the bayesplot package*](https://CRAN.R-project.org/package=bayesplot/vignettes/graphical-ppcs.html).
 
 ## Statistical inference
 
@@ -834,7 +800,7 @@ tibble(iter = 1:1e4) %>%
   theme_bw()
 ```
 
-To learn more about this approach to simulations, see [this section of *R4DS*](http://r4ds.had.co.nz/many-models.html#nested-data).
+To learn more about this approach to simulations, see [Section 25.2.1](https://r4ds.had.co.nz/many-models.html#nested-data) in *R4DS*.
 
 ### Testing a null hypothesis.
 
@@ -858,7 +824,7 @@ posterior_samples(model2.8) %>%
   theme_bw()
 ```
 
-For more discussion the NHST paradigm and how it compares with variations of Bayesian statistics, check out Kruschke's text, [*Doing Bayesian Data Analysis*](https://sites.google.com/site/doingbayesiandataanalysis/), particularly chapters 10 through 13. I'm currently working on translating all his code for use with **brms** and the **tidyverse**. You can find that project, [here](https://github.com/ASKurz/Doing-Bayesian-Data-Analysis-in-brms-and-the-tidyverse).
+For more discussion the NHST paradigm and how it compares with variations of Bayesian statistics, check out Kruschke's [-@kruschkeDoingBayesianData2015] text, [*Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan*](https://sites.google.com/site/doingbayesiandataanalysis/), particularly chapters 10 through 13. You can find my [-@kurzDoingBayesianData2020] **brms** + **tidyverse** translation of that text at [https://bookdown.org/content/3686/](https://bookdown.org/content/3686/).
 
 ### Interval estimation.
 
@@ -876,7 +842,7 @@ posterior_samples(model2.8) %>%
             the_97.5_percentile = quantile(b_negemot, probs = .975))
 ```
 
-The consequence of this is that our Bayesian credible intervals aren't necessarily symmetric, which is fine because the posterior distribution for a given parameter isn't always symmetric. But not all Bayesian intervals are percentile based. John Kruschke, for example, often recommends highest posterior density intervals in [his work](http://www.indiana.edu/~kruschke/DoingBayesianDataAnalysis/). The **brms** package doesn't have a convenience function for these, but you can compute them with help from the [HDInterval package](https://cran.r-project.org/web/packages/HDInterval/index.html). 
+The consequence of this is that our Bayesian credible intervals aren't necessarily symmetric, which is fine because the posterior distribution for a given parameter isn't always symmetric. But not all Bayesian intervals are percentile based. John Kruschke, for example, often recommends highest posterior density intervals in [his work](https://sites.google.com/site/doingbayesiandataanalysis/). The **brms** package doesn't have a convenience function for these, but you can compute them with help from the [**HDInterval** package](https://CRAN.R-project.org/package=HDInterval) [@R-HDInterval].
 
 ```{r}
 library(HDInterval)
@@ -884,7 +850,7 @@ library(HDInterval)
 hdi(posterior_samples(model2.8)[ , "b_negemot"], credMass = .95)
 ```
 
-Finally, because Bayesians aren't bound to the NHST paradigm, we aren't bound to 95% intervals, either. For example, in both his [excellent text](http://xcelab.net/rm/statistical-rethinking/) and as a default in its accompanying [**rethinking** package](https://github.com/rmcelreath/rethinking), [Richard McElreath](https://twitter.com/rlmcelreath) often uses 89% intervals. Alternatively, [Andrew Gelman](https://twitter.com/StatModeling) has publicly advocated for [50% intervals](http://andrewgelman.com/2016/11/05/why-i-prefer-50-to-95-intervals/). The most important thing is to express the uncertainty in the posterior in a clearly-specified way. If you'd like, say, 80% intervals in your model summary, you can insert a `prob` argument into either `print()` or `summary()`.
+Finally, because Bayesians aren't bound to the NHST paradigm, we aren't bound to 95% intervals, either. For example, in both his excellent [-@mcelreathStatisticalRethinkingBayesian2020] [text](http://xcelab.net/rm/statistical-rethinking/) and as a default in its accompanying [**rethinking** package](https://github.com/rmcelreath/rethinking), [Richard McElreath](https://twitter.com/rlmcelreath) often uses 89% intervals. Alternatively, [Andrew Gelman](https://twitter.com/StatModeling) has publicly advocated for [50% intervals](http://andrewgelman.com/2016/11/05/why-i-prefer-50-to-95-intervals/). The most important thing is to express the uncertainty in the posterior in a clearly-specified way. If you'd like, say, 80% intervals in your model summary, you can insert a `prob` argument into either `print()` or `summary()`.
 
 ```{r}
 print(model2.8, prob = .8)
@@ -919,18 +885,12 @@ Throughout this project, I'm going to be lazy and default to conventional 95% in
 
 Here we'll make use of the `update()` function to hastily fit our reduced model, `model5`.
 
-```{r model2.11, echo = F}
-# save(model2.11, file = "fits/model02.11.rda")
-# rm(model2.11)
-
-load("fits/model02.11.rda")
-```
-
-```{r, eval = F}
+```{r model2.11}
 model2.11 <- 
   update(model2.8,
          govact ~ 1 + ideology + sex + age,
-         cores = 4)
+         cores = 4,
+         file = "fits/model02.11")
 ```
 
 We can get a look at the $R^2$ summaries for our competing models like this.
@@ -944,14 +904,10 @@ So far it looks like our fuller model, `model2.8`, explains more variation in th
 
 ```{r}
 r2 <-
-  bayes_R2(model2.8, summary = F) %>%
-  data.frame() %>%
-  set_names("model2.8") %>% 
-  bind_cols(
-    bayes_R2(model2.11, summary = F) %>%
-      data.frame() %>%
-      set_names("model2.11")
-  )
+  cbind(bayes_R2(model2.8, summary = F),
+        bayes_R2(model2.11, summary = F)) %>% 
+  data.frame() %>% 
+  set_names(str_c("model2.", c(8, 11)))
 
 head(r2)
 ```
@@ -980,7 +936,7 @@ r2 %>%
   geom_density(fill = "black", color = "transparent") +
   scale_y_continuous(NULL, breaks = NULL) +
   coord_cartesian(xlim = -1:0) +
-  labs(title    = expression(paste(Delta, italic(R)^{2})),
+  labs(title = expression(paste(Delta, italic(R)^{2})),
        subtitle = expression(paste("This is the amount the ", italic(R)^{2}, " dropped after pruning the emotion variables from the model.")),
        x = NULL) +
   theme_bw()
@@ -988,7 +944,7 @@ r2 %>%
 
 The $R^2$ approach is popular within the social sciences. But it has its limitations, the first of which is that it doesn't correct for model complexity. The second is it's not applicable to a range of models, such as those that do not use the Gaussian likelihood (e.g., logistic regression) or to multilevel models.
 
-Happily, information criteria offer a more general framework. The AIC is the most popular information criteria among frequentists. Within the Bayesian world, we have the DIC, the WAIC, and the LOO. The DIC is quickly falling out of favor and is not immediately available with the **brms** package. However, we can use the WAIC and the LOO, both of which are computed in **brms** via the [**loo** package](https://github.com/stan-dev/loo).
+Happily, information criteria offer a more general framework. The AIC is the most popular information criteria among frequentists. Within the Bayesian world, we have the DIC, the WAIC, and the LOO. The DIC is quickly falling out of favor and is not immediately available with the **brms** package. However, we can use the WAIC and the LOO, both of which are computed in **brms** via the [**loo** package](https://github.com/stan-dev/loo) [@R-loo; @vehtariPracticalBayesianModel2017; @yaoUsingStackingAverage2018].
 
 With **brms**, you can compute the WAIC or LOO values and add them to your model fit object with the `add_criterion()` function.
 
@@ -1000,20 +956,20 @@ model2.11 <- add_criterion(model2.11, c("loo", "waic"))
 Here's the main loo-summary output for `model4`.
 
 ```{r}
-model2.8$loo
+model2.8$criteria$loo
 ```
 
-You get a wealth of output, more of which can be seen with `str(model2.8$loo)`. For now, notice the "All pareto k estimates are good (k < 0.5)." Pareto $k$ values [can be used for diagnostics](https://cran.r-project.org/web/packages/loo/vignettes/loo2-example.html#plotting-pareto-k-diagnostics). Each case in the data gets its own $k$ value and we like it when those $k$s are low. The makers of the **loo** package get worried when those $k$s exceed 0.7 and as a result you will get a warning message when they do. Happily, we have no such warning messages in this example.
+You get a wealth of output, more of which can be seen with `str(model2.8$loo)`. For now, notice the "All pareto k estimates are good (k < 0.5)." Pareto $k$ values [see @vehtariUsingLooPackage2020]. Each case in the data gets its own $k$ value and we like it when those $k$s are low. The makers of the **loo** package get worried when those $k$s exceed 0.7 and as a result you will get a warning message when they do. Happily, we have no such warning messages in this example.
 
 If you want to work with the $k$ values directly, you can extract them and place them into a data frame like so.
 
 ```{r}
-model2.8$loo$diagnostics %>% 
+model2.8$criteria$loo$diagnostics %>% 
   data.frame() %>% 
   head()
 ```
 
-The `pareto_k` values can be used to examine cases that are overly-influential on the model parameters, something akin to a Cook's $D_i$. See, for example [this discussion on stackoverflow.com](https://stackoverflow.com/questions/39578834/linear-model-diagnostics-for-bayesian-models-using-rstan/39595436) in which several members of the [Stan team](http://mc-stan.org) weighed in. The issue is also discussed in [this paper](https://arxiv.org/abs/1507.04544) and in [this lecture by Aki Vehtari](https://www.youtube.com/watch?v=FUROJM3u5HQ&feature=youtu.be&a=).
+The `pareto_k` values can be used to examine cases that are overly-influential on the model parameters, something akin to a Cook's $D_i$. See, for example [this discussion on stackoverflow.com](https://stackoverflow.com/questions/39578834/linear-model-diagnostics-for-bayesian-models-using-rstan/39595436) in which several members of the [Stan team](http://mc-stan.org) weighed in. The issue is also discussed in @vehtariPracticalBayesianModel2017 and in [this lecture by Aki Vehtari](https://www.youtube.com/watch?v=FUROJM3u5HQ&feature=youtu.be&a=).
 
 But anyway, we're getting ahead of ourselves. Back to the LOO.
 
@@ -1025,7 +981,7 @@ loo_compare(model2.8, model2.11) %>% print(simplify = F)
 
 We also get a standard error. Here it looks like `model2.8` was substantially better, in terms of LOO-values, than `model2.11`.
 
-For more on the LOO, see the [**loo** reference manual](https://cran.r-project.org/web/packages/loo/loo.pdf), this [handy vignette](https://cran.r-project.org/web/packages/loo/vignettes/loo2-example.html), or the scholarly papers referenced therein. Also, although McElreath doesn't discuss the LOO, he does cover the topic in general in his [text](http://xcelab.net/rm/statistical-rethinking/) and in his [online lectures on the topic](https://www.youtube.com/watch?v=t0pRuy1_190&t=1307s&list=PLDcUM9US4XdM9_N6XUUFrhghGJ4K25bFc&index=9).
+For more on the LOO, see the [**loo** reference manual](https://cran.r-project.org/web/packages/loo/loo.pdf) [@loo2020RM], Vehtari and Gabry's handy [-@vehtariUsingLooPackage2020] [vignette](https://CRAN.R-project.org/package=loo/vignettes/loo2-example.html), or the scholarly papers referenced therein. Also, McElreath discussed the LOO in the second [-@mcelreathStatisticalRethinkingBayesian2020] version of his text, as well as in this [lecture](https://www.youtube.com/watch?v=gjrsYDJbRh0&list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI&index=8).
 
 ## Multicategorical antecedent variables
 
@@ -1033,7 +989,7 @@ For more on the LOO, see the [**loo** reference manual](https://cran.r-project.o
 
 > One popular system for coding groups is *indicator coding*, also known as *dummy coding*. With indicator coding, $g − 1$ *indicator variables* containing either a zero or one represent which of the $g$ groups a case belongs in, and these indicator variables are used as antecedents in a regression model. To construct indicator codes, create $g − 1$ variables $D_i$ for each case set to 1 if the case is in group $i$, otherwise set $D_i$ to zero. (p. 66, *emphasis* in the original)
 
-Before we get to that, we should examine our multicategorical antecedent variable, `partyid`. It's coded 1 = Democrat 2 = Independent 3 = Repuclican. You can get a count of the cases within a give `partyid` like this.
+Before we get to that, we should examine our multicategorical antecedent variable, `partyid`. It's coded 1 = Democrat 2 = Independent 3 = Republican. You can get a count of the cases within a give `partyid` like this.
 
 ```{r}
 glbwarm %>% 
@@ -1042,7 +998,7 @@ glbwarm %>%
 
 We can get grouped means for `govact` like this.
 
-```{r}
+```{r, message = F}
 glbwarm %>% 
   group_by(partyid) %>% 
   summarize(mean_support_for_governmental_action = mean(govact))
@@ -1050,21 +1006,15 @@ glbwarm %>%
 
 We can make dummies with the `if_else()` function. We'll just go ahead and do that right within the `brm()` function.
 
-```{r model2.12, echo = F}
-# save(model2.12, file = "fits/model02.12.rda")
-# rm(model2.12)
-
-load("fits/model02.12.rda")
-```
-
-```{r, eval = F}
+```{r model2.12}
 model2.12 <- 
   brm(data = glbwarm %>% 
         mutate(Democrat = if_else(partyid == 1, 1, 0),
                Republican = if_else(partyid == 3, 1, 0)), 
       family = gaussian,
       govact ~ 1 + Democrat + Republican,
-      chains = 4, cores = 4)
+      chains = 4, cores = 4,
+      file = "fits/model02.12")
 ```
 
 Check the results.
@@ -1085,23 +1035,17 @@ There's no need to compute an $F$-test on our $R^2$. The posterior mean and it's
 
 We could also use information criteria. One method would be to compare the WAIC or LOO value of `model2.12` with an intercept-only model. First, we'll need to fit that model.
 
-```{r model2.13, echo = F}
-# save(model2.13, file = "fits/model02.13.rda")
-# rm(model2.13)
-
-load("fits/model02.13.rda")
-```
-
-```{r, eval = F}
+```{r model2.13, message = F}
 model2.13 <- 
   update(model2.12,
          govact ~ 1,
-         chains = 4, cores = 4)
+         chains = 4, cores = 4,
+         file = "fits/model02.13")
 ```
 
 Here we'll compute the WAIC for each, save the results to their fit objects, and them compare them with `loo_compare()`.
 
-```{r models_6_and_7_waics, cache = T, message = F, warning = F}
+```{r models_6_and_7_waics,  message = F, warning = F}
 model2.12 <- add_criterion(model2.12, "waic")
 model2.13 <- add_criterion(model2.13, "waic")
 
@@ -1109,7 +1053,7 @@ loo_compare(model2.12, model2.13, criterion = "waic") %>%
   print(simplify = F)
 ```
 
-The WAIC comparison suggests `model2.12`, the one *with* the `partyid` dummies, is an improvement over the simple intercept-only model. Another way to compare the information criteria is with AIC-type weighting. The brms package offers a variety of weighting methods via the `model_weights()` function.
+The WAIC comparison suggests `model2.12`, the one *with* the `partyid` dummies, is an improvement over the simple intercept-only model. Another way to compare the information criteria is with AIC-type weighting. The **brms** package offers a variety of weighting methods via the `model_weights()` function.
 
 ```{r model_weights, cache = T, message = F, warning = F}
 mw <- model_weights(model2.12, model2.13, weights = "waic")
@@ -1137,7 +1081,7 @@ You could, of course, do all this with the LOO.
 
 ## Assumptions for interpretation and statistical inference
 
-> Regression is a handy tool to have in your statistical toolbox. Its utility as a "general data analytic system" ([Cohen, 1968](https://pdfs.semanticscholar.org/c5f7/8049809e4112ec5feecea20ab2099a03e59c.pdf)) will be apparent throughout this book. But it is a human invention that isn't perfect, it can lead you astray if used indiscriminately, and it is founded on some assumptions that aren’t always realistic or likely to be met in the circumstances in which the method is applied. (p. 68)
+> Regression is a handy tool to have in your statistical toolbox. Its utility as a "general data analytic system" [@cohenMultipleRegressionGeneral1968] will be apparent throughout this book. But it is a human invention that isn't perfect, it can lead you astray if used indiscriminately, and it is founded on some assumptions that aren’t always realistic or likely to be met in the circumstances in which the method is applied. (p. 68)
 
 ### Linearity. 
 
@@ -1145,19 +1089,15 @@ You could, of course, do all this with the LOO.
 
 ### Normality.
 
-The **brms** package is quite general and allows users to fit models from a variety of likelihoods other than the Gaussian. For example, users can accommodate outliers/extreme values with [Student's t regression](https://solomonkurz.netlify.com/post/robust-linear-regression-with-the-robust-student-s-t-distribution/). You can do count regression with the Poisson or the negative binomial... For more, see McElreath's lecture [introducing the generalized linear model](https://www.youtube.com/watch?v=DyrUkqK9Tj4&t=254s&frags=pl%2Cwn) or Bürkner's vignette, [*Parameterization of Response Distributions in brms*](https://cran.r-project.org/web/packages/brms/vignettes/brms_families.html)
+The **brms** package is quite general and allows users to fit models from a variety of likelihoods other than the Gaussian. For example, users can accommodate outliers/extreme values with [Student's t regression](https://solomonkurz.netlify.com/post/robust-linear-regression-with-the-robust-student-s-t-distribution/). You can do count regression with the Poisson or the negative binomial... For more, see McElreath's lecture [introducing the generalized linear model](https://www.youtube.com/watch?v=DyrUkqK9Tj4&t=254s&frags=pl%2Cwn) or Bürkner's [-@Bürkner2020Parameterization] vignette, [*Parameterization of response distributions in brms*](https://CRAN.R-project.org/package=brms/vignettes/brms_families.html)
 
 ### Homoscedasticity.
 
-The **brms** package can also accommodate homoscedasticity with distributional modeling. In short, one simply models $\sigma$ in addition to the mean, $\mu$. See Bürkner's [handy vignette](https://cran.r-project.org/web/packages/brms/vignettes/brms_distreg.html) on the topic.
+The **brms** package can also accommodate homoscedasticity with distributional modeling. In short, one simply models $\sigma$ in addition to the mean, $\mu$. See Bürkner's handy [-@Bürkner2020Distributional] vignette, [*Estimating distributional models with brms*](https://CRAN.R-project.org/package=brms/vignettes/brms_distreg.html) on the topic.
 
 ### Independence.
 
-The issue of independence is where the multilevel model comes on. See any relevant text, such as [*Statistical Rethinking*](http://xcelab.net/rm/statistical-rethinking/) or [*Data Analysis Using Regression and Multilevel/Hierarchical Models*](http://www.stat.columbia.edu/~gelman/arm/). And yes, **brms** is fully capable of handling multilevel models (see [here](https://cran.r-project.org/web/packages/brms/vignettes/brms_overview.pdf) or [here](https://cran.r-project.org/web/packages/brms/vignettes/brms_multilevel.pdf)).
-
-## Reference {-}
-
-[Hayes, A. F. (2018). *Introduction to mediation, moderation, and conditional process analysis: A regression-based approach.* (2nd ed.). New York, NY, US: The Guilford Press.](http://afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html)
+The issue of independence is where the multilevel model comes on. See any relevant text, such as [*Statistical rethinking*](http://xcelab.net/rm/statistical-rethinking/) or [*Data analysis using regression and multilevel/hierarchical models*](http://www.stat.columbia.edu/~gelman/arm/) [@gelmanDataAnalysisUsing2006]. And yes, **brms** is fully capable of handling multilevel models [see @burknerBrmsPackageBayesian2017; @burknerAdvancedBayesianMultilevel2018].
 
 ## Session info {-}
 
@@ -1165,9 +1105,13 @@ The issue of independence is where the multilevel model comes on. See any releva
 sessionInfo()
 ```
 
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```
+
 ## Footnote {-}
 
 [^2.1]: Hayes did not cover count regression with the Poisson likelihood in this textbook. If you'd like to learn more, one place to start is with [McElreath's lecture on binomial and Poisson models](https://www.youtube.com/watch?v=hRJtKCIDTwc).
 
-[^2.2]: We will not be covering structural equation modeling (SEM) in this project. If you’re interested, you might check out [this video series](https://www.youtube.com/playlist?list=PLw93TUuxrFAZkJVc5dhgTZpOT7qmTjlT7) by Erin M. Buchanan on SEM within **R**, particularly with the handy [**lavaan**](http://lavaan.ugent.be/) package.
+[^2.2]: We will not be covering structural equation modeling (SEM) in this book If you're interested, you might check out [this video series](https://www.youtube.com/playlist?list=PLw93TUuxrFAZkJVc5dhgTZpOT7qmTjlT7) by Erin M. Buchanan on SEM within **R**, particularly with the handy [**lavaan**](https://lavaan.ugent.be/) package [@R-lavaan; @Merkle2018blavaan].
 

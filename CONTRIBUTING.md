@@ -27,4 +27,4 @@ I generally follow the recommendations in [*The tidyverse style guide*](https://
 
 ## Credit
 
-In my recent books, I have made it a practice to thank my contributors in the `index.Rmd` file. This project has been simple enough that I haven’t had reason to adopt that practice, yet. However, should your contribution make its way into the book, I will ll happily add your name and GitHub handle to a thank-you list. If for some reason you don't want to be added to the list, please let me know and I'll respect your privacy.
+In my recent books, I have made it a practice to thank my contributors in the `index.Rmd` file. This project has been simple enough that I haven’t had reason to adopt that practice, yet. However, should your contribution make its way into the book, I will happily add your name and GitHub handle to a thank-you list. If for some reason you don't want to be added to the list, please let me know and I'll respect your privacy.

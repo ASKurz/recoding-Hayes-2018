@@ -8,7 +8,7 @@ options(width = 110)
 
 Hayes closed the opening with:
 
-> Whereas answering questions about *when* or *for whom* is the domain of moderation analysis, questions that ask about *how* pertain to *mediation*, the focus of this and the next three chapters. In this chapter, [we'll explore] the *simple mediation model* and illustrate using ~~OLS regression-based~~ Bayesian path analysis how the effect of an antecedent variable $X$ on some final consequent $Y$ can be partitioned into two paths of influence, *direct* and *indirect*. (p. 78, *emphasis* in the original)
+> Whereas answering questions about *when* or *for whom* is the domain of moderation analysis, questions that ask about *how* pertain to *mediation*, the focus of this and the next three chapters. In this chapter, [we'll explore] the *simple mediation model* and illustrate using ~~OLS regression-based~~ Bayesian path analysis how the effect of an antecedent variable $X$ on some final consequent $Y$ can be partitioned into two paths of influence, *direct* and *indirect*. [@hayesIntroductionMediationModeration2018, p. 78, *emphasis* in the original]
 
 ## The simple mediation model
 
@@ -55,7 +55,7 @@ pmi %>%
 
 Here is how to get the ungrouped mean and $SD$ values for `reaction` and `pmi`, as presented in Table 3.1.
 
-```{r}
+```{r, message = F}
 pmi %>% 
   pivot_longer(c(reaction, pmi)) %>% 
   group_by(name) %>% 
@@ -81,7 +81,7 @@ Let's load our primary statistical package, **brms**.
 library(brms)
 ```
 
-Before we begin, I should acknowledge that I greatly benefited by [this great blog post on path analysis in brms](http://www.imachordata.com/bayesian-sem-with-brms/) by [Jarrett Byrnes](https://twitter.com/jebyrnes). With **brms**, we handle mediation models using the [multivariate syntax](https://cran.r-project.org/web/packages/brms/vignettes/brms_multivariate.html). There are a few ways to do this. Let's start simple. 
+Before we begin, I should acknowledge that I greatly benefited by [this great blog post on path analysis in brms](http://www.imachordata.com/bayesian-sem-with-brms/) by [Jarrett Byrnes](https://twitter.com/jebyrnes). With **brms**, we handle mediation models using the [multivariate syntax](https://CRAN.R-project.org/package=brms/vignettes/brms_multivariate.html) [@Bürkner2020Multivariate]. There are a few ways to do this. Let's start simple.
 
 If you look at the path model in Figure 3.3, you'll note that `reaction` is predicted by `pmi` and `cond`. `pmi`, in turn, is predicted solely by `cond`. So we have two regression models, which is just the kind of thing the **brms** multivariate syntax is for. So first let's specify both models, which we'll nest in `bf()` functions and save as objects.
 
@@ -92,19 +92,13 @@ m_model <- bf(pmi ~ 1 + cond)
 
 Now we have our `bf()` objects in hand, we'll combine them with the `+` operator within the `brm()` function. We'll also specify `set_rescor(FALSE)`--we're not interested in adding a residual correlation between `reaction` and `pmi`.
 
-```{r model3.1, echo = F}
-# save(model3.1, file = "fits/model03.01.rda")
-# rm(model3.1)
-
-load("fits/model03.01.rda")
-```
-
-```{r, eval = F}
+```{r, model3.1}
 model3.1 <-
   brm(data = pmi, 
       family = gaussian,
       y_model + m_model + set_rescor(FALSE),
-      cores = 4)
+      cores = 4,
+      file = "fits/model03.01")
 ```
 
 Here are our results.
@@ -127,10 +121,9 @@ In his Table 3.2, Hayes included the $R^2$ values. Here are ours.
 bayes_R2(model3.1) %>% round(digits = 3)
 ```
 
-It's worth it to actually plot the $R^2$ distributions.
+It's worth it to actually plot the $R^2$ distributions. We'll take our color palette from the [**ggthemes** package](https://CRAN.R-project.org/package=ggthemes) [@R-ggthemes].
 
 ```{r, fig.width = 6, fig.height = 2}
-# we'll get our color palette from ggthemes
 library(ggthemes)
 
 bayes_R2(model3.1, summary = F) %>% 
@@ -198,7 +191,7 @@ post %>%
                fill = colorblind_pal()(3)[3]) +
   scale_y_continuous(NULL, breaks = NULL) +
   labs(title = expression(paste("Our indirect effect, the ", italic("ab"), " pathway")),
-       x     = NULL) +
+       x = NULL) +
   theme_classic()
 ```
 
@@ -258,7 +251,7 @@ Our approach will not match up neatly with Hayes's on this topic.
 
 ### Inference about the total effect of $X$ on $Y$.
 
-As we mentioned in Chapter 2, we can indeed focus on rejecting $H_0$ when using Bayesian statistics. I, however, am not a fan of that approach and I will not be focusing on Bayesian $p$-values. But throughout this project, we will make great efforts to express the (un)certainty in our models with various plots of posterior distributions and summary statistics, such as measures of central tendency (e.g., means) and spread (e.g., percentile-based 95% intervals). 
+As we mentioned in Chapter 2, we can indeed focus on rejecting $H_0$ when using Bayesian statistics. I, however, am not a fan of that approach and I will not be focusing on Bayesian $p$-values. But throughout this project, we will make great efforts to express the (un)certainty in our models with various plots of posterior distributions and summary statistics, such as measures of central tendency (e.g., means) and spread (e.g., percentile-based 95% intervals).
 
 So instead of $t$- and $p$-values for $c'$, we are going to focus on the distribution. We already gave the mean and 95% intervals, above. Here's a look at the density.
 
@@ -284,7 +277,7 @@ post %>%
   geom_vline(xintercept = 0, color = "white", linetype = 2) +
   scale_y_continuous(NULL, breaks = NULL) +
   labs(title = expression(paste("Yep, 0 is a credible value for ", italic("c"), ".")),
-       x     = NULL) +
+       x = NULL) +
   theme_classic()
 ```
 
@@ -321,7 +314,7 @@ Anyway, Hayes's 6 steps:
 
 ##### Step 1.
 
-With HMC we do not take random samples of the data themselves. Rather, we take random draws from the posterior distribution. The posterior distribution is the joint probability distribution of our model. 
+With HMC we do not take random samples of the data themselves. Rather, we take random draws from the posterior distribution. The posterior distribution is the joint probability distribution of our model.
 
 ##### Step 2.
 
@@ -333,13 +326,13 @@ post %>%
   slice(1:10)
 ```
 
-Our data frame, `post`, has 4000 rows. Why 4000? By default, **brms** runs 4 HMC chains. Each chain has 2000 iterations, 1000 of which are warmups, which we always discard. As such, there are 1000 good iterations left in each chain and $1000 \times 4 = 4000$. We can change these defaults as needed.
+Our data frame, `post`, has 4,000 rows. Why 4,000? By default, **brms** runs 4 HMC chains. Each chain has 2,000 iterations, 1,000 of which are warmups, which we always discard. As such, there are 1,000 good iterations left in each chain and $1{,}000 \times 4 = 4{,}000$. We can change these defaults as needed.
 
 Each row in `post` contains the parameter values based on one of those draws. And again, these are draws from the posterior distribution. They are not draws from the data.
 
 ##### Step 3.
 
-We don't refit the model $k$ times based on the samples from the data. We take a number of draws from the posterior distribution. Hayes likes to take 5000 samples when he bootstraps. Happily, that number is quite similar to our default 4000 HMC draws. Whether 5000, 4000 or 10,000, these are all large enough numbers that the distributions become fairly stable. With HMC, however, you might want to increase the number of iterations if the effective sample size, 'Eff.Sample' in the `print()` output, is substantially smaller than the number of iterations.
+We don't refit the model $k$ times based on the samples from the data. We take a number of draws from the posterior distribution. Hayes likes to take 5,000 samples when he bootstraps. Happily, that number is quite similar to our default 4,000 HMC draws. Whether 5,000, 4,000 or 10,000, these are all large enough numbers that the distributions become fairly stable. With HMC, however, you might want to increase the number of iterations if either measure of effective sample size, 'Bulk_ESS' and 'Tail_ESS' in the `print()` output, are substantially smaller than the number of iterations.
 
 ##### Step 4.
 
@@ -395,9 +388,9 @@ post %>%
                binwidth = .025, boundary = 0) +
   geom_vline(xintercept = quantile(post$ab, probs = c(.025, .975)),
              linetype = 3, color = colorblind_pal()(6)[6]) +
-  labs(x = expression(paste("Indirect effect (", italic("ab"), ")")),
-       y = "Frequency in 4,000 HMC posterior draws",
-       subtitle = paste("95% of the posterior draws are between", ll, "and", ul)) +
+  labs(subtitle = str_c("95% of the posterior draws are between ", ll, " and ", ul),
+       x = expression(Indirect~effect~(italic(ab))),
+       y = "Frequency in 4,000 HMC posterior draws") +
   theme_classic()
 ```
 
@@ -407,7 +400,7 @@ Hayes discussed setting the seed in PROCESS on page 104. You can do this with th
 
 #### Alternative "asymmetric" confidence interval approaches.
 
-This section does not quite refer to us. I'm a little surprised Hayes didn't at least dedicate a paragraph or two on Bayesian estimation. Sure, he mentioned Monte Carlo, but not within the context of Bayes. So it goes. But if you're interested, you can read about Bayesian intervals for mediation models in Yuan and MacKinnon's [*Bayesian mediation analysis*](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2885293/pdf/nihms171111.pdf). And yes, Hayes is aware of this. He has cited it [in his work](https://www.researchgate.net/profile/Mohamed_Hammad11/post/What_statistical_methods_can_you_recommend_to_be_used_in_this_study/attachment/5a921b91b53d2f0bba541dd1/AS%3A597744293003264%401519524753928/download/An+Index+and+Test+of+Linear+Moderated+Mediation.pdf).
+This section does not quite refer to us. I'm a little surprised Hayes didn't at least dedicate a paragraph or two on Bayesian estimation. Sure, he mentioned Monte Carlo, but not within the context of Bayes. So it goes. But if you're interested, you can read about Bayesian intervals for mediation models in Yuan and MacKinnon's [-@yuanBayesianMediationAnalysis2009] [*Bayesian mediation analysis*](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2885293/pdf/nihms171111.pdf). And yes, Hayes is aware of this. He has cited it in his work [e.g., @hayesIndexTestLinear2015].
 
 ## An example with continuous $X$: Economic stress among small-business owners
 
@@ -428,19 +421,13 @@ m_model <- bf(affect ~ 1 + estress)
 
 With our `y_model` and `m_model` defined, we're ready to fit.
 
-```{r model3.2, echo = F}
-# save(model3.2, file = "fits/model03.02.rda")
-# rm(model3.2)
-
-load("fits/model03.02.rda")
-```
-
-```{r, eval = F}
+```{r model3.2}
 model3.2 <-
   brm(data = estress, 
       family = gaussian,
       y_model + m_model + set_rescor(FALSE),
-      cores = 4)
+      cores = 4,
+      file = "fits/model03.02")
 ```
 
 Let's take a look at the results.
@@ -449,7 +436,7 @@ Let's take a look at the results.
 print(model3.2, digits = 3)
 ```
 
-The 'Eff.Sample' and 'Rhat' values look great. Happily, the values in our summary cohere well with those Hayes reported in Table 3.5. Here are our $R^2$ values.
+The 'Rhat', 'Bulk_ESS', and 'Tail_ESS' values look great. Happily, the values in our summary cohere well with those Hayes reported in Table 3.5. Here are our $R^2$ values.
 
 ```{r}
 bayes_R2(model3.2)
@@ -482,8 +469,8 @@ post %>%
   scale_x_continuous(breaks = quantile(post$ab, probs = c(.025, .5, .975)),
                      labels = quantile(post$ab, probs = c(.025, .5, .975)) %>% round(2) %>% as.character()) +
   scale_y_continuous(NULL, breaks = NULL) +
-  labs(title = expression(paste("Behold our ", italic("ab"), "!")),
-       x     = NULL) +
+  labs(title = expression(Behold~our~italic("ab")*'!'),
+       x = NULL) +
   theme_classic()
 ```
 
@@ -502,10 +489,6 @@ post <-
 
 quantile(post$c, probs = c(.5, .025, .975)) %>% round(digits = 3)
 ```
-
-## Reference {-}
-
-[Hayes, A. F. (2018). *Introduction to mediation, moderation, and conditional process analysis: A regression-based approach.* (2nd ed.). New York, NY, US: The Guilford Press.](http://afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html)
 
 ## Session info {-}
 

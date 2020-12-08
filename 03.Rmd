@@ -25,7 +25,7 @@ M & = i_M + a X + e_M \\
 Y & = i_Y + c' X + b M + e_Y.
 \end{align*}
 
-When using OLS software, as Hayes promotes throughout the text, these equations are estimated sequentially. However, the **brms** package has multivariate capabilities. As such, our results will be from a Bayesian multilevel model that simultaneously computes both equations at once. They are both part of a joint model. And when we consider more advanced models later in the text, our multivariate models will fit even more than two equations at once. None of this is a problem for **brms**.
+When using OLS software, as Hayes promotes throughout the text, these equations are estimated sequentially. However, the **brms** package has multivariate capabilities. As such, our results will be from a Bayesian multivariate model that simultaneously computes both equations at once. They are both part of a joint model. And when we consider more advanced models later in the text, our multivariate models will fit even more than two equations at once. None of this is a problem for **brms**.
 
 ## Example with dichotomous $X$: The influence of presumed media influence
 
@@ -239,7 +239,7 @@ post <-
   mutate(total_effect = b_reaction_cond + ab)
 ```
 
-Here's the posterior mean with its quantile-based 95% intervals
+Here are the posterior mean with its quantile-based 95% intervals.
 
 ```{r}
 post %>% 
@@ -333,7 +333,7 @@ post %>%
   slice(1:10)
 ```
 
-Our data frame, `post`, has 4000 rows. Why 4000? By default, **brms** runs 4 HMC chains. Each chain has 2000 iterations, 1000 of which are warmups, which we always discard. As such, there are 1000 good iterations left in each chain and $1000 \times 4 = 4000$. We can change these defaults as needed. 
+Our data frame, `post`, has 4000 rows. Why 4000? By default, **brms** runs 4 HMC chains. Each chain has 2000 iterations, 1000 of which are warmups, which we always discard. As such, there are 1000 good iterations left in each chain and $1000 \times 4 = 4000$. We can change these defaults as needed.
 
 Each row in `post` contains the parameter values based on one of those draws. And again, these are draws from the posterior distribution. They are not draws from the data.
 
@@ -378,7 +378,7 @@ Also, notice the headers in the rightmost two columns in our `posterior_summary(
 posterior_summary(model3.1)
 ```
 
-Those .025 and .975 quantiles from above are just what brms is giving us in our 95% Bayesian credible intervals.
+Those .025 and .975 quantiles from above are just what **brms** is giving us in our 95% Bayesian credible intervals.
 
 Here's our version of Figure 3.5.
 
@@ -401,9 +401,9 @@ post %>%
   theme_classic()
 ```
 
-Again, as Hayes discussed how to specify different types of intervals in PROCESS on page 102, you can ask for different kinds of intervals in your `print()` or `summary()` output with the `probs` argument, just as you can with `quantile()` when working directly with the posterior draws. 
+Again, as Hayes discussed how to specify different types of intervals in PROCESS on page 102, you can ask for different kinds of intervals in your `print()` or `summary()` output with the `probs` argument, just as you can with `quantile()` when working directly with the posterior draws.
 
-Hayes discussed setting the seed in PROCESS on page 104. You can do this with the `seed` argument in the `brm()` function, too. 
+Hayes discussed setting the seed in PROCESS on page 104. You can do this with the `seed` argument in the `brm()` function, too.
 
 #### Alternative "asymmetric" confidence interval approaches.
 

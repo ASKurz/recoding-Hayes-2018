@@ -6,7 +6,7 @@
 options(width = 110)
 ```
 
-> The effect of $X$ on some variable $Y$ is moderated by $W$ if its size, sign, or strength depends on or can be predicted by $W$. In that case, $W$ is said to be a *moderator* of $X$’s effect on $Y$, or that $W$ and $X$ interact in their influence on $Y$. Identifying a moderator of an effect helps to establish the boundary conditions of that effect or the circumstances, stimuli, or type of people for which the effect is large versus small, present versus absent, positive versus negative, and so forth. (p. 220, *emphasis* in the original)
+> The effect of $X$ on some variable $Y$ is moderated by $W$ if its size, sign, or strength depends on or can be predicted by $W$. In that case, $W$ is said to be a *moderator* of $X$’s effect on $Y$, or that $W$ and $X$ interact in their influence on $Y$. Identifying a moderator of an effect helps to establish the boundary conditions of that effect or the circumstances, stimuli, or type of people for which the effect is large versus small, present versus absent, positive versus negative, and so forth. [@hayesIntroductionMediationModeration2018, p. 220, *emphasis* in the original]
 
 ## Conditional and unconditional effects
 
@@ -26,7 +26,7 @@ d <-
 d
 ```
 
-In previous chapters, we alteried our plot themes using either built-in settings from **ggplot2** or extra themes from the **ggthemes** package. When we wanted to change them further, we did so with extra `theme()` arguments. One, it's nice to be know how to make one's own custom theme and, two, it'd be handy to condense our code a bit. Here we'll take a few cues from the [Building a New Theme](https://bookdown.org/rdpeng/RProgDA/building-a-new-theme.html) section from Peng, Kross, and Anderson's [*Mastering Software Development in R*](https://bookdown.org/rdpeng/RProgDA/). We'll make our own theme, `theme_07`, by saving a handful of augmentations from the default `theme_gray()` theme.
+In previous chapters, we altered our plot themes using either built-in settings from **ggplot2** or extra themes from the **ggthemes** package. When we wanted to change them further, we did so with extra `theme()` arguments. One, it's nice to be know how to make one's own custom theme and, two, it'd be handy to condense our code a bit. Here we'll take a few cues from the [Building a New Theme](https://bookdown.org/rdpeng/RProgDA/building-a-new-theme.html) section from Peng, Kross, and Anderson's [-@pengMasteringSoftwareDevelopment2017] text, [*Mastering software development in R*](https://bookdown.org/rdpeng/RProgDA/). We'll make our own theme, `theme_07`, by saving a handful of augmentations from the default `theme_gray()` theme.
 
 ```{r, warning = F, message = F}
 library(dutchmasters)
@@ -46,7 +46,7 @@ theme_07 <-
         axis.text = element_text(color = dutchmasters$little_street[6]))
 ```
 
-This chapter's color palette comes from the [**dutchmasters** package](https://github.com/EdwinTh/dutchmasters), which was itself based of [Vermeer's *The Little Street*](https://en.wikipedia.org/wiki/The_Little_Street). To get a quick glance at the full palette, we'll also use `viz_palette()`, a convenience function from the [**ochRe** package](https://github.com/ropenscilabs/ochRe).
+This chapter's color palette comes from the [**dutchmasters** package](https://github.com/EdwinTh/dutchmasters) [@R-dutchmasters], which was itself based of Vermeer's [-@vermeerLittleStreet1657] [*The little street*](https://en.wikipedia.org/wiki/The_Little_Street). To get a quick glance at the full palette, we'll also use `viz_palette()`, a convenience function from the [**ochRe** package](https://github.com/ropenscilabs/ochRe) [@R-ochRe].
 
 ```{r, fig.width = 7.5, fig.height = 3, warning = F, message = F}
 # devtools::install_github("ropenscilabs/ochRe")
@@ -61,8 +61,7 @@ With our new `theme_07` in hand, we're ready to make our version of Figure 7.2.
 library(directlabels)
 
 d %>% 
-  pivot_longer(A:B,
-               values_to = "y") %>% 
+  pivot_longer(A:B, values_to = "y") %>% 
   mutate(label = str_c("W = ", w),
          w     = factor(w),
          strip = if_else(name == "A",
@@ -77,7 +76,7 @@ d %>%
                         fontfamily = "Courier")) +
   scale_size_manual(values = c(.5, .75, 1)) +
   coord_cartesian(xlim = c(-1, 2.6),
-                  ylim = 0:16) +
+                  ylim = c(0, 16)) +
   labs(x = expression(italic(X)),
        y = expression(hat(italic(Y)))) +
   facet_wrap(~strip) +
@@ -87,7 +86,7 @@ d %>%
   theme(legend.position = "none")
 ```  
 
-We borrowed `geom_dl()` form the [**directlabels** package](https://cran.r-project.org/web/packages/directlabels/index.html), which made it easy to insert the "W = $i$" labels to the right of the lines.
+We borrowed `geom_dl()` form the [**directlabels** package](https://CRAN.R-project.org/package=directlabels) [@R-directlabels], which made it easy to insert the "W = $i$" labels to the right of the lines.
 
 I played around with the annotation in Figure 7.4 for a while and it was just way more trouble than it was worth. If you're ever inspired to work it out, [please share your code](https://github.com/ASKurz/recoding_Introduction_to_Mediation_Moderation_and_Conditional_Process_Analysis/issues). I'm moving on.
 
@@ -124,10 +123,10 @@ $$\theta_{w \rightarrow Y} = b_2 + b_3 X.$$
 
 ### Interpretation of the regression coefficients.
 
-With all this wacky stuff going on, we should clarify some of our terms.
+With all this wacky stuff going on, we should clarify some of our terms:
 
-* $i_Y$ is still the expected value for $Y$ with both $X = 0$ and $W = 0$. 
-* $b_1$ is the conditional effect of $X$ on $Y$ when $W = 0$.
+* $i_Y$ is still the expected value for $Y$ with both $X = 0$ and $W = 0$, 
+* $b_1$ is the conditional effect of $X$ on $Y$ when $W = 0$, and
 * $b_2$ is the conditional effect of $W$ on $Y$ when $X = 0$.
 
 It turns out $b_3$ requires more words, which we'll provide in the next subsection.
@@ -138,7 +137,7 @@ It turns out $b_3$ requires more words, which we'll provide in the next subsecti
 
 ## An example: Climate change disasters and humanitarianism
 
-Here we load a couple necessary packages, load [Chapman and Lickel (2016)](https://static1.squarespace.com/static/5ba3a7e39772aef68a375870/t/5ba5256dc83025bd88601afe/1537549679439/Chapman+and+Lickel%2C+2016+-+Print+Edition.pdf) data, and take a `glimpse()`.
+Here we load a couple necessary packages, load the Chapman and Lickel [-@chapmanClimateChangeDisasters2016] data, and take a `glimpse()`.
 
 ```{r, warning = F, message = F}
 disaster <- read_csv("data/disaster/disaster.csv")
@@ -148,7 +147,7 @@ glimpse(disaster)
 
 Here is how to get the ungrouped mean and $SD$ values for `justify` and `skeptic`, as presented in Table 7.3.
 
-```{r}
+```{r, message = F}
 disaster %>% 
   pivot_longer(justify:skeptic) %>% 
   group_by(name) %>% 
@@ -176,19 +175,13 @@ library(brms)
 
 Now fit the simple univariable model.
 
-```{r model7.1, echo = F}
-# save(model7.1, file = "fits/model07.01.rda")
-# rm(model7.1)
-
-load("fits/model07.01.rda")
-```
-
-```{r, eval = F}
+```{r model7.1}
 model7.1 <-
   brm(data = disaster, 
       family = gaussian,
       justify ~ 1 + frame,
-      cores = 4)
+      cores = 4,
+      file = "fits/model07.01")
 ```
 
 ```{r}
@@ -203,7 +196,7 @@ fixef(model7.1)["Intercept", 1] + fixef(model7.1)["frame", 1]
 
 which matches up nicely with the equation on page 233. But this wouldn't be very Bayesian of us. It'd be more satisfying if we had an expression of the uncertainty in the value. For that, we'll follow our usual practice of extracting the posterior samples, making nicely-named vectors, and summarizing a bit.
 
-```{r}
+```{r, message = F}
 post <-
   posterior_samples(model7.1) %>% 
   mutate(when_x_is_0 = b_Intercept,
@@ -238,28 +231,20 @@ post %>%
 
 We'll use the `update()` function to hastily fit `model7.2` and `model7.3`.
 
-```{r model7.2_model7.3, echo = F}
-# save(model7.2, file = "fits/model07.02.rda")
-# rm(model7.2)
-# save(model7.3, file = "fits/model07.03.rda")
-# rm(model7.3)
-
-load("fits/model07.02.rda")
-load("fits/model07.03.rda")
-```
-
-```{r, eval = F}
+```{r model7.2}
 model7.2 <-
   update(model7.1, 
          newdata = disaster,
          formula = justify ~ 1 + frame + skeptic,
-         cores = 4)
+         cores = 4,
+         file = "fits/model07.02")
 
 model7.3 <-
   update(model7.1, 
          newdata = disaster,
          formula = justify ~ 1 + frame + skeptic + frame:skeptic,
-         cores = 4)
+         cores = 4,
+         file = "fits/model07.03")
 ```
 
 Note our use of the `frame:skeptic` syntax in `model7.3`. With that syntax we didn't need to make an interaction variable in the data by hand. The **brms** package just handled it for us. An alternative syntax would have been `frame*skeptic`. But if you really wanted to make the interaction variable by hand, you'd do this.
@@ -282,11 +267,11 @@ posterior_summary(model7.3)
 Just focusing on our primary model, `model7.3`, here's another way to look at the coefficients. 
 
 ```{r, fig.width = 10, fig.height = 1.5}
-stanplot(model7.3) +
+mcmc_plot(model7.3) +
   theme_07
 ```
 
-By default, the `brms::stanplot()` function returns coefficient plots which depict the parameters of a model by their posterior means (i.e., dots), 50% intervals (i.e., thick horizontal lines), and 95% intervals (i.e., thin horizontal lines). As `stanplot()` returns a **ggplot2** object, one can customize the theme and so on.
+By default, the `brms::mcmc_plot()` function returns coefficient plots which depict the parameters of a model by their posterior means (i.e., dots), 50% intervals (i.e., thick horizontal lines), and 95% intervals (i.e., thin horizontal lines). As `mcmc_plot()` returns a **ggplot2** object, one can customize the theme and so on.
 
 We'll extract the $R^2$ iterations in the usual way once for each model, and then combine them for a plot.
 
@@ -319,15 +304,14 @@ r2 %>%
   ggplot(aes(x = R2)) +
   geom_density(aes(fill = model), size = 0, alpha = 2/3) +
   scale_fill_manual(values = dutchmasters$little_street[c(3, 4, 8)] %>% as.character()) +
+  scale_x_continuous(expression(italic(R)^2~distribution), limits = 0:1) +
   scale_y_continuous(NULL, breaks = NULL) +
-  xlab(expression(paste(italic(R)^2, " distribution"))) +
-  coord_cartesian(xlim = 0:1) +
   theme_07
 ```
 
 Here's the $\Delta R^2$ distribution for `model7.3` minus `model7.2`.
 
-```{r, fig.width = 4, fig.height = 2.5}
+```{r, fig.width = 4, fig.height = 2.5, message = F}
 r2_2 %>% 
   bind_cols(r2_3) %>% 
   set_names(str_c("model7.", 2:3)) %>% 
@@ -337,7 +321,7 @@ r2_2 %>%
   geom_density(color = "transparent",
                fill = dutchmasters$little_street[9]) +
   scale_y_continuous(NULL, breaks = NULL) +
-  labs(title = expression(paste("The ", Delta, italic(R)^2)),
+  labs(title = expression(The~Delta*italic(R)^2),
        subtitle = "Like in the text, the posterior\nmean is about 0.05.",
        x = NULL) +
   theme_07
@@ -354,7 +338,7 @@ loo_compare(model7.1, model7.2, model7.3) %>%
   print(simplify = F)
 ```
 
-The LOO point estimate for both multivariable models were clearly lower than that for `model7.1`. The point estimate for the moderation model, `model7.3`, was within the double-digit range lower than that for `model7.2`, which typically suggests better fit. But notice how wide the standard error was. There's a lot of uncertainty, there. Hopefully this isn't surprising. Our $R^2$ difference was small and uncertain, too. We can also compare them with AIC-type model weighting, which you can learn more about [starting at this point in this lecture](https://www.youtube.com/watch?v=t0pRuy1_190) or [this related vignette for the **loo** package](https://cran.r-project.org/web/packages/loo/vignettes/loo2-weights.html). Here we'll keep things simple and weight with the LOO.
+The LOO point estimate for both multivariable models were clearly lower than that for `model7.1`. The point estimate for the moderation model, `model7.3`, was within the double-digit range lower than that for `model7.2`, which typically suggests better fit. But notice how wide the standard error was. There's a lot of uncertainty, there. Hopefully this isn't surprising. Our $R^2$ difference was small and uncertain, too. We can also compare them with AIC-type model weighting, which you can learn more about [starting at this point in this lecture](https://www.youtube.com/watch?v=t0pRuy1_190) or the related [-@vehtariBayesianStackingPseudoBMA] vignette, [*Bayesian stacking and pseudo-BMA weights using the loo package*](https://cran.r-project.org/web/packages/loo/vignettes/loo2-weights.html) [@vehtariBayesianStackingPseudoBMA]. Here we'll keep things simple and weight with the LOO.
 
 ```{r}
 model_weights(model7.1, model7.2, model7.3,
@@ -366,7 +350,7 @@ The `model_weights()` results put almost all the relative weight on `model7.3`. 
 
 Here are the results of the equations in the second half of page 237.
 
-```{r}
+```{r, message = F}
 post <- posterior_samples(model7.3)
 
 post %>% 
@@ -402,19 +386,13 @@ disaster <-
 
 And here's how we might fit the model.
 
-```{r model7.4, echo = F}
-# save(model7.4, file = "fits/model07.04.rda")
-# rm(model7.4)
-
-load("fits/model07.04.rda")
-```
-
-```{r, eval = F}
+```{r model7.4}
 model7.4 <-
   update(model7.3, 
          newdata = disaster,
          formula = justify ~ 1 + frame + skeptic_c + frame:skeptic_c,
-         cores = 4)
+         cores = 4,
+         file = "fits/model07.04")
 ```
 
 Here are the summaries of our fixed effects.
@@ -450,21 +428,15 @@ disaster <-
   mutate(frame_.5 = ifelse(frame == 0, -.5, .5))
 ```
 
-Time to fit `model5`.
+Time to fit `model7.5`.
 
-```{r model7.5, echo = F}
-# save(model7.5, file = "fits/model07.05.rda")
-# rm(model7.5)
-
-load("fits/model07.05.rda")
-```
-
-```{r, eval = F}
+```{r model7.5}
 model7.5 <-
   update(model7.4, 
          newdata = disaster,
          formula = justify ~ 1 + frame_.5 + skeptic_c + frame_.5:skeptic_c,
-         cores = 4)
+         cores = 4,
+         file = "fits/model07.05")
 ```
 
 Our posterior summaries match up nicely with the output in Hayes's Table 7.4.
@@ -483,13 +455,13 @@ bayes_R2(model7.5)
 
 > A regression model with the product to two antecedent variables in an abstract mathematical representation of one’s data that can be harder to interpret than a model without such a produce. As described earlier, the coefficients for $X$ and $W$ are conditional effects that may not have any substantive interpretation, and the coefficient for $XW$ is interpreted as a difference between differences that can be hard to make sense of without more information. (pp. 223--224)
 
-This is why we plot. To get quick plots for the interaction effect in **brms**, you might use the `conditional_effects()` function.
+This is why we plot. To get quick plots for the interaction effect with **brms**, you might use the `conditional_effects()` function.
 
 ```{r, fig.width = 4, fig.height = 2.5}
 conditional_effects(model7.3)
 ```
 
-By default, `conditional_effects()` will show three levels of the variable on the right side of the interaction term. The formula in `model7.3` was `justify ~ frame + skeptic + frame:skeptic `, with `frame:skeptic` as the interaction term and `skeptic` making up the right hand side of the term. The three levels of `skeptic` in the plot, above, are the mean $\pm 1$ standard deviation. See the **brms** [reference manual](https://cran.r-project.org/web/packages/brms/brms.pdf) for details on the `conditional_effects()` function.
+By default, `conditional_effects()` will show three levels of the variable on the right side of the interaction term. The formula in `model7.3` was `justify ~ frame + skeptic + frame:skeptic `, with `frame:skeptic` as the interaction term and `skeptic` making up the right hand side of the term. The three levels of `skeptic` in the plot, above, are the mean $\pm 1$ standard deviation. See the [**brms** reference manual](https://CRAN.R-project.org/package=brms/brms.pdf) for details on the `conditional_effects()` function [@brms2020RM].
 
 On page 244, Hayes discussed using the 16th, 50th, and 84th percentiles for the moderator variable. We can compute those with `quantile()`.
 
@@ -558,8 +530,8 @@ fitted(model7.3, newdata = nd) %>%
   scale_color_manual("frame",
                      values = dutchmasters$little_street[c(10, 5)] %>% as.character()) +
   scale_x_continuous(breaks = 1:6) +
-  coord_cartesian(xlim = 1:6,
-                  ylim = 2:4) +
+  coord_cartesian(xlim = c(1, 6),
+                  ylim = c(2, 4)) +
   labs(x = expression(paste("Climate Change Skepticism (", italic("W"), ")")),
        y = "Strength of Justification\nfor Withholding Aid") +
   theme_07 +
@@ -570,7 +542,7 @@ Do you see that subtle bowtie shape?
 
 ## Probing an interaction
 
-As with other modeling contexts, there the results from our moderation models, like depicted in the last plot, carry uncertainty with them. 
+As with other modeling contexts, there the results from our moderation models, like depicted in the last plot, carry uncertainty with them.
 
 > To deal with the uncertainty, it is common to follow up a test of interaction with a set of additional inferential tests to establish where in the distribution of the moderator $X$ has an effect on $Y$ that is different from zero and where it does not. This exercise is commonly known as "probing" an interaction, like you might squeeze an avocado or a mango in the produce section of the grocery store to assess its ripeness. The goal is to ascertain where in the distribution of the moderator $X$ is related to $Y$ and where it is not in an attempt to better discern the substantive interpretation of the interaction. In this section [we will cover] two approaches to probing an interaction. (p. 249)
 
@@ -578,11 +550,13 @@ As in earlier sections and chapters, our approach will largely follow Hayes's, b
 
 ### The pick-a-point approach.
 
-> The pick-a-point approach ([Rogosa, 1980](http://statweb.stanford.edu/~rag/ed257/cnrl.pdf); [Bauer & Curran, 2005](https://www.tandfonline.com/doi/pdf/10.1207/s15327906mbr4003_5)), sometimes called an *analysis of simple slopes* or a *spotlight analysis*, is perhaps the most popular approach to probing an interaction and is described in most discussions of multiple regression with interactions (e.g., [Aiken & West, 1991](http://us.sagepub.com/en-us/nam/multiple-regression/book3045); [Cohen et al., 2003](https://www.taylorfrancis.com/books/9780203774441); [Darlington & Hayes, 2017](https://www.guilford.com/books/Regression-Analysis-and-Linear-Models/Darlington-Hayes/9781462521135/reviews); [Hayes, 2005](http://afhayes.com/statistical-methods-for-communication-science.html); [Jaccard & Turrisi, 2003](https://methods.sagepub.com/book/interaction-effects-in-multiple-regression); [Spiller, Fitzsimons, Lynch, & McClelland, 2013](https://www.researchgate.net/profile/John_Lynch6/publication/255947445_Spiller_et_al_jmr120420-web-appendixdocx/links/00463520e21cc21a0f000000/Spiller-et-al-jmr120420-web-appendixdocx.pdf)). This procedure involves selecting a value or values of the moderator $W$, calculating the conditional effect of $X$ on $Y (\theta_{X \rightarrow Y})$ at that value or values, and then conducting an inferential test or generating a confidence interval. (p. 249, *emphasis* in the original)
+[e.g., @aikenMultipleRegressionTesting1991; @cohenAppliedMultipleRegression2003; @darlingtonRegressionAnalysisLinear2017; @hayesStatisticalMethodsCommunication2005; @jaccardInteractionEffectsMultiple2003; @spillerSpotlightsFloodlightsMagic2013]
+
+> The pick-a-point approach [@rogosaComparingNonparallelRegression1980; @bauerProbingInteractionsFixed2005], sometimes called an *analysis of simple slopes* or a *spotlight analysis*, is perhaps the most popular approach to probing an interaction and is described in most discussions of multiple regression with interactions [e.g., @aikenMultipleRegressionTesting1991; @cohenAppliedMultipleRegression2003; @darlingtonRegressionAnalysisLinear2017; @hayesStatisticalMethodsCommunication2005; @jaccardInteractionEffectsMultiple2003; @spillerSpotlightsFloodlightsMagic2013]. This procedure involves selecting a value or values of the moderator $W$, calculating the conditional effect of $X$ on $Y (\theta_{X \rightarrow Y})$ at that value or values, and then conducting an inferential test or generating a confidence interval. (p. 249, *emphasis* in the original)
 
 Though we will not be using inferential tests, we will use various ways of expressing the uncertainty in our Bayesian models, such as with 95% credible intervals and other ways of summarizing the posterior.
 
-#### The pick-a-point approach ~~implimented by regression centering~~ working directly with the posterior. 
+#### The pick-a-point approach ~~implimented by regression centering~~ working directly with the posterior.
 
 Yes, if you wanted to use the regression centering approach, you could do that in **brms**. Just center the necessary variables in the way Hayes described in the text, refit the model, and `summarize()`. I suspect this would be particularly approachable for someone new to **R** and to the ins and outs of data wrangling. But I'm going leave that as an exercise for the interested reader.
 
@@ -636,19 +610,17 @@ f %>% str()
 f %>% head()
 ```
 
-With `summary = F`, `fitted()` returned a matrix of 4000 rows (i.e., one for each posterior draw) and 6 vectors (i.e., one for each row in our `nd` data). So now instead of summary information, we have a full expression of the uncertainty in terms of 4000 draws. If you prefer working within the **tidyverse** and plotting with **ggplot2**, matrices aren't the most useful data type. Let's wrangle a bit.
+With `summary = F`, `fitted()` returned a matrix of 4,000 rows (i.e., one for each posterior draw) and 6 vectors (i.e., one for each row in our `nd` data). So now instead of summary information, we have a full expression of the uncertainty in terms of 4,000 draws. If you prefer working within the **tidyverse** and plotting with **ggplot2**, matrices aren't the most useful data type. Let's wrangle a bit.
+
 
 ```{r}
 f <-
   f %>% 
   data.frame() %>% 
-  gather() %>% 
-  select(-key) %>% 
-  bind_cols(
-    nd %>% 
-      expand(nesting(frame, skeptic),
-             iter = 1:4000)
-  ) %>%
+  set_names(mutate(nd, name = str_c(frame, "_", skeptic)) %>% pull(name)) %>% 
+  mutate(iter = 1:n()) %>% 
+  pivot_longer(-iter) %>% 
+  separate(name, into = c("frame", "skeptic"), sep = "_") %>% 
   pivot_wider(names_from = frame, values_from = value) %>% 
   mutate(difference = `1` - `0`,
          # this isn't necessary, but will help with the facet labels
@@ -673,7 +645,7 @@ f %>%
   facet_wrap(~skeptic)
 ```
 
-And if you prefered summary information instead of plots, you might just use `tidybayes::median_qi()`.
+If you prefer summary information instead of plots, you might just use `tidybayes::median_qi()`.
 
 ```{r, fig.width = 10, fig.height = 2.5, warning = F, message = F}
 library(tidybayes)
@@ -690,7 +662,7 @@ The JN technique generalizes this approach over many values of $W$ (i.e., `skept
 
 #### Implementation in ~~PROCESS~~ brms.
 
-Since Figure 7.9 had `skeptic` values ranging from 1 to 6 with ticks on the 0.5s, we'll use a similar approach for our version. We will display posterior samples with `fitted()` for `skeptic` values ranging from .5 to 6.5, one for each 0.5—13 in total. But since we have two levels of `frame` (i.e., 0 and 1), that really gives us 26. And we don't just want 26 summaries; we want full posterior distributions for each of those 26. 
+Since Figure 7.9 had `skeptic` values ranging from 1 to 6 with ticks on the 0.5's, we'll use a similar approach for our version. We will display posterior samples with `fitted()` for `skeptic` values ranging from .5 to 6.5, one for each 0.5--13 in total. But since we have two levels of `frame` (i.e., 0 and 1), that really gives us 26. And we don't just want 26 summaries; we want full posterior distributions for each of those 26. 
 
 We've got a lot of moving parts in the code, below. To help make sure everything adds up, we'll save several important values as **R** objects.
 
@@ -708,34 +680,31 @@ nd <-
 f <-
   fitted(model7.3, newdata = nd, summary = F) %>% 
   data.frame() %>% 
-  gather() %>% 
-  bind_cols(
-    nd %>% 
-      expand(nesting(frame, skeptic),
-             iter = 1:iter)
-  ) %>% 
-  select(-key) %>% 
-  rename(estimate = value) %>% 
-  pivot_wider(names_from = frame, values_from = estimate) %>% 
-  mutate(difference = `1` - `0`)
+  set_names(mutate(nd, name = str_c(frame, "_", skeptic)) %>% pull(name)) %>% 
+  mutate(iter = 1:n()) %>% 
+  pivot_longer(-iter) %>% 
+  separate(name, into = c("frame", "skeptic"), sep = "_") %>% 
+  pivot_wider(names_from = frame, values_from = value) %>% 
+  mutate(difference = `1` - `0`,
+         skeptic    = as.double(skeptic))
 
 # finally, here's the plot
 f %>% 
   ggplot(aes(x = skeptic %>% as.character, y = difference)) +
   geom_hline(yintercept = 0, color = dutchmasters$little_street[7]) +
   geom_violin(size = 0, fill = dutchmasters$little_street[6]) +
-  stat_summary(fun.y = median,
-               fun.ymin = function(x){quantile(x, probs = .025)},
-               fun.ymax = function(x){quantile(x, probs = .975)},
+  stat_summary(fun = median,
+               fun.min = function(x){quantile(x, probs = .025)},
+               fun.max = function(x){quantile(x, probs = .975)},
                color = dutchmasters$little_street[5]) +
   labs(x = expression(paste("Climate Change Skepticism (", italic(W), ")")),
        y = expression(atop(theta[paste(italic(X), " on ", italic(Y))], paste("Conditional Effect of Disaster Frame")))) +
   theme_07
 ```  
 
-[Note. I got the `atop()` trick for the label for the y-axis from [Drew Steen's answer to this stackoverflow question](https://stackoverflow.com/questions/13223846/ggplot2-two-line-label-with-expression?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa).]
+[Note. I got the `atop()` trick for the label for the $y$-axis from [Drew Steen's answer to this stackoverflow question](https://stackoverflow.com/questions/13223846/ggplot2-two-line-label-with-expression?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa).]
 
-This isn't quite our version of Figure 7.9, but I'm hoping it'll add some pedagogical value for what we're doing. Since we specified `summary = F` within `fitted()`, we got full posterior distributions for each of our 26 conditions. *Because Figure 7.9 is all about differences between each `frame` pair across the various values of `skeptic`*, we needed to make a `difference` score for each pair; this is what we did with the last `mutate()` line before the plot code. This initial version of the plot shows the full posterior distribution for each `difference` score. The posteriors are depicted with violin plots, which are density plots set on their side and symmetrically reflected as if by a mirror to give a pleasing leaf- or violin-like shape (though [beware](https://twitter.com/naomicaselli/status/973601256609599488?lang=en)). The light dots and vertical lines are the posterior medians and 95% intervals for each. 
+This isn't quite our version of Figure 7.9, but I'm hoping it'll add some pedagogical value for what we're doing. Since we specified `summary = F` within `fitted()`, we got full posterior distributions for each of our 26 conditions. *Because Figure 7.9 is all about differences between each `frame` pair across the various values of `skeptic`*, we needed to make a `difference` score for each pair; this is what we did with the last `mutate()` line before the plot code. This initial version of the plot shows the full posterior distribution for each `difference` score. The posteriors are depicted with violin plots, which are density plots set on their side and symmetrically reflected as if by a mirror to give a pleasing leaf- or violin-like shape (though [beware](https://twitter.com/naomicaselli/status/973601256609599488?lang=en)). The light dots and vertical lines are the posterior medians and 95% intervals for each.
 
 Going from left to right, it appears we have a clearly emerging trend. We can more simply express the trend by summarizing each posterior with medians and 95% intervals.
 
@@ -760,19 +729,15 @@ f %>%
   theme_07
 ```  
 
-Notice how the contour boundaries of the 95% intervals are a little clunky. That's because our bowtie-shape is based on only 13 x-axis values. If you wanted a smoother shape, you'd specify more `skeptic` values in the data object you feed into `fitted()`'s `newdata` argument. For linear effects, 30 or so usually does it.
+Notice how the contour boundaries of the 95% intervals are a little clunky. That's because our bowtie-shape is based on only 13 $x$-axis values. If you wanted a smoother shape, you'd specify more `skeptic` values in the data object you feed into `fitted()`'s `newdata` argument. For linear effects, I find 30 or so usually does it.
 
-Anyway, I got the values for the two vertical lines directly out of the text. It's not clear to me how one might elegantly determine those values within the paradigm we've been using. But that leads to an important digression. The two vertical lines are quite $p$-value centric. They are an attempt to separate the x-axis into areas where the `difference` trend either is or is not statistically-significantly different from zero. That is, we're dichotomizing--or "trichotomizing", depending on how you look at it--a continuous phenomenon. This is somewhat at odds with the sensibilities of the Bayesians associated with Stan and **brms** (e.g., [here](https://github.com/paul-buerkner/brms/issues/309)).
+Anyway, I got the values for the two vertical lines directly out of the text. It's not clear to me how one might elegantly determine those values within the paradigm we've been using. But that leads to an important digression. The two vertical lines are quite $p$-value centric. They are an attempt to separate the $x$-axis into areas where the `difference` trend either is or is not statistically-significantly different from zero. That is, we're dichotomizing--or "trichotomizing", depending on how you look at it--a continuous phenomenon. This is somewhat at odds with the sensibilities of the Bayesians associated with Stan and **brms** (e.g., [here](https://github.com/paul-buerkner/brms/issues/309)).
 
-On page 259, Hayes wrote:
-
-> Although the JN technique eliminates the need to select arbitrary values of $W$ when probing an interaction, it does not eliminate your need to keep your brain turned into the task and thinking critically about the answer the method gives you.
-
-I think this is valuable advice, particularly when working within the Bayesian paradigm. Our version of Figure 7.9 gives some interesting insights into the moderation model, `model7.3`. I'm just not so sure I’d want to encourage people to interpret a continuous phenomenon by heuristically dividing it into discrete regions.
+On page 259, Hayes wrote: "Although the JN technique eliminates the need to select arbitrary values of $W$ when probing an interaction, it does not eliminate your need to keep your brain turned into the task and thinking critically about the answer the method gives you." I think this is valuable advice, particularly when working within the Bayesian paradigm. Our version of Figure 7.9 gives some interesting insights into the moderation model, `model7.3`. I'm just not so sure I'd want to encourage people to interpret a continuous phenomenon by heuristically dividing it into discrete regions.
 
 ## The difference between testing for moderation and probing it
 
-This is another section where the NHST-type paradigm contrasts with many within the contemporary Bayesian paradigm. E.g., Hayes opened the section with: "We test for evidence of moderation when we want to know whether the relationship between $X$ and $Y$ varies systematically as a function of a proposed moderator $W$". His use of "whether" suggests we are talking about a binary answer--either there is an effect or there isn't. But, as [Gelman argued](http://www.stat.columbia.edu/~gelman/research/published/bayes_management.pdf), the default presumption in social science [and warning, I'm a psychologist and thus biased towards thinking in terms of social science] is that treatment effects--and more generally, causal effects--vary across contexts [^7.1] . As such, asking "whether" there's a difference or an interaction effect isn't really the right question. Rather, we should presume variation at the outset and ask instead what the magnitude of that variation is and how much accounting for it matters for our given purposes. If the variation--read *interaction effect*--is tiny and of little theoretical interest, perhaps we might just ignore it and not include it in the model. Alternatively, if the variation is large or of theoretical interest, we might should include it in the model regardless of statistical significance.
+This is another section where the NHST-type paradigm contrasts with many within the contemporary Bayesian paradigm. E.g., Hayes opened the section with: "We test for evidence of moderation when we want to know whether the relationship between $X$ and $Y$ varies systematically as a function of a proposed moderator $W$". His use of "whether" suggests we are talking about a binary answer--either there is an effect or there isn't. But, as Gelman [-@gelmanConnectionVaryingTreatment2015] has argued, the default presumption in social science [and warning, I'm a psychologist and thus biased towards thinking in terms of social science] is that treatment effects--and more generally, causal effects--vary across contexts [^7.1] . As such, asking "whether" there's a difference or an interaction effect isn't really the right question. Rather, we should presume variation at the outset and ask instead what the magnitude of that variation is and how much accounting for it matters for our given purposes. If the variation--read *interaction effect*--is tiny and of little theoretical interest, perhaps we might just ignore it and not include it in the model. Alternatively, if the variation is large or of theoretical interest, we might should include it in the model regardless of statistical significance.
 
 Another way into this topic is posterior predictive checking. We've already done a bit of this in previous chapters. The basic idea, recall, is that better models should give us a better sense of the patterns in the data. In the plot below, we continue to show the interaction effect with two regression lines, but this time we separate them into their own panels by `frame`. In addition, we add the original data which we also separate and color code by `frame`.
 
@@ -797,11 +762,11 @@ fitted(model7.3, newdata = nd) %>%
                     values = dutchmasters$little_street[c(10, 5)] %>% as.character()) +
   scale_color_manual("frame",
                      values = dutchmasters$little_street[c(10, 5)] %>% as.character()) +
-  scale_x_continuous(breaks = 1:9) +
-  coord_cartesian(xlim = 1:9) +
+  scale_x_continuous(breaks = c(1, 9)) +
+  coord_cartesian(xlim = c(1, 9)) +
   labs(title = "model 7.3, the interaction model",
-       x     = expression(paste("Climate Change Skepticism (", italic("W"), ")")),
-       y     = "Strength of Justification\nfor Withholding Aid") +
+       x = expression(paste("Climate Change Skepticism (", italic("W"), ")")),
+       y = "Strength of Justification\nfor Withholding Aid") +
   theme_07 +
   theme(legend.position = "top") +
   facet_wrap(~frame)
@@ -826,17 +791,17 @@ fitted(model7.2, newdata = nd) %>%
                     values = dutchmasters$little_street[c(10, 5)] %>% as.character()) +
   scale_color_manual("frame",
                      values = dutchmasters$little_street[c(10, 5)] %>% as.character()) +
-  scale_x_continuous(breaks = 1:9) +
-  coord_cartesian(xlim = 1:9) +
+  scale_x_continuous(breaks = c(1, 9)) +
+  coord_cartesian(xlim = c(1, 9)) +
   labs(title = "model 7.2, the multivariable model",
-       x     = expression(paste("Climate Change Skepticism (", italic("W"), ")")),
-       y     = "Strength of Justification\nfor Withholding Aid") +
+       x = expression(paste("Climate Change Skepticism (", italic("W"), ")")),
+       y = "Strength of Justification\nfor Withholding Aid") +
   theme_07 +
   theme(legend.position = "top") +
   facet_wrap(~frame)
 ```
 
-This time when we allowed the intercept but not the slope to vary by `frame`, it appears the regression lines are missing part of the story. They look okay, but it appears that the red line on the left is sloping up to quickly and that the cream line on the right isn't sloping steeply enough. We have missed an insight. 
+This time when we allowed the intercept but not the slope to vary by `frame`, it appears the regression lines are missing part of the story. They look okay, but it appears that the red line on the left is sloping up to quickly and that the cream line on the right isn't sloping steeply enough. We have missed an insight.
 
 Now imagine scenarios in which the differences by `frame` are more or less pronounced. Imagine those scenarios fall along a continuum. It's not so much that you can say with certainty where on such a continuous an interaction effect would exist or not, but rather, such a continuum suggests it would appear more or less important, of greater or smaller magnitude. It's not that the effect exists or is non-zero. It's that it is orderly enough and of a large enough magnitude, and perhaps of theoretical interest, that it appears to matter in terms of explaining the data.
 
@@ -854,24 +819,19 @@ nd <-
            skeptic = quantile(disaster$skeptic,
                               probs = c(.16, .5, .84)))
 
-fitted(model7.3, 
-       newdata = nd, 
-       summary = F) %>% 
+fitted(model7.3, newdata = nd, summary = F) %>% 
   data.frame() %>% 
-  gather() %>% 
-  select(-key) %>% 
-  bind_cols(
-    nd %>% 
-      expand(nesting(frame, skeptic),
-             iter = 1:4000)
-              ) %>% 
+  set_names(mutate(nd, name = str_c(frame, "_", skeptic)) %>% pull(name)) %>% 
+  mutate(iter = 1:n()) %>% 
+  pivot_longer(-iter) %>% 
+  separate(name, into = c("frame", "skeptic"), sep = "_") %>% 
   pivot_wider(names_from = frame, values_from = value) %>% 
   mutate(difference = `1` - `0`,
-         skeptic    = str_c("skeptic = ", skeptic)) %>% 
+         # this isn't necessary, but will help with the facet labels
+         skeptic = str_c("skeptic = ", skeptic)) %>% 
 
   ggplot(aes(x = difference)) +
-  geom_density(color = "transparent",
-               fill = dutchmasters$little_street[9]) +
+  geom_density(color = "transparent", fill = dutchmasters$little_street[9]) +
   scale_y_continuous(NULL, breaks = NULL) +
   labs(subtitle = "The effect of frame on justify given three different values of skeptic",
        x = NULL) +
@@ -914,26 +874,18 @@ disaster <-
 
 With our dummy in hand, we're ready to fit the two models.
 
-```{r model7.6_model7.7, echo = F}
-# save(model7.6, file = "fits/model07.06.rda")
-# rm(model7.6)
-# save(model7.7, file = "fits/model07.07.rda")
-# rm(model7.7)
-
-load("fits/model07.06.rda")
-load("fits/model07.07.rda")
-```
-
-```{r, eval = F}
+```{r model7.6}
 model7.6 <-
   brm(data = disaster %>% filter(skeptic_hi == 0), 
       family = gaussian,
       justify ~ 1 + frame,
-      cores = 4)
+      cores = 4,
+      file = "fits/model07.06")
 
 model7.7 <-
   update(model7.6, newdata = disaster %>% filter(skeptic_hi == 1),
-         cores = 4)
+         cores = 4,
+         file = "fits/model07.07")
 ```
 
 Behold the coefficient summaries.
@@ -960,12 +912,10 @@ Do note that though **brms** 'Est.Error' is the posterior $SD$ for the coefficie
 Anyway, our results don't yield $t$-tests. But you don't need those anyway. We're working within the Bayesian regression paradigm! But if you're really interested in the sub-model-implied differences between the two levels of `frame` by `skeptic_hi` subgroup, all you need is the `frame` coefficient of `model7.6` and `model7.7`. Here we'll use `bind_rows()` to combine their posterior samples and then plot.
 
 ```{r, fig.width = 6, fig.height = 3}
-posterior_samples(model7.6) %>% 
-  select(b_frame) %>% 
-  bind_rows(
-    posterior_samples(model7.7) %>%
-      select(b_frame)
-  ) %>% 
+bind_rows(
+  posterior_samples(model7.6) %>% select(b_frame),
+  posterior_samples(model7.7) %>% select(b_frame)
+) %>% 
   mutate(model = rep(c("model7.6", "model7.7"), each = 4000)) %>% 
     
   ggplot(aes(x = b_frame, fill = model)) +
@@ -980,10 +930,6 @@ posterior_samples(model7.6) %>%
 
 As within the frequentist paradigm, please don't mean split as a Bayesian. When possible, use all available data and use the regression formula to model theoretically-meaningful variables in your analyses.
 
-## References {-}
-
-[Hayes, A. F. (2018). *Introduction to mediation, moderation, and conditional process analysis: A regression-based approach.* (2nd ed.). New York, NY, US: The Guilford Press.](http://afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html)
-
 ## Session info {-}
 
 ```{r}
@@ -992,5 +938,5 @@ sessionInfo()
 
 ## Footnote {-}
 
-[^7.1]: If you're an experimental psychologist, check out the [great paper](https://www.researchgate.net/profile/Niall_Bolger/publication/332358948_Causal_processes_in_psychology_are_heterogeneous/links/5cd9b471a6fdccc9ddaa7879/Causal-processes-in-psychology-are-heterogeneous.pdf) by Bolger, Zee, Rossignac-Milon, and Hassin, *Causal processes in psychology are heterogeneous*. The rest of you social scientists aren't off the hook. Check out Ellen Hamaker's excellent book chapter, [*Why researchers should think "within-person": A paradigmatic rationale*](https://www.researchgate.net/publication/266896375_Why_researchers_should_think_within-person_A_paradigmatic_rationale?fbclid=IwAR2Zw3DEI3QDVSYyw2yj0LiioGi-IOUkh0xWalE9aFqjX8k50s6Vyfgm5bg). Both works suggest researchers might do well to switch out their fixed-effects models for multilevel models. Does this mean the methods we've been covering are of no use? No. But don't stop here, friends. Keep learning!
+[^7.1]: If you're an experimental psychologist, check out the great [-@bolgerCausalProcessesPsychology2019] paper by Bolger, Zee, Rossignac-Milon, and Hassin, [*Causal processes in psychology are heterogeneous*](https://www.researchgate.net/profile/Niall_Bolger/publication/332358948_Causal_processes_in_psychology_are_heterogeneous/links/5cd9b471a6fdccc9ddaa7879/Causal-processes-in-psychology-are-heterogeneous.pdf). The rest of you social scientists aren't off the hook. Check out Ellen Hamaker's excellent [-@hamakerWhyResearchersShould2012] chapter, [*Why researchers should think "within-person": A paradigmatic rationale*](https://www.researchgate.net/publication/266896375_Why_researchers_should_think_within-person_A_paradigmatic_rationale?fbclid=IwAR2Zw3DEI3QDVSYyw2yj0LiioGi-IOUkh0xWalE9aFqjX8k50s6Vyfgm5bg). Both works suggest researchers might do well to switch out their fixed-effects models for multilevel models. Does this mean the methods we've been covering are of no use? No. But don't stop here, friends. Keep learning!
 

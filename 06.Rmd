@@ -4,7 +4,7 @@
 options(width = 110)
 ```
 
-"Historically, investigators interested in doing a mediation analysis with a multicategorical antecedents $X$ have resorted to some less optimal strategies than the one [Hayes] discuss[ed] in this chapter (p. 188)." Happily, the approach outlined in this chapter avoids such gaffs. Hayes's procedure "does not require discarding any data; the entire sample is analyzed simultaneously. Furthermore, the multicategorical nature of $X$ is respected and retained (p. 189)."
+"Historically, investigators interested in doing a mediation analysis with a multicategorical antecedents $X$ have resorted to some less optimal strategies than the one [Hayes] discuss[ed] in this chapter" [@hayesIntroductionMediationModeration2018, p. 188]. Happily, the approach outlined in this chapter avoids such gaffs. Hayes's procedure "does not require discarding any data; the entire sample is analyzed simultaneously. Furthermore, the multicategorical nature of $X$ is respected and retained (p. 189)."
 
 ## Relative total, direct, and indirect effects
 
@@ -40,7 +40,7 @@ glimpse(protest)
 
 Here are the ungrouped means and $SD$s for `respappr` and `liking` shown at the bottom of Table 6.1.
 
-```{r}
+```{r, message = F}
 protest %>%
   pivot_longer(liking:respappr) %>% 
   group_by(name) %>% 
@@ -81,19 +81,13 @@ library(brms)
 
 This is the first time we've had a simple univariate regression model in a while--no special `mvbind()` syntax or multiple `bf()` formulas, just straight up `brms::brm()`.
 
-```{r model6.1, echo = F}
-# save(model6.1, file = "fits/model06.01.rda")
-# rm(model6.1)
-
-load("fits/model06.01.rda")
-```
-
-```{r, eval = F}
+```{r model6.1}
 model6.1 <-
   brm(data = protest, 
       family = gaussian,
       liking ~ 1 + d1 + d2,
-      cores = 4)
+      cores = 4,
+      file = "fits/model06.01")
 ```
 
 Check the coefficient summaries.
@@ -108,7 +102,7 @@ Our $R^2$ differences a bit from the OLS version in the text. This shouldn't be 
 bayes_R2(model6.1)
 ```
 
-Here's its shape. For the plots in this chapter, we'll take a few formatting cues from [Edward Tufte](https://www.edwardtufte.com/tufte/books_vdqi), curtesy of the [**ggthemes** package](https://cran.r-project.org/web/packages/ggthemes/index.html). The `theme_tufte()` function will change the default font and remove some chart junk. We will take our color palette from [Pokemon](http://pokemonbyreview.blogspot.com/2017/02/311-312-plusle-minun.html) via the [**palettetown** package](https://cran.r-project.org/web/packages/palettetown/index.html).
+Here's its shape. For the plots in this chapter, we'll take a few formatting cues from Edward Tufte [-@tufteVisualDisplayQuantitative2001], courtesy of the [**ggthemes** package](https://CRAN.R-project.org/package=ggthemes). The `theme_tufte()` function will change the default font and remove some chart junk. We will take our color palette from [Pokemon](http://pokemonbyreview.blogspot.com/2017/02/311-312-plusle-minun.html) via the [**palettetown** package](https://CRAN.R-project.org/package=palettetown) [@R-palettetown].
 
 ```{r, fig.width = 4, fig.height = 2.5}
 library(ggthemes)
@@ -121,15 +115,15 @@ bayes_R2(model6.1, summary = F) %>%
   geom_density(size = 0, fill = pokepal(pokemon = "plusle")[2]) +
   scale_y_continuous(NULL, breaks = NULL) +
   coord_cartesian(xlim = 0:1) +
-  xlab(expression(italic(R)^{2})) +
+  xlab(expression(italic(R)^2)) +
   theme_tufte() +
-  theme(legend.title    = element_blank(),
+  theme(legend.title = element_blank(),
         plot.background = element_rect(fill = pokepal(pokemon = "plusle")[8]))
 ```
 
 To use the model-implied equations to compute the means for each group on the criterion, we'll extract the posterior samples.
 
-```{r}
+```{r, message = F}
 post <- posterior_samples(model6.1)
 
 post %>% 
@@ -155,19 +149,13 @@ y_model <- bf(liking   ~ 1 + d1 + d2 + respappr)
 
 There's a third way to fit multivariate models in **brms**. It uses either the `mvbrmsformula()` function, or its abbreviated version, `mvbf()`. With these, we first define our submodels in `br()` statements like before. We then combine them within `mvbf()`, separated with a comma. If we'd like to avoid estimating a residual correlation, which we do in this project--, we then set `rescore = FALSE`. Here's how it looks like for our second model.
 
-```{r model6.2, echo = F}
-# save(model6.2, file = "fits/model06.02.rda")
-# rm(model6.2)
-
-load("fits/model06.02.rda")
-```
-
-```{r, eval = F}
+```{r model6.2}
 model6.2 <-
   brm(data = protest, 
       family = gaussian,
       mvbf(m_model, y_model, rescor = FALSE),
-      cores = 4)
+      cores = 4,
+      file = "fits/model06.02")
 ```
 
 ```{r}
@@ -185,11 +173,10 @@ bayes_R2(model6.2, summary = F) %>%
   geom_density(size = 0, alpha = 2/3) +
   annotate("text", x = .18, y = 6.75, label = "liking", color = pokepal(pokemon = "plusle")[2], family = "Times") +
   annotate("text", x = .355, y = 6.75, label = "respappr", color = pokepal(pokemon = "plusle")[6], family = "Times") +
-  scale_y_continuous(NULL, breaks = NULL) +
   scale_fill_manual(values = pokepal(pokemon = "plusle")[c(2, 6)]) +
-  coord_cartesian(xlim = 0:1) +
-  labs(title = expression(paste("The ", italic(R)^{2}, " densities overlap near perfectly, both hovering around .25.")),
-       x = NULL) +
+  scale_x_continuous(NULL, limits = c(0:1)) +
+  scale_y_continuous(NULL, breaks = NULL) +
+  labs(title = expression(The~italic(R)^2*" densities overlap near perfectly, both hovering around .25.")) +
   theme_tufte() +
   theme(legend.position = "none",
         plot.background = element_rect(fill = pokepal(pokemon = "plusle")[8]))
@@ -219,7 +206,7 @@ post %>%
 
 Working with the $\overline M_{ij}$ formulas in page 199 is quite similar to what we did above.
 
-```{r}
+```{r, message = F}
 post %>% 
   mutate(M_np = b_respappr_Intercept + b_respappr_d1 * 0 + b_respappr_d2 * 0,
          M_ip = b_respappr_Intercept + b_respappr_d1 * 1 + b_respappr_d2 * 0,
@@ -234,7 +221,7 @@ post %>%
 
 The $\overline Y^*_{ij}$ formulas are more of the same.
 
-```{r}
+```{r, message = F}
 post <-
   post %>% 
   mutate(Y_np = b_liking_Intercept + b_liking_d1 * 0 + b_liking_d2 * 0 + b_liking_respappr * mean(protest$respappr),
@@ -251,27 +238,26 @@ post %>%
 
 Note, these are where the adjusted $Y$ values came from in Table 6.1.
 
-This is as fine a spot as any to introduce coefficient plots. **brms**, **tidybayes**, and the [**bayesplot** package](https://github.com/stan-dev/bayesplot) all offer convenience functions for coefficient plots. Before we get all lazy using convenience functions, it's good to know how to make coefficient plots by hand. Here's ours for those last three $\overline Y^*_{ij}$-values.
+This is as fine a spot as any to introduce coefficient plots. The **brms**, **tidybayes**, and **bayesplot** packages all offer convenience functions for coefficient plots. Before we get all lazy using convenience functions, it's good to know how to make coefficient plots by hand. Here's ours for those last three $\overline Y^*_{ij}$-values.
 
 ```{r, fig.width = 6, fig.height = 1}
 post %>% 
   pivot_longer(starts_with("Y_")) %>% 
   
-  ggplot(aes(x = name, y = value, color = name)) +
+  ggplot(aes(x = value, y = name, color = name)) +
   stat_summary(geom = "pointrange",
-               fun.y = median,
-               fun.ymin = function(x){quantile(x, probs = .025)},
-               fun.ymax = function(x){quantile(x, probs = .975)},
+               fun = median,
+               fun.min = function(x) {quantile(x, probs = .025)},
+               fun.max = function(x) {quantile(x, probs = .975)},
                size = .75) +
   stat_summary(geom = "linerange",
-               fun.ymin = function(x){quantile(x, probs = .25)},
-               fun.ymax = function(x){quantile(x, probs = .75)},
+               fun.min = function(x) {quantile(x, probs = .25)},
+               fun.max = function(x) {quantile(x, probs = .75)},
                size = 1.5) +
   scale_color_manual(values = pokepal(pokemon = "plusle")[c(3, 7, 9)]) +
-  coord_flip() +
-  theme_tufte() +
   labs(x = NULL, y = NULL) +
-  theme(axis.ticks.y    = element_blank(),
+  theme_tufte() +
+  theme(axis.ticks.y = element_blank(),
         legend.position = "none",
         plot.background = element_rect(fill = pokepal(pokemon = "plusle")[8]))
 ```
@@ -280,19 +266,13 @@ The points are the posterior medians, the thick inner lines the 50% intervals, a
 
 If we want to examine $R^2$ change for dropping the dummy variables, we'll first fit a model that omits them.
 
-```{r model6.3, echo = F}
-# save(model6.3, file = "fits/model06.03.rda")
-# rm(model6.3)
-
-load("fits/model06.03.rda")
-```
-
-```{r, eval = F}
+```{r model6.3}
 model6.3 <-
   brm(data = protest, 
       family = gaussian,
       liking ~ 1 + respappr,
-      cores = 4)
+      cores = 4,
+      file = "fits/model06.03")
 ```
 
 Here are the competing $R^2$ distributions.
@@ -300,26 +280,22 @@ Here are the competing $R^2$ distributions.
 ```{r, fig.width = 6, fig.height = 2.5}
 # get the R2 draws and wrangle
 r2 <-
-  bayes_R2(model6.2, resp = "liking", summary = F) %>%
+  rbind(bayes_R2(model6.2, resp = "liking", summary = F),
+        bayes_R2(model6.3, summary = F)) %>% 
   data.frame() %>% 
   set_names("R2") %>% 
-  bind_rows(
-    bayes_R2(model6.3, summary = F) %>% 
-      data.frame()
-  ) %>% 
-  mutate(fit = rep(c("model6.2", "model6.3"), each = 4000))
+  mutate(fit = rep(c("model6.2", "model6.3"), each = n() / 2))
 
 # plot!
 r2 %>% 
   ggplot(aes(x = R2, fill = fit)) +
   geom_density(size = 0, alpha = 2/3) +
-  scale_fill_manual(values = pokepal(pokemon = "plusle")[c(6, 7)]) +
   annotate("text", x = .15, y = 6.75, label = "model3", color = pokepal(pokemon = "plusle")[7], family = "Times") +
   annotate("text", x = .35, y = 6.75, label = "model2", color = pokepal(pokemon = "plusle")[6], family = "Times") +
+  scale_fill_manual(values = pokepal(pokemon = "plusle")[c(6, 7)]) +
+  scale_x_continuous(NULL, limits = 0:1) +
   scale_y_continuous(NULL, breaks = NULL) +
-  coord_cartesian(xlim = 0:1) +
-  labs(title = expression(paste("The ", italic(R)^{2}, " densities for LIKING overlap a lot.")),
-       x     = NULL) +
+  ggtitle(expression(The~italic(R)^2*" densities for LIKING overlap a lot.")) +
   theme_tufte() +
   theme(legend.position = "none",
         plot.background = element_rect(fill = pokepal(pokemon = "plusle")[8]))
@@ -331,17 +307,16 @@ If you want to compare then with a change score, do something like this.
 r2 %>%
   mutate(iter = rep(1:4000, times = 2)) %>% 
   pivot_wider(names_from = fit, values_from = R2) %>% 
-  mutate(difference = model6.2 - model6.3) %>% 
-  
-  ggplot(aes(x = difference)) +
+
+  ggplot(aes(x = model6.2 - model6.3)) +
   geom_density(size = 0, fill = pokepal(pokemon = "plusle")[4]) +
   geom_vline(xintercept = 0, color = pokepal(pokemon = "plusle")[8]) +
   scale_y_continuous(NULL, breaks = NULL) +
-  labs(title = expression(paste("The ", Delta, italic(R)^{2}, " distribution")),
+  labs(title = expression(The~Delta*italic(R)^2~distribution),
        subtitle = "Doesn't appear we have a lot of change.",
        x = NULL) +
   theme_tufte() +
-  theme(legend.title    = element_blank(),
+  theme(legend.title = element_blank(),
         plot.background = element_rect(fill = pokepal(pokemon = "plusle")[8]))
 ```
 
@@ -378,19 +353,13 @@ y_model <- bf(liking   ~ 1 + d_1 + d_2 + respappr)
 
 Now we fit using the `mvbf()` approach.
 
-```{r model6.4, echo = F}
-# save(model6.4, file = "fits/model06.04.rda")
-# rm(model6.4)
-
-load("fits/model06.04.rda")
-```
-
-```{r, eval = F}
+```{r model6.4}
 model6.4 <-
   brm(data = protest, 
       family = gaussian,
       mvbf(m_model, y_model, rescor = FALSE),
-      cores = 4)
+      cores = 4,
+      file = "fits/model06.04")
 ```
 
 Here are our intercepts and regression coefficient summaries.
@@ -412,7 +381,7 @@ posterior_summary(model6.4) %>%
 
 Thus it's easy to get the $\overline M_{ij}$ means with a little posterior manipulation.
 
-```{r}
+```{r, message = F}
 post <-
   posterior_samples(model6.4) %>% 
   mutate(M_np = b_respappr_Intercept + b_respappr_d_1 * -2/3 + b_respappr_d_2 *    0,
@@ -429,7 +398,7 @@ post %>%
 
 With these in hand, we can compute $a_1$ and $a_2$.
 
-```{r}
+```{r, message = F}
 post <-
   post %>% 
   mutate(a1 = (M_ip + M_cp)/2 - M_np,
@@ -444,7 +413,7 @@ post %>%
 
 Happily, our model output will allow us to work with Hayes's $\overline Y^*_{ij}$ equations in the middle of page 210.
 
-```{r}
+```{r, message = F}
 post <-
   post %>% 
   mutate(Y_np = b_liking_Intercept + b_liking_d_1 * -2/3 + b_liking_d_2 *    0 + b_liking_respappr * mean(protest$respappr),
@@ -461,7 +430,7 @@ post %>%
 
 And with these in hand, we can compute $c'_1$ and $c'_2$.
 
-```{r}
+```{r, message = F}
 post <-
   post %>% 
   mutate(c1_prime = (Y_ip + Y_cp) / 2 - Y_np,
@@ -494,7 +463,7 @@ post %>%
 
 Now we can compute and `summarize()` our $c_1$ and $c_2$.
 
-```{r}
+```{r, message = F}
 post <-
   post %>% 
   mutate(c1 = c1_prime + a1b,
@@ -524,19 +493,13 @@ protest %>%
 
 Before we fit a full mediation model, we should warm up. Here we fit a univariable model for `liking`. This is an alternative to what we did way back with `model6.1`.
 
-```{r model6.5, echo = F}
-# save(model6.5, file = "fits/model06.05.rda")
-# rm(model6.5)
-
-load("fits/model06.05.rda")
-```
-
-```{r, eval = F}
+```{r model6.5}
 model6.5 <-
   brm(data = protest, 
       family = gaussian,
       liking ~ 0 + group,
-      cores = 4)
+      cores = 4,
+      file = "fits/model06.05")
 ```
 
 Check the summary.
@@ -547,7 +510,7 @@ print(model6.5)
 
 There's no conventional intercept parameter. Rather, each of the each of the levels of `group` get its own conditional intercept. To get a sense of what this model is, let's practice our coefficient plotting skills. This time we'll compute the necessary values before plugging them into **ggplot2**.
 
-```{r, fig.width = 6, fig.height = 1}
+```{r, fig.width = 6, fig.height = 1, message = F}
 # compute the means for `liking` by `group`
 group_means <-
   protest %>% 
@@ -561,19 +524,17 @@ fixef(model6.5) %>%
   mutate(group = str_remove(parameter, "group")) %>% 
   
   # plot!
-  ggplot(aes(x = group)) +
+  ggplot(aes(y = group)) +
   # this is the main function for our coefficient plots
-  geom_pointrange(aes(y = Estimate, ymin = Q2.5, ymax = Q97.5,
-                      color = group),
+  geom_pointrange(aes(x = Estimate, xmin = Q2.5, xmax = Q97.5, color = group),
                   size = 3/4) +
   geom_point(data = group_means,
-             aes(y = mu_liking)) +
+             aes(x = mu_liking)) +
   scale_color_manual(values = pokepal(pokemon = "plusle")[c(3, 7, 9)]) +
-  coord_flip() +
   labs(x = NULL, y = NULL) +
   theme_tufte() +
-  theme(axis.text.y     = element_text(hjust = 0),
-        axis.ticks.y    = element_blank(),
+  theme(axis.text.y = element_text(hjust = 0),
+        axis.ticks.y = element_blank(),
         legend.position = "none",
         plot.background = element_rect(fill = pokepal(pokemon = "plusle")[8]))
 ```
@@ -589,19 +550,13 @@ y_model <- bf(liking   ~ 0 + group + respappr)
 
 Now fit `model6` using the `mvbf()` approach.
 
-```{r model6.6, echo = F}
-# save(model6.6, file = "fits/model06.06.rda")
-# rm(model6.6)
-
-load("fits/model06.06.rda")
-```
-
-```{r, eval = F}
+```{r model6.6}
 model6.6 <-
   brm(data = protest, 
       family = gaussian,
       mvbf(m_model, y_model, rescor = FALSE),
-      cores = 4)
+      cores = 4,
+      file = "fits/model06.06")
 ```
 
 What will the summary hold?
@@ -652,13 +607,13 @@ post %>%
 
 If you look back to our results from `model6.2`, you'll see that `diff_individual_minus_none` and `diff_collective_minus_none` correspond to `a1b` and `a2b`, respectively. But with our `model6.6` approach, we get the additional information of what kind of indirect effect we might have yielded had we used a different coding scheme for our original set of dummy variables. That is, we get `diff_collective_minus_individual`.
 
-## References {-}
-
-[Hayes, A. F. (2018). *Introduction to mediation, moderation, and conditional process analysis: A regression-based approach.* (2nd ed.). New York, NY, US: The Guilford Press.](http://afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html)
-
 ## Session info {-}
 
 ```{r}
 sessionInfo()
+```
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```
 

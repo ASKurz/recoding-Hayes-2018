@@ -936,6 +936,10 @@ As within the frequentist paradigm, please don't mean split as a Bayesian. When 
 sessionInfo()
 ```
 
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```
+
 ## Footnote {-}
 
 [^7.1]: If you're an experimental psychologist, check out the great [-@bolgerCausalProcessesPsychology2019] paper by Bolger, Zee, Rossignac-Milon, and Hassin, [*Causal processes in psychology are heterogeneous*](https://www.researchgate.net/profile/Niall_Bolger/publication/332358948_Causal_processes_in_psychology_are_heterogeneous/links/5cd9b471a6fdccc9ddaa7879/Causal-processes-in-psychology-are-heterogeneous.pdf). The rest of you social scientists aren't off the hook. Check out Ellen Hamaker's excellent [-@hamakerWhyResearchersShould2012] chapter, [*Why researchers should think "within-person": A paradigmatic rationale*](https://www.researchgate.net/publication/266896375_Why_researchers_should_think_within-person_A_paradigmatic_rationale?fbclid=IwAR2Zw3DEI3QDVSYyw2yj0LiioGi-IOUkh0xWalE9aFqjX8k50s6Vyfgm5bg). Both works suggest researchers might do well to switch out their fixed-effects models for multilevel models. Does this mean the methods we've been covering are of no use? No. But don't stop here, friends. Keep learning!

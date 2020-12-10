@@ -8,7 +8,7 @@ In this chapter, our Bayesian approach complicates some of Hayes's flow. We'll s
 
 ## Truths and myths about mean-centering
 
-> Mean-centering has been recommended in a few highly regarded books on regression analysis (e.g., [Aiken & West, 1991](http://us.sagepub.com/en-us/nam/multiple-regression/book3045); [Cohen et al., 2003](https://www.taylorfrancis.com/books/9780203774441)), and several explanations have been offered for why mean-centering should be undertaken prior to computation of the product and model estimation. The explanation that seems to have resulted in the most misunderstanding is that $X$ and $W$ are likely to be highly correlated with $XW$ and this will produce estimation problems caused by collinearity and result in poor or "strange" estimates of regression coefficients, large standard errors, and reduced power of the statistical test of the interaction. But this is, in large part, simply a myth. As I describe later, there are some reasons that mean- centering the focal antecedent or moderator variables can be a beneficial thing to do, which is why it has been *recommended* by some. However, it is incorrect to claim that it is *necessary*, that a failure to do so will lead one to incorrect inferences about moderation, or that the resulting regression coefficients are somehow strange or inherently uninterpretable. (pp. 304--305, *emphasis* in the original)
+> Mean-centering has been recommended in a few highly regarded books on regression analysis [e.g., @aikenMultipleRegressionTesting1991; @cohenAppliedMultipleRegression2003], and several explanations have been offered for why mean-centering should be undertaken prior to computation of the product and model estimation. The explanation that seems to have resulted in the most misunderstanding is that $X$ and $W$ are likely to be highly correlated with $XW$ and this will produce estimation problems caused by collinearity and result in poor or "strange" estimates of regression coefficients, large standard errors, and reduced power of the statistical test of the interaction. But this is, in large part, simply a myth. As I describe later, there are some reasons that mean- centering the focal antecedent or moderator variables can be a beneficial thing to do, which is why it has been *recommended* by some. However, it is incorrect to claim that it is *necessary*, that a failure to do so will lead one to incorrect inferences about moderation, or that the resulting regression coefficients are somehow strange or inherently uninterpretable. [@hayesIntroductionMediationModeration2018, pp. 304--305, *emphasis* in the original]
 
 Here we load a couple necessary packages, load the data, and take a `glimpse()`.
 
@@ -50,28 +50,20 @@ Y & = i_Y + b_1 (X - \overline X) + b_2 (W - \overline W) + b_3 (X - \overline X
 
 where $X' = (X - \overline X)$ and so on.
 
-```{r model9.1_9.2, echo = F}
-# save(model9.1, file = "fits/model09.01.rda")
-# save(model9.2, file = "fits/model09.02.rda")
-# rm(model9.1)
-# rm(model9.2)
-
-load("fits/model09.01.rda")
-load("fits/model09.02.rda")
-```
-
-```{r, eval = F}
+```{r model9.1}
 model9.1 <- 
   brm(data = glbwarm, 
       family = gaussian,
       govact ~ 1 + negemot + age + negemot:age,
-      cores = 4)
+      cores = 4,
+      file = "fits/model09.01")
 
 model9.2 <- 
   update(model9.1, 
          newdata = glbwarm,
          govact ~ 1 + negemot_c + age_c + negemot_c:age_c,
-         cores = 4)
+         cores = 4,
+         file = "fits/model09.02")
 ```
 
 As with Hayes's OLS models, our HMC models yield the same Bayesian $R^2$ distributions, within simulation error.
@@ -88,11 +80,11 @@ print(model9.1, digits = 3)
 print(model9.2, digits = 3)
 ```
 
-However, notice the 'Bulk_ESS' and 'Tail_ESS' columns. The values for `model9.2` were substantially larger than those for `model9.1`. These columns denote the number of effective samples (a.k.a. the effective sample size). Versions of **brms** before 2.10.0 returned a single effective sample size (ESS) value per parameter. We will cover where the change came from in a bit. But first, recall that we've been using **brms** defaults, which results in 4 HMC chains, each of which contains 2000 draws (iterations), the first 1000 of which are warmup values. After we discard the warmup values, that leaves 1000 draws from each chain--4000 total. As it turns out, Markov chains, and thus HMC chains, are typically *autocorrelated*, which means that each draw is partially dependent on the previous draw. Ideally, the autocorrelations are near zero. That's often not the case. 
+However, notice the 'Bulk_ESS' and 'Tail_ESS' columns. The values for `model9.2` were substantially larger than those for `model9.1`. These columns denote the number of effective samples (a.k.a. the effective sample size). Versions of **brms** before 2.10.0 returned a single effective sample size (ESS) value per parameter. We will cover where the change came from in a bit. But first, recall that we've been using **brms** defaults, which results in 4 HMC chains, each of which contains 2,000 draws (iterations), the first 1,000 of which are warmup values. After we discard the warmup values, that leaves 1,000 draws from each chain--4,000 total. As it turns out, Markov chains, and thus HMC chains, are typically *autocorrelated*, which means that each draw is partially dependent on the previous draw. Ideally, the autocorrelations are near zero. That's often not the case.
 
 The [**bayesplot** package](https://github.com/stan-dev/bayesplot) offers a variety of [diagnostic plots](https://cran.r-project.org/web/packages/bayesplot/vignettes/visual-mcmc-diagnostics.html#effective-sample-size). Here we'll use the `mcmc_acf()` function to make autocorrelation plots for all model parameters. Note that when we add `add_chain = T` to `brms::posterior_samples()`, we add an index to the data that allows us to keep track of which iteration comes from which chain. That index will come in handy for our `mcmc_acf()` plots.
 
-But before we get there, we'll be using an [xkcd](https://xkcd.com)-inspired theme with help from the [**xkcd** package](https://cran.r-project.org/web/packages/xkcd/index.html) for our plots in this chapter.
+But before we get there, we'll be using an [xkcd](https://xkcd.com)-inspired theme with help from the [**xkcd** package](https://CRAN.R-project.org/package=xkcd) [@torres-manzaneraXkcdPlottingGgplot22018a] for our plots in this chapter.
 
 ```{r, warning = F, message = F}
 # install.packages("xkcd", dependencies = T)
@@ -100,7 +92,7 @@ But before we get there, we'll be using an [xkcd](https://xkcd.com)-inspired the
 library(xkcd)
 ```
 
-If you haven't used the **xkcd** package, before, you might also need to take a few extra steps outlined [here](https://cran.r-project.org/web/packages/xkcd/vignettes/xkcd-intro.pdf), part of which requires help from the [**extrafont** package](https://cran.r-project.org/web/packages/extrafont/README.html),
+If you haven't used the **xkcd** package, before, you might also need to take a few extra steps outlined in the paper by Torres-Manzanera [-@torres-manzaneraXkcdPlottingXKCD], [*xkcd: Plotting XKCD graphs*](https://cran.r-project.org/web/packages/xkcd/vignettes/xkcd-intro.pdf), part of which requires help from the [**extrafont** package](https://cran.r-project.org/package=extrafont/) [@winstonchangExtrafontToolsUsing2014].
 
 ```{r, eval = F}
 library(extrafont)
@@ -147,18 +139,14 @@ mcmc_acf(post2,
 
 As it turns out, `theme_xkcd()` can't handle special characters like "_", so it returns rectangles instead. So it goes...
 
-But again, high autocorrelations in the HMC chains have consequences for the effective sample size. In the [Visual MCMC diagnostics using the bayesplot package](https://cran.r-project.org/web/packages/bayesplot/vignettes/visual-mcmc-diagnostics.html#effective-sample-size) vignette, Gabry wrote:
+But again, high autocorrelations in the HMC chains have consequences for the effective sample size. In their [-@gabryVisualMCMC2020] vignette, [**Visual MCMC diagnostics using the bayesplot package**](https://CRAN.R-project.org/package=bayesplot/vignettes/visual-mcmc-diagnostics.html), Gabry and Modrák wrote:
 
 > The effective sample size is an estimate of the number of independent draws from the posterior distribution of the estimand of interest. Because the draws within a Markov chain are *not* independent if there is autocorrelation, the effective sample size, $n_{eff}$, will be smaller than the total sample size, $N$. The larger the ratio of $n_{eff}$ to $N$ the better.
 
-In that quote, Gabry spoke as if there was only one measure of ESS. Though this has been the case for some time, times have changed. In a [2019 paper](https://arxiv.org/pdf/1903.08008.pdf), Stan-team allstars Vehtari, Gelman, Simpson, Carpenter, and Bürkner proposed two measures of ESS: "bulk-ESS" and "tail-ESS." From their paper, we read:
+In that quote, they spoke as if there was only one measure of ESS. Though this has been the case for some time, times have changed. In a [-@vehtariRanknormalizationFoldingLocalization2019] [paper](https://arxiv.org/pdf/1903.08008.pdf), Stan-team allstars Vehtari, Gelman, Simpson, Carpenter, and Bürkner proposed two measures of ESS: "bulk-ESS" and "tail-ESS." From their paper, we read:
 
->  if you plan to report quantile estimates or posterior intervals, we strongly suggest assessing the
-convergence of the chains for these quantiles. In Section 4.3 we show that convergence of Markov chains is
-not uniform across the parameter space and propose diagnostics and effective sample sizes specifically for
-extreme quantiles. This is *different* from the standard ESS estimate (which we refer to as the "bulk-ESS"),
-which mainly assesses how well the centre of the distribution is resolved. Instead, these "tail-ESS" measures
-allow the user to estimate the MCSE for interval estimates. (p. 5, *emphasis* in the original)
+> if you plan to report quantile estimates or posterior intervals, we strongly suggest assessing the
+convergence of the chains for these quantiles. In Section 4.3 we show that convergence of Markov chains is not uniform across the parameter space and propose diagnostics and effective sample sizes specifically for extreme quantiles. This is *different* from the standard ESS estimate (which we refer to as the "bulk-ESS"), which mainly assesses how well the centre of the distribution is resolved. Instead, these "tail-ESS" measures allow the user to estimate the MCSE for interval estimates. (p. 5, *emphasis* in the original)
 
 You can read the paper for technical details. In short, the `Bulk_ESS` in the output of **brms** 2.10.0 and up is what was previously referred to as `Eff.Sample`, the effective sample size. This indexed the number of effective samples in "the centre of the" posterior distribution (i.e., the posterior mean or median). But since we also care about uncertainty in our models, we also care about how well we have characterized the tails of the posterior distribution in 95% intervals and such. The new `Tail_ESS` in **brms** output allows us to gauge the effective sample size for those intervals.
 
@@ -236,7 +224,7 @@ vcov(model9.1, correlation = T)["negemot", "negemot:age"]
 
 Boom! That's where those correlations come from.
 
-This entire topic of HMC diagnostics can seem baffling, especially when compared to the simplicity of OLS. If this is your first introduction, you might want to watch lectures [10](https://www.youtube.com/watch?v=BWEtS3HuU5A&list=PLDcUM9US4XdM9_N6XUUFrhghGJ4K25bFc) and [11](https://www.youtube.com/watch?v=13mEekRdOcQ&list=PLDcUM9US4XdM9_N6XUUFrhghGJ4K25bFc) from McElreath's [Statistical Rethinking Fall 2017 lecture series](https://www.youtube.com/playlist?list=PLDcUM9US4XdM9_N6XUUFrhghGJ4K25bFc). Accordingly, you might check out Chapter 8 of his [*Statistical Rethinking* text](https://xcelab.net/rm/statistical-rethinking/) and [my project explaining how to reproduce the analyses in that chapter in **brms**](https://bookdown.org/content/1850/markov-chain-monte-carlo.html).
+This entire topic of HMC diagnostics can seem baffling, especially when compared to the simplicity of OLS. If this is your first introduction, you might want to watch lectures [10](https://www.youtube.com/watch?v=BWEtS3HuU5A&list=PLDcUM9US4XdM9_N6XUUFrhghGJ4K25bFc) and [11](https://www.youtube.com/watch?v=13mEekRdOcQ&list=PLDcUM9US4XdM9_N6XUUFrhghGJ4K25bFc) from McElreath's [Statistical Rethinking Fall 2017 lecture series](https://www.youtube.com/playlist?list=PLDcUM9US4XdM9_N6XUUFrhghGJ4K25bFc). Accordingly, you might check out Chapter 8 of his [-@mcelreathStatisticalRethinkingBayesian2015] text, Chapter 9 of his [-@mcelreathStatisticalRethinkingBayesian2020] text, and either of my ebooks translating his work into **brms** and **tidyverse** code [@kurzStatisticalRethinkingBrms2020; @kurzStatisticalRethinkingSecondEd2020].
 
 ### The effect of mean-centering on multicollinearity and the standard error of $b_3$.
 
@@ -254,37 +242,27 @@ glbwarm <-
 
 And recall that to get our sweet Bayesian correlations, we use the multivariate `mvbind()` syntax to fit an intercepts-only model. Here we do that for all three of the Table 9.2 sections.
 
-```{r model9.3_9.5, echo = F}
-# save(model9.3, file = "fits/model09.03.rda")
-# save(model9.4, file = "fits/model09.04.rda")
-# save(model9.5, file = "fits/model09.05.rda")
-# rm(model9.3)
-# rm(model9.4)
-# rm(model9.5)
-
-load("fits/model09.03.rda")
-load("fits/model09.04.rda")
-load("fits/model09.05.rda")
-```
-
-```{r, eval = F}
+```{r model9.3}
 model9.3 <- 
   brm(data = glbwarm, 
       family = gaussian,
       mvbind(negemot, age, negemot_x_age) ~ 1,
-      cores = 4)
+      cores = 4,
+      file = "fits/model09.03")
 
 model9.4 <- 
   brm(data = glbwarm, 
       family = gaussian,
       mvbind(negemot_c, age_c, negemot_c_x_age_c) ~ 1,
-      cores = 4)
+      cores = 4,
+      file = "fits/model09.04")
 
 model9.5 <- 
   brm(data = glbwarm, 
       family = gaussian,
       mvbind(negemot_z, age_z, negemot_z_x_age_z) ~ 1,
-      cores = 4)
+      cores = 4,
+      file = "fits/model09.05")
 ```
 
 Here are their summaries.
@@ -319,11 +297,11 @@ fixef(model9.1)["negemot:age", "Est.Error"]
 fixef(model9.2)["negemot_c:age_c", "Est.Error"]
 ```
 
-For more details, you might also see the [22.12. Standardizing Predictors and Outputs subsection of the Stan User's Guide, Version 2.21](https://mc-stan.org/docs/2_21/stan-users-guide/standardizing-predictors-and-outputs.html)--[Stan](http://mc-stan.org), of course, being the computational engine underneath our **brms** hood.
+For more details, you might also see the [*Standardizing predictors and outputs*](https://mc-stan.org/docs/2_25/stan-users-guide/standardizing-predictors-and-outputs.html) subsection of Chapter 22 in the *Stan user's guide* [@standevelopmentteamStanUserGuide2020]--[Stan](http://mc-stan.org), of course, being the computational engine underneath our **brms** hood.
 
 ### The effect of mean-centering on $b_1$, $b_2$, and their ~~standard errors~~ posterior $SD$s.
 
-> A second explanation given for why mean-centering is preferred is that it makes $b_1$ and $b_2$, the regression coefficients for $X$ and $W$, more meaningful. This is generally true and thus not a myth, although it is not necessarily true in all circumstances... 
+> A second explanation given for why mean-centering is preferred is that it makes $b_1$ and $b_2$, the regression coefficients for $X$ and $W$, more meaningful. This is generally true and thus not a myth, although it is not necessarily true in all circumstances... .
 >
 > Mean-centering $X$ and $W$ prior to computation of the product and estimation of the model will produce $b_1$ and $b_2$ that are always meaningful, rather than meaningful only when $X$ and/or $W$ are meaningful when equal to zero... [After mean centering,] $b_1$ estimates the difference in $Y$ between two cases that differ by one unit on $X$ among cases that are *average* on $W$. Similarly, $b_2$ estimates the difference in $Y$ between two cases that differ by one unit on $W$ among cases that are *average* on $X$. These will always estimate conditional effects of $X$ on $Yv within the range of the data, and they can always be interpreted. (p. 310. *emphasis* in the original)
 
@@ -375,19 +353,13 @@ glbwarm <-
 
 Fit the model.
 
-```{r model9.6, echo = F}
-# save(model9.6, file = "fits/model09.06.rda")
-# rm(model9.6)
-
-load("fits/model09.06.rda")
-```
-
-```{r, eval = F}
+```{r model9.6}
 model9.6 <- 
   update(model9.1, 
          newdata = glbwarm,
          govact_z ~ 1 + negemot_z + age_z + negemot_z:age_z,
-         cores = 4)
+         cores = 4,
+         file = "fits/model09.06")
 ```
 
 Check the Bayesian $R^2$.
@@ -414,21 +386,15 @@ glbwarm <-
   mutate(negemot_x_age_z = (negemot_x_age - mean(negemot_x_age)) / sd(negemot_x_age))
 ```
 
-Now we're ready to `update()`
+Now we're ready to `update()`.
 
-```{r model9.7, echo = F}
-# save(model9.7, file = "fits/model09.07.rda")
-# rm(model9.7)
-
-load("fits/model09.07.rda")
-```
-
-```{r, eval = F}
+```{r model9.7}
 model9.7 <- 
   update(model9.1, 
          newdata = glbwarm,
          govact_z ~ 1 + negemot_z + age_z + negemot_x_age_z,
-         cores = 4)
+         cores = 4,
+         file = "fits/model09.07")
 ```   
 
 ```{r}
@@ -443,32 +409,26 @@ The results correspond nicely to those in Table 9.1, too.
 
 ## A caution on manual centering and standardization [because of missing data]
 
-It's worthwhile considering the issue of listwise deletion when data are partially missing. The **brms** default is to delete rows with missingness, `NA` in **R**, for the predictors. However, [**brms** allows users to perform one-step Bayesian imputation for missing values using the `mi()` syntax](https://cran.r-project.org/web/packages/brms/vignettes/brms_missings.html). First we'll fit see what happens when you fit a model in **brms** when some of the `negemot_z` values are missing, but without using the `mi()` syntax. And of course before we do that, we'll make a `negemot_z_missing` variable, which is identical to `negemot_z`, but about 10% of the values are missing.
+It's worthwhile considering the issue of listwise deletion when data are partially missing. The **brms** default is to delete rows with missingness, `NA` in **R**, for the predictors. However, **brms** allows users to perform one-step Bayesian imputation for missing values using the `mi()` syntax. You can learn all the details in Bürkner's [-@Bürkner2020HandleMissingValues] vignette, [*Handle missing values with brms*](https://CRAN.R-project.org/package=brms/vignettes/brms_missings.html). First we'll fit see what happens when you fit a model in **brms** when some of the `negemot_z` values are missing, but without using the `mi()` syntax. And of course before we do that, we'll make a `negemot_z_missing` variable, which is identical to `negemot_z`, but about 10% of the values are missing.
 
 ```{r}
 set.seed(9)
 
 glbwarm <-
   glbwarm %>% 
-  mutate(missing           = rbinom(n = n(), size = 1, prob = .1)) %>% 
+  mutate(missing = rbinom(n = n(), size = 1, prob = .1)) %>% 
   mutate(negemot_z_missing = ifelse(missing == 1, NA, negemot_z))
 ```
 
 If you've never used `rbinom()` before, execute `?rbinom` or look it up in your favorite web search engine. Here's our listwise deletion model, which corresponds to what you'd get from a typical OLS-based program.
 
-```{r model9.8, echo = F}
-# save(model9.8, file = "fits/model09.08.rda")
-# rm(model9.8)
-
-load("fits/model09.08.rda")
-```
-
-```{r, eval = F}
+```{r model9.8, warning = F}
 model9.8 <- 
   update(model9.6, 
          newdata = glbwarm,
          govact_z ~ 1 + negemot_z_missing + age_z + negemot_z_missing:age_z,
-         cores = 4)
+         cores = 4,
+         file = "fits/model09.08")
 ```
 
 Let's compare the listwise deletion results with the model based on all the data.
@@ -480,7 +440,7 @@ print(model9.8)
 
 In this case, the model results were similar to those based on all the data because we used `rbinom()` to delete the predictor values completely at random. With real data and real-live missing data mechanisms, the situation isn't often so rosy. But anyway, the real story, here, is the `Data: glbwarm (Number of observations: n)` line at the top of the `print()` outputs. The number, $n$, was 815 in the model using all the data and 731 for the one based on listwise deletion. That's a lot of missing information.
 
-The `mi()` syntax will allow us to use all the rows in a model, even if one or more of the predictors contain missing values. The syntax makes the model a multivariate model in that now we'll be modeling both `govact_z` *and* `negemot_z_missing`. As we've covered in prior chapters, there are multiple ways to write a [multivariate model in **brms**](https://cran.r-project.org/web/packages/brms/vignettes/brms_multivariate.html). One nice way is to write the model for each criterion separately in a `bf()` statement. You combine the `bf()` statements together with the `+` operator. And for models like the ones in Hayes's text, you'll also want to tack on `set_rescor(FALSE)`. You can do this within the `brm()` function, as usual. But I find that this clutters the code up more than I like. So another approach is to save the combination of `bf()` statements as an object.
+The `mi()` syntax will allow us to use all the rows in a model, even if one or more of the predictors contain missing values. The syntax makes the model a multivariate model in that now we'll be modeling both `govact_z` *and* `negemot_z_missing`. As we've covered in prior chapters, there are multiple ways to write a multivariate model in **brms** [see @Bürkner2020Multivariate]. One nice way is to write the model for each criterion separately in a `bf()` statement. You combine the `bf()` statements together with the `+` operator. And for models like the ones in Hayes's text, you'll also want to tack on `set_rescor(FALSE)`. You can do this within the `brm()` function, as usual. But I find that this clutters the code up more than I like. So another approach is to save the combination of `bf()` statements as an object.
 
 ```{r}
 my_model <- 
@@ -491,19 +451,13 @@ my_model <-
 
 With our multivariate formula saved as `my_model`, we're ready to plug it into `brm()` and fit.
 
-```{r model9.9, echo = F}
-# save(model9.9, file = "fits/model09.09.rda")
-# rm(model9.9)
-
-load("fits/model09.09.rda")
-```
-
-```{r, eval = F}
+```{r model9.9}
 model9.9 <- 
   brm(data = glbwarm,
       family = gaussian,
       my_model,
-      cores = 4)
+      cores = 4,
+      file = "model09.09")
 ```
 
 Let's see what we've done.
@@ -572,7 +526,7 @@ Another method we could have used is multiple imputation. With multiple imputati
 
 But we didn't quite use multiple imputation. With one-step Bayesian imputation using the `mi()` syntax, you get an entire posterior distribution for each missing value. And if you have variables in the data set that might help predict what those missing values are, you'd just plug that into the missing data submodel. Improving the imputation model can improve the subsequent substantive model.
 
-For more on the `mi()` approach, see Bürkner’s [vignette](https://cran.r-project.org/web/packages/brms/vignettes/brms_missings.html). McElreath [lectured on this topic](https://www.youtube.com/watch?v=Yi0EqAu043A) within the context of his [*Statistical Rethinking* text](https://xcelab.net/rm/statistical-rethinking/) and you can find my effort to translate the Capter 14 code in McElreath’s text into **brms** [here](https://bookdown.org/content/1850/missing-data-and-other-opportunities.html#missing-data). For a more general introduction to missing data theory, check out van Burren's [**bookdown**](https://bookdown.org) book [*Flexible Imputation of Missing Data. Second Edition*](https://stefvanbuuren.name/fimd/) or Enders' great [*Applied Missing Data Analysis*](http://www.appliedmissingdata.com). You can also find Enders lecturing on missing data [here](https://vimeo.com/147353266).
+For more on the `mi()` approach, see Bürkner's [-@Bürkner2020HandleMissingValues] [vignette](https://CRAN.R-project.org/package=brms/vignettes/brms_missings.html). McElreath lectured on this topic ([here](https://www.youtube.com/watch?v=Yi0EqAu043A) and [here](https://www.youtube.com/watch?v=UgLF0aLk85s)) within the context of his *Statistical rethinking* texts [@mcelreathStatisticalRethinkingBayesian2015; @mcelreathStatisticalRethinkingBayesian2020], and you can find links to my translations of both of his texts [here](https://solomonkurz.netlify.app/bookdown/). For a more general introduction to missing data theory, check out van Burren's [-@vanbuurenFlexibleImputationMissing2018] book, [*Flexible imputation of missing data*](https://stefvanbuuren.name/fimd/), or Enders' great [-@enders2010applied] text, [*Applied missing data analysis*](http://www.appliedmissingdata.com). You can also find Enders lecturing on missing data [here](https://vimeo.com/147353266).
 
 The take home message is there is no need to ignore missing data or use outdated procedures like listwise deletion. Be a champion and model your missing data with **brms**.
 
@@ -584,19 +538,13 @@ None of this is a problem for **brms**. But instead of using the `model=i` synta
 
 It's trivial to add `sex`, its interaction with `negemot`, and the two covariates (i.e., `posemot` and `ideology`) to the model. We can even do it within `update()`.
 
-```{r model9.10, echo = F}
-# save(model9.10, file = "fits/model09.10.rda")
-# rm(model9.10)
-
-load("fits/model09.10.rda")
-```
-
-```{r, eval = F}
+```{r model9.10}
 model9.10 <- 
   update(model9.1, 
          newdata = glbwarm,
          govact ~ 1 + negemot + sex + age + posemot + ideology + negemot:sex + negemot:age,
-         cores = 4)
+         cores = 4,
+         file = "fits/model09.10")
 ```
 
 Our output matches nicely with the formula at the bottom of page 232 and the PROCESS output in Figure 9.2. 
@@ -607,41 +555,30 @@ print(model9.10, digits = 3)
 
 On page 325, Hayes discussed the unique variance each of the two moderation terms accounted for after controlling for the other covariates. In order to get our Bayesian version of these, we'll have to fit two additional models, one after removing each of the interaction terms.
 
-```{r model9.11_9.12, echo = F}
-# save(model9.11, file = "fits/model09.11.rda")
-# save(model9.12, file = "fits/model09.12.rda")
-# rm(model9.11)
-# rm(model9.12)
-
-load("fits/model09.11.rda")
-load("fits/model09.12.rda")
-```
-
-```{r, eval = F}
+```{r model9.11}
 model9.11 <- 
   update(model9.10, 
          newdata = glbwarm,
          govact ~ 1 + negemot + sex + age + posemot + ideology + negemot:sex,
-         cores = 4)
+         cores = 4,
+         file = "fits/model09.11")
 
 model9.12 <- 
   update(model9.10, 
          newdata = glbwarm,
          govact ~ 1 + negemot + sex + age + posemot + ideology + negemot:age,
-         cores = 4)
+         cores = 4,
+         file = "fits/model09.12")
 ```
 
 Here we'll extract the `bayes_R2()` iterations for each of the three models, place them all in a single tibble, and then do a little arithmetic to get the difference scores. After all that data wrangling, we'll `summarize()` as usual.
 
-```{r, warning = F}
-r2_without_age_interaction <- bayes_R2(model9.11, summary = F) %>% data.frame()
-r2_without_sex_interaction <- bayes_R2(model9.12, summary = F) %>% data.frame()
-r2_with_both_interactions  <- bayes_R2(model9.10, summary = F) %>% data.frame()
 
+```{r}
 r2 <-
-  tibble(r2_without_age_interaction = r2_without_age_interaction$R2,
-         r2_without_sex_interaction = r2_without_sex_interaction$R2,
-         r2_with_both_interactions  = r2_with_both_interactions$R2) %>% 
+  tibble(r2_without_age_interaction = bayes_R2(model9.11, summary = F)[, 1],
+         r2_without_sex_interaction = bayes_R2(model9.12, summary = F)[, 1],
+         r2_with_both_interactions  = bayes_R2(model9.10, summary = F)[, 1]) %>% 
   mutate(`delta R2 due to age interaction` = r2_with_both_interactions - r2_without_age_interaction,
          `delta R2 due to sex interaction` = r2_with_both_interactions - r2_without_sex_interaction)
 
@@ -663,7 +600,7 @@ r2 %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
-Hopefully it's clear how our proportions turned percentages correspond to the numbers on page 325. However, note how our 95% credible intervals do not cohere with the $p$-values from Hayes's $F$-tests. 
+Hopefully it's clear how our proportions turned percentages correspond to the numbers on page 325. However, note how our 95% credible intervals do not cohere with the $p$-values from Hayes's $F$-tests.
 
 If we want to prep for our version of Figure 9.3, we'll need to carefully specify the predictor values we'll pass through the `fitted()` function. Here we do so and save them in `nd`.
 
@@ -697,13 +634,13 @@ fitted(model9.10, newdata = nd) %>%
   geom_line(aes(y = Estimate, color = sex),
             size = 1) +
   scale_x_continuous(breaks = 1:6) +
-  coord_cartesian(xlim = 1:6,
-                  ylim = 3:6) +
-  labs(x = expression(paste("Negative Emotions about Climate Change, ", italic(X))),
-       y = expression(paste("Support for Government Action to Mitigate Climate Change, ", italic(Y)))) +
+  coord_cartesian(xlim = c(1, 6),
+                  ylim = c(3, 6)) +
+  labs(x = expression("Negative Emotions about Climate Change, "*italic(X)),
+       y = expression("Support for Government Action to Mitigate Climate Change, "*italic(Y))) +
   theme_xkcd() +
   theme(legend.position = "top",
-        legend.title    = element_blank()) +
+        legend.title = element_blank()) +
   facet_grid(age ~ .)
 ```
 
@@ -783,21 +720,15 @@ If you look closely, you'll see `women_50 - women_30` is the same as `men_50 - m
 
 To fit the moderated moderation model in **brms**, just add to two new interaction terms to the `formula`.
 
-```{r model9.13, echo = F}
-# save(model9.13, file = "fits/model09.13.rda")
-# rm(model9.13)
-
-load("fits/model09.13.rda")
-```
-
-```{r, eval = F}
+```{r model9.13}
 model9.13 <- 
   update(model9.10, 
          newdata = glbwarm,
          govact ~ 1 + negemot + sex + age + posemot + ideology + 
            negemot:sex + negemot:age + sex:age + 
            negemot:sex:age,
-         cores = 4)
+         cores = 4,
+         file = "fits/model09.13")
 ```
 
 Check the summary.
@@ -830,13 +761,13 @@ fitted(model9.13, newdata = nd) %>%
   geom_line(aes(y = Estimate, color = sex),
             size = 1) +
   scale_x_continuous(breaks = 1:6) +
-  coord_cartesian(xlim = 1:6,
-                  ylim = 3:6) +
-  labs(x = expression(paste("Negative Emotions about Climate Change, ", italic(X))),
-       y = expression(paste("Support for Government Action to Mitigate Climate Change, ", italic(Y)))) +
+  coord_cartesian(xlim = c(1, 6),
+                  ylim = c(3, 6)) +
+  labs(x = expression("Negative Emotions about Climate Change, "*italic(X)),
+       y = expression("Support for Government Action to Mitigate Climate Change, "*italic(Y))) +
   theme_xkcd() +
   theme(legend.position = "top",
-        legend.title    = element_blank()) +
+        legend.title = element_blank()) +
   facet_grid(age ~ .)
 ```
 
@@ -879,14 +810,12 @@ post %>%
               alpha = 1/2) +
   geom_line(aes(y = value), 
             size = 1) +
-  coord_cartesian(xlim = 20:85,
+  coord_cartesian(xlim = c(20, 85),
                   ylim = c(-.25, .75)) +
   theme_xkcd()
 ```
 
-Notice how we just took the code from our pick-a-point analysis and dumped it into a plot. So one obvious approach would be to pick like 30 or 50 `age` values to plug into `transmute()` and just do the same thing. If you're super afraid of coding, that'd be one intuitive but extremely verbose attempt. I have done stuff like that earlier in my **R** career. There's no shame in being extremely verbose and redundant if that's what 
-
-makes sense. Another way is to think in terms of functions. When we made `age = 30` within `transmute()`, we took a specific `age` value (i.e., 30) and plugged it into the formula `b_negemot:sex + b_negemot:sex:age * i` where $i$ = 30. And when we made `age = 50` we did exactly the same thing but switched out the 30 for a 50. So what we need is a function that will take a range of values for $i$, plug them into our `b_negemot:sex + b_negemot:sex:age * i` formula, and then neatly return the output. A nice base **R** function for that is `sapply()`.
+Notice how we just took the code from our pick-a-point analysis and dumped it into a plot. So one obvious approach would be to pick like 30 or 50 `age` values to plug into `transmute()` and just do the same thing. If you're super afraid of coding, that'd be one intuitive but extremely verbose attempt. I have done stuff like that earlier in my **R** career. There's no shame in being extremely verbose and redundant if that's what makes sense. Another way is to think in terms of functions. When we made `age = 30` within `transmute()`, we took a specific `age` value (i.e., 30) and plugged it into the formula `b_negemot:sex + b_negemot:sex:age * i` where $i$ = 30. And when we made `age = 50` we did exactly the same thing but switched out the 30 for a 50. So what we need is a function that will take a range of values for $i$, plug them into our `b_negemot:sex + b_negemot:sex:age * i` formula, and then neatly return the output. A nice base **R** function for that is `sapply()`.
 
 ```{r}
 sapply(15:90, function(i) {
@@ -902,9 +831,7 @@ Okay, so that looks a little monstrous. What we did in the first argument was te
 With our `sapply()` output in hand, all we need to do is a little more indexing and summarizing and we're ready to plot. The result is our very own version of Figure 9.7.
 
 ```{r, fig.width = 6, fig.height = 4.5, message = F, warning = F}
-sapply(15:90, function(i) {
-  post$`b_negemot:sex` + post$`b_negemot:sex:age` * i
-}) %>% 
+sapply(15:90, function(i) post$`b_negemot:sex` + post$`b_negemot:sex:age` * i) %>% 
   data.frame() %>% 
   set_names(15:90) %>% 
   pivot_longer(everything()) %>% 
@@ -919,7 +846,7 @@ sapply(15:90, function(i) {
               alpha = 1/2) +
   geom_line(aes(y = value), 
             size = 1) +
-  coord_cartesian(xlim = 20:85,
+  coord_cartesian(xlim = c(20, 85),
                   ylim = c(-.25, .75)) +
   labs(x = expression(paste("Age, ", italic(Z))),
        y = "Conditional Two-way Interaction Between\nNegative Emotions and Sex") +
@@ -944,14 +871,14 @@ sapply(15:90, function(i) {
   geom_vline(xintercept = 38.114, color = "grey75") +
   geom_pointrange(aes(y = value, ymin = .lower, ymax = .upper),
                   shape = 16, size = 1/3) +
-  coord_cartesian(xlim = 20:85,
+  coord_cartesian(xlim = c(20, 85),
                   ylim = c(-.25, .75)) +
-  labs(x = expression(paste("Age, ", italic(Z))),
+  labs(x = expression("Age, "*italic(Z)),
        y = "Conditional Two-way Interaction Between\nNegative Emotions and Sex") +
   theme_xkcd()
 ```
 
-Although I probably wouldn't try to use a plot like this in a manuscript, I hope it makes clear how the way we've been implementing the JN technique is just the pick-a-point approach in bulk. No magic, here. 
+Although I probably wouldn't try to use a plot like this in a manuscript, I hope it makes clear how the way we've been implementing the JN technique is just the pick-a-point approach in bulk. No magic, here.
 
 For all you **tidyverse** fanatics out there, don't worry. There are more **tidyverse**-centric ways to get the plot values than with `sapply()`. We'll get to them soon enough. It's advantageous to have good old base **R** `sapply()` up your sleeve, too. And new **R** users, it's helpful to know that `sapply()` is one part of the `apply()` family of base **R** functions, which you might learn more about [here](https://www.r-{bloggers.com}r-tutorial-on-the-apply-family-of-functions/) or [here](http://www.dummies.com/programming/r/how-to-use-the-apply-family-of-functions-in-r/) or [here](https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/).
 
@@ -1016,7 +943,7 @@ post %>%
 
 ## Comparing conditional effects
 
-> In this section, [Hayes discussed] a test of the difference between two conditional effects in a moderation model. The method [Hayes described] is called a "slope difference test" by Dawson ([Dawson, 2014](http://eprints.whiterose.ac.uk/114588/1/Dawson%20(2014)%20(post-print).pdf); [Dawson & Richter, 2006](https://www.researchgate.net/publication/6950125_Probing_Three-Way_Interactions_in_Moderated_Multiple_Regression_Development_and_Application_of_a_Slope_Difference_Test)), who offers some guidelines on how to conduct this test for the moderated moderation model. (p. 342)
+> In this section, [Hayes discussed] a test of the difference between two conditional effects in a moderation model. The method [Hayes described] is called a "slope difference test" by Dawson [@dawsonModerationManagementResearch2014; @dawsonProbingThreewayInteractions2006], who offers some guidelines on how to conduct this test for the moderated moderation model. (p. 342)
 
 As usual, we will follow along, but with alternative methods to the statistical testing paradigm. We will steadfastly continue summarizing and plotting the posterior distribution from various vantage points.
 
@@ -1046,7 +973,7 @@ Since we don't have the `contrast` feature automated like in PROCESS, we'll have
 
 $$\Delta \theta_{X \rightarrow Y} = (b_1 + b_4 w_1 + b_5 z_1 + b_7 w_1 z_1) - (b_1 + b_4 w_2 + b_5 z_2 + b_7 w_2 z_2).$$
 
-```{r}
+```{r, message = F}
 w1 <- 1
 z1 <- 30
 w2 <- 0
@@ -1071,7 +998,7 @@ For good measure, we'll compute using the equation in the second line,
 
 $$\Delta \theta_{X \rightarrow Y} = b_4 (w_1 - w_2) + b_5 (z_1 - z_2) + b_7 (w_1 z_1 - w_2 z_2).$$
 
-```{r}
+```{r, message = F}
 post %>% 
   mutate(contrast = `b_negemot:sex` * (w1 - w2) + `b_negemot:age` * (z1 - z2) + `b_negemot:sex:age` * (w1 * z1 - w2 * z2)) %>% 
   pivot_longer(contrast) %>%
@@ -1084,10 +1011,6 @@ post %>%
 ```
 
 Same results.
-
-## References {-}
-
-[Hayes, A. F. (2018). *Introduction to mediation, moderation, and conditional process analysis: A regression-based approach.* (2nd ed.). New York, NY, US: The Guilford Press.](http://afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html)
 
 ## Session info {-}
 

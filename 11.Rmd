@@ -6,7 +6,7 @@
 options(width = 110)
 ```
 
-> Thus far in this book, mediation and moderation have been treated as distinct, separate, and independent concepts with different analytical procedures and interpretations. Yet processes modeled with mediation analysis likely are contingent and hence moderated, in that they operate differently for different people or in different contexts or circumstances. A more complete analysis, therefore, should attempt to model the mechanisms at work linking $X$ to $Y$ while simultaneously allowing those effects to be contingent on context, circumstance, or individual differences. (p. 395)
+> Thus far in this book, mediation and moderation have been treated as distinct, separate, and independent concepts with different analytical procedures and interpretations. Yet processes modeled with mediation analysis likely are contingent and hence moderated, in that they operate differently for different people or in different contexts or circumstances. A more complete analysis, therefore, should attempt to model the mechanisms at work linking $X$ to $Y$ while simultaneously allowing those effects to be contingent on context, circumstance, or individual differences. [@hayesIntroductionMediationModeration2018, p. 395]
 
 ## Examples of conditional process models in the literature
 
@@ -38,21 +38,17 @@ library(brms)
 
 Recall that we fit mediation models with **brms** using multivariate syntax. In previous attempts, we've defined and saved the model components outside of the `brm()` function and then plugged then into `brm()` using their identifier. Just to shake things up a bit, we'll just do all the steps right in `brm()`, this time.
 
-```{r model11.1, echo = F}
-# save(model11.1, file = "fits/model11.01.rda")
-# rm(model11.1)
-
-load("fits/model11.01.rda")
-```
-
-```{r, eval = F}
+```{r model11.1}
 model11.1 <-
   brm(data = teams, family = gaussian,
       bf(negtone ~ 1 + dysfunc) +
         bf(perform ~ 1 + dysfunc + negtone + negexp + negtone:negexp) + 
         set_rescor(FALSE),
-      chains = 4, cores = 4)
+      chains = 4, cores = 4,
+      file = "fits/model11.01")
 ```
+
+Check the model summary.
 
 ```{r}
 print(model11.1, digits = 3)
@@ -71,13 +67,13 @@ mean(teams$negexp) %>% round(digits = 3)   # w_bar
 mean(teams$perform) %>% round(digits = 3)  # m_bar
 ```
 
-For our Figure 11.4 and other similar figures in this chapter, we'll use spaghetti plots. Recall that with a spaghetti plots for linear models, we only need two values for the variable on the x-axis, rather than the typical 30+.
+For our Figure 11.4 and other similar figures in this chapter, we'll use spaghetti plots. Recall that with a spaghetti plots for linear models, we only need two values for the variable on the $x$-axis, rather than the typical 30+.
 
 ```{r}
 nd <-
   crossing(negtone = c(-.8, .8),
            negexp  = quantile(teams$negexp, probs = c(.16, .50, .84))) %>% 
-  mutate(dysfunc   = mean(teams$dysfunc))
+  mutate(dysfunc = mean(teams$dysfunc))
 ```
 
 Here's our Figure 11.4, which uses only the first 40 HMC iterations for the spaghetti-plot lines.
@@ -90,12 +86,11 @@ fitted(model11.1,
        summary = F) %>% 
   # wrangle
   as_tibble() %>% 
-  gather() %>% 
-  bind_cols(
-    nd %>% 
-      expand(nesting(negtone, negexp),
-             iter = 1:4000)
-  ) %>% 
+  mutate(iter = 1:n()) %>% 
+  pivot_longer(-iter) %>% 
+  arrange(name, iter) %>% 
+  select(-iter) %>% 
+  bind_cols(expand(nd, nesting(negtone, negexp), iter = 1:4000)) %>% 
   mutate(negexp = factor(str_c("expresivity = ", negexp), 
                          levels = c("expresivity = -0.49", "expresivity = -0.06", "expresivity = 0.6"))) %>% 
   filter(iter < 41) %>% 
@@ -114,7 +109,7 @@ fitted(model11.1,
   facet_wrap(~negexp)
 ```
 
-Also, the plot theme in this chapter is a nod to the style [John Kruschke](http://www.indiana.edu/~kruschke/DoingBayesianDataAnalysis/) frequently uses in his papers and texts.
+Also, the plot theme in this chapter is a nod to the style [John Kruschke](http://www.indiana.edu/~kruschke/DoingBayesianDataAnalysis/) frequently uses in his papers and texts [e.g., @kruschkeDoingBayesianData2015].
 
 Using Hayes's notation from the top of page 412, we can express $M$'s conditional effect on $Y$ as
 
@@ -138,7 +133,7 @@ We just fit the model in the last section. No need to repeat.
 
 One way to make a version of Table 11.2 is to work with the `posterior_samples()`, simply summarizing the distributions with means.
 
-```{r}
+```{r, message = F}
 post <-
   posterior_samples(model11.1)
 
@@ -157,7 +152,7 @@ post %>%
   pivot_wider(names_from = name, values_from = mean)
 ```
 
-That kind of summary isn't the most Bayesian of us. 
+That kind of summary isn't the most Bayesian of us.
 
 ```{r, fig.width = 6, fig.height = 4, warning = F, message = F}
 post %>% 
@@ -171,8 +166,7 @@ post %>%
   select(-(b1:b3)) %>% 
   pivot_longer(-w) %>% 
   mutate(label = str_c("W = ", w),
-         w = fct_reorder(label,
-                         w)) %>% 
+         w     = fct_reorder(label, w)) %>% 
   
   ggplot(aes(x = value)) +
   geom_vline(xintercept = 0, color = "grey50", linetype = 2) +
@@ -233,28 +227,30 @@ Since the `b_perform_dysfunc` values are constant across $W$, the individual HMC
 
 ### Inference about the direct effect.
 
-We've already been expressing undertainty in terms of percentile-based 95% intervals and histograms. Here's a plot of the direct effect, `b_perform_dysfunc`.
+We've already been expressing uncertainty in terms of percentile-based 95% intervals and histograms. Here's a plot of the direct effect, `b_perform_dysfunc`.
 
 ```{r, fig.width = 3.5, fig.height = 2.75, warning = F, message = F}
 library(tidybayes)
+
+# breaks
+breaks <- mode_hdi(post$b_perform_dysfunc, .width = .95) %>% pivot_longer(starts_with("y")) %>% pull(value)
 
 post %>% 
   ggplot(aes(x = b_perform_dysfunc)) +
   geom_histogram(binwidth = .025, boundary = 0, 
                  color = "white", fill = "skyblue3", size = 1/4) +
-  stat_pointintervalh(aes(y = 0), 
-                      point_interval = mode_hdi, .width = .95) +
-  scale_x_continuous(breaks = mode_hdi(post$b_perform_dysfunc, .width = .95)[1, 1:3],
-                     labels = mode_hdi(post$b_perform_dysfunc, .width = .95)[1, 1:3] %>% round(3)) +
+  stat_pointinterval(aes(y = 0), 
+                     point_interval = mode_hdi, .width = .95) +
+  scale_x_continuous("The direct effect (i.e., b_perform_dysfunc)", 
+                     breaks = breaks, labels = round(breaks, digits = 3)) +
   scale_y_continuous(NULL, breaks = NULL) +
-  xlab("The direct effect (i.e., b_perform_dysfunc)") +
   theme_bw() +
-  theme(panel.grid   = element_blank(),
+  theme(axis.line.x = element_line(size = 1/4),
         panel.border = element_blank(),
-        axis.line.x  = element_line(size = 1/4))
+        panel.grid = element_blank())
 ```
 
-Since we're plotting in a style similar to Kruschke, we switched from emphasizing the posterior mean or median to marking off the posterior mode, which is Kruschkes' preferred measure of central tendency. We also ditched our typical percentile-based 95% intervals for highest posterior density intervals. The `stat_pointintervalh()` function from the Matthew Kay's [**tidybayes** package](https://github.com/mjskay/tidybayes) made it easy to compute those values with the `point_interval = mode_hdi` argument. Note how we also used `tidybayes::mode_hdi()` to compute those values and plug them into `scale_x_continuous()`.
+Since we're plotting in a style similar to Kruschke, we switched from emphasizing the posterior mean or median to marking off the posterior mode, which is Kruschkes' preferred measure of central tendency. We also ditched our typical percentile-based 95% intervals for highest posterior density intervals. The `stat_pointinterval()` function from the Matthew Kay's [**tidybayes** package](https://github.com/mjskay/tidybayes) made it easy to compute those values with the `point_interval = mode_hdi` argument. Note how we also used `tidybayes::mode_hdi()` to compute those values and plug them into `scale_x_continuous()`.
 
 ### Inference about the indirect effect.
 
@@ -265,31 +261,33 @@ post <-
   post %>% 
   mutate(ab_3 = b_negtone_dysfunc * `b_perform_negtone:negexp`)
 
+# breaks
+breaks <- mode_hdi(post$ab_3, .width = .95) %>% pivot_longer(starts_with("y")) %>% pull(value)
+
 post %>% 
   ggplot(aes(x = ab_3)) +
   geom_histogram(binwidth = .025, boundary = 0, 
                  color = "white", fill = "skyblue3", size = 1/4) +
-  stat_pointintervalh(aes(y = 0), 
-                      point_interval = mode_hdi, .width = .95) +
+  stat_pointinterval(aes(y = 0), 
+                     point_interval = mode_hdi, .width = .95) +
   scale_x_continuous(expression(paste("The indirect effect, ", italic(ab)[3])),
-                     breaks = mode_hdi(post$ab_3, .width = .95)[1, 1:3],
-                     labels = mode_hdi(post$ab_3, .width = .95)[1, 1:3] %>% round(3)) +
+                     breaks = breaks, labels = round(breaks, digits = 3)) +
   scale_y_continuous(NULL, breaks = NULL) +
   theme_bw() +
-  theme(panel.grid   = element_blank(),
+  theme(axis.line.x = element_line(size = 1/4),
         panel.border = element_blank(),
-        axis.line.x  = element_line(size = 1/4))
+        panel.grid = element_blank())
 ```
 
 ### Probing moderation of mediation.
 
-> One of the contributions of [Preacher et al. (2007)](https://kuscholarworks.ku.edu/bitstream/handle/1808/1658/preacher_rucker_hayes_2007.pdf?sequence=1&isAllowed=y) to the literature on moderated mediation analysis was their discussion of inference for conditional indirect effects. They suggested two approaches, one a normal theory-based approach that is an analogue of the Sobel test in unmoderated mediation analysis, and another based on bootstrapping. (p. 426)
+> One of the contributions of @preacherAddressingModeratedMediation2007 to the literature on moderated mediation analysis was their discussion of inference for conditional indirect effects. They suggested two approaches, one a normal theory-based approach that is an analogue of the Sobel test in unmoderated mediation analysis, and another based on bootstrapping. (p. 426)
 
-One of the contributions of this project is moving away from NHST in favor of Bayesian modeling. Since we’ve already been referencing him with our plot themes, you might check out Kruschke's [textbook](https://sites.google.com/site/doingbayesiandataanalysis/) for more discussion on Bayes versus NHST.
+One of the contributions of this project is moving away from NHST in favor of Bayesian modeling. Since we’ve already been referencing him with our plot themes, you might check out Kruschke's [-@kruschkeDoingBayesianData2015] [textbook](https://sites.google.com/site/doingbayesiandataanalysis/) for more discussion on Bayes versus NHST.
 
 #### Normal theory approach.
 
-As we're square within the Bayesian modeling paradigm, we have no need to appeal to normal theory for the posterior $SD$s or 95% intervals. 
+As we're square within the Bayesian modeling paradigm, we have no need to appeal to normal theory for the posterior $SD$s or 95% intervals.
 
 #### ~~Bootstrap confidence intervals~~ Two types of Bayesian credible intervals.
 
@@ -340,21 +338,20 @@ post %>%
          w = fct_reorder(label,
                          w)) %>% 
 
-  ggplot(aes(x = `a(b1 + b3w)`)) +
-  geom_vline(xintercept = 0, color = "grey50", linetype = 2) +
+  ggplot(aes(y = `a(b1 + b3w)`)) +
+  geom_hline(yintercept = 0, color = "grey50", linetype = 2) +
   geom_histogram(binwidth = .05, boundary = 0, 
                  color = "white", fill = "skyblue3", size = 1/4) +
-  stat_pointintervalh(aes(y = 0),
-                      point_interval = mode_hdi, .width = .95) +
-  scale_x_continuous("The conditional indirect effect", limits = c(-1.25, .75)) +
-  scale_y_continuous(NULL, breaks = NULL) +
-  coord_flip() +
+  stat_pointinterval(aes(x = 0),
+                     point_interval = mode_hdi, .width = .95) +
+  scale_x_continuous(NULL, breaks = NULL) +
+  scale_y_continuous("The conditional indirect effect", limits = c(-1.25, .75)) +
   theme_bw() +
-  theme(panel.grid   = element_blank(),
+  theme(axis.line.y = element_line(size = 1/4),
         panel.border = element_blank(),
-        axis.line.y  = element_line(size = 1/4),
-        strip.text   = element_text(hjust = 0),
-        strip.background = element_rect(color = "transparent", fill = "transparent")) +
+        panel.grid = element_blank(),
+        strip.background = element_rect(color = "transparent", fill = "transparent"),
+        strip.text = element_text(hjust = 0)) +
   facet_wrap(~w, nrow = 1)
 ```
 
@@ -362,11 +359,11 @@ This, of course, leads us right into the next section.
 
 #### A Johnson-Neyman approach.
 
-On page 429, Hayes discussed how Preacher et al. (2007)'s attempt to apply the JN technique in this context presumed
+On page 429, Hayes discussed how @preacherAddressingModeratedMediation2007's attempt to apply the JN technique in this context presumed
 
 > the sampling distribution of the conditional indirect effect is normal. Given that the sampling distribution of the conditional indirect effect is not normal, the approach they describe yields, at best, an approximate solution. To [Hayes's] knowledge, no one has ever proposed a bootstrapping-based analogue of the Johnson-Neyman method for probing the moderation of an indirect effect.
 
-However, our Bayesian HMC approach makes no such assumption. All we need to do is manipulate the posterior as usual. Here it is, this time using all 4000 iterations.
+However, our Bayesian HMC approach makes no such assumption. All we need to do is manipulate the posterior as usual. Here it is, this time using all 4,000 iterations.
 
 ```{r, fig.width = 6, fig.height = 4.5}
 post %>% 
@@ -374,9 +371,9 @@ post %>%
             `-0.8` = b_perform_negtone + `b_perform_negtone:negexp` * -0.8,
             `0.8`  = b_perform_negtone + `b_perform_negtone:negexp` * 0.8) %>% 
   pivot_longer(-iter) %>% 
-  mutate(key = name %>% as.double()) %>% 
+  mutate(name = name %>% as.double()) %>% 
   
-  ggplot(aes(x = key, y = value, group = iter)) +
+  ggplot(aes(x = name, y = value, group = iter)) +
   geom_line(color = "skyblue3",
             size = 1/6, alpha = 1/15) +
   coord_cartesian(xlim = c(-.5, .6),
@@ -389,12 +386,13 @@ post %>%
 
 Glorious.
 
-## References {-}
-
-[Hayes, A. F. (2018). *Introduction to mediation, moderation, and conditional process analysis: A regression-based approach.* (2nd ed.). New York, NY, US: The Guilford Press.](http://afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html)
-
 ## Session info {-}
 
 ```{r}
 sessionInfo()
 ```
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
+```
+

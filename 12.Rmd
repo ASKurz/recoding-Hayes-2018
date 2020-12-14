@@ -6,7 +6,7 @@ options(width = 110)
 
 > In this chapter [Hayes built] on the foundation laid by stepping through an analysis of a more complicated conditional process model that include[d] moderation of both the indirect effects in a simple mediation model. [He did] so by first using a piecemeal approach that focuse[d] on each pathway in the model. With some understanding gained by this examination of the components in the process, [he brought] the pieces together into an integrated conditional process analysis...
 >
-> When an indirect effect of $X$ on $Y$ through $M$ is moderated, we call this phenomenon *moderated mediation*. In such a scenario, the mechanism represented by the $X \rightarrow M \rightarrow Y$ chain of events operates to varying degrees (or not at all) for certain people or in certain contexts. A similar-sounding phenomenon is *mediated moderation*, which refers to the scenario in which an interaction between X and some moderator $W$ on $Y$ is carried through a mediator $M$. [We'll see] in this chapter that a mediated moderation analysis is really nothing other than a mediation analysis with the product of two variables serving as the causal agent of focus. (p. 432)
+> When an indirect effect of $X$ on $Y$ through $M$ is moderated, we call this phenomenon *moderated mediation*. In such a scenario, the mechanism represented by the $X \rightarrow M \rightarrow Y$ chain of events operates to varying degrees (or not at all) for certain people or in certain contexts. A similar-sounding phenomenon is *mediated moderation*, which refers to the scenario in which an interaction between X and some moderator $W$ on $Y$ is carried through a mediator $M$. [We'll see] in this chapter that a mediated moderation analysis is really nothing other than a mediation analysis with the product of two variables serving as the causal agent of focus. [@hayesIntroductionMediationModeration2018. p. 432]
 
 ## Revisiting the disaster framing study
 
@@ -32,19 +32,13 @@ $$Y = b_0 + b_1 X + e_Y,$$
 
 where the $X$ is `frame` the $Y$ is `donate`. Here's the model.
 
-```{r model12.1, echo = F}
-# save(model12.1, file = "fits/model12.01.rda")
-# rm(model12.1)
-
-load("fits/model12.01.rda")
-```
-
-```{r, eval = F}
+```{r model12.1}
 model12.1 <-
   brm(data = disaster, 
       family = gaussian,
       donate ~ 1 + frame,
-      chains = 4, cores = 4)
+      chains = 4, cores = 4,
+      file = "fits/model12.01")
 ```
 
 Check the summary.
@@ -53,7 +47,7 @@ Check the summary.
 print(model12.1, digits = 3)
 ```
 
-Hayes interpteted the coefficient for `frame` through the lens of a $t$ statistic and accompanying $p$-value. We'll just plot the posterior. For the figures in this chapter, we'll take theme cues from the vignettes from Matthew Kay's [**tidybayes** package](https://github.com/mjskay/tidybayes).
+Hayes interpreted the coefficient for `frame` through the lens of a $t$ statistic and accompanying $p$-value. We'll just plot the posterior. For the figures in this chapter, we'll take theme cues from the vignettes from Matthew Kay's [**tidybayes** package](https://mjskay.github.io/tidybayes/).
 
 ```{r, fig.width = 4, fig.height = 2.5}
 library(tidybayes)
@@ -61,7 +55,7 @@ theme_set(theme_tidybayes() + cowplot::panel_border())
 
 posterior_samples(model12.1) %>% 
   ggplot(aes(x = b_frame, y = 0)) +
-  geom_halfeyeh() +
+  stat_halfeye() +
   geom_vline(xintercept = 0, linetype = 2) +
   scale_y_continuous(NULL, breaks = NULL)
 ```
@@ -69,23 +63,17 @@ posterior_samples(model12.1) %>%
 
 Now we fit the moderation model
 
-$$Y = b_0 + b_1 X + + b_2 W + b_3 XW + e_Y,$$
+$$Y = b_0 + b_1 X + b_2 W + b_3 XW + e_Y,$$
 
 where `skeptic` is the $W$ variable.
 
-```{r model12.2, echo = F}
-# save(model12.2, file = "fits/model12.02.rda")
-# rm(model12.2)
-
-load("fits/model12.02.rda")
-```
-
-```{r, eval = F}
+```{r model12.2}
 model12.2 <-
   brm(data = disaster, 
       family = gaussian,
       donate ~ 1 + frame + skeptic + frame:skeptic,
-      chains = 4, cores = 4)
+      chains = 4, cores = 4,
+      file = "fits/model12.02")
 ```
 
 Our `model12.2` summary matches nicely with the text.
@@ -98,9 +86,8 @@ Here's our Figure 12.2.
 
 ```{r, fig.width = 6, fig.height = 5}
 nd <-
-  tibble(frame = rep(0:1, each = 30),
-         skeptic = rep(seq(from = 0, to = 7, length.out = 30),
-                       times = 2))
+  crossing(frame   = 0:1,
+           skeptic = seq(from = 0, to = 7, length.out = 30))
 
 fitted(model12.2, newdata = nd) %>% 
   as_tibble() %>% 
@@ -117,12 +104,12 @@ fitted(model12.2, newdata = nd) %>%
   geom_line(aes(color = frame)) +
   scale_fill_brewer(palette = "Set2") +
   scale_color_brewer(palette = "Set2") +
-  coord_cartesian(xlim = 1:6,
+  coord_cartesian(xlim = c(1, 6),
                   ylim = c(3.5, 5.5)) +
   labs(x = expression(paste("Climate Change Skepticism (", italic(W), ")")),
        y = "Willingness to Donate to Victims") +
-  theme(legend.position = "top",
-        legend.direction = "horizontal",
+  theme(legend.direction = "horizontal",
+        legend.position = "top",
         legend.title = element_blank())
 ```
 
@@ -136,18 +123,15 @@ nd <-
 fitted(model12.2, summary = F,
        newdata = nd) %>% 
   as_tibble() %>% 
-  gather() %>% 
-  bind_cols(
-    nd %>% 
-      expand(nesting(frame, skeptic),
-             iter = 1:4000)
-  ) %>% 
-  select(-key) %>% 
+  set_names(mutate(nd, label = str_c(frame, "_", skeptic)) %>% pull(label)) %>% 
+  mutate(iter = 1:n()) %>% 
+  pivot_longer(-iter) %>% 
+  separate(name, into = c("frame", "skeptic"), sep = "_", convert = T) %>% 
   pivot_wider(names_from = frame, values_from = value) %>% 
   mutate(difference = `1` - `0`) %>% 
   
   ggplot(aes(x = difference, y = skeptic, fill = skeptic %>% as.character())) +
-  geom_halfeyeh(point_interval = median_qi, .width = c(0.95, 0.5)) +
+  stat_halfeye(point_interval = median_qi, .width = c(0.95, 0.5)) +
   scale_fill_brewer() +
   scale_y_continuous(breaks = quantile(disaster$skeptic, probs = c(.16, .5, .86)),
                      labels = quantile(disaster$skeptic, probs = c(.16, .5, .86)) %>% round(2)) +
@@ -156,21 +140,15 @@ fitted(model12.2, summary = F,
 
 Here's our simple mediation model, `model12.3`, using the multivariate syntax right in the `brm()` function.
 
-```{r model12.3, echo = F}
-# save(model12.3, file = "fits/model12.03.rda")
-# rm(model12.3)
-
-load("fits/model12.03.rda")
-```
-
-```{r, eval = F}
+```{r model12.3}
 model12.3 <-
   brm(data = disaster, 
       family = gaussian,
       bf(justify ~ 1 + frame) +
         bf(donate ~ 1 + frame + justify) +
         set_rescor(FALSE),
-      chains = 4, cores = 4)
+      chains = 4, cores = 4,
+      file = "fits/model12.03")
 ```
 
 ```{r}
@@ -202,24 +180,18 @@ Y & = i_Y + c_1' X + c_2' W + c_3' XW + b M + e_Y.
 
 We don't need to do anything particularly special to fit a model like this with **brms**. It just requires we do a careful job specifying the formulas in our `bf()` arguments. If you find this syntax a little too cumbersome, you can always specify the formulas outside of `brm()`, save them as one or multiple objects, and plug those objects into `brm()`.
 
-```{r model12.4, echo = F}
-# save(model12.4, file = "fits/model12.04.rda")
-# rm(model12.4)
-
-load("fits/model12.04.rda")
-```
-
-```{r, eval = F}
+```{r model12.4}
 model12.4 <-
   brm(data = disaster, 
       family = gaussian,
       bf(justify ~ 1 + frame + skeptic + frame:skeptic) +
         bf(donate ~ 1 + frame + justify + skeptic + frame:skeptic) +
         set_rescor(FALSE),
-      chains = 4, cores = 4)
+      chains = 4, cores = 4,
+      file = "fits/model12.04")
 ```
 
-The model summary:
+Check the model summary.
 
 ```{r}
 print(model12.4, digits = 3)
@@ -267,7 +239,7 @@ post %>%
 
 And if you really want that full-on Table 12.2 layout, try this.
 
-```{r}
+```{r, message = F}
 post %>% 
   mutate(a1 = b_justify_frame,
          a3 = `b_justify_frame:skeptic`,
@@ -283,7 +255,7 @@ post %>%
   pivot_longer(-w) %>% 
   group_by(w, name) %>% 
   summarise(mean = mean(value) %>% round(digits = 3)) %>% 
-  pivot_wider(names_from  = name, 
+  pivot_wider(names_from = name, 
               values_from = mean) %>% 
   select(w, `a1 + a3w`, b, everything())
 ```
@@ -318,7 +290,7 @@ w <- c(1.592, 2.800, 5.200)
   mutate(`conditional direct effect` = b_donate_frame + `b_donate_frame:skeptic` * w) %>% 
 
   ggplot(aes(x = `conditional direct effect`, y = w, fill = w %>% as.character())) +
-  geom_halfeyeh(point_interval = median_qi, .width = c(0.95, 0.5)) +
+  stat_halfeye(point_interval = median_qi, .width = c(0.95, 0.5)) +
   scale_y_continuous(breaks = w) +
   scale_fill_brewer() +
   theme(legend.position = "none")
@@ -336,8 +308,7 @@ effects <-
   mutate(`direct effect`   = b_donate_frame + `b_donate_frame:skeptic` * w,
          `indirect effect` = (b_justify_frame + `b_justify_frame:skeptic` * w) * b_donate_justify) %>% 
   pivot_longer(c(`direct effect`, `indirect effect`)) %>% 
-  mutate(name = factor(name,
-                       levels = c("direct effect", "indirect effect"))) %>% 
+  mutate(name = factor(name, levels = c("direct effect", "indirect effect"))) %>% 
   select(w:value)
 
 head(effects)
@@ -348,11 +319,11 @@ Now we plot.
 ```{r, fig.width = 6, fig.height = 4}
 # we'll need this for `geom_text()`
 text <-
-  tibble(x      = c(4.2, 4.7),
-         y      = c(.28, -.28),
-         angle  = c(3.6, 335),
-         name = factor(c("direct effect", "indirect effect"),
-                       levels = c("direct effect", "indirect effect")))
+  tibble(x     = c(4.2, 4.7),
+         y     = c(.28, -.28),
+         angle = c(3.6, 335),
+         name  = factor(c("direct effect", "indirect effect"),
+                        levels = c("direct effect", "indirect effect")))
 
 # plot!
 effects %>% 
@@ -368,7 +339,7 @@ effects %>%
   scale_color_brewer(type = "qual") +
   coord_cartesian(xlim = c(1, 5.5),
                   ylim = c(-.6, .4)) +
-  labs(x = expression(paste("Climate Change Skepticism (", italic(W), ")")),
+  labs(x = expression(Climate~Change~Skepticism~(italic(W))),
        y = "Effects of Disaster Frame on Willingness to Donate") +
   theme(legend.position = "none")
 ```
@@ -416,14 +387,14 @@ Here we'll combine `stat_intervalh()` and `stat_pointintervalh()` to visualize $
 ```{r, fig.width = 6, fig.height = 1}
 post %>% 
   ggplot(aes(x = a3b, y = 1)) +
-  stat_intervalh(.width = c(.95, .8, .5)) +
-  stat_pointintervalh(point_interval = median_qi, .width = c(.95, .8, .5),
-                      position = position_nudge(y = -.75)) +
+  stat_interval(.width = c(.95, .8, .5)) +
+  stat_pointinterval(point_interval = median_qi, .width = c(.95, .8, .5),
+                     position = position_nudge(y = -.75)) +
   scale_color_brewer("Interval") +
   scale_y_discrete(NULL, breaks = NULL) +
   coord_cartesian(xlim = c(-.5, 0)) +
   labs(title = expression(paste("Coefficient plot for ", italic(a)[3], italic(b), " (i.e., the index of moderated mediation)")),
-       x     = NULL) +
+       x = NULL) +
   theme(legend.position = "none")
 ```
 
@@ -431,7 +402,7 @@ post %>%
 
 As we discussed in Chapter 11, our Bayesian version of the JN technique should be fine because HMC does not impose the normality assumption on the parameter posteriors. In this instance, I'll leave the JN technique plot as an exercise for the interested reader. Here we'll just follow along with the text and pick a few points.
 
-We computed and inspected these 95% intervals, above. Here's another way we might `geom_halfeyeh()` to look at their entire densities.
+We computed and inspected these 95% intervals, above. Here's another way we might `stat_halfeye()` to look at their entire densities.
 
 ```{r, fig.width = 5, fig.height = 3}
 post %>% 
@@ -439,15 +410,13 @@ post %>%
   rename(`conditional indirect effect` = value) %>% 
   mutate(W = str_remove(name, "indirect effect when W is ") %>% as.double()) %>% 
   
-  
-  ggplot(aes(x = `conditional indirect effect`, y = W, fill = W %>% as.character())) +
-  geom_vline(xintercept = 0, linetype = 2) +
-  geom_halfeyeh(point_interval = median_qi, .width = 0.95) +
+  ggplot(aes(x = W, y = `conditional indirect effect`, fill = W %>% as.character())) +
+  geom_hline(yintercept = 0, linetype = 2) +
+  stat_halfeye(point_interval = median_qi, .width = 0.95) +
   scale_fill_brewer() +
-  scale_y_continuous(breaks = c(1.592, 2.8, 5.2),
+  scale_x_continuous(breaks = c(1.592, 2.8, 5.2),
                      labels = c(1.6, 2.8, 5.2)) +
-  coord_flip() +
-  # coord_cartesian(xlim = -1:1) +
+  coord_cartesian(ylim = c(-1, 1)) +
   theme(legend.position = "none",
         panel.grid.minor.y = element_blank())
 ```
@@ -456,21 +425,15 @@ post %>%
 
 Fitting the model without the interaction term is just a small change to one of our `formula` arguments.
 
-```{r model12.5, echo = F}
-# save(model12.5, file = "fits/model12.05.rda")
-# rm(model12.5)
-
-load("fits/model12.05.rda")
-```
-
-```{r, eval = F}
+```{r model12.5}
 model12.5 <-
   brm(data = disaster, 
       family = gaussian,
       bf(justify ~ 1 + frame + skeptic + frame:skeptic) +
         bf(donate ~ 1 + frame + justify + skeptic) +
         set_rescor(FALSE),
-      chains = 4, cores = 4)
+      chains = 4, cores = 4,
+      file = "fits/model12.05")
 ```
 
 Here are the results.
@@ -519,13 +482,13 @@ Hayes later concluded that we should avoid
 
 > the articulation of hypotheses or research questions in terms of the mediation of the effect of a product, abandoning the term *mediated moderation* entirely, and instead [reframe] such hypotheses and research questions in terms of the contingencies of an indirect effect--moderated mediation. (p. 467, *emphasis* in the original)
 
-## References {-}
-
-[Hayes, A. F. (2018). *Introduction to mediation, moderation, and conditional process analysis: A regression-based approach.* (2nd ed.). New York, NY, US: The Guilford Press.](http://afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html)
-
 ## Session info {-}
 
 ```{r}
 sessionInfo()
+```
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```
 

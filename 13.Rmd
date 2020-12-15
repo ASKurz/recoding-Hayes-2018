@@ -6,7 +6,7 @@ options(width = 100)
 
 With his opening lines, Hayes prepared us:
 
-> At the end of any great fireworks show is the grand finale, where the pyrotechnicians throw everything remaining in their arsenal at you at once, leaving you amazed, dazed, and perhaps temporarily a little hard of hearing. Although this is not the final chapter of this book, I am now going to throw everything at you at once with an example of the most complicated conditional process model I will cover in this book. (p. 469)
+> At the end of any great fireworks show is the grand finale, where the pyrotechnicians throw everything remaining in their arsenal at you at once, leaving you amazed, dazed, and perhaps temporarily a little hard of hearing. Although this is not the final chapter of this book, I am now going to throw everything at you at once with an example of the most complicated conditional process model I will cover in this book. [@@hayesIntroductionMediationModeration2018, p. 469]
 
 Enjoy the fireworks.
 
@@ -54,19 +54,13 @@ y_model <- bf(liking   ~ 1 + d1 + d2 + sexism + d1:sexism + d2:sexism + respappr
 
 Now we're ready to fit our primary model, the conditional process model with a multicategorical antecedent.
 
-```{r model13.1, echo = F}
-# save(model13.1, file = "fits/model13.01.rda")
-# rm(model13.1)
-
-load("fits/model13.01.rda")
-```
-
-```{r, eval = F}
+```{r model13.1}
 model13.1 <-
   brm(data = protest, 
       family = gaussian,
       m_model + y_model + set_rescor(FALSE),
-      chains = 4, cores = 4)
+      chains = 4, cores = 4,
+      file = "fits/model13.01")
 ```
 
 Here's the model summary, which coheres reasonably well with the output in Table 13.1.
@@ -78,6 +72,7 @@ print(model13.1, digits = 3)
 Why not look at the output with a coefficient plot?
 
 ```{r, fig.width = 10, fig.height = 2.5, warning = F, message = F}
+library(ggdark)
 library(tidybayes)
 
 post <- posterior_samples(model13.1)
@@ -91,18 +86,19 @@ post %>%
          name = factor(name, levels = c("Intercept", "respappr", "d2:sexism", "d1:sexism", "sexism", "d2", "d1"))) %>% 
 
   ggplot(aes(x = value, y = name, group = name)) +
-  geom_halfeyeh(.width = .95, 
-                scale = "width", relative_scale = .75,
-                color = "white") +
+  stat_halfeye(.width = .95, normalize = "xy", 
+               color = "white", size = 1/3) +
   coord_cartesian(xlim = c(-7, 6)) +
   labs(x = NULL, y = NULL) +
-  theme_black() +
+  dark_theme_bw() +
   theme(axis.text.y = element_text(hjust = 0),
         axis.ticks.y = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.grid.major = element_line(color = "grey20")) +
+        panel.grid.major = element_line(color = "grey20"),
+        panel.grid.minor = element_blank()) +
   facet_wrap(~criterion)
 ```
+
+Note our use of `dark_theme_bw()` from the [**ggdark** package](https://CRAN.R-project.org/package=ggdark).
 
 The Bayesian $R^2$ distributions are reasonably close to the estimates in the text.
 
@@ -154,10 +150,10 @@ f1 %>%
   geom_line(aes(y = Estimate), color = "white") +
   geom_point(data = protest, aes(x = sexism, y = respappr),
              color = "red", size = 2/3) +
-  coord_cartesian(xlim = 4:6) +
-  labs(x = expression(paste("Perceived Pervasiveness of Sex Discrimination in Society (", italic(W), ")")),
-       y = expression(paste("Perceived Appropriateness of Response (", italic(M), ")"))) +
-  theme_black() +
+  coord_cartesian(xlim = c(4, 6)) +
+  labs(x = expression(Perceived~Pervasiveness~of~Sex~Discrimination~"in"~Society~(italic(W))),
+       y = expression(Perceived~Appropriateness~of~Response~(italic(M)))) +
+  dark_theme_bw() +
   theme(panel.grid = element_blank()) +
   facet_wrap(~condition)
 ```
@@ -171,19 +167,13 @@ y_model <- bf(liking   ~ 1 + d1 + d2 + respappr + sexism + d1:sexism + d2:sexism
 
 Now we fit `model13.2`.
 
-```{r model13.2, echo = F}
-# save(model13.2, file = "fits/model13.02.rda")
-# rm(model13.2)
-
-load("fits/model13.02.rda")
-```
-
-```{r, eval = F}
+```{r model13.2}
 model13.2 <-
   brm(data = protest, 
       family = gaussian,
       m_model + y_model + set_rescor(FALSE),
-      chains = 4, cores = 4)
+      chains = 4, cores = 4,
+      file = "fits/model13.02")
 ```
 
 With `model13.2` in hand, we're ready to compare $R^2$ distributions.
@@ -191,26 +181,22 @@ With `model13.2` in hand, we're ready to compare $R^2$ distributions.
 ```{r, fig.width = 4, fig.height = 2}
 # extract the R2 draws and wrangle
 r2 <-
-  bayes_R2(model13.1, resp = "respappr", summary = F) %>% 
-  as_tibble() %>% 
-  set_names("model13.1") %>% 
-  bind_cols(
-    bayes_R2(model13.2, resp = "respappr", summary = F) %>% 
-      as_tibble() %>% 
-      set_names("model13.2")
-  ) %>% 
+  tibble(model13.1 = bayes_R2(model13.1, resp = "respappr", summary = F)[, 1],
+         model13.2 = bayes_R2(model13.2, resp = "respappr", summary = F)[, 1]) %>% 
   mutate(difference = model13.1 - model13.2) 
+
+# breaks
+breaks <- median_qi(r2$difference, .width = .95) %>% pivot_longer(starts_with("y")) %>% pull(value)
 
 # plot!
 r2 %>% 
   ggplot(aes(x = difference)) +
-  geom_halfeyeh(aes(y = 0), fill = "grey50", color = "white",
-                point_interval = median_qi, .width = 0.95) +
+  stat_halfeye(aes(y = 0), fill = "grey50", color = "white",
+               point_interval = median_qi, .width = 0.95) +
   scale_x_continuous(expression(paste(Delta, italic(R)^2)),
-                     breaks = median_qi(r2$difference, .width = .95)[1, 1:3],
-                     labels = median_qi(r2$difference, .width = .95)[1, 1:3] %>% round(2)) +
+                     breaks = breaks, labels = round(breaks, digits = 2)) +
   scale_y_continuous(NULL, breaks = NULL) +
-  theme_black() +
+  dark_theme_bw() +
   theme(panel.grid = element_blank())
 ```
 
@@ -226,9 +212,9 @@ loo_compare(model13.1, model13.2, criterion = "waic") %>%
   print(simplify = F)
 ```
 
-The Bayesian $R^2$, the LOO-CV, and the WAIC all suggest there's little difference between the two models with respect to their predictive utility. In such a case, I'd lean on theory to choose between them. If inclined, one could also do Bayesian model averaging. 
+The Bayesian $R^2$, the LOO-CV, and the WAIC all suggest there's little difference between the two models with respect to their predictive utility. In such a case, I'd lean on theory to choose between them. If inclined, one could also do Bayesian model averaging.
 
-Within our Bayesian modeling paradigm, we don't have a direct analogue to the $F$-tests Hayes presented on page 483. But a little `fitted()` and follow-up wrangling will give us some difference scores.
+Within our Bayesian modeling paradigm, we don't have a direct analogue to the $F$-tests Hayes presented on page 483. We can just extract the fitted draws and wrangle to get the difference scores.
 
 ```{r, fig.width = 10, fig.height = 4.5, warning = F}
 # we need new `nd` data
@@ -240,24 +226,17 @@ nd <-
   mutate(condition = ifelse(d2 == 0, "No Protest",
                             ifelse(d2 < 0, "Individual Protest", "Collective Protest")))
 
-# this time we'll use `summary = F`
+# extract the fitted draws
 f1 <-
-  fitted(model13.1, 
-       newdata = nd,
-       resp = "respappr", 
-       summary = F) %>% 
-  as_tibble() %>% 
-  gather() %>% 
-  bind_cols(
-    nd %>% 
-      expand(nesting(condition, sexism),
-             iter = 1:4000)
-  ) %>% 
-  select(-key) %>% 
-  pivot_wider(names_from = condition, values_from = value) %>% 
+  add_fitted_draws(model13.1,
+                   newdata = nd,
+                   resp = "respappr") %>% 
+  ungroup() %>% 
+  select(sexism, condition, .value, .draw) %>%
+  pivot_wider(names_from = condition, values_from = .value) %>% 
   mutate(`Individual Protest - No Protest` = `Individual Protest` - `No Protest`,
          `Collective Protest - No Protest` = `Collective Protest` - `No Protest`,
-         `Collective Protest - Individual Protest` = `Collective Protest` - `Individual Protest`)
+         `Collective Protest - Individual Protest` = `Collective Protest` - `Individual Protest`) 
 
 # a tiny bit more wrangling and we're ready
 f1 %>% 
@@ -265,14 +244,17 @@ f1 %>%
   
   # plot the difference distributions!
   ggplot(aes(x = value)) +
-  geom_halfeyeh(aes(y = 0), fill = "grey50", color = "white",
-                point_interval = median_qi, .width = .95) +
+  stat_halfeye(aes(y = 0),
+               point_interval = median_qi, .width = .95, 
+               fill = "grey50", color = "white") +
   geom_vline(xintercept = 0, linetype = 2) +
   scale_y_continuous(NULL, breaks = NULL) +
   facet_grid(sexism~name) +
-  theme_black() +
+  dark_theme_bw() +
   theme(panel.grid = element_blank())
 ```
+
+Did you notice our use of the `add_fitted_draws()` function? `add_fitted_draws()` is a convenience function from **tidybayes**, that works in a similar way to `brms::fitted()`. The advantage of `the add_fitted_draws()` approach is it returns the output in a tidy tibble format and, if you use the `newdata` argument, it will automatically add those predictor values to the output. To learn more about `add_fitted_draws()` and other similar functions, check out Kay's [-@kayExtractingVisualizingTidy2020] tutorial, [*Extracting and visualizing tidy draws from brms models*](https://mjskay.github.io/tidybayes/articles/tidy-brms.html).
 
 Now we have `f1`, it's easy to get the typical numeric summaries for the differences.
 
@@ -309,13 +291,13 @@ At the end of the subsection, Hayes highlighted $a_5$. Here it is.
 
 ```{r, fig.width = 6, fig.height = 2}
 post %>% 
-  ggplot(aes(x = `b_respappr_d2:sexism`)) +
-  geom_halfeyeh(aes(y = 0), fill = "grey50", color = "white",
-                point_interval = median_qi, .width = 0.95) +
+  ggplot(aes(x = `b_respappr_d2:sexism`, y = 0)) +
+  stat_halfeye(point_interval = median_qi, .width = 0.95,
+               fill = "grey50", color = "white") +
   scale_y_continuous(NULL, breaks = NULL) +
-  coord_cartesian(xlim = -1:1) +
-  xlab(expression(paste("b_respappr_d2:sexism (i.e., ", italic(a)[5], ")"))) +
-  theme_black() +
+  coord_cartesian(xlim = c(-1, 1)) +
+  xlab(expression("b_respappr_d2:sexism (i.e., "*italic(a)[5]*")")) +
+  dark_theme_bw() +
   theme(panel.grid = element_blank())
 ```
 
@@ -325,17 +307,17 @@ Now here's $b$.
 
 ```{r, fig.width = 6, fig.height = 2}
 post %>% 
-  ggplot(aes(x = b_liking_respappr)) +
-  geom_halfeyeh(aes(y = 0), fill = "grey50", color = "white",
-                point_interval = median_qi, .width = 0.95) +
-  scale_x_continuous(expression(paste("b_liking_respappr (i.e., ", italic(b), ")")),
+  ggplot(aes(x = b_liking_respappr, y = 0)) +
+  stat_halfeye(point_interval = median_qi, .width = 0.95, 
+               fill = "grey50", color = "white") +
+  scale_x_continuous(expression("b_liking_respappr (i.e., "*italic(b)*")"),
                      breaks = c(-1, median(post$b_liking_respappr), 1),
                      labels = c(-1, 
                                 median(post$b_liking_respappr) %>% round(3),
                                 1)) +
   scale_y_continuous(NULL, breaks = NULL) +
-  coord_cartesian(xlim = -1:1) +
-  theme_black() +
+  coord_cartesian(xlim = c(-1, 1)) +
+  dark_theme_bw() +
   theme(panel.grid = element_blank())
 ```
 
@@ -362,7 +344,6 @@ indirect <-
          `Collective vs. Individual Protest` = (b_respappr_d2 + `b_respappr_d2:sexism` * sexism) * b_liking_respappr) %>% 
   pivot_longer(contains("Protest")) %>% 
   select(sexism:value) %>% 
-  
   group_by(name, sexism) %>% 
   median_qi(value)
 
@@ -373,25 +354,23 @@ Now we've saved our results in `indirect`, we just need to plug them into `ggplo
 
 ```{r, fig.width = 10, fig.height = 4.5}
 indirect %>% 
-  ggplot(aes(x = sexism, group = name)) +
-  geom_ribbon(aes(ymin = .lower, ymax = .upper),
-              color = "white", fill = "transparent", linetype = 3) +
-  geom_line(aes(y = value),
-            color = "white") +
-  coord_cartesian(xlim = 4:6,
+  ggplot(aes(x = sexism, y = value, ymin = .lower, ymax = .upper, group = name)) +
+  geom_ribbon(color = "white", fill = "transparent", linetype = 3) +
+  geom_line(color = "white") +
+  coord_cartesian(xlim = c(4, 6),
                   ylim = c(-.6, .8)) +
   labs(title = "These are just the conditional indirect effects",
-       x     = expression(paste("Perceived Pervasiveness of Sex Discrimination in Society (", italic(W), ")")),
-       y     = "Relative Conditional Effect on Liking") +
-  theme_black() +
-  theme(panel.grid = element_blank(),
-        legend.position = "none") +
+       x = expression(Perceived~Pervasiveness~of~Sex~Discrimination~'in'~Society~(italic(W))),
+       y = "Relative Conditional Effect on Liking") +
+  dark_theme_bw() +
+  theme(legend.position = "none",
+        panel.grid = element_blank()) +
   facet_grid(~name)
 ```
 
 Do not that unlike the figure in the text, we're only displaying the conditional indirect effects. Once you include the 95% intervals, things get too cluttered to add in other effects. Here's how we might make our version of Table 13.2 based on posterior means.
 
-```{r}
+```{r, message = F}
 post %>% 
   expand(nesting(b_respappr_d1, b_respappr_d2, `b_respappr_d1:sexism`, `b_respappr_d2:sexism`, b_liking_respappr),
          w = c(4.250, 5.125, 5.896)) %>% 
@@ -430,7 +409,7 @@ post %>%
   select(parameter:.upper)
 ```
 
-Here they are in a `geom_halfeyeh()` plot.
+Here they are in a `stat_halfeye()` plot.
 
 ```{r, fig.width = 6, fig.height = 2.5}
 post %>% 
@@ -438,19 +417,19 @@ post %>%
                names_to = "parameter") %>% 
  
   ggplot(aes(x = value, y = parameter)) +
-  geom_halfeyeh(point_interval = median_qi, .width = c(0.95, 0.5),
-                fill = "grey50", color = "white") +
+  stat_halfeye(point_interval = median_qi, .width = c(0.95, 0.5),
+               fill = "grey50", color = "white") +
   scale_y_discrete(NULL, expand = c(.1, .1)) +
   xlab(NULL) +
-  theme_black() +
+  dark_theme_bw() +
   theme(axis.ticks.y = element_blank(),
-        panel.grid.minor.y = element_blank(),
-        panel.grid.major.y = element_blank()) 
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank()) 
 ```
 
 ### Probing moderation of mediation.
 
-We already computed the relevant 95% credible intervals at the end of section 13.3. We could inspect those in a `geom_halfeyeh()` plot, too.
+We already computed the relevant 95% credible intervals at the end of section 13.3. We could inspect those in a `stat_halfeye()` plot, too.
 
 ```{r, fig.width = 8, fig.height = 4}
 # we did this all before
@@ -465,13 +444,12 @@ post %>%
   pivot_longer(contains("conditional")) %>% 
   
   # now plot instead of summarizing
-  ggplot(aes(x = value, y = w)) +
-  geom_halfeyeh(point_interval = median_qi, .width = c(0.95, 0.5),
-                fill = "grey50", color = "white") +
-  labs(x = "Relative Conditional Effect on Liking", 
-       y = "Sexism") +
-  coord_flip() +
-  theme_black() +
+  ggplot(aes(x = w, y = value)) +
+  stat_halfeye(point_interval = median_qi, .width = c(0.95, 0.5),
+               fill = "grey50", color = "white") +
+  labs(x = "Sexism",
+       y = "Relative Conditional Effect on Liking") +
+  dark_theme_bw() +
   theme(panel.grid.minor.x = element_blank(),
         panel.grid.major.x = element_blank()) +
   facet_wrap(~name)
@@ -481,14 +459,7 @@ post %>%
 
 In order to get the $R^2$ difference distribution analogous to the change in $R^2$ $F$-test Hayes discussed on pages 495--496, we'll have to first refit the model without the interaction for the $Y$ criterion, `liking`.
 
-```{r model13.3, echo = F}
-# save(model13.3, file = "fits/model13.03.rda")
-# rm(model13.3)
-
-load("fits/model13.03.rda")
-```
-
-```{r, eval = F}
+```{r model13.3}
 m_model <- bf(respappr ~ 1 + d1 + d2 + sexism + d1:sexism + d2:sexism)
 y_model <- bf(liking   ~ 1 + d1 + d2 + respappr + sexism)
 
@@ -496,31 +467,26 @@ model13.3 <-
   brm(data = protest, 
       family = gaussian,
       m_model + y_model + set_rescor(FALSE),
-      chains = 4, cores = 4)
+      chains = 4, cores = 4,
+      file = "fits/model13.03")
 ```
 
 Here's the $\Delta R^2$ density for our $Y$, `liking`.
 
 ```{r, fig.width = 6, fig.height = 2}
 # wrangle
-bayes_R2(model13.1, resp = "liking", summary = F) %>% 
-  as_tibble() %>% 
-  set_names("model13.1") %>% 
-  bind_cols(
-    bayes_R2(model13.3, resp = "liking", summary = F) %>% 
-      as_tibble() %>% 
-      set_names("model13.3")
-  ) %>% 
+tibble(model13.1 = bayes_R2(model13.1, resp = "liking", summary = F)[, 1],
+       model13.3 = bayes_R2(model13.3, resp = "liking", summary = F)[, 1]) %>% 
   mutate(difference = model13.1 - model13.3) %>%
   
   # plot
   ggplot(aes(x = difference, y = 0)) +
-  geom_halfeyeh(point_interval = median_qi, .width = c(0.95, 0.5),
-                fill = "grey50", color = "white") +
+  stat_halfeye(point_interval = median_qi, .width = c(0.95, 0.5),
+               fill = "grey50", color = "white") +
   scale_y_continuous(NULL, breaks = NULL) +
   coord_cartesian(xlim = c(-.5, .5)) +
-  xlab(expression(paste(Delta, italic(R)^2))) +
-  theme_black() +
+  xlab(expression(Delta*italic(R)^2)) +
+  dark_theme_bw() +
   theme(panel.grid = element_blank())
 ```
 
@@ -533,7 +499,7 @@ loo_compare(model13.1, model13.3, criterion = "loo")
 loo_compare(model13.1, model13.3, criterion = "waic")
 ```
 
-As when we went through these steps for `resp = "respappr"`, above, the Bayesian $R^2$, the LOO-CV, and the WAIC all suggest there's little difference between the two models with respect to predictive utility. In such a case, I'd lean on theory to choose between them. If inclined, one could also do Bayesian model averaging. 
+As when we went through these steps for `resp = "respappr"`, above, the Bayesian $R^2$, the LOO-CV, and the WAIC all suggest there's little difference between the two models with respect to predictive utility. In such a case, I'd lean on theory to choose between them. If inclined, one could also do Bayesian model averaging.
 
 Our approach to plotting the relative conditional *direct* effects will mirror what we did for the relative conditional *indirect* effects, above. Here are the `brm()` parameters that correspond to the parameter names of Hayes's notation.
 
@@ -559,21 +525,21 @@ post %>%
   ggplot(aes(x = sexism, y = value,
              ymin = .lower, ymax = .upper)) +
   geom_ribbon(color = "white", fill = "transparent", linetype = 3) +
-  geom_line(color = "white") +
-  coord_cartesian(xlim = 4:6,
+  geom_line() +
+  coord_cartesian(xlim = c(4, 6),
                   ylim = c(-.6, .8)) +
   labs(title = "These are just the conditional direct effects",
-       x = expression(paste("Perceived Pervasiveness of Sex Discrimination in Society (", italic(W), ")")),
+       x = expression("Perceived Pervasiveness of Sex Discrimination in Society "*(italic(W))),
        y = "Relative Conditional Effect on Liking") +
-  theme_black() +
-  theme(panel.grid = element_blank(),
-        legend.position = "none") +
+  dark_theme_bw() +
+  theme(legend.position = "none",
+        panel.grid = element_blank()) +
   facet_grid(~name)
 ```
 
 Holy smokes, them are some wide 95% CIs! No wonder the information criteria and $R^2$ comparisons were so uninspiring. 
 
-Notice that the y-axis is on the parameter space. When Hayes made his Figure 13.5, he put the y-axis on the `liking` space, instead. When we want things in the parameter space, we work with the output of `posterior_samples()`; when we want them in the criterion space, we use `fitted()`.
+Notice that the y-axis is on the parameter space. When Hayes made his Figure 13.5, he put the y-axis on the `liking` space, instead. When we want things in the parameter space, we work with the output of `posterior_samples()`; when we want them in the criterion space, we typically use `fitted()`. This time, however, we'll practice again with `tidbayes::add_fitted_draws()`.
 
 ```{r, fig.width = 10, fig.height = 3.5}
 # we need new `nd` data
@@ -588,36 +554,34 @@ nd <-
   mutate(condition = factor(condition, 
                             levels = c("No Protest", "Individual Protest", "Collective Protest")))
 
-# feed `nd` into `fitted()`
+# feed `nd` into `add_fitted_draws()` and then summarize with `median_qi()`
 f <-
-  fitted(model13.1, 
-       newdata = nd,
-       resp = "liking", 
-       summary = T) %>% 
-  as_tibble() %>% 
-  bind_cols(nd)
+  add_fitted_draws(model13.1, 
+                   newdata = nd,
+                   resp = "liking") %>% 
+  median_qi(.value)
 
 # plot!
 f %>% 
   ggplot(aes(x = sexism)) +
-  geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5),
+  geom_ribbon(aes(ymin = .lower, ymax = .upper),
               linetype = 3, color = "white", fill = "transparent") +
-  geom_line(aes(y = Estimate), color = "white") +
+  geom_line(aes(y = .value)) +
   geom_point(data = protest, 
              aes(y = liking),
              color = "red", size = 2/3) +
-  coord_cartesian(xlim = 4:6,
-                  ylim = 4:7) +
+  coord_cartesian(xlim = c(4, 6),
+                  ylim = c(4, 7)) +
   labs(x = expression(paste("Perceived Pervasiveness of Sex Discrimination in Society (", italic(W), ")")),
        y = expression(paste("Evaluation of the Attorney (", italic(Y), ")"))) +
-  theme_black() +
+  dark_theme_bw() +
   theme(panel.grid = element_blank()) +
   facet_wrap(~condition)
 ```
 
 Relative to the text, we expanded the range of the y-axis a bit to show more of that data (and there's even more data outside of our expanded range). Also note how after doing so and after including the 95% CI bands, the crossing regression line effect in Hayes's Figure 13.5 isn't as impressive looking any more.
 
-On pages 497--498, Hayes discussed more omnibus $F$-tests. Much like with the $M$ criterion, we won't come up with Bayesian $F$-tests, but we might go ahead and make pairwise comparisons at the three percentiles Hayes prefers. 
+On pages 497--498, Hayes discussed more omnibus $F$-tests. Much like with the $M$ criterion, we won't come up with Bayesian $F$-tests, but we might go ahead and make pairwise comparisons at the three percentiles Hayes prefers.
 
 ```{r, fig.width = 10, fig.height = 4.5}
 # we need new `nd` data
@@ -629,42 +593,34 @@ nd <-
   mutate(respappr  = mean(protest$respappr),
          condition = ifelse(d2 == 0, "No Protest",
                             ifelse(d2 < 0, "Individual Protest", "Collective Protest"))) %>% 
-  mutate(condition = factor(condition, 
-                            levels = c("No Protest", "Individual Protest", "Collective Protest")))
+  mutate(condition = factor(condition, levels = c("No Protest", "Individual Protest", "Collective Protest")))
 
-# this time we'll use `summary = F`
+# define f
 f <-
-  fitted(model13.1, 
-       newdata = nd,
-       resp = "liking", 
-       summary = F) %>% 
-  as_tibble() %>% 
-  gather() %>% 
-  bind_cols(
-    nd %>% 
-      expand(nesting(condition, sexism),
-             iter = 1:4000)
-  ) %>% 
-  select(-key) %>% 
-  pivot_wider(names_from = condition, values_from = value) %>% 
+  add_fitted_draws(model13.1, 
+                   newdata = nd,
+                   resp = "liking") %>% 
+  ungroup() %>% 
+  select(condition, sexism, .draw, .value) %>% 
+  pivot_wider(names_from = condition, values_from = .value) %>% 
   mutate(`Individual Protest - No Protest` = `Individual Protest` - `No Protest`,
          `Collective Protest - No Protest` = `Collective Protest` - `No Protest`,
          `Collective Protest - Individual Protest` = `Collective Protest` - `Individual Protest`)
 
 # a tiny bit more wrangling and we're ready to plot the difference distributions
 f %>% 
-  select(sexism, contains("-")) %>% 
-  gather(key, value, -sexism) %>% 
+  select(sexism, contains("-")) %>%
+  pivot_longer(-sexism) %>% 
   mutate(sexism = str_c("W = ", sexism)) %>% 
-  
-  ggplot(aes(x = value)) +
-  geom_halfeyeh(aes(y = 0), color = "white",
-                point_interval = median_qi, .width = .95) +
+
+  ggplot(aes(x = value, y = 0)) +
+  stat_halfeye(point_interval = median_qi, .width = .95, 
+               color = "white") +
   geom_vline(xintercept = 0, linetype = 2) +
   scale_y_continuous(NULL, breaks = NULL) +
-  facet_grid(sexism~key) +
-  theme_black() +
-  theme(panel.grid = element_blank())
+  dark_theme_bw() +
+  theme(panel.grid = element_blank()) +
+  facet_grid(sexism~name)
 ```
 
 Now we have `f`, it's easy to get the typical numeric summaries for the differences.
@@ -682,7 +638,7 @@ f %>%
 
 We don't have $p$-values, but who needs them? All the differences are small in magnitude and have wide 95% intervals straddling zero.
 
-To get the difference scores Hayes presented on pages 498--500, one execute something like this.
+To get the difference scores Hayes presented on pages 498--500, one might execute something like this.
 
 ```{r, warning = F, message = F}
 post %>% 
@@ -705,13 +661,13 @@ post %>%
 
 Each of those was our Bayesian version of an iteration of what you might call $\theta_{D_i \rightarrow Y} | W$.
 
-## References {-}
-
-[Hayes, A. F. (2018). *Introduction to mediation, moderation, and conditional process analysis: A regression-based approach.* (2nd ed.). New York, NY, US: The Guilford Press.](http://afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html)
-
 ## Session info {-}
 
 ```{r}
 sessionInfo()
+```
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```
 

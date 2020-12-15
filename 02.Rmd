@@ -763,10 +763,10 @@ What we did was simulate 10 data sets worth of `govact` values, plot their densi
 Here's a **tidyverse** way to do Hayes' simulation from page 57. We're just using OLS regression with the `lm()` function. You could do this with Bayesian HMC estimation, but man would it take a while. For our first step, we'll define two custom functions.
 
 ```{r}
-# this first one will use the `sample_n()` function to randomly sample from `glbwarm`
+# this first one will use the `slice_sample()` function to randomly sample from `glbwarm`
 make_sample <- function(i) {
   set.seed(i)
-  sample_n(glbwarm, 50, replace = F)
+  slice_sample(glbwarm, n = 50, replace = F)
 }
 
 # this second function will fit our model, the same one from `model2.8`, to each of our subsamples

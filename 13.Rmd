@@ -6,7 +6,7 @@ options(width = 100)
 
 With his opening lines, Hayes prepared us:
 
-> At the end of any great fireworks show is the grand finale, where the pyrotechnicians throw everything remaining in their arsenal at you at once, leaving you amazed, dazed, and perhaps temporarily a little hard of hearing. Although this is not the final chapter of this book, I am now going to throw everything at you at once with an example of the most complicated conditional process model I will cover in this book. [@@hayesIntroductionMediationModeration2018, p. 469]
+> At the end of any great fireworks show is the grand finale, where the pyrotechnicians throw everything remaining in their arsenal at you at once, leaving you amazed, dazed, and perhaps temporarily a little hard of hearing. Although this is not the final chapter of this book, I am now going to throw everything at you at once with an example of the most complicated conditional process model I will cover in this book. [@hayesIntroductionMediationModeration2018, p. 469]
 
 Enjoy the fireworks.
 

@@ -16,7 +16,7 @@ Hayes closed the opening with:
 >
 > When thinking about whether a phenomenon or theory you are studying could be conceptualized as a mediation process, it is important to keep in mind that mediation is ultimately a causal explanation. It is assumed that the relationships in the system are causal, and, importantly, that $M$ is causally located *between* $X$ and $Y$. It must be assumed, if not also empirically substantiated, that $X$ causes $M$, which in turn causes $Y$. $M$ cannot possibly carry $X$’s effect on $Y$ if $M$ is not located causally between $X$ and $Y$. (pp. 78--81, *emphasis* in the original)
 
-## Estimation of the direce, indirect, and total effects of $X$
+## Estimation of the direct, indirect, and total effects of $X$
 
 Given the simple three-term mediation model, the statistical model is expressed in the two equations
 

@@ -1,11 +1,17 @@
 --- 
 title: "Recoding *Introduction to Mediation, Moderation, and Conditional Process Analysis*"
-subtitle: "version 1.1.0"
+subtitle: "version 1.2.0"
 author: ["A Solomon Kurz"]
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
-output: bookdown::gitbook
+output: 
+  bookdown::gitbook:
+    split_bib: yes
 documentclass: book
+bibliography: bib.bib
+biblio-style: apalike
+csl: apa.csl
+link-citations: yes
 geometry:
   margin = 0.5in
 urlcolor: blue
@@ -61,18 +67,37 @@ In this project, I use a handful of formatting conventions gleaned from [*R4DS*]
 
 ## Times change and so do we {-}
 
-I released the 1.0.0 version of this book in July of 2018. This 1.1.0 version includes a lot of changes. Most notably,
+For a brief rundown of the version history, we have:
 
-* all models have been refit with **brms** 2.10.3,
-* the introduction to Bayesian information criteria now reflects the updates introduced in **brms** 2.10.0,
-* I have updated the multivariate model code with the `mvbind()` and `mvbf()` functions,
-* I have made greater use of the handy **tidybayes** package for post-processing models,
-* I have updated and simplified a lot of the **tidyverse** code,
-* all fit objects have sequential names and are now saved in `.rda` files in the [`fits` folder](https://github.com/ASKurz/recoding-Hayes-2018/tree/master/fits) on GitHub,
-* I have substantially increased the amount of Hayes quotes,
+### 1.0.0.
+
+I released the 1.0.0 version of this book in July of 2018. It was a complete first draft.
+
+### 1.1.0.
+
+In December 21, 2019, came the 1.1.0 update. It included a lot of changes, the most notable of which were that,
+
+* all models were refit with **brms** 2.10.3,
+* the introduction to Bayesian information criteria reflected the updates introduced in **brms** 2.10.0,
+* I updated the multivariate model code with the `mvbind()` and `mvbf()` functions,
+* I made greater use of the handy **tidybayes** package for post-processing models,
+* I updated and simplified a lot of the **tidyverse** code,
+* all fit objects were assigned sequential names and were saved in `.rda` files in the [`fits` folder](https://github.com/ASKurz/recoding-Hayes-2018/tree/master/fits) on GitHub,
+* I substantially increased the amount of Hayes quotes,
 * I added more statistical formulas throughout the text,
 * I added a version of Chapter 14, which includes warnings about relying on cross-sectional mediation, and
-* the various **R** objects enjoy simpler and more standardized names.
+* the various **R** objects were assigned simpler and more standardized names.
+
+### 1.2.0.
+
+Welcome to version 1.2.0! Noteworthy changes are that
+
+* all models have been refit with **brms** 2.15.0;
+* we have updated the in-text citations and reference sections using [BibTex](http://www.bibtex.org/) [@BibTeX2020], [Better BibTeX](https://github.com/retorquere/zotero-better-bibtex) [@BetterBibTeXZotero2020], and [zotero](https://www.zotero.org/) [@ZoteroYourPersonal2020];
+* I fixed code breaks due to various updates in the **tidyverse** packages; and
+* I fixed a handful of typos and other small gaffes.
+
+### What's next?
 
 It's unclear what future versions of this book may hold. Candidates include
 
@@ -82,4 +107,27 @@ It's unclear what future versions of this book may hold. Candidates include
 * sterner warnings against cross-sectional mediation.
 
 We'll see. In the meantime, feel free to make suggestions or report typos and coding goofs at [https://github.com/ASKurz/recoding-Hayes-2018/issues](https://github.com/ASKurz/recoding-Hayes-2018/issues).
+
+## Thank-you's are in order {-}
+
+Before we move on, I'd like to thank the following for their helpful contributions:
+
+* Jose Storopoli ([\@storopoli](https://github.com/storopoli))
+
+For information on how you might help improve this ebook, go to [https://github.com/ASKurz/recoding-Hayes-2018/blob/master/CONTRIBUTING.md](https://github.com/ASKurz/recoding-Hayes-2018/blob/master/CONTRIBUTING.md).
+
+## License and citation {-}
+
+This book is licensed under the Creative Commons Zero v1.0 Universal license. You can learn the details, [here](https://github.com/ASKurz/recoding-Hayes-2018/blob/master/LICENSE). In short, you can use my work. Just make sure you give me the appropriate credit the same way you would for any other scholarly resource. Here's the citation information:
+
+```{r, eval = F}
+@book{kurzRecodingIntroduction2021,
+  title = {Recoding {{Introduction to Mediation, Moderation, and Conditional Process Analysis}}},
+  author = {Kurz, A. Solomon},
+  year = {2021},
+  month = {jul},
+  edition = {version 1.2.0},
+  url = {https://bookdown.org/ajkurz/recoding_Hayes_2018/}
+}
+```
 

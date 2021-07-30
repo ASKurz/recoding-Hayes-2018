@@ -587,7 +587,7 @@ post %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
-With this parameterization, it's a little difficult to the $a_j b$ estimates. None of them are in comparison to anything. However, this approach is quite useful once you compute their various difference scores.
+With this parameterization, it's a little difficult to interpret the $a_j b$ estimates. None of them are in comparison to anything. However, this approach is quite useful once you compute their various difference scores.
 
 ```{r, warning = F}
 # compute the difference scores

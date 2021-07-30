@@ -1,11 +1,3 @@
----
-title: "Chapter 01. Introduction"
-author: "A Solomon Kurz"
-date: "`r format(Sys.Date())`"
-output:
-  github_document
----
-
 # (PART) FUNDAMENTALS {-}
 
 # Introduction

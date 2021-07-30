@@ -480,7 +480,7 @@ The first two columns in Hayes's Table 7.5 contain the values he combined with t
 )
 ```
 
-Now we've go our `nd`, we'll get our posterior estimates for $Y$ with `fitted()`.
+Now we've got our `nd`, we'll get our posterior estimates for $Y$ with `fitted()`.
 
 ```{r}
 fitted(model7.3, newdata = nd)

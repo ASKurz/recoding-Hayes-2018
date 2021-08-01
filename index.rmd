@@ -92,7 +92,7 @@ In December 21, 2019, came the 1.1.0 update. It included a lot of changes, the m
 Welcome to version 1.2.0! Noteworthy changes are that
 
 * all models have been refit with **brms** 2.15.0;
-* we have updated the in-text citations and reference sections using [BibTex](http://www.bibtex.org/) [@BibTeX2020], [Better BibTeX](https://github.com/retorquere/zotero-better-bibtex) [@BetterBibTeXZotero2020], and [zotero](https://www.zotero.org/) [@ZoteroYourPersonal2020];
+* we have updated the in-text citations and reference sections using [BibTex](http://www.bibtex.org/) [@BibTeX2020], [Better BibTeX](https://github.com/retorquere/zotero-better-bibtex) [@heynsBetterBibTeXZotero2020], and [zotero](https://www.zotero.org/) [@ZoteroYourPersonal2020];
 * I fixed code breaks due to various updates in the **tidyverse** packages; and
 * I fixed a handful of typos and other small gaffes.
 

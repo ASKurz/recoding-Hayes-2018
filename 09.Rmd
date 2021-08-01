@@ -50,7 +50,7 @@ Y & = i_Y + b_1 (X - \overline X) + b_2 (W - \overline W) + b_3 (X - \overline X
 
 where $X' = (X - \overline X)$ and so on.
 
-```{r model9.1}
+```{r model9.1, warning = F, message = F}
 model9.1 <- 
   brm(data = glbwarm, 
       family = gaussian,
@@ -353,7 +353,7 @@ glbwarm <-
 
 Fit the model.
 
-```{r model9.6}
+```{r model9.6, warning = F, message = F}
 model9.6 <- 
   update(model9.1, 
          newdata = glbwarm,
@@ -388,7 +388,7 @@ glbwarm <-
 
 Now we're ready to `update()`.
 
-```{r model9.7}
+```{r model9.7, warning = F, message = F}
 model9.7 <- 
   update(model9.1, 
          newdata = glbwarm,
@@ -422,7 +422,7 @@ glbwarm <-
 
 If you've never used `rbinom()` before, execute `?rbinom` or look it up in your favorite web search engine. Here's our listwise deletion model, which corresponds to what you'd get from a typical OLS-based program.
 
-```{r model9.8, warning = F}
+```{r model9.8, warning = F, message = F}
 model9.8 <- 
   update(model9.6, 
          newdata = glbwarm,
@@ -538,7 +538,7 @@ None of this is a problem for **brms**. But instead of using the `model=i` synta
 
 It's trivial to add `sex`, its interaction with `negemot`, and the two covariates (i.e., `posemot` and `ideology`) to the model. We can even do it within `update()`.
 
-```{r model9.10}
+```{r model9.10, warning = F, message = F}
 model9.10 <- 
   update(model9.1, 
          newdata = glbwarm,
@@ -555,7 +555,7 @@ print(model9.10, digits = 3)
 
 On page 325, Hayes discussed the unique variance each of the two moderation terms accounted for after controlling for the other covariates. In order to get our Bayesian version of these, we'll have to fit two additional models, one after removing each of the interaction terms.
 
-```{r model9.11}
+```{r model9.11, warning = F, message = F}
 model9.11 <- 
   update(model9.10, 
          newdata = glbwarm,
@@ -720,7 +720,7 @@ If you look closely, you'll see `women_50 - women_30` is the same as `men_50 - m
 
 To fit the moderated moderation model in **brms**, just add to two new interaction terms to the `formula`.
 
-```{r model9.13}
+```{r model9.13, warning = F, message = F}
 model9.13 <- 
   update(model9.10, 
          newdata = glbwarm,

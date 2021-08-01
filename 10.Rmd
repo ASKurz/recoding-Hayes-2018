@@ -51,7 +51,7 @@ library(brms)
 
 With `model10.1` and `model10.2` we fit the multicategorical multivariable model and the multicategorical moderation models, respectively.
 
-```{r model10.1}
+```{r model10.1, warning = F, message = F}
 model10.1 <-
   brm(data = protest, 
       family = gaussian,
@@ -215,7 +215,7 @@ protest <-
 
 From here on, `model10.3` is the moderation model without the lower-order `d1` and `d2` terms; `model10.4` is the full moderation model. But we're going to be fitting both these models three different ways, based on how we center` sexism`. So for this first set where we centered `sexism` on 4.25, we'll give them the suffix `a`.
 
-```{r model10.3a}
+```{r model10.3a, warning = F, message = F}
 # the model without d1 + d2
 model10.3a <-
   update(model10.2,
@@ -279,7 +279,7 @@ protest <-
 
 Now fit the models.
 
-```{r model10.3b}
+```{r model10.3b, warning = F, message = F}
 # the model without d1 + d2
 model10.3b <-
   update(model10.2,
@@ -343,7 +343,7 @@ protest <-
 
 Fit the models.
 
-```{r model10.3c}
+```{r model10.3c, warning = F, message = F}
 # the model without d1 + d2
 model10.3c <-
   update(model10.2,
@@ -483,7 +483,8 @@ Summary tables like this are precise and very common in the literature. But you 
 t %>% 
   # this will help us order our y-axis
   mutate(parameter = factor(parameter,
-                            levels = c("d2:sexism_p", "d1:sexism_p", "sexism_p", "d2", "d1", "Intercept")),
+                            levels = c("d2:sexism_p", "d1:sexism_p", 
+                                       "sexism_p", "d2", "d1", "Intercept")),
          # this is just for aesthetics
          `w'` = str_c("w' = ", `w'`)) %>% 
   

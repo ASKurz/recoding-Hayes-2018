@@ -49,7 +49,7 @@ print(model12.1, digits = 3)
 
 Hayes interpreted the coefficient for `frame` through the lens of a $t$ statistic and accompanying $p$-value. We'll just plot the posterior. For the figures in this chapter, we'll take theme cues from the vignettes from Matthew Kay's [**tidybayes** package](https://mjskay.github.io/tidybayes/).
 
-```{r, fig.width = 4, fig.height = 2.5}
+```{r, fig.width = 4, fig.height = 2.5, warning = F, message = F}
 library(tidybayes)
 theme_set(theme_tidybayes() + cowplot::panel_border())
 

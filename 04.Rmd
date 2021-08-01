@@ -30,7 +30,7 @@ estress <- read_csv("data/estress/estress.csv")
 glimpse(estress)
 ```
 
-The `lowerCor()` function from the [**psych** package](https://CRAN.R-project.org/package=psych) [@R-psych] makes it easy to estimate the lower triangle of a correlation matrix.
+As we learned in [Section 2.3][Alternative explanations for association], the `psych::lowerCor()` function makes it easy to estimate the lower triangle of a correlation matrix.
 
 ```{r}
 psych::lowerCor(estress, digits = 3)
@@ -441,7 +441,7 @@ Behold the results.
 print(model4.6)
 ```
 
-Good old `brms::brm()` came through just fine. If you wanted to simulate data with a particular correlation structure for the `iv` variables, you might use the `mvnorm()` function from the [**MASS** package](https://CRAN.R-project.org/package=MASS) [@r-MASS], about which you might learn more [here](http://blog.revolutionanalytics.com/2016/02/multivariate_data_with_r.html).
+Good old `brms::brm()` came through just fine. If you wanted to simulate data with a particular correlation structure for the `iv` variables, you might use the `mvnorm()` function from the [**MASS** package](https://CRAN.R-project.org/package=MASS) [@R-MASS], about which you might learn more [here](http://blog.revolutionanalytics.com/2016/02/multivariate_data_with_r.html).
 
 ### Multiple $Y$ variables.
 

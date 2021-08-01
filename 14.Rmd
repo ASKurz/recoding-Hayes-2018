@@ -56,7 +56,7 @@ Within the paradigm I have introduces throughout this text, "testing" effects is
 
 ### Step 7: Quantify and test conditional direct effects (if relevant).
 
-"If your model includes moderation of the direct effect of X, you will want to probe this interaction by estimating the conditional direct effects" (p. 513).
+"If your model includes moderation of the direct effect of $X$, you will want to probe this interaction by estimating the conditional direct effects" (p. 513).
 
 ### Step 8: Tell your story.
 
@@ -149,7 +149,7 @@ Hayes also discussed the cross-lag panel model for longitudinal mediation [e.g.,
 
 > For a more detailed discussion of mediation in panel designs like this, see Cole and Maxwell [-@coleTestingMediationalModels2003], Little, Preacher, Selig, and Card [-@little2007new], and Selig and Preacher [-@seligMediationModelsLongitudinal2009].
 >
-> Another analytical option is available when $M$ and $Y$ are measured at least three times, regardless of the number of measurements of $X$. *Parallel process latent growth modeling* allows for $X$ (either in a single measurement or manipulation, or its change over time) to influence the trajectory in change in the mediator, which in turn can influence the trajectory in the change in $Y$ over time. [Yes, **brms** can do this]. See Cheong et al. cheongInvestigationMediationalProcesses2003 and Selig and Preacher (2009) for discussions of the mathematics of mediation analysis in a latent growth context. (p. 545, *emphasis* in the original)
+> Another analytical option is available when $M$ and $Y$ are measured at least three times, regardless of the number of measurements of $X$. *Parallel process latent growth modeling* allows for $X$ (either in a single measurement or manipulation, or its change over time) to influence the trajectory in change in the mediator, which in turn can influence the trajectory in the change in $Y$ over time. [Yes, **brms** can do this]. See Cheong et al. @cheongInvestigationMediationalProcesses2003 and Selig and Preacher (2009) for discussions of the mathematics of mediation analysis in a latent growth context. (p. 545, *emphasis* in the original)
 
 ## Dichotomous, ordinal, count, and survival outcomes
 

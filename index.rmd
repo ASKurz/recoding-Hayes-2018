@@ -19,7 +19,6 @@ highlight: tango
 header-includes:
   \usepackage{underscore}
   \usepackage[T1]{fontenc}
-link-citations: yes
 github-repo: ASKURZ/recoding-Hayes-2018
 twitter-handle: SolomonKurz
 description: "This project is an effort to connect his Hayes's conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner's brms, and use the tidyverse for data manipulation and plotting."
@@ -69,11 +68,11 @@ In this project, I use a handful of formatting conventions gleaned from [*R4DS*]
 
 For a brief rundown of the version history, we have:
 
-### 1.0.0.
+### 1.0.0. {-}
 
 I released the 1.0.0 version of this book in July of 2018. It was a complete first draft.
 
-### 1.1.0.
+### 1.1.0. {-}
 
 In December 21, 2019, came the 1.1.0 update. It included a lot of changes, the most notable of which were that,
 
@@ -88,7 +87,7 @@ In December 21, 2019, came the 1.1.0 update. It included a lot of changes, the m
 * I added a version of Chapter 14, which includes warnings about relying on cross-sectional mediation, and
 * the various **R** objects were assigned simpler and more standardized names.
 
-### 1.2.0.
+### 1.2.0. {-}
 
 Welcome to version 1.2.0! Noteworthy changes are that
 
@@ -97,7 +96,7 @@ Welcome to version 1.2.0! Noteworthy changes are that
 * I fixed code breaks due to various updates in the **tidyverse** packages; and
 * I fixed a handful of typos and other small gaffes.
 
-### What's next?
+### What's next? {-}
 
 It's unclear what future versions of this book may hold. Candidates include
 

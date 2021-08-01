@@ -297,7 +297,7 @@ fixef(model9.1)["negemot:age", "Est.Error"]
 fixef(model9.2)["negemot_c:age_c", "Est.Error"]
 ```
 
-For more details, you might also see the [*Standardizing predictors and outputs*](https://mc-stan.org/docs/2_25/stan-users-guide/standardizing-predictors-and-outputs.html) subsection of Chapter 22 in the *Stan user's guide* [@standevelopmentteamStanUserGuide2020]--[Stan](http://mc-stan.org), of course, being the computational engine underneath our **brms** hood.
+For more details, you might also see the [*Standardizing predictors and outputs*](https://mc-stan.org/docs/2_25/stan-users-guide/standardizing-predictors-and-outputs.html) subsection of Chapter 22 in the *Stan user's guide* [@standevelopmentteamStanUserGuide2021]--[Stan](http://mc-stan.org), of course, being the computational engine underneath our **brms** hood.
 
 ### The effect of mean-centering on $b_1$, $b_2$, and their ~~standard errors~~ posterior $SD$s.
 
@@ -409,7 +409,7 @@ The results correspond nicely to those in Table 9.1, too.
 
 ## A caution on manual centering and standardization [because of missing data]
 
-It's worthwhile considering the issue of listwise deletion when data are partially missing. The **brms** default is to delete rows with missingness, `NA` in **R**, for the predictors. However, **brms** allows users to perform one-step Bayesian imputation for missing values using the `mi()` syntax. You can learn all the details in Bürkner's [-@Bürkner2020HandleMissingValues] vignette, [*Handle missing values with brms*](https://CRAN.R-project.org/package=brms/vignettes/brms_missings.html). First we'll fit see what happens when you fit a model in **brms** when some of the `negemot_z` values are missing, but without using the `mi()` syntax. And of course before we do that, we'll make a `negemot_z_missing` variable, which is identical to `negemot_z`, but about 10% of the values are missing.
+It's worthwhile considering the issue of listwise deletion when data are partially missing. The **brms** default is to delete rows with missingness, `NA` in **R**, for the predictors. However, **brms** allows users to perform one-step Bayesian imputation for missing values using the `mi()` syntax. You can learn all the details in Bürkner's [-@Bürkner2021HandleMissingValues] vignette, [*Handle missing values with brms*](https://CRAN.R-project.org/package=brms/vignettes/brms_missings.html). First we'll fit see what happens when you fit a model in **brms** when some of the `negemot_z` values are missing, but without using the `mi()` syntax. And of course before we do that, we'll make a `negemot_z_missing` variable, which is identical to `negemot_z`, but about 10% of the values are missing.
 
 ```{r}
 set.seed(9)
@@ -440,7 +440,7 @@ print(model9.8)
 
 In this case, the model results were similar to those based on all the data because we used `rbinom()` to delete the predictor values completely at random. With real data and real-live missing data mechanisms, the situation isn't often so rosy. But anyway, the real story, here, is the `Data: glbwarm (Number of observations: n)` line at the top of the `print()` outputs. The number, $n$, was 815 in the model using all the data and 731 for the one based on listwise deletion. That's a lot of missing information.
 
-The `mi()` syntax will allow us to use all the rows in a model, even if one or more of the predictors contain missing values. The syntax makes the model a multivariate model in that now we'll be modeling both `govact_z` *and* `negemot_z_missing`. As we've covered in prior chapters, there are multiple ways to write a multivariate model in **brms** [see @Bürkner2020Multivariate]. One nice way is to write the model for each criterion separately in a `bf()` statement. You combine the `bf()` statements together with the `+` operator. And for models like the ones in Hayes's text, you'll also want to tack on `set_rescor(FALSE)`. You can do this within the `brm()` function, as usual. But I find that this clutters the code up more than I like. So another approach is to save the combination of `bf()` statements as an object.
+The `mi()` syntax will allow us to use all the rows in a model, even if one or more of the predictors contain missing values. The syntax makes the model a multivariate model in that now we'll be modeling both `govact_z` *and* `negemot_z_missing`. As we've covered in prior chapters, there are multiple ways to write a multivariate model in **brms** [see @Bürkner2021Multivariate]. One nice way is to write the model for each criterion separately in a `bf()` statement. You combine the `bf()` statements together with the `+` operator. And for models like the ones in Hayes's text, you'll also want to tack on `set_rescor(FALSE)`. You can do this within the `brm()` function, as usual. But I find that this clutters the code up more than I like. So another approach is to save the combination of `bf()` statements as an object.
 
 ```{r}
 my_model <- 

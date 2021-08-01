@@ -105,7 +105,7 @@ Within the **brms** framework, $\sigma$ of the Gaussian likelihood is considered
 
 When you have a regression model with multiple Gaussian criterion variables, those variables will typically have some degree of covariation. It's often termed residual covariance, particularly within the structural equation modeling paradigm [^2.2]. But when you have an intercept-only regression model with multiple variables, that residual covariance is just a covariance. And when you express those variation parameters in terms of standard deviations $\sigma$, their covariance is expressed as a correlation $\rho$. Since our multivariate model is of two variables, we have one $\rho$ parameter for the $\sigma$s, `rescor(negemot,govact)`, which is our Bayesian analogue to the Pearson's correlation.
 
-To learn more about the multivariate syntax in **brms**, check out Bürkner's [-@Bürkner2020Multivariate] vignette,  [*Estimating multivariate models with brms*](https://CRAN.R-project.org/package=brms/vignettes/brms_multivariate.html), or execute `vignette("brms_multivariate")`. Or just hold your horses until we get into mediation. All of our mediation models will use one version of the multivariate syntax or another.
+To learn more about the multivariate syntax in **brms**, check out Bürkner's [-@Bürkner2021Multivariate] vignette,  [*Estimating multivariate models with brms*](https://CRAN.R-project.org/package=brms/vignettes/brms_multivariate.html), or execute `vignette("brms_multivariate")`. Or just hold your horses until we get into mediation. All of our mediation models will use one version of the multivariate syntax or another.
 
 But to clarify the output, above:
 
@@ -1082,11 +1082,11 @@ You could, of course, do all this with the LOO.
 
 ### Normality.
 
-The **brms** package is quite general and allows users to fit models from a variety of likelihoods other than the Gaussian. For example, users can accommodate outliers/extreme values with [Student's t regression](https://solomonkurz.netlify.com/post/robust-linear-regression-with-the-robust-student-s-t-distribution/). You can do count regression with the Poisson or the negative binomial... For more, see McElreath's lecture [introducing the generalized linear model](https://www.youtube.com/watch?v=DyrUkqK9Tj4&t=254s&frags=pl%2Cwn) or Bürkner's [-@Bürkner2020Parameterization] vignette, [*Parameterization of response distributions in brms*](https://CRAN.R-project.org/package=brms/vignettes/brms_families.html)
+The **brms** package is quite general and allows users to fit models from a variety of likelihoods other than the Gaussian. For example, users can accommodate outliers/extreme values with [Student's t regression](https://solomonkurz.netlify.com/post/robust-linear-regression-with-the-robust-student-s-t-distribution/). You can do count regression with the Poisson or the negative binomial... For more, see McElreath's lecture [introducing the generalized linear model](https://www.youtube.com/watch?v=DyrUkqK9Tj4&t=254s&frags=pl%2Cwn) or Bürkner's [-@Bürkner2021Parameterization] vignette, [*Parameterization of response distributions in brms*](https://CRAN.R-project.org/package=brms/vignettes/brms_families.html)
 
 ### Homoscedasticity.
 
-The **brms** package can also accommodate homoscedasticity with distributional modeling. In short, one simply models $\sigma$ in addition to the mean, $\mu$. See Bürkner's handy [-@Bürkner2020Distributional] vignette, [*Estimating distributional models with brms*](https://CRAN.R-project.org/package=brms/vignettes/brms_distreg.html) on the topic.
+The **brms** package can also accommodate homoscedasticity with distributional modeling. In short, one simply models $\sigma$ in addition to the mean, $\mu$. See Bürkner's handy [-@Bürkner2021Distributional] vignette, [*Estimating distributional models with brms*](https://CRAN.R-project.org/package=brms/vignettes/brms_distreg.html) on the topic.
 
 ### Independence.
 

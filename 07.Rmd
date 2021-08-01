@@ -231,7 +231,7 @@ post %>%
 
 We'll use the `update()` function to hastily fit `model7.2` and `model7.3`.
 
-```{r model7.2}
+```{r model7.2, message = F, warning = F}
 model7.2 <-
   update(model7.1, 
          newdata = disaster,
@@ -408,7 +408,7 @@ bayes_R2(model7.3) %>% round(digits = 3)
 bayes_R2(model7.4) %>% round(digits = 3)
 ```
 
-If you're bothered by the differences resulting from sampling variation, you might increase the number of HMC iterations from the 2000-per-chain default. Doing so might look something like this.
+If you're bothered by the differences resulting from sampling variation, you might increase the number of HMC iterations from the 2,000-per-chain default. Doing so might look something like this.
 
 ```{r, eval = F}
 model7.3 <-
@@ -469,7 +469,7 @@ On page 244, Hayes discussed using the 16th, 50th, and 84th percentiles for the 
 quantile(disaster$skeptic, probs = c(.16, .5, .84))
 ```
 
-The first two columns in Hayes's Table 7.5 contain the values he combined with the point estimates of his model to get the $\hat Y$ column. The way we'll push those values through `model7.3`'s posterior is with `brms::fitted()`. As a preparatory step, we'll put the predictor values in a data object, `nd`.
+The first two columns in Hayes's Table 7.5 contain the values he combined with the point estimates of his model to get the $\widehat Y$ column. The way we'll push those values through `model7.3`'s posterior is with `brms::fitted()`. As a preparatory step, we'll put the predictor values in a data object, `nd`.
 
 ```{r}
 (

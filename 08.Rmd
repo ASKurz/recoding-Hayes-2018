@@ -135,7 +135,7 @@ The `head()` function returned six rows, each one corresponding to the credible 
 5. $\hat{Y}$ = `r round(post[5, 1], 3)` + `r round(post[5, 2], 3)`$X$ + `r round(post[5, 3], 3)`$W$ + `r round(post[5, 4], 3)`*XW*
 6. $\hat{Y}$ = `r round(post[6, 1], 3)` + `r round(post[6, 2], 3)`$X$ + `r round(post[6, 3], 3)`$W$ + `r round(post[6, 4], 3)`*XW*
 
-Each row of `post`, each iteration or posterior draw, yields a full model equation that is a credible description of the data--or at least as credible as we can get within the limits of the model we have specified, our priors (which we typically cop out on and just use defaults in this project), and how well those fit when applied to the data at hand. So when we use **brms** convenience functions like `fitted()`, we pass specific predictor values through those 4000 unique model equations, which returns 4000 similar but distinct expected $Y$-values. So although a nice way to summarize those 4000 values is with summaries such as the posterior mean/median and 95% intervals, another way is to just plot an individual regression line for each of the iterations. That is what's going on when we depict out models with a spaghetti plot.
+Each row of `post`, each iteration or posterior draw, yields a full model equation that is a credible description of the data--or at least as credible as we can get within the limits of the model we have specified, our priors (which we typically cop out on and just use defaults in this project), and how well those fit when applied to the data at hand. So when we use **brms** convenience functions like `fitted()`, we pass specific predictor values through those 4,000 unique model equations, which returns 4,000 similar but distinct expected $Y$-values. So although a nice way to summarize those 4,000 values is with summaries such as the posterior mean/median and 95% intervals, another way is to just plot an individual regression line for each of the iterations. That is what's going on when we depict out models with a spaghetti plot.
 
 The thing I like about spaghetti plots is that they give a three-dimensional sense of the posterior. Note that each individual line is very skinny and semitransparent. When you pile a whole bunch of them atop each other, the peaked or most credible regions of the posterior are the most saturated in color. Less credible posterior regions almost seamlessly merge into the background. Also, note how the combination of many similar but distinct straight lines results in a bowtie shape. Hopefully this clarifies where that shape’s been coming from when we use `geom_ribbon()` to plot the 95% intervals.
 
@@ -161,9 +161,9 @@ disaster <-
   mutate(frame_ep = 1 - frame)
 ```
 
-With `frame_ep` in hand, we’re ready to refit the model.
+With `frame_ep` in hand, we're ready to refit the model.
 
-```{r model8.2}
+```{r model8.2, warning = F, message = F}
 model8.2 <-
   update(model8.1, 
          newdata = disaster,
@@ -650,7 +650,7 @@ post %>%
 
 A nice feature of **brms** is you can transform your data right within the `brm()` or `update()` functions. Here we'll make our two new main-effects-coded variables, `policy_me` and `kerry_me`, with the `mutate()` function right within `update()`.
 
-```{r model8.6}
+```{r model8.6, warning = F, message = F}
 model8.6 <-
   update(model8.5,
          newdata = caskets %>%
@@ -711,7 +711,7 @@ fixef(model8.6)[4, ] %>% round(digits = 3)
 
 However, the results aren't exactly the same because of simulation error. If you were working on a project requiring high precision, increase the number of posterior iterations. To demonstrate, here we'll increase each chain's post-warmup iteration count by an order of magnitude, resulting in 80,000 post-warmup iterations rather than the default 4,000.
 
-```{r model8.7}
+```{r model8.7, warning = F, message = F}
 model8.7 <-
   update(model8.5,
          chains = 4, cores = 4, warmup = 1000, iter = 21000,

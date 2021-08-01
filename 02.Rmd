@@ -130,7 +130,7 @@ summary(model2.2)
 
 Here's the Bayesian model in **brms**.
 
-```{r model2.3, echo = F}
+```{r, echo = F, eval = F}
 # save(model2.3, file = "fits/model02.03.rda")
 # rm(model2.3)
 
@@ -328,7 +328,7 @@ post %>%
   theme(legend.position = "none")
 ```
 
-For even more ideas, see [Matthew Kay](https://twitter.com/mjskay)'s [**tidybayes** package](https://mjskay.github.io/tidybayes/articles/tidybayes.html). 
+For even more ideas, see [Matthew Kay](https://twitter.com/mjskay)'s [**tidybayes**](https://mjskay.github.io/tidybayes/articles/tidybayes.html) and [**ggdist**](https://mjskay.github.io/ggdist/) packages. 
 
 As Hayes discussed on page 42, you can also get a sense of the model estimates for women and men with a little addition. Here we continue to use the `round()` function to simplify the output.
 
@@ -457,7 +457,7 @@ print(model2.7, digits = 3)
 
 For our purposes, the action is in the 'rescor($i$, $j$)' portions of the 'Family Specific Parameters' section.
 
-Anyway, if you wanted to get all the Pearson's correlations among the `glbwarm` variables, rather than piecewise `cor()` approach, you could use the `lowerCor()` function from the [**psych** package](https://cran.r-project.org/web/packages/psych/index.html).
+Anyway, if you wanted to get all the Pearson's correlations among the `glbwarm` variables, rather than piecewise `cor()` approach, you could use the `lowerCor()` function from the [**psych** package](https://cran.r-project.org/web/packages/psych/index.html) [@R-psych].
 
 ```{r}
 psych::lowerCor(glbwarm[, 1:7], digits = 3)

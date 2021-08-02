@@ -271,7 +271,7 @@ Happily, these results are closer to those in the text than with the previous ex
 
 **Note**. Hayes could have made this clearer in the text, but the `estress` model he referred to in this section was the one from way back in [Section 3.5][An example with continuous $X$: Economic stress among small-business owners], _not_ the one from earlier in this chapter.
 
-One way to get a standardized solution is to standardize the variables in the data and then fit the model with those standardized variables. To do so, we'll revisit our custom `standardize()`, put it to work, and fit the standardized version of the model from section 3.5, which we'll call `model4.4`.
+One way to get a standardized solution is to standardize the variables in the data and then fit the model with those standardized variables. To do so, we'll revisit our custom `standardize()`, put it to work, and fit the standardized version of the model from Section 3.5, which we'll call `model4.4`.
 
 ```{r, message = F, warning = F}
 # make the function

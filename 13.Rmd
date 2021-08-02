@@ -423,8 +423,7 @@ post <-
          a5b = `b_respappr_d2:sexism` * b_liking_respappr) 
 
 post %>% 
-  pivot_longer(a4b:a5b,
-               names_to = "parameter") %>% 
+  pivot_longer(a4b:a5b, names_to = "parameter") %>% 
   group_by(parameter) %>% 
   mean_qi(value) %>% 
   mutate_if(is.double, round, digits = 3) %>% 

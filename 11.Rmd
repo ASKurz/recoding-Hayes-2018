@@ -203,7 +203,7 @@ post %>%
   select(b_perform_dysfunc, `-0.7`:`0.7`) %>% 
   pivot_longer(-b_perform_dysfunc) %>% 
   mutate(negexp = name %>% as.double(),
-         iter = rep(1:4000, times = 2)) %>% 
+         iter   = rep(1:4000, times = 2)) %>% 
   filter(iter < 401) %>% 
   
   ggplot(aes(x = negexp, group = iter)) +

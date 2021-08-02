@@ -450,7 +450,7 @@ We haven't spelled it out, but the $b$ parameter is currently labeled `b_liking_
 ```{r, warning = F}
 post <-
   post %>%
-  mutate(b   = b_liking_respappr) %>% 
+  mutate(b = b_liking_respappr) %>% 
   mutate(a1b = a1 * b,
          a2b = a2 * b)
 

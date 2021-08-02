@@ -239,8 +239,8 @@ For our version of Figure 8.5, we'll need to adjust our `nd` data for `fitted()`
 ```{r}
 (
   nd <-
-  crossing(negemot  = c(1, 6),
-           age      = c(30, 50, 70)) %>% 
+  crossing(negemot = c(1, 6),
+           age     = c(30, 50, 70)) %>% 
   mutate(posemot  = mean(glbwarm$posemot),
          ideology = mean(glbwarm$ideology),
          sex      = mean(glbwarm$sex))
@@ -508,7 +508,7 @@ So then computing the main effect for policy information using the simple effect
 
 ```{r, warning = F}
 post %>% 
-  transmute(main_effect = ((Y_bar_4 - Y_bar_3) + (Y_bar_2 - Y_bar_1))/2) %>% 
+  transmute(main_effect = ((Y_bar_4 - Y_bar_3) + (Y_bar_2 - Y_bar_1)) / 2) %>% 
   mean_qi(main_effect) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
@@ -526,7 +526,7 @@ The main effect of for candidate is similarly computed using either approach.
 
 ```{r, warning = F}
 post %>% 
-  transmute(main_effect = ((Y_bar_4 - Y_bar_2) + (Y_bar_3 - Y_bar_1))/2) %>% 
+  transmute(main_effect = ((Y_bar_4 - Y_bar_2) + (Y_bar_3 - Y_bar_1)) / 2) %>% 
   mean_qi(main_effect) %>% 
   mutate_if(is.double, round, digits = 3)
 

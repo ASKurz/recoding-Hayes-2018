@@ -149,14 +149,14 @@ Let's get down to business and examine the indirect effect, the $ab$ pathway. In
 You can isolate them with `fixef()[i]`.
 
 ```{r}
-fixef(model3.1)[5 , ]
-fixef(model3.1)[3 , ]
+fixef(model3.1)[5, ]
+fixef(model3.1)[3, ]
 ```
 
 So the naive approach would be to just multiply them.
 
 ```{r}
-(fixef(model3.1)[5 , ] * fixef(model3.1)[3 , ]) %>% round(digits = 3)
+(fixef(model3.1)[5, ] * fixef(model3.1)[3, ]) %>% round(digits = 3)
 ```
 
 Now, this does get us the correct 'Estimate' (i.e., posterior mean). However, the posterior $SD$ and 95% intervals are off. If you want to do this properly, you need to work with the poster samples themselves. We do that with the `posterior_samples()` function.

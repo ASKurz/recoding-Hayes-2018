@@ -106,7 +106,7 @@ fitted(model11.1,
   theme_bw() +
   theme(panel.grid = element_blank(),
         strip.background = element_rect(color = "transparent", fill = "transparent")) +
-  facet_wrap(~negexp)
+  facet_wrap(~ negexp)
 ```
 
 Also, the plot theme in this chapter is a nod to the style [John Kruschke](http://www.indiana.edu/~kruschke/DoingBayesianDataAnalysis/) frequently uses in his papers and texts [e.g., @kruschkeDoingBayesianData2015].
@@ -176,7 +176,7 @@ post %>%
   theme_bw() +
   theme(panel.grid = element_blank(),
         strip.background = element_rect(color = "transparent", fill = "transparent")) +
-  facet_grid(w~name)
+  facet_grid(w ~ name)
 ```
 
 Now the posterior distribution for each is on full display.
@@ -357,7 +357,7 @@ post %>%
         panel.grid = element_blank(),
         strip.background = element_rect(color = "transparent", fill = "transparent"),
         strip.text = element_text(hjust = 0)) +
-  facet_wrap(~w, nrow = 1)
+  facet_wrap(~ w, nrow = 1)
 ```
 
 This, of course, leads us right into the next section.

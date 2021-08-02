@@ -251,7 +251,7 @@ f1 %>%
                fill = "grey50", color = "white") +
   geom_vline(xintercept = 0, linetype = 2) +
   scale_y_continuous(NULL, breaks = NULL) +
-  facet_grid(sexism~name) +
+  facet_grid(sexism ~ name) +
   dark_theme_bw() +
   theme(panel.grid = element_blank())
 ```
@@ -387,7 +387,7 @@ indirect %>%
   dark_theme_bw() +
   theme(legend.position = "none",
         panel.grid = element_blank()) +
-  facet_grid(~name)
+  facet_grid(~ name)
 ```
 
 Do not that unlike the figure in the text, we're only displaying the conditional indirect effects. Once you include the 95% intervals, things get too cluttered to add in other effects. Here's how we might make our version of Table 13.2 based on posterior means.
@@ -473,7 +473,7 @@ post %>%
   dark_theme_bw() +
   theme(panel.grid.minor.x = element_blank(),
         panel.grid.major.x = element_blank()) +
-  facet_wrap(~name)
+  facet_wrap(~ name)
 ```
 
 ## Relative conditional direct effects
@@ -554,7 +554,7 @@ post %>%
   dark_theme_bw() +
   theme(legend.position = "none",
         panel.grid = element_blank()) +
-  facet_grid(~name)
+  facet_grid(~ name)
 ```
 
 Holy smokes, them are some wide 95% CIs! No wonder the information criteria and $R^2$ comparisons were so uninspiring. 
@@ -592,7 +592,7 @@ f %>%
        y = expression(paste("Evaluation of the Attorney (", italic(Y), ")"))) +
   dark_theme_bw() +
   theme(panel.grid = element_blank()) +
-  facet_wrap(~condition)
+  facet_wrap(~ condition)
 ```
 
 Relative to the text, we expanded the range of the y-axis a bit to show more of that data (and there's even more data outside of our expanded range). Also note how after doing so and after including the 95% CI bands, the crossing regression line effect in Hayes's Figure 13.5 isn't as impressive looking any more.
@@ -633,7 +633,7 @@ f %>%
   scale_y_continuous(NULL, breaks = NULL) +
   dark_theme_bw() +
   theme(panel.grid = element_blank()) +
-  facet_grid(sexism~name)
+  facet_grid(sexism ~ name)
 ```
 
 Now we have `f`, it's easy to get the typical numeric summaries for the differences.

@@ -79,7 +79,7 @@ d %>%
                   ylim = c(0, 16)) +
   labs(x = expression(italic(X)),
        y = expression(hat(italic(Y)))) +
-  facet_wrap(~strip) +
+  facet_wrap(~ strip) +
   theme_07 +
   # because we didn't alter the `legend.position` argument in our `theme_07`, 
   # we need to use `theme()` to remove it
@@ -636,7 +636,7 @@ f %>%
   labs(subtitle = "The effect of frame on justify given three different values of skeptic",
        x = NULL) +
   theme_07 +
-  facet_wrap(~skeptic)
+  facet_wrap(~ skeptic)
 ```
 
 If you prefer summary information instead of plots, you might just use `tidybayes::median_qi()`.
@@ -766,7 +766,7 @@ fitted(model7.3, newdata = nd) %>%
        y = "Strength of Justification\nfor Withholding Aid") +
   theme_07 +
   theme(legend.position = "top") +
-  facet_wrap(~frame)
+  facet_wrap(~ frame)
 ```
 
 When we separate out the data this way, it really does appear that when `frame == 1`, the `justify` values do increase as the `skeptic` values increase, but not so much when `frame == 0`. We can use the same plotting approach, but this time with the results from the non-interaction multivariable model, `model7.2`.
@@ -795,7 +795,7 @@ fitted(model7.2, newdata = nd) %>%
        y = "Strength of Justification\nfor Withholding Aid") +
   theme_07 +
   theme(legend.position = "top") +
-  facet_wrap(~frame)
+  facet_wrap(~ frame)
 ```
 
 This time when we allowed the intercept but not the slope to vary by `frame`, it appears the regression lines are missing part of the story. They look okay, but it appears that the red line on the left is sloping up to quickly and that the cream line on the right isn't sloping steeply enough. We have missed an insight.
@@ -833,7 +833,7 @@ fitted(model7.3, newdata = nd, summary = F) %>%
   labs(subtitle = "The effect of frame on justify given three different values of skeptic",
        x = NULL) +
   theme_07 +
-  facet_wrap(~skeptic)
+  facet_wrap(~ skeptic)
 ```
 
 With the pick pick-a-point approach one could fixate on whether zero was a credible value within the posterior, given a particular `skeptic` value. And yet zero is just one point in the parameter space. One might also focus on the whole shapes of the posteriors of these three `skeptic` values. You could focus on where the most credible values (i.e., those at and around their peaks) are on the number line (i.e., the effect sizes) and you could also focus on the relative widths of the distributions (i.e., the precision with which the effect sizes are estimated). These sensibilities can apply to the JN technique, as well. Sure, we might be interested in how credible zero is. But there's a lot more to notice, too.

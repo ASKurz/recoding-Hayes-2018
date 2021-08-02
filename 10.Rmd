@@ -95,7 +95,7 @@ r2 %>%
   ggplot(aes(x = value)) +
   geom_density(size = 0, fill = "grey33") +
   scale_y_continuous(NULL, breaks = NULL) +
-  facet_wrap(~name, scales = "free_y") +
+  facet_wrap(~ name, scales = "free_y") +
   theme_minimal()
 ```
 
@@ -190,7 +190,7 @@ f %>%
   labs(x = expression(paste("Perceived Pervasiveness of Sex Discrimination in Society (", italic(W), ")")),
        y = "Evaluation of the Attorney") +
   theme_minimal() +
-  facet_wrap(~condition)
+  facet_wrap(~ condition)
 ```
 
 By adding the data to the plots, they are both more informative and now serve as a posterior predictive check.
@@ -495,7 +495,7 @@ t %>%
        y = NULL) +
   theme_minimal() +
   theme(axis.text.y = element_text(hjust = 0)) +
-  facet_wrap(~`w'`, nrow = 1)
+  facet_wrap(~ `w'`, nrow = 1)
 ```
 
 Notice how this arrangement makes it easiest to compare coefficients within models. If we wanted to make it easier to compare coefficients across models, we might arrange the plot like so.
@@ -513,7 +513,7 @@ t %>%
        y = NULL) +
   theme_minimal() +
   theme(axis.text.y = element_text(hjust = 0)) +
-  facet_wrap(~parameter, ncol = 1)
+  facet_wrap(~ parameter, ncol = 1)
 ```
 
 Oh man--with sweet plots like these, who needs tables! This makes it much easier to see what happened as we changed values we centered `sexism` on. In the middle paragraph on page 374, Hayes pointed out "that $b_1$ and $b_2$ differ in these analyses, but $b_3$, $b_4$, and $b_5$ are unaffected by the centering". Our coefficient plot clarified that in a way I don't think a table ever could. But before we move on, let's back up a little in the text.
@@ -822,7 +822,7 @@ f %>%
   coord_cartesian(xlim = c(4, 6)) +
   labs(x = expression(paste("Perceived Pervasiveness of Sex Discrimination in Society (", italic(X), ")")),
        y = "Evaluation of the Attorney") +
-  facet_wrap(~condition) +
+  facet_wrap(~ condition) +
   theme_minimal()
 ```
 

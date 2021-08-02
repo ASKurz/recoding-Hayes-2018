@@ -221,7 +221,7 @@ post %>%
        x = NULL) +
   dark_theme_gray() +
   theme(panel.grid = element_blank()) +
-  facet_wrap(~name, ncol = 3)
+  facet_wrap(~ name, ncol = 3)
 ```
 
 On page 135, Hayes revisited the model from [Section 3.3][Example with dichotomous $X$: The influence of presumed media influence]. We'll have to reload the data and refit that model to follow along. First, load the data.

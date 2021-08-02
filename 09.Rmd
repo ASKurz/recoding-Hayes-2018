@@ -458,7 +458,7 @@ model9.9 <-
       family = gaussian,
       my_model,
       cores = 4,
-      file = "model09.09")
+      file = "fits/model09.09")
 ```
 
 Let's see what we've done.

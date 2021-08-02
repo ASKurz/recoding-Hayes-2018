@@ -526,7 +526,7 @@ div.csl-indent {
 <p>A little indexing with the <code>posterior_summary()</code> function will get us the Bayesian correlation with its posterior <span class="math inline">\(SD\)</span> and intervals.</p>
 <div class="sourceCode" id="cb278"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb278-1"><a href="more-than-one-mediator.html#cb278-1" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_summary</span>(model5<span class="fl">.1</span>)[<span class="st">&quot;rescor__pmi__import&quot;</span>, ] <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##  Estimate Est.Error      Q2.5     Q97.5 
-##     0.274     0.085     0.100     0.432</code></pre>
+##     0.278     0.082     0.115     0.431</code></pre>
 <p>As with single mediation models, the multiple mediation model requires we carefully construct the formula for each criterion. Here we’ll use the multiple <code>bf()</code> approach from Chapter 3.</p>
 <div class="sourceCode" id="cb280"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb280-1"><a href="more-than-one-mediator.html#cb280-1" aria-hidden="true" tabindex="-1"></a>m1_model <span class="ot">&lt;-</span> <span class="fu">bf</span>(import   <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> cond)</span>
 <span id="cb280-2"><a href="more-than-one-mediator.html#cb280-2" aria-hidden="true" tabindex="-1"></a>m2_model <span class="ot">&lt;-</span> <span class="fu">bf</span>(pmi      <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> cond)</span>
@@ -552,20 +552,20 @@ div.csl-indent {
 ## 
 ## Population-Level Effects: 
 ##                    Estimate Est.Error l-95% CI u-95% CI  Rhat Bulk_ESS Tail_ESS
-## reaction_Intercept   -0.143     0.541   -1.172    0.904 1.002     7069     3209
-## import_Intercept      3.907     0.213    3.500    4.322 1.001     7880     2875
-## pmi_Intercept         5.378     0.166    5.057    5.697 1.001     9490     2980
-## reaction_import       0.324     0.071    0.183    0.459 1.002     7690     3332
-## reaction_pmi          0.396     0.095    0.206    0.583 1.000     6487     2884
-## reaction_cond         0.100     0.241   -0.382    0.576 1.001     9043     2545
-## import_cond           0.624     0.305    0.027    1.225 1.001     7996     3082
-## pmi_cond              0.475     0.233    0.021    0.936 1.002    10060     2831
+## reaction_Intercept   -0.159     0.533   -1.225    0.878 1.001     8229     3166
+## import_Intercept      3.906     0.212    3.488    4.340 1.001     9383     2960
+## pmi_Intercept         5.379     0.164    5.058    5.696 1.001     8461     3029
+## reaction_import       0.325     0.071    0.181    0.460 1.003     7906     3403
+## reaction_pmi          0.397     0.092    0.217    0.586 1.001     7868     3379
+## reaction_cond         0.106     0.240   -0.360    0.587 1.000     7723     2872
+## import_cond           0.628     0.306    0.044    1.224 1.001     9949     3317
+## pmi_cond              0.475     0.240    0.003    0.960 1.004     9187     3054
 ## 
 ## Family Specific Parameters: 
 ##                Estimate Est.Error l-95% CI u-95% CI  Rhat Bulk_ESS Tail_ESS
-## sigma_reaction    1.302     0.085    1.144    1.482 1.000     8816     2803
-## sigma_import      1.727     0.109    1.533    1.955 1.002     7617     2894
-## sigma_pmi         1.318     0.089    1.155    1.505 1.000     8597     2332
+## sigma_reaction    1.302     0.086    1.148    1.487 1.001     9615     2684
+## sigma_import      1.730     0.112    1.524    1.968 1.001     9796     3095
+## sigma_pmi         1.317     0.089    1.160    1.506 1.001    10111     2946
 ## 
 ## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
 ## and Tail_ESS are effective sample size measures, and Rhat is the potential
@@ -613,14 +613,14 @@ div.csl-indent {
 <pre><code>## # A tibble: 8 x 7
 ##   name    value   .lower .upper .width .point .interval
 ##   &lt;chr&gt;   &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 a1      0.625  0.0273   1.22    0.95 median qi       
-## 2 a1b1    0.194  0.00720  0.435   0.95 median qi       
-## 3 a2      0.474  0.0211   0.936   0.95 median qi       
-## 4 a2b2    0.177  0.00824  0.418   0.95 median qi       
-## 5 b1      0.325  0.183    0.459   0.95 median qi       
-## 6 b2      0.395  0.206    0.583   0.95 median qi       
-## 7 c       0.487 -0.0480   1.03    0.95 median qi       
-## 8 c_prime 0.101 -0.382    0.576   0.95 median qi</code></pre>
+## 1 a1      0.628  0.0436   1.22    0.95 median qi       
+## 2 a1b1    0.196  0.0133   0.449   0.95 median qi       
+## 3 a2      0.476  0.00292  0.960   0.95 median qi       
+## 4 a2b2    0.180  0.00137  0.435   0.95 median qi       
+## 5 b1      0.326  0.181    0.460   0.95 median qi       
+## 6 b2      0.396  0.217    0.586   0.95 median qi       
+## 7 c       0.496 -0.0437   1.02    0.95 median qi       
+## 8 c_prime 0.103 -0.360    0.587   0.95 median qi</code></pre>
 <p>In the <code>value</code> column, we have our measure of central tendency (i.e., median). The 95% intervals are in the next two columns. With <strong>tidybayes</strong>, we can ask for different kinds of intervals and different kinds of measures of central tendency, as indicated by the <code>.width</code> and <code>.point</code> columns, respectively. For example, here’s the output for the same variables when we ask for posterior means and 80% intervals.</p>
 <div class="sourceCode" id="cb288"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb288-1"><a href="more-than-one-mediator.html#cb288-1" aria-hidden="true" tabindex="-1"></a>post <span class="sc">%&gt;%</span> </span>
 <span id="cb288-2"><a href="more-than-one-mediator.html#cb288-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(a1<span class="sc">:</span>c) <span class="sc">%&gt;%</span> </span>
@@ -631,14 +631,14 @@ div.csl-indent {
 <pre><code>## # A tibble: 8 x 7
 ##   name    value .lower .upper .width .point .interval
 ##   &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 a1      0.624  0.235  1.01     0.8 mean   qi       
-## 2 a1b1    0.203  0.069  0.347    0.8 mean   qi       
-## 3 a2      0.475  0.178  0.778    0.8 mean   qi       
-## 4 a2b2    0.188  0.061  0.325    0.8 mean   qi       
-## 5 b1      0.324  0.231  0.414    0.8 mean   qi       
-## 6 b2      0.396  0.277  0.516    0.8 mean   qi       
-## 7 c       0.49   0.14   0.843    0.8 mean   qi       
-## 8 c_prime 0.1   -0.204  0.406    0.8 mean   qi</code></pre>
+## 1 a1      0.628  0.23   1.02     0.8 mean   qi       
+## 2 a1b1    0.205  0.068  0.356    0.8 mean   qi       
+## 3 a2      0.475  0.161  0.784    0.8 mean   qi       
+## 4 a2b2    0.189  0.058  0.326    0.8 mean   qi       
+## 5 b1      0.325  0.234  0.414    0.8 mean   qi       
+## 6 b2      0.397  0.283  0.515    0.8 mean   qi       
+## 7 c       0.5    0.154  0.847    0.8 mean   qi       
+## 8 c_prime 0.106 -0.204  0.407    0.8 mean   qi</code></pre>
 <p>For more in this family of <strong>tidybayes</strong> functions, check out the <a href="https://mjskay.github.io/tidybayes/articles/tidy-brms.html#point-summaries-and-intervals"><em>Point summaries and intervals</em></a> subsection of Kay’s <span class="citation">(<a href="#ref-kayExtractingVisualizingTidy2020" role="doc-biblioref">2020a</a>)</span> vignette, <a href="https://mjskay.github.io/tidybayes/articles/tidy-brms.html"><em>Extracting and visualizing tidy draws from brms models</em></a>.</p>
 <p>In the middle paragraph of page 158, Hayes showed how the mean difference in <code>imprt</code> between the two <code>cond</code> groups multiplied by <code>b1</code>, the coefficient of <code>import</code> predicting <code>reaction</code>, is equal to the <code>a1b1</code> indirect effect. He did that with simple algebra using the group means and the point estimates, following the formula</p>
 <p><span class="math display">\[a_1 b_1 = \left \{ \left [\overline M_1 | (X = 1) \right] - \left[\overline M_1 | (X = 0) \right ] \right \} b_1.\]</span></p>
@@ -670,8 +670,8 @@ div.csl-indent {
 <pre><code>## # A tibble: 2 x 7
 ##   name          value .lower .upper .width .point .interval
 ##   &lt;chr&gt;         &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 a1b1          0.203  0.007  0.435   0.95 mean   qi       
-## 2 handmade a1b1 0.203  0.115  0.288   0.95 mean   qi</code></pre>
+## 1 a1b1          0.205  0.013  0.449   0.95 mean   qi       
+## 2 handmade a1b1 0.204  0.113  0.288   0.95 mean   qi</code></pre>
 <p>Yep, Hayes’s formula is good at the mean. But the distributions are distinct with vastly different posterior intervals. I’m no mathematician, so take this with a grain of salt, but I suspect this has to do with how we used fixed values (i.e., the difference of the subsample means) to compute <code>handmade a1b1</code>, but all the components in <code>a1b1</code> were estimated.</p>
 <p>Here we’ll follow the same protocol for <code>a2b2</code>.</p>
 <div class="sourceCode" id="cb298"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb298-1"><a href="more-than-one-mediator.html#cb298-1" aria-hidden="true" tabindex="-1"></a>(</span>
@@ -696,8 +696,8 @@ div.csl-indent {
 <pre><code>## # A tibble: 2 x 7
 ##   name          value .lower .upper .width .point .interval
 ##   &lt;chr&gt;         &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 a2b2          0.188  0.008  0.418   0.95 mean   qi       
-## 2 handmade a2b2 0.189  0.098  0.278   0.95 mean   qi</code></pre>
+## 1 a2b2          0.189  0.001  0.435   0.95 mean   qi       
+## 2 handmade a2b2 0.189  0.104  0.279   0.95 mean   qi</code></pre>
 <p>To get the total indirect effect as discussed on page 160, we simply add the <code>a1b1</code> and <code>a2b2</code> columns.</p>
 <div class="sourceCode" id="cb303"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb303-1"><a href="more-than-one-mediator.html#cb303-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span></span>
 <span id="cb303-2"><a href="more-than-one-mediator.html#cb303-2" aria-hidden="true" tabindex="-1"></a>  post <span class="sc">%&gt;%</span> </span>
@@ -709,7 +709,7 @@ div.csl-indent {
 <pre><code>## # A tibble: 1 x 6
 ##   total_indirect_effect .lower .upper .width .point .interval
 ##                   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1                  0.39   0.12  0.695   0.95 mean   qi</code></pre>
+## 1                 0.394   0.11  0.707   0.95 mean   qi</code></pre>
 <p>To use the equations on the top of page 161, we’ll just work directly with the original vectors in <code>post</code>.</p>
 <div class="sourceCode" id="cb305"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb305-1"><a href="more-than-one-mediator.html#cb305-1" aria-hidden="true" tabindex="-1"></a>post <span class="sc">%&gt;%</span> </span>
 <span id="cb305-2"><a href="more-than-one-mediator.html#cb305-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Y_bar_given_X_1 =</span> b_import_Intercept <span class="sc">+</span> b_reaction_cond <span class="sc">*</span> <span class="dv">1</span> <span class="sc">+</span> b_reaction_import <span class="sc">*</span> b_import_Intercept <span class="sc">+</span> b_reaction_pmi <span class="sc">*</span> b_pmi_Intercept,</span>
@@ -719,17 +719,17 @@ div.csl-indent {
 <span id="cb305-6"><a href="more-than-one-mediator.html#cb305-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
 <span id="cb305-7"><a href="more-than-one-mediator.html#cb305-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean_qi</span>(value)</span></code></pre></div>
 <pre><code>## # A tibble: 2 x 7
-##   name             value .lower .upper .width .point .interval
-##   &lt;chr&gt;            &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 c_prime         0.0995 -0.382  0.576   0.95 mean   qi       
-## 2 c_prime by hand 0.0995 -0.382  0.576   0.95 mean   qi</code></pre>
+##   name            value .lower .upper .width .point .interval
+##   &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
+## 1 c_prime         0.106 -0.360  0.587   0.95 mean   qi       
+## 2 c_prime by hand 0.106 -0.360  0.587   0.95 mean   qi</code></pre>
 <p>We computed <code>c</code> a while ago.</p>
 <div class="sourceCode" id="cb307"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb307-1"><a href="more-than-one-mediator.html#cb307-1" aria-hidden="true" tabindex="-1"></a>post <span class="sc">%&gt;%</span> </span>
 <span id="cb307-2"><a href="more-than-one-mediator.html#cb307-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mean_qi</span>(c)</span></code></pre></div>
 <pre><code>## # A tibble: 1 x 6
 ##       c  .lower .upper .width .point .interval
 ##   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 0.490 -0.0480   1.03   0.95 mean   qi</code></pre>
+## 1 0.500 -0.0437   1.02   0.95 mean   qi</code></pre>
 <p>And <code>c</code> minus <code>c_prime</code> is straight subtraction.</p>
 <div class="sourceCode" id="cb309"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb309-1"><a href="more-than-one-mediator.html#cb309-1" aria-hidden="true" tabindex="-1"></a>post <span class="sc">%&gt;%</span> </span>
 <span id="cb309-2"><a href="more-than-one-mediator.html#cb309-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">c minus c_prime</span><span class="st">`</span> <span class="ot">=</span> c <span class="sc">-</span> c_prime) <span class="sc">%&gt;%</span> </span>
@@ -737,7 +737,7 @@ div.csl-indent {
 <pre><code>## # A tibble: 1 x 6
 ##   `c minus c_prime` .lower .upper .width .point .interval
 ##               &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1             0.390  0.120  0.695   0.95 mean   qi</code></pre>
+## 1             0.394  0.110  0.707   0.95 mean   qi</code></pre>
 </div>
 <div id="statistical-inference-2" class="section level2" number="5.3">
 <h2><span class="header-section-number">5.3</span> Statistical inference</h2>
@@ -771,8 +771,8 @@ div.csl-indent {
 <pre><code>## # A tibble: 2 x 7
 ##   name  value .lower .upper .width .point .interval
 ##   &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 a1b1  0.194  0.007  0.435   0.95 median qi       
-## 2 a2b2  0.177  0.008  0.418   0.95 median qi</code></pre>
+## 1 a1b1  0.196  0.013  0.449   0.95 median qi       
+## 2 a2b2  0.18   0.001  0.435   0.95 median qi</code></pre>
 </div>
 <div id="pairwise-comparisons-between-specific-indirect-effects." class="section level3" number="5.3.3">
 <h3><span class="header-section-number">5.3.3</span> Pairwise comparisons between specific indirect effects.</h3>
@@ -787,7 +787,7 @@ div.csl-indent {
 <pre><code>## # A tibble: 1 x 6
 ##   difference .lower .upper .width .point .interval
 ##        &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1      0.015 -0.289  0.309   0.95 mean   qi</code></pre>
+## 1      0.017 -0.303  0.339   0.95 mean   qi</code></pre>
 <p>Why not plot?</p>
 <div class="sourceCode" id="cb316"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb316-1"><a href="more-than-one-mediator.html#cb316-1" aria-hidden="true" tabindex="-1"></a>post <span class="sc">%&gt;%</span> </span>
 <span id="cb316-2"><a href="more-than-one-mediator.html#cb316-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> difference)) <span class="sc">+</span></span>
@@ -859,21 +859,21 @@ div.csl-indent {
 ## 
 ## Population-Level Effects: 
 ##                    Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## import_Intercept       3.91      0.21     3.48     4.31 1.00     7870     3141
-## pmi_Intercept          4.61      0.30     4.02     5.20 1.00     9337     3379
-## reaction_Intercept    -0.15      0.53    -1.18     0.88 1.00     8941     3128
-## import_cond            0.63      0.32     0.01     1.25 1.00     8737     2915
-## pmi_import             0.20      0.07     0.07     0.32 1.00     8391     3166
-## pmi_cond               0.35      0.24    -0.12     0.82 1.00     7458     2586
-## reaction_import        0.32      0.07     0.18     0.46 1.00     7687     2925
-## reaction_pmi           0.40      0.09     0.22     0.58 1.00     7203     2796
-## reaction_cond          0.10      0.25    -0.39     0.58 1.00     7767     2802
+## import_Intercept       3.91      0.22     3.50     4.33 1.00     9837     3064
+## pmi_Intercept          4.61      0.31     3.99     5.21 1.00     8070     2924
+## reaction_Intercept    -0.14      0.55    -1.22     0.90 1.00     8998     3012
+## import_cond            0.63      0.31     0.03     1.24 1.00     9589     3063
+## pmi_import             0.20      0.07     0.06     0.33 1.00     7796     2979
+## pmi_cond               0.35      0.23    -0.11     0.81 1.00     7838     3162
+## reaction_import        0.32      0.07     0.18     0.47 1.00     6835     3181
+## reaction_pmi           0.40      0.10     0.20     0.59 1.00     7755     3038
+## reaction_cond          0.11      0.24    -0.37     0.58 1.00     7839     3026
 ## 
 ## Family Specific Parameters: 
 ##                Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## sigma_import       1.73      0.11     1.52     1.98 1.00     8404     3197
-## sigma_pmi          1.28      0.08     1.13     1.46 1.00     7656     2624
-## sigma_reaction     1.30      0.09     1.14     1.49 1.00     8060     2984
+## sigma_import       1.73      0.11     1.53     1.97 1.00     9188     2670
+## sigma_pmi          1.28      0.08     1.12     1.45 1.00     8057     2837
+## sigma_reaction     1.30      0.08     1.15     1.48 1.00     7701     3114
 ## 
 ## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
 ## and Tail_ESS are effective sample size measures, and Rhat is the potential
@@ -913,12 +913,12 @@ div.csl-indent {
 <pre><code>## # A tibble: 6 x 7
 ##   name    value .lower .upper .width .point .interval
 ##   &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 a1      0.626  0.005  1.25    0.95 mean   qi       
-## 2 a2      0.354 -0.124  0.82    0.95 mean   qi       
-## 3 b1      0.323  0.183  0.463   0.95 mean   qi       
-## 4 b2      0.398  0.22   0.583   0.95 mean   qi       
-## 5 c_prime 0.104 -0.385  0.577   0.95 mean   qi       
-## 6 d21     0.197  0.07   0.323   0.95 mean   qi</code></pre>
+## 1 a1      0.626  0.028  1.24    0.95 mean   qi       
+## 2 a2      0.351 -0.106  0.808   0.95 mean   qi       
+## 3 b1      0.324  0.182  0.47    0.95 mean   qi       
+## 4 b2      0.395  0.204  0.589   0.95 mean   qi       
+## 5 c_prime 0.107 -0.374  0.581   0.95 mean   qi       
+## 6 d21     0.196  0.062  0.33    0.95 mean   qi</code></pre>
 <p>To get our version of the parameter summaries in Table 5.2, all you have to do is add the summaries for the intercepts to what we did above.</p>
 <div class="sourceCode" id="cb325"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb325-1"><a href="more-than-one-mediator.html#cb325-1" aria-hidden="true" tabindex="-1"></a>post <span class="sc">%&gt;%</span> </span>
 <span id="cb325-2"><a href="more-than-one-mediator.html#cb325-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">im1 =</span> b_import_Intercept,</span>
@@ -933,15 +933,15 @@ div.csl-indent {
 <pre><code>## # A tibble: 9 x 4
 ##   name     value .lower .upper
 ##   &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-## 1 a1       0.626  0.005  1.25 
-## 2 a2       0.354 -0.124  0.82 
-## 3 b1       0.323  0.183  0.463
-## 4 b2       0.398  0.22   0.583
-## 5 c_prime  0.104 -0.385  0.577
-## 6 d21      0.197  0.07   0.323
-## 7 im1      3.91   3.48   4.31 
-## 8 im2      4.61   4.02   5.20 
-## 9 iy      -0.152 -1.18   0.884</code></pre>
+## 1 a1       0.626  0.028  1.24 
+## 2 a2       0.351 -0.106  0.808
+## 3 b1       0.324  0.182  0.47 
+## 4 b2       0.395  0.204  0.589
+## 5 c_prime  0.107 -0.374  0.581
+## 6 d21      0.196  0.062  0.33 
+## 7 im1      3.91   3.50   4.33 
+## 8 im2      4.61   3.99   5.21 
+## 9 iy      -0.143 -1.22   0.895</code></pre>
 <p>Here we compute the four indirect effects.</p>
 <div class="sourceCode" id="cb327"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb327-1"><a href="more-than-one-mediator.html#cb327-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span></span>
 <span id="cb327-2"><a href="more-than-one-mediator.html#cb327-2" aria-hidden="true" tabindex="-1"></a>  post <span class="sc">%&gt;%</span>  </span>
@@ -959,10 +959,10 @@ div.csl-indent {
 <pre><code>## # A tibble: 4 x 4
 ##   name                  value .lower .upper
 ##   &lt;chr&gt;                 &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-## 1 a1b1                  0.195  0.001  0.445
-## 2 a1d21b2               0.043  0      0.132
-## 3 a2b2                  0.136 -0.046  0.362
-## 4 total_indirect_effect 0.385  0.073  0.758</code></pre>
+## 1 a1b1                  0.194  0.008  0.447
+## 2 a1d21b2               0.043  0.001  0.13 
+## 3 a2b2                  0.13  -0.041  0.355
+## 4 total_indirect_effect 0.383  0.091  0.734</code></pre>
 <p>To get the contrasts Hayes presented in page 179, we just do a little subtraction.</p>
 <div class="sourceCode" id="cb330"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb330-1"><a href="more-than-one-mediator.html#cb330-1" aria-hidden="true" tabindex="-1"></a>post <span class="sc">%&gt;%</span>  </span>
 <span id="cb330-2"><a href="more-than-one-mediator.html#cb330-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">c1 =</span> a1b1 <span class="sc">-</span> a2b2,</span>
@@ -976,9 +976,9 @@ div.csl-indent {
 <pre><code>## # A tibble: 3 x 4
 ##   name  value .lower .upper
 ##   &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
-## 1 c1    0.059 -0.238  0.371
-## 2 c2    0.141 -0.001  0.371
-## 3 c3    0.089 -0.113  0.317</code></pre>
+## 1 c1    0.065 -0.244  0.368
+## 2 c2    0.141  0.004  0.375
+## 3 c3    0.085 -0.113  0.313</code></pre>
 <p>And just because it’s fun, we may as well plot our indirect effects.</p>
 <div class="sourceCode" id="cb332"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb332-1"><a href="more-than-one-mediator.html#cb332-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this will help us save a little space with the plot code</span></span>
 <span id="cb332-2"><a href="more-than-one-mediator.html#cb332-2" aria-hidden="true" tabindex="-1"></a>my_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">expression</span>(<span class="fu">italic</span>(a)[<span class="dv">1</span>]<span class="sc">*</span><span class="fu">italic</span>(b)[<span class="dv">1</span>]),</span>

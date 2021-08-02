@@ -567,14 +567,14 @@ div.csl-indent {
 <span id="cb343-6"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb343-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">file =</span> <span class="st">&quot;fits/model06.01&quot;</span>)</span></code></pre></div>
 <p>Check the coefficient summaries.</p>
 <div class="sourceCode" id="cb344"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb344-1"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb344-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(model6<span class="fl">.1</span>)</span></code></pre></div>
-<pre><code>##            Estimate Est.Error       Q2.5     Q97.5
-## Intercept 5.3131538 0.1654246 4.98391571 5.6399201
-## d1        0.5151391 0.2325014 0.06587203 0.9759099
-## d2        0.4403257 0.2230260 0.01108483 0.8737501</code></pre>
+<pre><code>##            Estimate Est.Error         Q2.5     Q97.5
+## Intercept 5.3105221 0.1646877  4.987615216 5.6267716
+## d1        0.5183924 0.2306089  0.071900531 0.9716942
+## d2        0.4445530 0.2275941 -0.004987925 0.8885953</code></pre>
 <p>Our <span class="math inline">\(R^2\)</span> differences a bit from the OLS version in the text. This shouldn’t be surprising when it’s near the boundary.</p>
 <div class="sourceCode" id="cb346"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb346-1"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb346-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bayes_R2</span>(model6<span class="fl">.1</span>)</span></code></pre></div>
-<pre><code>##      Estimate  Est.Error        Q2.5    Q97.5
-## R2 0.05809419 0.03583401 0.006216829 0.139659</code></pre>
+<pre><code>##      Estimate  Est.Error        Q2.5     Q97.5
+## R2 0.05873881 0.03607054 0.006018393 0.1416788</code></pre>
 <p>Here’s its shape. For the plots in this chapter, we’ll take a few formatting cues from Edward Tufte <span class="citation">(<a href="#ref-tufteVisualDisplayQuantitative2001" role="doc-biblioref">2001</a>)</span>, courtesy of the <a href="https://CRAN.R-project.org/package=ggthemes"><strong>ggthemes</strong> package</a>. The <code>theme_tufte()</code> function will change the default font and remove some chart junk. We will take our color palette from <a href="http://pokemonbyreview.blogspot.com/2017/02/311-312-plusle-minun.html">Pokemon</a> via the <a href="https://CRAN.R-project.org/package=palettetown"><strong>palettetown</strong> package</a> <span class="citation">(<a href="#ref-R-palettetown" role="doc-biblioref">Lucas, 2016</a>)</span>.</p>
 <div class="sourceCode" id="cb348"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb348-1"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb348-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggthemes)</span>
 <span id="cb348-2"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb348-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(palettetown)</span>
@@ -608,8 +608,8 @@ div.csl-indent {
 ##   name   mean    sd
 ##   &lt;fct&gt; &lt;dbl&gt; &lt;dbl&gt;
 ## 1 Y_np   5.31 0.165
-## 2 Y_ip   5.83 0.160
-## 3 Y_cp   5.75 0.155</code></pre>
+## 2 Y_ip   5.83 0.159
+## 3 Y_cp   5.76 0.154</code></pre>
 <p>What Hayes called the “relative total effects” <span class="math inline">\(c_1\)</span> and <span class="math inline">\(c_2\)</span> are the <code>d1</code> and <code>d2</code> lines in our <code>fixef()</code> output, above.</p>
 <p>Here are the sub-models for the mediation model.</p>
 <div class="sourceCode" id="cb351"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb351-1"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb351-1" aria-hidden="true" tabindex="-1"></a>m_model <span class="ot">&lt;-</span> <span class="fu">bf</span>(respappr <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> d1 <span class="sc">+</span> d2)</span>
@@ -633,18 +633,18 @@ div.csl-indent {
 ## 
 ## Population-Level Effects: 
 ##                    Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## respappr_Intercept     3.89      0.18     3.55     4.24 1.00     4677     2913
-## liking_Intercept       3.71      0.31     3.11     4.32 1.00     5720     3308
-## respappr_d1            1.26      0.25     0.76     1.77 1.00     4493     3380
-## respappr_d2            1.61      0.25     1.11     2.10 1.00     4632     3378
-## liking_d1              0.00      0.22    -0.43     0.44 1.00     3737     3137
-## liking_d2             -0.21      0.23    -0.66     0.24 1.00     3568     2954
-## liking_respappr        0.41      0.07     0.27     0.55 1.00     3851     3207
+## respappr_Intercept     3.89      0.18     3.54     4.24 1.00     5949     3113
+## liking_Intercept       3.71      0.30     3.15     4.33 1.00     6332     3358
+## respappr_d1            1.26      0.26     0.76     1.76 1.00     6080     3328
+## respappr_d2            1.60      0.25     1.11     2.08 1.00     5515     3108
+## liking_d1             -0.00      0.22    -0.43     0.42 1.00     4014     3295
+## liking_d2             -0.22      0.23    -0.67     0.23 1.00     3916     3034
+## liking_respappr        0.41      0.07     0.27     0.55 1.00     4690     3390
 ## 
 ## Family Specific Parameters: 
 ##                Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## sigma_respappr     1.18      0.08     1.04     1.34 1.00     6708     2860
-## sigma_liking       0.93      0.06     0.82     1.05 1.00     6864     2983
+## sigma_respappr     1.18      0.08     1.04     1.34 1.00     8008     3137
+## sigma_liking       0.93      0.06     0.82     1.05 1.00     6155     3168
 ## 
 ## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
 ## and Tail_ESS are effective sample size measures, and Rhat is the potential
@@ -656,8 +656,8 @@ div.csl-indent {
 <span id="cb355-4"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb355-4" aria-hidden="true" tabindex="-1"></a>  </span>
 <span id="cb355-5"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb355-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">fill =</span> name)) <span class="sc">+</span></span>
 <span id="cb355-6"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb355-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">size =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="dv">2</span><span class="sc">/</span><span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb355-7"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb355-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="at">x =</span> .<span class="dv">18</span>, <span class="at">y =</span> <span class="fl">6.75</span>, <span class="at">label =</span> <span class="st">&quot;liking&quot;</span>, <span class="at">color =</span> <span class="fu">pokepal</span>(<span class="at">pokemon =</span> <span class="st">&quot;plusle&quot;</span>)[<span class="dv">2</span>], <span class="at">family =</span> <span class="st">&quot;Times&quot;</span>) <span class="sc">+</span></span>
-<span id="cb355-8"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb355-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="at">x =</span> .<span class="dv">355</span>, <span class="at">y =</span> <span class="fl">6.75</span>, <span class="at">label =</span> <span class="st">&quot;respappr&quot;</span>, <span class="at">color =</span> <span class="fu">pokepal</span>(<span class="at">pokemon =</span> <span class="st">&quot;plusle&quot;</span>)[<span class="dv">6</span>], <span class="at">family =</span> <span class="st">&quot;Times&quot;</span>) <span class="sc">+</span></span>
+<span id="cb355-7"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb355-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="at">x =</span> .<span class="dv">2</span>, <span class="at">y =</span> <span class="dv">7</span>, <span class="at">label =</span> <span class="st">&quot;liking&quot;</span>, <span class="at">color =</span> <span class="fu">pokepal</span>(<span class="at">pokemon =</span> <span class="st">&quot;plusle&quot;</span>)[<span class="dv">2</span>], <span class="at">family =</span> <span class="st">&quot;Times&quot;</span>) <span class="sc">+</span></span>
+<span id="cb355-8"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb355-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="at">x =</span> .<span class="dv">355</span>, <span class="at">y =</span> <span class="dv">6</span>, <span class="at">label =</span> <span class="st">&quot;respappr&quot;</span>, <span class="at">color =</span> <span class="fu">pokepal</span>(<span class="at">pokemon =</span> <span class="st">&quot;plusle&quot;</span>)[<span class="dv">6</span>], <span class="at">family =</span> <span class="st">&quot;Times&quot;</span>) <span class="sc">+</span></span>
 <span id="cb355-9"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb355-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">pokepal</span>(<span class="at">pokemon =</span> <span class="st">&quot;plusle&quot;</span>)[<span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">6</span>)]) <span class="sc">+</span></span>
 <span id="cb355-10"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb355-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="cn">NULL</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>)) <span class="sc">+</span></span>
 <span id="cb355-11"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb355-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="cn">NULL</span>, <span class="at">breaks =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
@@ -687,13 +687,13 @@ div.csl-indent {
 <pre><code>## # A tibble: 7 x 7
 ##   name      value .lower .upper .width .point .interval
 ##   &lt;chr&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 a1        1.26   0.762  1.77    0.95 mean   qi       
-## 2 a2        1.61   1.11   2.1     0.95 mean   qi       
-## 3 b         0.41   0.271  0.552   0.95 mean   qi       
-## 4 c1_prime  0     -0.431  0.436   0.95 mean   qi       
-## 5 c2_prime -0.215 -0.657  0.245   0.95 mean   qi       
-## 6 i_m       3.89   3.55   4.24    0.95 mean   qi       
-## 7 i_y       3.71   3.11   4.32    0.95 mean   qi</code></pre>
+## 1 a1        1.26   0.759  1.76    0.95 mean   qi       
+## 2 a2        1.60   1.11   2.08    0.95 mean   qi       
+## 3 b         0.412  0.272  0.548   0.95 mean   qi       
+## 4 c1_prime -0.003 -0.43   0.418   0.95 mean   qi       
+## 5 c2_prime -0.22  -0.67   0.226   0.95 mean   qi       
+## 6 i_m       3.89   3.54   4.24    0.95 mean   qi       
+## 7 i_y       3.71   3.15   4.33    0.95 mean   qi</code></pre>
 <p>Working with the <span class="math inline">\(\overline M_{ij}\)</span> formulas in page 199 is quite similar to what we did above.</p>
 <div class="sourceCode" id="cb358"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb358-1"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb358-1" aria-hidden="true" tabindex="-1"></a>post <span class="sc">%&gt;%</span> </span>
 <span id="cb358-2"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb358-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">M_np =</span> b_respappr_Intercept <span class="sc">+</span> b_respappr_d1 <span class="sc">*</span> <span class="dv">0</span> <span class="sc">+</span> b_respappr_d2 <span class="sc">*</span> <span class="dv">0</span>,</span>
@@ -708,9 +708,9 @@ div.csl-indent {
 <pre><code>## # A tibble: 3 x 3
 ##   name   mean    sd
 ##   &lt;fct&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 M_np   3.89 0.179
-## 2 M_ip   5.15 0.176
-## 3 M_cp   5.49 0.173</code></pre>
+## 1 M_np   3.89 0.180
+## 2 M_ip   5.15 0.181
+## 3 M_cp   5.49 0.177</code></pre>
 <p>The <span class="math inline">\(\overline Y^*_{ij}\)</span> formulas are more of the same.</p>
 <div class="sourceCode" id="cb360"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb360-1"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb360-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span></span>
 <span id="cb360-2"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb360-2" aria-hidden="true" tabindex="-1"></a>  post <span class="sc">%&gt;%</span> </span>
@@ -727,9 +727,9 @@ div.csl-indent {
 <pre><code>## # A tibble: 3 x 3
 ##   name   mean    sd
 ##   &lt;fct&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 Y_np   5.71 0.163
-## 2 Y_ip   5.71 0.142
-## 3 Y_cp   5.50 0.145</code></pre>
+## 1 Y_np   5.72 0.161
+## 2 Y_ip   5.71 0.141
+## 3 Y_cp   5.50 0.144</code></pre>
 <p>Note, these are where the adjusted <span class="math inline">\(Y\)</span> values came from in Table 6.1.</p>
 <p>This is as fine a spot as any to introduce coefficient plots. The <strong>brms</strong>, <strong>tidybayes</strong>, and <strong>bayesplot</strong> packages all offer convenience functions for coefficient plots. Before we get all lazy using convenience functions, it’s good to know how to make coefficient plots by hand. Here’s ours for those last three <span class="math inline">\(\overline Y^*_{ij}\)</span>-values.</p>
 <div class="sourceCode" id="cb362"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb362-1"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb362-1" aria-hidden="true" tabindex="-1"></a>post <span class="sc">%&gt;%</span> </span>
@@ -773,7 +773,7 @@ div.csl-indent {
 <span id="cb364-10"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb364-10" aria-hidden="true" tabindex="-1"></a>r2 <span class="sc">%&gt;%</span> </span>
 <span id="cb364-11"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb364-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> R2, <span class="at">fill =</span> fit)) <span class="sc">+</span></span>
 <span id="cb364-12"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb364-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">size =</span> <span class="dv">0</span>, <span class="at">alpha =</span> <span class="dv">2</span><span class="sc">/</span><span class="dv">3</span>) <span class="sc">+</span></span>
-<span id="cb364-13"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb364-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="at">x =</span> .<span class="dv">15</span>, <span class="at">y =</span> <span class="fl">6.75</span>, <span class="at">label =</span> <span class="st">&quot;model3&quot;</span>, <span class="at">color =</span> <span class="fu">pokepal</span>(<span class="at">pokemon =</span> <span class="st">&quot;plusle&quot;</span>)[<span class="dv">7</span>], <span class="at">family =</span> <span class="st">&quot;Times&quot;</span>) <span class="sc">+</span></span>
+<span id="cb364-13"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb364-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="at">x =</span> .<span class="dv">18</span>, <span class="at">y =</span> <span class="fl">6.75</span>, <span class="at">label =</span> <span class="st">&quot;model3&quot;</span>, <span class="at">color =</span> <span class="fu">pokepal</span>(<span class="at">pokemon =</span> <span class="st">&quot;plusle&quot;</span>)[<span class="dv">7</span>], <span class="at">family =</span> <span class="st">&quot;Times&quot;</span>) <span class="sc">+</span></span>
 <span id="cb364-14"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb364-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="at">x =</span> .<span class="dv">35</span>, <span class="at">y =</span> <span class="fl">6.75</span>, <span class="at">label =</span> <span class="st">&quot;model2&quot;</span>, <span class="at">color =</span> <span class="fu">pokepal</span>(<span class="at">pokemon =</span> <span class="st">&quot;plusle&quot;</span>)[<span class="dv">6</span>], <span class="at">family =</span> <span class="st">&quot;Times&quot;</span>) <span class="sc">+</span></span>
 <span id="cb364-15"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb364-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">pokepal</span>(<span class="at">pokemon =</span> <span class="st">&quot;plusle&quot;</span>)[<span class="fu">c</span>(<span class="dv">6</span>, <span class="dv">7</span>)]) <span class="sc">+</span></span>
 <span id="cb364-16"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb364-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="cn">NULL</span>, <span class="at">limits =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>) <span class="sc">+</span></span>
@@ -810,8 +810,8 @@ div.csl-indent {
 <pre><code>## # A tibble: 2 x 7
 ##   name  value .lower .upper .width .point .interval
 ##   &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 a1b   0.518  0.27   0.815   0.95 mean   qi       
-## 2 a2b   0.66   0.378  0.989   0.95 mean   qi</code></pre>
+## 1 a1b   0.517  0.27   0.807   0.95 mean   qi       
+## 2 a2b   0.659  0.381  0.982   0.95 mean   qi</code></pre>
 </div>
 <div id="using-a-different-group-coding-system" class="section level2" number="6.3">
 <h2><span class="header-section-number">6.3</span> Using a different group coding system</h2>
@@ -833,14 +833,14 @@ div.csl-indent {
 <span id="cb370-6"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb370-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">file =</span> <span class="st">&quot;fits/model06.04&quot;</span>)</span></code></pre></div>
 <p>Here are our intercepts and regression coefficient summaries.</p>
 <div class="sourceCode" id="cb371"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb371-1"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb371-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(model6<span class="fl">.4</span>)</span></code></pre></div>
-<pre><code>##                      Estimate Est.Error       Q2.5     Q97.5
-## respappr_Intercept  4.8409171 0.1045365  4.6380616 5.0419166
-## liking_Intercept    3.6371043 0.3546292  2.9628847 4.3403483
-## respappr_d_1        1.4412688 0.2221000  1.0067794 1.8737067
-## respappr_d_2        0.3500687 0.2494522 -0.1309177 0.8269577
-## liking_d_1         -0.1104966 0.2066174 -0.5168861 0.2903976
-## liking_d_2         -0.2138799 0.1986922 -0.6137003 0.1759357
-## liking_respappr     0.4113725 0.0711161  0.2695799 0.5478882</code></pre>
+<pre><code>##                      Estimate  Est.Error       Q2.5     Q97.5
+## respappr_Intercept  4.8408491 0.10400545  4.6391636 5.0524578
+## liking_Intercept    3.6363534 0.35318446  2.9437136 4.3215543
+## respappr_d_1        1.4376291 0.21964377  1.0104644 1.8696691
+## respappr_d_2        0.3478888 0.24998359 -0.1359316 0.8558661
+## liking_d_1         -0.1120374 0.20567008 -0.5092694 0.2919660
+## liking_d_2         -0.2193080 0.19541186 -0.6081167 0.1656851
+## liking_respappr     0.4117305 0.07136229  0.2730765 0.5551897</code></pre>
 <p>It’s important to note that these will not correspond to the “TOTAL EFFECT MODEL” section of the PROCESS output of Figure 6.3. Hayes’s PROCESS has the <code>mcx=3</code> command which tells the program to reparametrize the orthogonal contrasts. <strong>brms</strong> doesn’t have such a command.</p>
 <p>For now, we’ll have to jump to Equation 6.8 towards the bottom of page 207. Those parameters are evident in our output. For good measure, here we’ll practice with <code>posterior_summary()</code>.</p>
 <div class="sourceCode" id="cb373"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb373-1"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb373-1" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_summary</span>(model6<span class="fl">.4</span>) <span class="sc">%&gt;%</span> </span>
@@ -848,9 +848,9 @@ div.csl-indent {
 <span id="cb373-3"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb373-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames_to_column</span>(<span class="st">&quot;parameter&quot;</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb373-4"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb373-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">str_detect</span>(parameter, <span class="st">&quot;b_respappr&quot;</span>))</span></code></pre></div>
 <pre><code>##              parameter  Estimate Est.Error       Q2.5     Q97.5
-## 1 b_respappr_Intercept 4.8409171 0.1045365  4.6380616 5.0419166
-## 2       b_respappr_d_1 1.4412688 0.2221000  1.0067794 1.8737067
-## 3       b_respappr_d_2 0.3500687 0.2494522 -0.1309177 0.8269577</code></pre>
+## 1 b_respappr_Intercept 4.8408491 0.1040055  4.6391636 5.0524578
+## 2       b_respappr_d_1 1.4376291 0.2196438  1.0104644 1.8696691
+## 3       b_respappr_d_2 0.3478888 0.2499836 -0.1359316 0.8558661</code></pre>
 <p>Thus it’s easy to get the <span class="math inline">\(\overline M_{ij}\)</span> means with a little posterior manipulation.</p>
 <div class="sourceCode" id="cb375"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb375-1"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb375-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span></span>
 <span id="cb375-2"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb375-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">posterior_samples</span>(model6<span class="fl">.4</span>) <span class="sc">%&gt;%</span> </span>
@@ -867,9 +867,9 @@ div.csl-indent {
 <pre><code>## # A tibble: 3 x 3
 ##   name   mean    sd
 ##   &lt;fct&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 M_np   3.88 0.184
-## 2 M_ip   5.15 0.178
-## 3 M_cp   5.50 0.177</code></pre>
+## 1 M_np   3.88 0.182
+## 2 M_ip   5.15 0.181
+## 3 M_cp   5.49 0.173</code></pre>
 <p>With these in hand, we can compute <span class="math inline">\(a_1\)</span> and <span class="math inline">\(a_2\)</span>.</p>
 <div class="sourceCode" id="cb377"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb377-1"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb377-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span></span>
 <span id="cb377-2"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb377-2" aria-hidden="true" tabindex="-1"></a>  post <span class="sc">%&gt;%</span> </span>
@@ -884,8 +884,8 @@ div.csl-indent {
 <pre><code>## # A tibble: 2 x 3
 ##   name   mean    sd
 ##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 a1    1.44  0.222
-## 2 a2    0.350 0.249</code></pre>
+## 1 a1    1.44  0.220
+## 2 a2    0.348 0.250</code></pre>
 <p>Happily, our model output will allow us to work with Hayes’s <span class="math inline">\(\overline Y^*_{ij}\)</span> equations in the middle of page 210.</p>
 <div class="sourceCode" id="cb379"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb379-1"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb379-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span></span>
 <span id="cb379-2"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb379-2" aria-hidden="true" tabindex="-1"></a>  post <span class="sc">%&gt;%</span> </span>
@@ -902,9 +902,9 @@ div.csl-indent {
 <pre><code>## # A tibble: 3 x 3
 ##   name   mean    sd
 ##   &lt;fct&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1 Y_np   5.71 0.163
-## 2 Y_ip   5.71 0.144
-## 3 Y_cp   5.50 0.146</code></pre>
+## 1 Y_np   5.71 0.164
+## 2 Y_ip   5.71 0.141
+## 3 Y_cp   5.49 0.144</code></pre>
 <p>And with these in hand, we can compute <span class="math inline">\(c&#39;_1\)</span> and <span class="math inline">\(c&#39;_2\)</span>.</p>
 <div class="sourceCode" id="cb381"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb381-1"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb381-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span></span>
 <span id="cb381-2"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb381-2" aria-hidden="true" tabindex="-1"></a>  post <span class="sc">%&gt;%</span> </span>
@@ -919,8 +919,8 @@ div.csl-indent {
 <pre><code>## # A tibble: 2 x 3
 ##   name       mean    sd
 ##   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;
-## 1 c1_prime -0.110 0.207
-## 2 c2_prime -0.214 0.199</code></pre>
+## 1 c1_prime -0.112 0.206
+## 2 c2_prime -0.219 0.195</code></pre>
 <p>It appears Hayes has a typo in the formula for <span class="math inline">\(c&#39;_2\)</span> on page 211. The value he has down for <span class="math inline">\(\overline Y^*_{IP}\)</span>, 5.145, is incorrect. It’s not the one he displayed at the bottom of the previous page and it also contradicts the analyses herein. So it goes… These things happen.</p>
 <p>We haven’t spelled it out, but the <span class="math inline">\(b\)</span> parameter is currently labeled <code>b_liking_respappr</code> in our <code>post</code> object. Here we’ll make a <code>b</code> column to make things easier. While we’re at it, we’ll compute the indirect effects, too.</p>
 <div class="sourceCode" id="cb383"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb383-1"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb383-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span></span>
@@ -937,8 +937,8 @@ div.csl-indent {
 <pre><code>## # A tibble: 2 x 7
 ##   name  value .lower .upper .width .point .interval
 ##   &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 a1b   0.593  0.342  0.886   0.95 mean   qi       
-## 2 a2b   0.144 -0.053  0.368   0.95 mean   qi</code></pre>
+## 1 a1b   0.591  0.351  0.875   0.95 mean   qi       
+## 2 a2b   0.143 -0.051  0.368   0.95 mean   qi</code></pre>
 <p>Now we can compute and <code>summarize()</code> our <span class="math inline">\(c_1\)</span> and <span class="math inline">\(c_2\)</span>.</p>
 <div class="sourceCode" id="cb385"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb385-1"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb385-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span></span>
 <span id="cb385-2"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb385-2" aria-hidden="true" tabindex="-1"></a>  post <span class="sc">%&gt;%</span> </span>
@@ -953,8 +953,8 @@ div.csl-indent {
 <pre><code>## # A tibble: 2 x 3
 ##   name     mean    sd
 ##   &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt;
-## 1 c1     0.483  0.202
-## 2 c2    -0.0697 0.223</code></pre>
+## 1 c1     0.479  0.201
+## 2 c2    -0.0761 0.217</code></pre>
 </div>
 <div id="some-miscellaneous-issues-unrelated-to-those-hayes-covered-in-the-text" class="section level2" number="6.4">
 <h2><span class="header-section-number">6.4</span> Some miscellaneous issues [unrelated to those Hayes covered in the text]</h2>
@@ -999,13 +999,13 @@ div.csl-indent {
 ## 
 ## Population-Level Effects: 
 ##                 Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## groupnone           5.31      0.16     4.99     5.62 1.00     4693     2848
-## groupindividual     5.83      0.16     5.51     6.15 1.00     5108     3298
-## groupcollective     5.75      0.16     5.44     6.05 1.00     4376     3286
+## groupnone           5.31      0.16     4.99     5.63 1.00     4289     2749
+## groupindividual     5.82      0.16     5.51     6.14 1.00     4466     2830
+## groupcollective     5.75      0.15     5.46     6.04 1.00     4168     3341
 ## 
 ## Family Specific Parameters: 
 ##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## sigma     1.04      0.07     0.92     1.18 1.00     4565     3176
+## sigma     1.04      0.07     0.92     1.18 1.00     5139     3391
 ## 
 ## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
 ## and Tail_ESS are effective sample size measures, and Rhat is the potential
@@ -1062,18 +1062,18 @@ div.csl-indent {
 ## 
 ## Population-Level Effects: 
 ##                          Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## respappr_groupnone           3.89      0.19     3.52     4.24 1.00     3819     2733
-## respappr_groupindividual     5.15      0.18     4.80     5.51 1.00     4118     2575
-## respappr_groupcollective     5.49      0.18     5.15     5.84 1.00     3128     2675
-## liking_groupnone             3.71      0.32     3.09     4.36 1.00     1727     1854
-## liking_groupindividual       3.71      0.40     2.92     4.51 1.01     1571     1901
-## liking_groupcollective       3.49      0.43     2.64     4.33 1.00     1601     1847
-## liking_respappr              0.41      0.07     0.27     0.56 1.00     1523     1700
+## respappr_groupnone           3.89      0.18     3.52     4.23 1.00     4039     2601
+## respappr_groupindividual     5.14      0.18     4.77     5.51 1.00     3599     2467
+## respappr_groupcollective     5.50      0.17     5.15     5.84 1.00     3960     2741
+## liking_groupnone             3.71      0.31     3.11     4.34 1.00     1673     2291
+## liking_groupindividual       3.70      0.39     2.93     4.48 1.00     1658     1967
+## liking_groupcollective       3.49      0.41     2.70     4.28 1.00     1687     2011
+## liking_respappr              0.41      0.07     0.27     0.55 1.00     1590     1950
 ## 
 ## Family Specific Parameters: 
 ##                Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## sigma_respappr     1.18      0.08     1.04     1.33 1.00     3895     2584
-## sigma_liking       0.93      0.06     0.82     1.06 1.00     3698     2505
+## sigma_respappr     1.18      0.07     1.04     1.34 1.00     3862     2463
+## sigma_liking       0.93      0.06     0.82     1.05 1.00     4106     2867
 ## 
 ## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
 ## and Tail_ESS are effective sample size measures, and Rhat is the potential
@@ -1098,9 +1098,9 @@ div.csl-indent {
 <pre><code>## # A tibble: 3 x 7
 ##   name  value .lower .upper .width .point .interval
 ##   &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 a1b    1.60   1.03   2.19   0.95 mean   qi       
-## 2 a2b    2.12   1.37   2.88   0.95 mean   qi       
-## 3 a3b    2.26   1.46   3.08   0.95 mean   qi</code></pre>
+## 1 a1b    1.6    1.05   2.15   0.95 mean   qi       
+## 2 a2b    2.12   1.39   2.85   0.95 mean   qi       
+## 3 a3b    2.26   1.49   3.04   0.95 mean   qi</code></pre>
 <p>With this parameterization, it’s a little difficult to interpret the <span class="math inline">\(a_j b\)</span> estimates. None of them are in comparison to anything. However, this approach is quite useful once you compute their various difference scores.</p>
 <div class="sourceCode" id="cb399"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb399-1"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb399-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute the difference scores</span></span>
 <span id="cb399-2"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#cb399-2" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> </span>
@@ -1118,9 +1118,9 @@ div.csl-indent {
 <pre><code>## # A tibble: 3 x 7
 ##   name                             value .lower .upper .width .point .interval
 ##   &lt;chr&gt;                            &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 diff_collective_minus_individual 0.143 -0.064  0.367   0.95 mean   qi       
-## 2 diff_collective_minus_none       0.661  0.371  1       0.95 mean   qi       
-## 3 diff_individual_minus_none       0.519  0.27   0.823   0.95 mean   qi</code></pre>
+## 1 diff_collective_minus_individual 0.147 -0.053  0.364   0.95 mean   qi       
+## 2 diff_collective_minus_none       0.663  0.378  0.994   0.95 mean   qi       
+## 3 diff_individual_minus_none       0.517  0.272  0.82    0.95 mean   qi</code></pre>
 <p>If you look back to our results from <code>model6.2</code>, you’ll see that <code>diff_individual_minus_none</code> and <code>diff_collective_minus_none</code> correspond to <code>a1b</code> and <code>a2b</code>, respectively. But with our <code>model6.6</code> approach, we get the additional information of what kind of indirect effect we might have yielded had we used a different coding scheme for our original set of dummy variables. That is, we get <code>diff_collective_minus_individual</code>.</p>
 </div>
 <div id="session-info-5" class="section level2 unnumbered">

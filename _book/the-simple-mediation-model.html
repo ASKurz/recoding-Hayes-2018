@@ -588,16 +588,16 @@ Y &amp; = i_Y + c&#39; X + b M + e_Y.
 ## 
 ## Population-Level Effects: 
 ##                    Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## reaction_Intercept     0.52      0.55    -0.57     1.56 1.00     5736     3139
-## pmi_Intercept          5.38      0.16     5.06     5.70 1.00     5965     3186
-## reaction_pmi           0.51      0.10     0.32     0.71 1.00     5655     3174
-## reaction_cond          0.26      0.27    -0.27     0.79 1.00     6317     3269
-## pmi_cond               0.48      0.24     0.00     0.95 1.00     6441     3144
+## reaction_Intercept     0.52      0.56    -0.58     1.62 1.00     4994     2990
+## pmi_Intercept          5.38      0.16     5.05     5.68 1.00     6001     2896
+## reaction_pmi           0.51      0.10     0.31     0.70 1.00     5281     2959
+## reaction_cond          0.25      0.26    -0.26     0.77 1.00     6398     3090
+## pmi_cond               0.48      0.23     0.03     0.94 1.00     6409     2711
 ## 
 ## Family Specific Parameters: 
 ##                Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## sigma_reaction     1.41      0.09     1.24     1.60 1.00     5640     3112
-## sigma_pmi          1.32      0.08     1.17     1.50 1.00     6211     2634
+## sigma_reaction     1.41      0.09     1.24     1.60 1.00     4435     2908
+## sigma_pmi          1.32      0.09     1.16     1.50 1.00     6602     3028
 ## 
 ## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
 ## and Tail_ESS are effective sample size measures, and Rhat is the potential
@@ -606,14 +606,14 @@ Y &amp; = i_Y + c&#39; X + b M + e_Y.
 <p>If you’re getting lost in all the model output, try taking out the constant and error terms.</p>
 <div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb161-1"><a href="the-simple-mediation-model.html#cb161-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(model3<span class="fl">.1</span>)[<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>, ] <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##               Estimate Est.Error   Q2.5 Q97.5
-## reaction_pmi     0.507     0.099  0.317 0.707
-## reaction_cond    0.258     0.266 -0.269 0.790
-## pmi_cond         0.478     0.239  0.003 0.953</code></pre>
+## reaction_pmi     0.507     0.100  0.308 0.703
+## reaction_cond    0.253     0.261 -0.257 0.772
+## pmi_cond         0.481     0.234  0.025 0.942</code></pre>
 <p>In his Table 3.2, Hayes included the <span class="math inline">\(R^2\)</span> values. Here are ours.</p>
 <div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb163-1"><a href="the-simple-mediation-model.html#cb163-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bayes_R2</span>(model3<span class="fl">.1</span>) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##            Estimate Est.Error  Q2.5 Q97.5
-## R2reaction    0.211     0.056 0.103 0.319
-## R2pmi         0.039     0.031 0.000 0.116</code></pre>
+## R2reaction    0.210     0.057 0.099 0.319
+## R2pmi         0.039     0.031 0.000 0.113</code></pre>
 <p>It’s worth it to actually plot the <span class="math inline">\(R^2\)</span> distributions. We’ll take our color palette from the <a href="https://CRAN.R-project.org/package=ggthemes"><strong>ggthemes</strong> package</a> <span class="citation">(<a href="#ref-R-ggthemes" role="doc-biblioref">Arnold, 2021</a>)</span>.</p>
 <div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb165-1"><a href="the-simple-mediation-model.html#cb165-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggthemes)</span>
 <span id="cb165-2"><a href="the-simple-mediation-model.html#cb165-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -635,31 +635,31 @@ Y &amp; = i_Y + c&#39; X + b M + e_Y.
 <li><span class="math inline">\(a\)</span> = <code>pmi_cond</code> and</li>
 <li><span class="math inline">\(b\)</span> = <code>reaction_pmi</code>.</li>
 </ul>
-<p>You can isolate them with <code>fixef()[i]</code>.</p>
+<p>You can isolate them with <code>fixef()[i, ]</code>.</p>
 <div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb166-1"><a href="the-simple-mediation-model.html#cb166-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(model3<span class="fl">.1</span>)[<span class="dv">5</span>, ]</span></code></pre></div>
-<pre><code>##    Estimate   Est.Error        Q2.5       Q97.5 
-## 0.478120097 0.239229062 0.002662413 0.953497695</code></pre>
-<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="the-simple-mediation-model.html#cb168-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(model3<span class="fl">.1</span>)[<span class="dv">3</span>, ]</span></code></pre></div>
 <pre><code>##   Estimate  Est.Error       Q2.5      Q97.5 
-## 0.50741664 0.09898774 0.31667105 0.70660547</code></pre>
+## 0.48067590 0.23440092 0.02533352 0.94154760</code></pre>
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb168-1"><a href="the-simple-mediation-model.html#cb168-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(model3<span class="fl">.1</span>)[<span class="dv">3</span>, ]</span></code></pre></div>
+<pre><code>##  Estimate Est.Error      Q2.5     Q97.5 
+## 0.5071028 0.1000656 0.3084225 0.7034410</code></pre>
 <p>So the naive approach would be to just multiply them.</p>
 <div class="sourceCode" id="cb170"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb170-1"><a href="the-simple-mediation-model.html#cb170-1" aria-hidden="true" tabindex="-1"></a>(<span class="fu">fixef</span>(model3<span class="fl">.1</span>)[<span class="dv">5</span>, ] <span class="sc">*</span> <span class="fu">fixef</span>(model3<span class="fl">.1</span>)[<span class="dv">3</span>, ]) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##  Estimate Est.Error      Q2.5     Q97.5 
-##     0.243     0.024     0.001     0.674</code></pre>
+##     0.244     0.023     0.008     0.662</code></pre>
 <p>Now, this does get us the correct ‘Estimate’ (i.e., posterior mean). However, the posterior <span class="math inline">\(SD\)</span> and 95% intervals are off. If you want to do this properly, you need to work with the poster samples themselves. We do that with the <code>posterior_samples()</code> function.</p>
 <div class="sourceCode" id="cb172"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb172-1"><a href="the-simple-mediation-model.html#cb172-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">posterior_samples</span>(model3<span class="fl">.1</span>)</span>
 <span id="cb172-2"><a href="the-simple-mediation-model.html#cb172-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb172-3"><a href="the-simple-mediation-model.html#cb172-3" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(post)</span></code></pre></div>
 <pre><code>## Rows: 4,000
 ## Columns: 8
-## $ b_reaction_Intercept &lt;dbl&gt; -0.12137463, 0.63556080, 0.90302305, 0.33518157, 0.09392572, -0.15231517, 0.029…
-## $ b_pmi_Intercept      &lt;dbl&gt; 5.213578, 5.249156, 5.097116, 5.194683, 5.550075, 5.122989, 5.249685, 5.470834,…
-## $ b_reaction_pmi       &lt;dbl&gt; 0.5625295, 0.4894083, 0.4516891, 0.5619456, 0.5683868, 0.6234615, 0.6027555, 0.…
-## $ b_reaction_cond      &lt;dbl&gt; 0.626121124, 0.379049310, 0.306911753, -0.034920283, 0.416434733, 0.285463074, …
-## $ b_pmi_cond           &lt;dbl&gt; 0.66994719, 0.79072903, 0.78940354, 0.69986977, 0.07739835, 0.59469187, 0.71726…
-## $ sigma_reaction       &lt;dbl&gt; 1.496954, 1.346085, 1.285150, 1.429293, 1.516523, 1.455875, 1.304108, 1.371367,…
-## $ sigma_pmi            &lt;dbl&gt; 1.358108, 1.334820, 1.380348, 1.339067, 1.302856, 1.319906, 1.253359, 1.274481,…
-## $ lp__                 &lt;dbl&gt; -429.5512, -427.4654, -429.1097, -427.7079, -429.0244, -428.7526, -428.5376, -4…</code></pre>
+## $ b_reaction_Intercept &lt;dbl&gt; 0.36559647, 0.59759057, 0.76109870, 0.79578161, -0.51777597, 1.62493958, 0.7192…
+## $ b_pmi_Intercept      &lt;dbl&gt; 5.312075, 5.366714, 5.313554, 5.351762, 5.505363, 5.583854, 5.617829, 5.117164,…
+## $ b_reaction_pmi       &lt;dbl&gt; 0.5131299, 0.4871675, 0.4702092, 0.4459453, 0.6967265, 0.2983430, 0.3938866, 0.…
+## $ b_reaction_cond      &lt;dbl&gt; 0.28194792, 0.13524704, 0.32367895, 0.23891725, 0.35143446, 0.19791049, 0.87464…
+## $ b_pmi_cond           &lt;dbl&gt; 0.42154009, 0.53567033, 0.96725973, 0.63031509, 0.29318933, 0.09468811, 0.04072…
+## $ sigma_reaction       &lt;dbl&gt; 1.415145, 1.379133, 1.381677, 1.294263, 1.603548, 1.173935, 1.415440, 1.358086,…
+## $ sigma_pmi            &lt;dbl&gt; 1.355619, 1.208127, 1.403995, 1.394962, 1.181342, 1.481303, 1.284731, 1.330499,…
+## $ lp__                 &lt;dbl&gt; -427.1174, -427.2585, -429.8131, -427.9630, -432.0138, -436.5891, -431.7727, -4…</code></pre>
 <p>Here we compute the indirect effect, <code>ab</code>.</p>
 <div class="sourceCode" id="cb174"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb174-1"><a href="the-simple-mediation-model.html#cb174-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span></span>
 <span id="cb174-2"><a href="the-simple-mediation-model.html#cb174-2" aria-hidden="true" tabindex="-1"></a>  post <span class="sc">%&gt;%</span> </span>
@@ -668,7 +668,7 @@ Y &amp; = i_Y + c&#39; X + b M + e_Y.
 <div class="sourceCode" id="cb175"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb175-1"><a href="the-simple-mediation-model.html#cb175-1" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(post<span class="sc">$</span>ab, <span class="at">probs =</span> <span class="fu">c</span>(.<span class="dv">5</span>, .<span class="dv">025</span>, .<span class="dv">975</span>)) <span class="sc">%&gt;%</span> </span>
 <span id="cb175-2"><a href="the-simple-mediation-model.html#cb175-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##   50%  2.5% 97.5% 
-## 0.233 0.002 0.537</code></pre>
+## 0.234 0.011 0.519</code></pre>
 <p>And we can even visualize it as a density.</p>
 <div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="the-simple-mediation-model.html#cb177-1" aria-hidden="true" tabindex="-1"></a>post <span class="sc">%&gt;%</span> </span>
 <span id="cb177-2"><a href="the-simple-mediation-model.html#cb177-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> ab)) <span class="sc">+</span></span>
@@ -685,7 +685,7 @@ Y &amp; = i_Y + c&#39; X + b M + e_Y.
 <span id="cb178-3"><a href="the-simple-mediation-model.html#cb178-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">median =</span> <span class="fu">median</span>(ab)) <span class="sc">%&gt;%</span> </span>
 <span id="cb178-4"><a href="the-simple-mediation-model.html#cb178-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##    mean median
-## 1 0.243  0.233</code></pre>
+## 1 0.243  0.234</code></pre>
 <p>Their magnitudes are similar, but this asymmetry will be a source of contrast to our estimates and the OLS estimates Hayes reported in the text. This is also something to consider when reporting on central tendency. When the indirect effect–or any other parameter, for that matter–is quite asymmetric, you might prefer reporting the median rather than the mean.</p>
 <p>On page 90, Hayes computed the <em>adjusted means</em> for <span class="math inline">\(Y\)</span>. For both <code>cond == 1</code> and <code>cond == 0</code>, he computed the expected values for <code>reaction</code> when <code>pmi</code> was at its mean. A natural way to do that in <strong>brms</strong> is with <code>fitted()</code>. First we’ll put our input values for <code>cond</code> and <code>pmi</code> in a tibble, which we’ll call <code>nd</code>. Then we’ll feed <code>nd</code> into the <code>newdata</code> argument within the <code>fitted()</code> function.</p>
 <div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="the-simple-mediation-model.html#cb180-1" aria-hidden="true" tabindex="-1"></a>nd <span class="ot">&lt;-</span></span>
@@ -696,19 +696,19 @@ Y &amp; = i_Y + c&#39; X + b M + e_Y.
 <pre><code>## , , reaction
 ## 
 ##      Estimate Est.Error     Q2.5    Q97.5
-## [1,] 3.619908 0.1913863 3.244846 3.987508
-## [2,] 3.361776 0.1774889 3.015778 3.698860
+## [1,] 3.617955 0.1860720 3.269416 3.991500
+## [2,] 3.365036 0.1778951 3.014780 3.729252
 ## 
 ## , , pmi
 ## 
 ##      Estimate Est.Error     Q2.5    Q97.5
-## [1,] 5.856624 0.1688646 5.520799 6.195669
-## [2,] 5.378504 0.1642438 5.060156 5.695529</code></pre>
+## [1,] 5.856277 0.1750840 5.514630 6.196228
+## [2,] 5.375601 0.1617578 5.051166 5.683241</code></pre>
 <p>Because <code>model3.1</code> is a multivariate model, <code>fitted()</code> returned the model-implied summaries for both <code>reaction</code> and <code>pmi</code>. If you just want the adjusted means for <code>reaction</code>, you can use the <code>resp</code> argument within <code>fitted()</code>.</p>
 <div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="the-simple-mediation-model.html#cb182-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitted</span>(model3<span class="fl">.1</span>, <span class="at">newdata =</span> nd, <span class="at">resp =</span> <span class="st">&quot;reaction&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##      Estimate Est.Error  Q2.5 Q97.5
-## [1,]    3.620     0.191 3.245 3.988
-## [2,]    3.362     0.177 3.016 3.699</code></pre>
+## [1,]    3.618     0.186 3.269 3.991
+## [2,]    3.365     0.178 3.015 3.729</code></pre>
 <p>Note how this is where the two values in the <span class="math inline">\(Y\)</span> adjusted column in Table 3.1 came from.</p>
 <p>However, if we want to reproduce how Hayes computed the total effect (i.e., <span class="math inline">\(c&#39; + ab\)</span>), we’ll need to work with the posterior draws themselves, <code>post</code>. Recall, we’ve already saved the indirect effect as a vector, <code>ab</code>. The direct effect, <span class="math inline">\(c&#39;\)</span>, is labeled <code>b_reaction_cond</code> within <code>post</code>. To get the total effect, <span class="math inline">\(c\)</span>, all we need to is add those vectors together.</p>
 <div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="the-simple-mediation-model.html#cb184-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span></span>
@@ -720,7 +720,7 @@ Y &amp; = i_Y + c&#39; X + b M + e_Y.
 <span id="cb185-3"><a href="the-simple-mediation-model.html#cb185-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">ll   =</span> <span class="fu">quantile</span>(total_effect, <span class="at">prob =</span> .<span class="dv">025</span>),</span>
 <span id="cb185-4"><a href="the-simple-mediation-model.html#cb185-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">ul   =</span> <span class="fu">quantile</span>(total_effect, <span class="at">prob =</span> .<span class="dv">975</span>))</span></code></pre></div>
 <pre><code>##        mean          ll       ul
-## 1 0.5014101 -0.06211054 1.065284</code></pre>
+## 1 0.4963361 -0.05526613 1.044788</code></pre>
 <div id="estimation-of-the-model-in-process-for-spss-and-sas." class="section level3" number="3.3.1">
 <h3><span class="header-section-number">3.3.1</span> <del>Estimation of the model in PROCESS for SPSS and SAS.</del></h3>
 <p>Nothing new for us, here.</p>
@@ -759,11 +759,11 @@ Y &amp; = i_Y + c&#39; X + b M + e_Y.
 <div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="the-simple-mediation-model.html#cb189-1" aria-hidden="true" tabindex="-1"></a>post <span class="sc">%&gt;%</span> </span>
 <span id="cb189-2"><a href="the-simple-mediation-model.html#cb189-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">proportion_below_zero =</span> <span class="fu">mean</span>(b_reaction_cond <span class="sc">&lt;</span> <span class="dv">0</span>))</span></code></pre></div>
 <pre><code>##   proportion_below_zero
-## 1                0.1645</code></pre>
+## 1                0.1605</code></pre>
 <p>This is something like a Bayesian <span class="math inline">\(p\)</span>-value. But of course, you could always just look at the posterior intervals.</p>
 <div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="the-simple-mediation-model.html#cb191-1" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_interval</span>(model3<span class="fl">.1</span>)[<span class="st">&quot;b_reaction_cond&quot;</span>, ]</span></code></pre></div>
 <pre><code>##       2.5%      97.5% 
-## -0.2685976  0.7902690</code></pre>
+## -0.2574458  0.7719065</code></pre>
 </div>
 <div id="inference-about-the-indirect-of-x-on-y-through-m." class="section level3" number="3.4.3">
 <h3><span class="header-section-number">3.4.3</span> Inference about the indirect of <span class="math inline">\(X\)</span> on <span class="math inline">\(Y\)</span> through <span class="math inline">\(M\)</span>.</h3>
@@ -790,17 +790,17 @@ Y &amp; = i_Y + c&#39; X + b M + e_Y.
 <div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="the-simple-mediation-model.html#cb193-1" aria-hidden="true" tabindex="-1"></a>post <span class="sc">%&gt;%</span> </span>
 <span id="cb193-2"><a href="the-simple-mediation-model.html#cb193-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(b_pmi_cond, b_reaction_pmi, ab) <span class="sc">%&gt;%</span> </span>
 <span id="cb193-3"><a href="the-simple-mediation-model.html#cb193-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span></code></pre></div>
-<pre><code>##     b_pmi_cond b_reaction_pmi          ab
-## 1   0.66994719      0.5625295  0.37686509
-## 2   0.79072903      0.4894083  0.38698933
-## 3   0.78940354      0.4516891  0.35656498
-## 4   0.69986977      0.5619456  0.39328872
-## 5   0.07739835      0.5683868  0.04399220
-## 6   0.59469187      0.6234615  0.37076747
-## 7   0.71726630      0.6027555  0.43233623
-## 8  -0.01982145      0.5891753 -0.01167831
-## 9   1.00262550      0.4136709  0.41475696
-## 10  0.51360857      0.3676442  0.18882520</code></pre>
+<pre><code>##    b_pmi_cond b_reaction_pmi         ab
+## 1  0.42154009      0.5131299 0.21630483
+## 2  0.53567033      0.4871675 0.26096120
+## 3  0.96725973      0.4702092 0.45481446
+## 4  0.63031509      0.4459453 0.28108606
+## 5  0.29318933      0.6967265 0.20427277
+## 6  0.09468811      0.2983430 0.02824953
+## 7  0.04072477      0.3938866 0.01604094
+## 8  0.90712988      0.6157761 0.55858887
+## 9  0.34774045      0.3385149 0.11771532
+## 10 0.33193994      0.4354419 0.14454057</code></pre>
 <p>Our data frame, <code>post</code>, has 4,000 rows. Why 4,000? By default, <strong>brms</strong> runs 4 HMC chains. Each chain has 2,000 iterations, 1,000 of which are warmups, which we always discard. As such, there are 1,000 good iterations left in each chain and <span class="math inline">\(1{,}000 \times 4 = 4{,}000\)</span>. We can change these defaults as needed.</p>
 <p>Each row in <code>post</code> contains the parameter values based on one of those draws. And again, these are draws from the posterior distribution. They are not draws from the data.</p>
 </div>
@@ -816,16 +816,16 @@ Y &amp; = i_Y + c&#39; X + b M + e_Y.
 <span id="cb195-3"><a href="the-simple-mediation-model.html#cb195-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(ab) <span class="sc">%&gt;%</span> </span>
 <span id="cb195-4"><a href="the-simple-mediation-model.html#cb195-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)</span></code></pre></div>
 <pre><code>##             ab
-## 1  -0.20728983
-## 2  -0.13180386
-## 3  -0.10885798
-## 4  -0.10670485
-## 5  -0.10271285
-## 6  -0.09932364
-## 7  -0.09925341
-## 8  -0.09770149
-## 9  -0.09514023
-## 10 -0.09044580</code></pre>
+## 1  -0.17350242
+## 2  -0.14797175
+## 3  -0.11911678
+## 4  -0.11519001
+## 5  -0.10195975
+## 6  -0.09700267
+## 7  -0.09497020
+## 8  -0.09417739
+## 9  -0.08930287
+## 10 -0.07417596</code></pre>
 </div>
 <div id="step-5." class="section level5" number="3.4.3.2.5">
 <h5><span class="header-section-number">3.4.3.2.5</span> Step 5.</h5>
@@ -845,14 +845,14 @@ Y &amp; = i_Y + c&#39; X + b M + e_Y.
 <p>Also, notice the headers in the rightmost two columns in our <code>posterior_summary()</code> output:</p>
 <div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb201-1"><a href="the-simple-mediation-model.html#cb201-1" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_summary</span>(model3<span class="fl">.1</span>)</span></code></pre></div>
 <pre><code>##                          Estimate  Est.Error          Q2.5        Q97.5
-## b_reaction_Intercept    0.5194173 0.55238058 -5.729556e-01    1.5646545
-## b_pmi_Intercept         5.3785041 0.16424380  5.060156e+00    5.6955294
-## b_reaction_pmi          0.5074166 0.09898774  3.166711e-01    0.7066055
-## b_reaction_cond         0.2581326 0.26571811 -2.685976e-01    0.7902690
-## b_pmi_cond              0.4781201 0.23922906  2.662413e-03    0.9534977
-## sigma_reaction          1.4050273 0.08990214  1.239212e+00    1.5957300
-## sigma_pmi               1.3170054 0.08471099  1.166138e+00    1.5000230
-## lp__                 -429.6661307 1.84073041 -4.339511e+02 -426.9939415</code></pre>
+## b_reaction_Intercept    0.5244362 0.56344986   -0.58443361    1.6188593
+## b_pmi_Intercept         5.3756008 0.16175784    5.05116562    5.6832413
+## b_reaction_pmi          0.5071028 0.10006562    0.30842255    0.7034410
+## b_reaction_cond         0.2529186 0.26139163   -0.25744582    0.7719065
+## b_pmi_cond              0.4806759 0.23440092    0.02533352    0.9415476
+## sigma_reaction          1.4058526 0.09254048    1.24092563    1.6038985
+## sigma_pmi               1.3155903 0.08528014    1.16071637    1.4959238
+## lp__                 -429.7015030 1.85596449 -434.10783413 -426.9886428</code></pre>
 <p>Those .025 and .975 quantiles from above are just what <strong>brms</strong> is giving us in our 95% Bayesian credible intervals.</p>
 <p>Here’s our version of Figure 3.5.</p>
 <div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb203-1"><a href="the-simple-mediation-model.html#cb203-1" aria-hidden="true" tabindex="-1"></a><span class="co"># these will come in handy in the subtitle</span></span>
@@ -920,16 +920,16 @@ Y &amp; = i_Y + c&#39; X + b M + e_Y.
 ## 
 ## Population-Level Effects: 
 ##                    Estimate Est.Error l-95% CI u-95% CI  Rhat Bulk_ESS Tail_ESS
-## withdraw_Intercept    1.444     0.247    0.959    1.935 1.000     6809     3288
-## affect_Intercept      0.799     0.142    0.523    1.075 1.002     5704     2753
-## withdraw_estress     -0.077     0.053   -0.182    0.025 1.001     6019     3153
-## withdraw_affect       0.772     0.102    0.574    0.976 1.000     5349     3296
-## affect_estress        0.173     0.029    0.117    0.229 1.002     5877     2770
+## withdraw_Intercept    1.453     0.256    0.958    1.961 1.002     6901     2868
+## affect_Intercept      0.802     0.145    0.520    1.088 1.000     6500     2875
+## withdraw_estress     -0.079     0.053   -0.180    0.025 1.001     5371     3164
+## withdraw_affect       0.771     0.105    0.571    0.976 1.002     6153     2923
+## affect_estress        0.172     0.030    0.115    0.231 1.000     6316     2920
 ## 
 ## Family Specific Parameters: 
 ##                Estimate Est.Error l-95% CI u-95% CI  Rhat Bulk_ESS Tail_ESS
-## sigma_withdraw    1.138     0.052    1.043    1.247 1.000     5900     3052
-## sigma_affect      0.684     0.030    0.629    0.748 1.000     5827     3387
+## sigma_withdraw    1.139     0.051    1.046    1.245 1.002     6161     2605
+## sigma_affect      0.685     0.030    0.628    0.747 1.000     7455     2883
 ## 
 ## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
 ## and Tail_ESS are effective sample size measures, and Rhat is the potential
@@ -937,8 +937,8 @@ Y &amp; = i_Y + c&#39; X + b M + e_Y.
 <p>The ‘Rhat,’ ‘Bulk_ESS,’ and ‘Tail_ESS’ values look great. Happily, the values in our summary cohere well with those Hayes reported in Table 3.5. Here are our <span class="math inline">\(R^2\)</span> values.</p>
 <div class="sourceCode" id="cb210"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb210-1"><a href="the-simple-mediation-model.html#cb210-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bayes_R2</span>(model3<span class="fl">.2</span>)</span></code></pre></div>
 <pre><code>##             Estimate  Est.Error       Q2.5     Q97.5
-## R2withdraw 0.1836641 0.03775066 0.11095088 0.2589094
-## R2affect   0.1167798 0.03395526 0.05570835 0.1849818</code></pre>
+## R2withdraw 0.1830694 0.03888225 0.10989488 0.2607779
+## R2affect   0.1161616 0.03467365 0.05349846 0.1866342</code></pre>
 <p>These are also quite similar to those in the text. Here’s our indirect effect.</p>
 <div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb212-1"><a href="the-simple-mediation-model.html#cb212-1" aria-hidden="true" tabindex="-1"></a><span class="co"># putting the posterior draws into a data frame</span></span>
 <span id="cb212-2"><a href="the-simple-mediation-model.html#cb212-2" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">posterior_samples</span>(model3<span class="fl">.2</span>)</span>
@@ -951,7 +951,7 @@ Y &amp; = i_Y + c&#39; X + b M + e_Y.
 <span id="cb212-9"><a href="the-simple-mediation-model.html#cb212-9" aria-hidden="true" tabindex="-1"></a><span class="co"># getting the posterior median and 95% intervals with `quantile()`</span></span>
 <span id="cb212-10"><a href="the-simple-mediation-model.html#cb212-10" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(post<span class="sc">$</span>ab, <span class="at">probs =</span> <span class="fu">c</span>(.<span class="dv">5</span>, .<span class="dv">025</span>, .<span class="dv">975</span>)) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##   50%  2.5% 97.5% 
-## 0.132 0.082 0.194</code></pre>
+## 0.131 0.080 0.195</code></pre>
 <p>We can visualize its shape, median, and 95% intervals in a density plot.</p>
 <div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb214-1"><a href="the-simple-mediation-model.html#cb214-1" aria-hidden="true" tabindex="-1"></a>post <span class="sc">%&gt;%</span> </span>
 <span id="cb214-2"><a href="the-simple-mediation-model.html#cb214-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> ab)) <span class="sc">+</span></span>
@@ -969,7 +969,7 @@ Y &amp; = i_Y + c&#39; X + b M + e_Y.
 <p>Here’s <span class="math inline">\(c&#39;\)</span>, the direct effect of <code>esterss</code> predicting <code>withdraw</code>.</p>
 <div class="sourceCode" id="cb215"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb215-1"><a href="the-simple-mediation-model.html#cb215-1" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_summary</span>(model3<span class="fl">.2</span>)[<span class="st">&quot;b_withdraw_estress&quot;</span>, ]</span></code></pre></div>
 <pre><code>##    Estimate   Est.Error        Q2.5       Q97.5 
-## -0.07723275  0.05266539 -0.18209525  0.02537269</code></pre>
+## -0.07905861  0.05277480 -0.18040443  0.02491451</code></pre>
 <p>It has wide flapping intervals which do straddle zero. A little addition will give us the direct effect, <span class="math inline">\(c\)</span>.</p>
 <div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb217-1"><a href="the-simple-mediation-model.html#cb217-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span></span>
 <span id="cb217-2"><a href="the-simple-mediation-model.html#cb217-2" aria-hidden="true" tabindex="-1"></a>  post <span class="sc">%&gt;%</span> </span>
@@ -977,7 +977,7 @@ Y &amp; = i_Y + c&#39; X + b M + e_Y.
 <span id="cb217-4"><a href="the-simple-mediation-model.html#cb217-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb217-5"><a href="the-simple-mediation-model.html#cb217-5" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(post<span class="sc">$</span>c, <span class="at">probs =</span> <span class="fu">c</span>(.<span class="dv">5</span>, .<span class="dv">025</span>, .<span class="dv">975</span>)) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##    50%   2.5%  97.5% 
-##  0.057 -0.053  0.160</code></pre>
+##  0.054 -0.054  0.162</code></pre>
 </div>
 <div id="session-info-2" class="section level2 unnumbered">
 <h2>Session info</h2>

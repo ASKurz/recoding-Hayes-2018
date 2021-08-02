@@ -667,19 +667,19 @@ Y &amp; = i_Y + b_1 X + b_2 W + b_3 XW + e_Y.
 ## 
 ## Population-Level Effects: 
 ##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## Intercept     2.80      0.09     2.63     2.97 1.00     3582     2609
-## frame         0.13      0.13    -0.11     0.38 1.00     3590     2920
+## Intercept     2.80      0.09     2.63     2.97 1.00     3774     2776
+## frame         0.13      0.13    -0.11     0.38 1.00     3963     2724
 ## 
 ## Family Specific Parameters: 
 ##       Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## sigma     0.93      0.05     0.85     1.03 1.00     4084     2614
+## sigma     0.93      0.05     0.85     1.03 1.00     3620     2765
 ## 
 ## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
 ## and Tail_ESS are effective sample size measures, and Rhat is the potential
 ## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <p>The ‘Estimate’ (i.e., posterior mean) of the model intercept is the expected <code>justify</code> value for when <code>frame</code> is 0. The ‘Estimate’ for <code>frame</code> is the expected difference when <code>frame</code> is a 1. If all you care about is the posterior mean, you could execute</p>
 <div class="sourceCode" id="cb418"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb418-1"><a href="fundamentals-of-moderation-analysis.html#cb418-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(model7<span class="fl">.1</span>)[<span class="st">&quot;Intercept&quot;</span>, <span class="dv">1</span>] <span class="sc">+</span> <span class="fu">fixef</span>(model7<span class="fl">.1</span>)[<span class="st">&quot;frame&quot;</span>, <span class="dv">1</span>]</span></code></pre></div>
-<pre><code>## [1] 2.936121</code></pre>
+<pre><code>## [1] 2.934172</code></pre>
 <p>which matches up nicely with the equation on page 233. But this wouldn’t be very Bayesian of us. It’d be more satisfying if we had an expression of the uncertainty in the value. For that, we’ll follow our usual practice of extracting the posterior samples, making nicely-named vectors, and summarizing a bit.</p>
 <div class="sourceCode" id="cb420"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb420-1"><a href="fundamentals-of-moderation-analysis.html#cb420-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span></span>
 <span id="cb420-2"><a href="fundamentals-of-moderation-analysis.html#cb420-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">posterior_samples</span>(model7<span class="fl">.1</span>) <span class="sc">%&gt;%</span> </span>
@@ -695,12 +695,12 @@ Y &amp; = i_Y + b_1 X + b_2 W + b_3 XW + e_Y.
 <pre><code>## # A tibble: 2 x 3
 ##   name         mean    sd
 ##   &lt;chr&gt;       &lt;dbl&gt; &lt;dbl&gt;
-## 1 when_x_is_0  2.80 0.089
-## 2 when_x_is_1  2.94 0.093</code></pre>
+## 1 when_x_is_0  2.80 0.088
+## 2 when_x_is_1  2.93 0.095</code></pre>
 <p>Hayes referenced a <span class="math inline">\(t\)</span>-test and accompanying <span class="math inline">\(p\)</span>-value in the lower part of page 233. We, of course, aren’t going to do that. But we do have the 95% intervals in our <code>print()</code> output, above, which we can also look at with the <code>brms::posterior_interval()</code> function.</p>
 <div class="sourceCode" id="cb422"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb422-1"><a href="fundamentals-of-moderation-analysis.html#cb422-1" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_interval</span>(model7<span class="fl">.1</span>)[<span class="st">&quot;b_frame&quot;</span>, ]</span></code></pre></div>
 <pre><code>##       2.5%      97.5% 
-## -0.1095023  0.3820728</code></pre>
+## -0.1104257  0.3847622</code></pre>
 <p>And we can always plot.</p>
 <div class="sourceCode" id="cb424"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb424-1"><a href="fundamentals-of-moderation-analysis.html#cb424-1" aria-hidden="true" tabindex="-1"></a>post <span class="sc">%&gt;%</span> </span>
 <span id="cb424-2"><a href="fundamentals-of-moderation-analysis.html#cb424-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> b_frame)) <span class="sc">+</span></span>
@@ -733,19 +733,19 @@ Y &amp; = i_Y + b_1 X + b_2 W + b_3 XW + e_Y.
 <p>Here are the quick and dirty coefficient summaries for our two new models.</p>
 <div class="sourceCode" id="cb427"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb427-1"><a href="fundamentals-of-moderation-analysis.html#cb427-1" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_summary</span>(model7<span class="fl">.2</span>)</span></code></pre></div>
 <pre><code>##                 Estimate  Est.Error         Q2.5        Q97.5
-## b_Intercept    2.1316590 0.12305743    1.8907913    2.3726587
-## b_frame        0.1180133 0.11605417   -0.1105336    0.3486287
-## b_skeptic      0.2009920 0.02829137    0.1454809    0.2558302
-## sigma          0.8416652 0.04141704    0.7644530    0.9262784
-## lp__        -265.6074165 1.41141383 -269.1373758 -263.8595926</code></pre>
+## b_Intercept    2.1321750 0.12594154    1.8914550    2.3852145
+## b_frame        0.1174051 0.11625236   -0.1110120    0.3459309
+## b_skeptic      0.2003137 0.02839508    0.1440296    0.2554813
+## sigma          0.8414353 0.04159860    0.7649706    0.9282171
+## lp__        -265.6272830 1.42659274 -269.1917073 -263.8615255</code></pre>
 <div class="sourceCode" id="cb429"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb429-1"><a href="fundamentals-of-moderation-analysis.html#cb429-1" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_summary</span>(model7<span class="fl">.3</span>)</span></code></pre></div>
 <pre><code>##                     Estimate  Est.Error          Q2.5        Q97.5
-## b_Intercept        2.4528578 0.14985912    2.15853786    2.7472328
-## b_frame           -0.5645917 0.22093662   -0.98591778   -0.1130738
-## b_skeptic          0.1052598 0.03833355    0.02867027    0.1796417
-## b_frame:skeptic    0.2008375 0.05614256    0.08883959    0.3072896
-## sigma              0.8173608 0.04119505    0.74086604    0.9026804
-## lp__            -259.6607192 1.60825509 -263.74156740 -257.5630005</code></pre>
+## b_Intercept        2.4516167 0.14668648    2.17005729    2.7526710
+## b_frame           -0.5645480 0.21392057   -0.97831354   -0.1458024
+## b_skeptic          0.1046097 0.03775143    0.02660806    0.1775666
+## b_frame:skeptic    0.2020772 0.05450541    0.09875548    0.3109934
+## sigma              0.8181036 0.04037604    0.74317261    0.9020807
+## lp__            -259.6144256 1.48807863 -263.07099629 -257.5339074</code></pre>
 <p>Just focusing on our primary model, <code>model7.3</code>, here’s another way to look at the coefficients.</p>
 <div class="sourceCode" id="cb431"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb431-1"><a href="fundamentals-of-moderation-analysis.html#cb431-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mcmc_plot</span>(model7<span class="fl">.3</span>) <span class="sc">+</span></span>
 <span id="cb431-2"><a href="fundamentals-of-moderation-analysis.html#cb431-2" aria-hidden="true" tabindex="-1"></a>  theme_07</span></code></pre></div>
@@ -804,9 +804,9 @@ Y &amp; = i_Y + b_1 X + b_2 W + b_3 XW + e_Y.
 <span id="cb434-5"><a href="fundamentals-of-moderation-analysis.html#cb434-5" aria-hidden="true" tabindex="-1"></a><span class="fu">loo_compare</span>(model7<span class="fl">.1</span>, model7<span class="fl">.2</span>, model7<span class="fl">.3</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb434-6"><a href="fundamentals-of-moderation-analysis.html#cb434-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">simplify =</span> F)</span></code></pre></div>
 <pre><code>##          elpd_diff se_diff elpd_loo se_elpd_loo p_loo  se_p_loo looic  se_looic
-## model7.3    0.0       0.0  -259.1     10.9         5.5    0.9    518.3   21.7  
-## model7.2   -5.5       4.1  -264.6     11.2         4.6    0.9    529.2   22.4  
-## model7.1  -27.0       9.5  -286.1     12.0         3.3    0.8    572.3   24.1</code></pre>
+## model7.3    0.0       0.0  -259.0     10.8         5.4    0.9    518.1   21.7  
+## model7.2   -5.6       4.1  -264.7     11.2         4.6    0.9    529.3   22.4  
+## model7.1  -27.1       9.5  -286.2     12.0         3.3    0.8    572.3   24.1</code></pre>
 <p>The LOO point estimate for both multivariable models were clearly lower than that for <code>model7.1</code>. The point estimate for the moderation model, <code>model7.3</code>, was within the double-digit range lower than that for <code>model7.2</code>, which typically suggests better fit. But notice how wide the standard error was. There’s a lot of uncertainty, there. Hopefully this isn’t surprising. Our <span class="math inline">\(R^2\)</span> difference was small and uncertain, too. We can also compare them with AIC-type model weighting, which you can learn more about <a href="https://www.youtube.com/watch?v=t0pRuy1_190">starting at this point in this lecture</a> or the related <span class="citation">(<a href="#ref-vehtariBayesianStackingPseudoBMA" role="doc-biblioref">2019</a>)</span> vignette, <a href="https://cran.r-project.org/web/packages/loo/vignettes/loo2-weights.html"><em>Bayesian stacking and pseudo-BMA weights using the loo package</em></a> <span class="citation">(<a href="#ref-vehtariBayesianStackingPseudoBMA" role="doc-biblioref">Vehtari &amp; Gabry, 2019</a>)</span>. Here we’ll keep things simple and weight with the LOO.</p>
 <div class="sourceCode" id="cb436"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb436-1"><a href="fundamentals-of-moderation-analysis.html#cb436-1" aria-hidden="true" tabindex="-1"></a><span class="fu">model_weights</span>(model7<span class="fl">.1</span>, model7<span class="fl">.2</span>, model7<span class="fl">.3</span>,</span>
 <span id="cb436-2"><a href="fundamentals-of-moderation-analysis.html#cb436-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">weights =</span> <span class="st">&quot;loo&quot;</span>) <span class="sc">%&gt;%</span> </span>
@@ -831,9 +831,9 @@ Y &amp; = i_Y + b_1 X + b_2 W + b_3 XW + e_Y.
 <pre><code>## # A tibble: 3 x 3
 ##   `conditional effect of X on Y when W =`   mean    sd
 ##   &lt;chr&gt;                                    &lt;dbl&gt; &lt;dbl&gt;
-## 1 2                                       -0.163 0.138
-## 2 3.5                                      0.138 0.115
-## 3 5                                        0.44  0.147</code></pre>
+## 1 2                                       -0.16  0.134
+## 2 3.5                                      0.143 0.113
+## 3 5                                        0.446 0.145</code></pre>
 <div id="estimation-using-process-brms." class="section level3" number="7.2.1">
 <h3><span class="header-section-number">7.2.1</span> Estimation using <del>PROCESS</del> brms.</h3>
 <p>Similar to what Hayes advertised with PROCESS, with our <code>formula = justify ~ 1 + frame + skeptic + frame:skeptic</code> code in <code>model7.3</code>, we didn’t need to hard code an interaction variable into the data. <strong>brms</strong> handled that for us.</p>
@@ -858,17 +858,17 @@ Y &amp; = i_Y + b_1 X + b_2 W + b_3 XW + e_Y.
 <p>Here are the summaries of our fixed effects.</p>
 <div class="sourceCode" id="cb442"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb442-1"><a href="fundamentals-of-moderation-analysis.html#cb442-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(model7<span class="fl">.4</span>)</span></code></pre></div>
 <pre><code>##                  Estimate  Est.Error        Q2.5     Q97.5
-## Intercept       2.8058395 0.07934943  2.64922250 2.9599333
-## frame           0.1190528 0.11423511 -0.11004503 0.3379748
-## skeptic_c       0.1045952 0.03854777  0.02899774 0.1808234
-## frame:skeptic_c 0.2013556 0.05578022  0.09255114 0.3092746</code></pre>
+## Intercept       2.8073962 0.07701610  2.65744337 2.9562671
+## frame           0.1133822 0.11460258 -0.10819717 0.3411017
+## skeptic_c       0.1027887 0.03881743  0.02914400 0.1789173
+## frame:skeptic_c 0.2040915 0.05496150  0.09173885 0.3086697</code></pre>
 <p>To practice, <code>frame</code> and <code>skeptic_c</code> are lower order terms and, as such, they are conditional effects. The higher order term is <code>frame:skeptic_c</code>. Anyway, here are the <span class="math inline">\(R^2\)</span> distributions for <code>model7.3</code> and <code>model7.4</code>. They’re the same within simulation variance.</p>
 <div class="sourceCode" id="cb444"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb444-1"><a href="fundamentals-of-moderation-analysis.html#cb444-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bayes_R2</span>(model7<span class="fl">.3</span>) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##    Estimate Est.Error  Q2.5 Q97.5
-## R2    0.249     0.044 0.163 0.334</code></pre>
+## R2    0.249     0.045 0.158 0.334</code></pre>
 <div class="sourceCode" id="cb446"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb446-1"><a href="fundamentals-of-moderation-analysis.html#cb446-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bayes_R2</span>(model7<span class="fl">.4</span>) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##    Estimate Est.Error  Q2.5 Q97.5
-## R2    0.249     0.043 0.162 0.333</code></pre>
+## R2    0.249     0.044 0.161 0.335</code></pre>
 <p>If you’re bothered by the differences resulting from sampling variation, you might increase the number of HMC iterations from the 2,000-per-chain default. Doing so might look something like this.</p>
 <div class="sourceCode" id="cb448"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb448-1"><a href="fundamentals-of-moderation-analysis.html#cb448-1" aria-hidden="true" tabindex="-1"></a>model7<span class="fl">.3</span> <span class="ot">&lt;-</span></span>
 <span id="cb448-2"><a href="fundamentals-of-moderation-analysis.html#cb448-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update</span>(model7<span class="fl">.3</span>,</span>
@@ -891,14 +891,14 @@ Y &amp; = i_Y + b_1 X + b_2 W + b_3 XW + e_Y.
 <p>Our posterior summaries match up nicely with the output in Hayes’s Table 7.4.</p>
 <div class="sourceCode" id="cb451"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb451-1"><a href="fundamentals-of-moderation-analysis.html#cb451-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(model7<span class="fl">.5</span>)</span></code></pre></div>
 <pre><code>##                     Estimate  Est.Error        Q2.5     Q97.5
-## Intercept          2.8656524 0.05707244  2.75426979 2.9731264
-## frame_.5           0.1177391 0.11389706 -0.09964912 0.3418923
-## skeptic_c          0.2054648 0.02719751  0.15105342 0.2581924
-## frame_.5:skeptic_c 0.2013508 0.05645362  0.08739552 0.3130293</code></pre>
+## Intercept          2.8661008 0.05693406  2.75424820 2.9800025
+## frame_.5           0.1162708 0.11283424 -0.10375391 0.3302863
+## skeptic_c          0.2059356 0.02710684  0.15156950 0.2584645
+## frame_.5:skeptic_c 0.2006627 0.05580013  0.09389709 0.3151269</code></pre>
 <p>Here’s a summary of the Bayesian <span class="math inline">\(R^2\)</span>.</p>
 <div class="sourceCode" id="cb453"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb453-1"><a href="fundamentals-of-moderation-analysis.html#cb453-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bayes_R2</span>(model7<span class="fl">.5</span>)</span></code></pre></div>
-<pre><code>##     Estimate  Est.Error      Q2.5    Q97.5
-## R2 0.2489388 0.04386666 0.1602135 0.331556</code></pre>
+<pre><code>##     Estimate  Est.Error      Q2.5     Q97.5
+## R2 0.2493167 0.04306566 0.1624235 0.3303375</code></pre>
 </div>
 </div>
 <div id="visualizing-moderation" class="section level2" number="7.3">
@@ -933,12 +933,12 @@ Y &amp; = i_Y + b_1 X + b_2 W + b_3 XW + e_Y.
 <p>Now we’ve got our <code>nd</code>, we’ll get our posterior estimates for <span class="math inline">\(Y\)</span> with <code>fitted()</code>.</p>
 <div class="sourceCode" id="cb460"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb460-1"><a href="fundamentals-of-moderation-analysis.html#cb460-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitted</span>(model7<span class="fl">.3</span>, <span class="at">newdata =</span> nd)</span></code></pre></div>
 <pre><code>##      Estimate  Est.Error     Q2.5    Q97.5
-## [1,] 2.621274 0.10294090 2.418362 2.826162
-## [2,] 2.747585 0.08147712 2.586832 2.910142
-## [3,] 3.000209 0.10685528 2.789737 3.207283
-## [4,] 2.378022 0.10952920 2.159534 2.591939
-## [5,] 2.745339 0.08449143 2.579371 2.917328
-## [6,] 3.479972 0.10829190 3.272957 3.694824</code></pre>
+## [1,] 2.618992 0.10059981 2.424506 2.822780
+## [2,] 2.744524 0.07975865 2.589767 2.901872
+## [3,] 2.995587 0.10562745 2.785480 3.196689
+## [4,] 2.377768 0.10841435 2.164639 2.588615
+## [5,] 2.745792 0.08410312 2.583013 2.908011
+## [6,] 3.481841 0.10967583 3.262311 3.702851</code></pre>
 <p>When using the default <code>summary = TRUE</code> settings in <code>fitted()</code>, the function returns posterior means, <span class="math inline">\(SD\)</span>s and 95% intervals for <span class="math inline">\(Y\)</span> based on each row in the <code>nd</code> data we specified in the <code>newdata = nd</code> argument. You don’t have to name your newdata <code>nd</code> or anything like that; it’s just my convention.</p>
 <p>Here’ a quick plot of what those values imply.</p>
 <div class="sourceCode" id="cb462"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb462-1"><a href="fundamentals-of-moderation-analysis.html#cb462-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitted</span>(model7<span class="fl">.3</span>, <span class="at">newdata =</span> nd) <span class="sc">%&gt;%</span> </span>
@@ -956,7 +956,7 @@ Y &amp; = i_Y + b_1 X + b_2 W + b_3 XW + e_Y.
 <span id="cb462-13"><a href="fundamentals-of-moderation-analysis.html#cb462-13" aria-hidden="true" tabindex="-1"></a>  theme_07</span></code></pre></div>
 <p><img src="07_files/figure-html/unnamed-chunk-34-1.png" width="576" /></p>
 <p>That plot is okay, but we can do better.</p>
-<p>In order to plot the model-implied effects across the full range of <code>skeptic</code> values presented in Figure 7.7, you need to change the range of those values in the <code>nd</code> data. Also, although the effect is subtle in the above example, 95% intervals often follow a bowtie shape. In order to insure the contours of that shape are smooth, it’s often helpful to specify 30 or so evenly-spaced values in the variable on the x-axis, <code>skeptic</code> in this case. We’ll employ the <code>seq()</code> function for that and specify <code>length.out = 30</code>. In addition, we add a few other flourishes to make our plot more closely resemble the one in the text.</p>
+<p>In order to plot the model-implied effects across the full range of <code>skeptic</code> values presented in Figure 7.7, you need to change the range of those values in the <code>nd</code> data. Also, although the effect is subtle in the above example, 95% intervals often follow a bowtie shape. In order to insure the contours of that shape are smooth, it’s often helpful to specify 30 or so evenly-spaced values in the variable on the <span class="math inline">\(x\)</span>-axis, <code>skeptic</code> in this case. We’ll employ the <code>seq()</code> function for that and specify <code>length.out = 30</code>. In addition, we add a few other flourishes to make our plot more closely resemble the one in the text.</p>
 <p>Here’s our Figure 7.7.</p>
 <div class="sourceCode" id="cb463"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb463-1"><a href="fundamentals-of-moderation-analysis.html#cb463-1" aria-hidden="true" tabindex="-1"></a>nd <span class="ot">&lt;-</span> </span>
 <span id="cb463-2"><a href="fundamentals-of-moderation-analysis.html#cb463-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">crossing</span>(<span class="at">frame   =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>,</span>
@@ -1044,15 +1044,15 @@ Y &amp; = i_Y + b_1 X + b_2 W + b_3 XW + e_Y.
 <span id="cb469-2"><a href="fundamentals-of-moderation-analysis.html#cb469-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fitted</span>(model7<span class="fl">.3</span>, <span class="at">newdata =</span> nd, <span class="at">summary =</span> F)</span>
 <span id="cb469-3"><a href="fundamentals-of-moderation-analysis.html#cb469-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb469-4"><a href="fundamentals-of-moderation-analysis.html#cb469-4" aria-hidden="true" tabindex="-1"></a>f <span class="sc">%&gt;%</span> <span class="fu">str</span>()</span></code></pre></div>
-<pre><code>##  num [1:4000, 1:6] 2.57 2.64 2.77 2.54 2.67 ...</code></pre>
+<pre><code>##  num [1:4000, 1:6] 2.54 2.64 2.56 2.58 2.76 ...</code></pre>
 <div class="sourceCode" id="cb471"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb471-1"><a href="fundamentals-of-moderation-analysis.html#cb471-1" aria-hidden="true" tabindex="-1"></a>f <span class="sc">%&gt;%</span> <span class="fu">head</span>()</span></code></pre></div>
 <pre><code>##          [,1]     [,2]     [,3]     [,4]     [,5]     [,6]
-## [1,] 2.567148 2.684988 2.920667 2.565533 2.872769 3.487242
-## [2,] 2.641720 2.767627 3.019443 2.315604 2.693016 3.447841
-## [3,] 2.773269 2.862681 3.041504 2.369106 2.724398 3.434984
-## [4,] 2.538722 2.676719 2.952712 2.372175 2.784640 3.609571
-## [5,] 2.674566 2.788308 3.015793 2.328503 2.675105 3.368308
-## [6,] 2.524002 2.643537 2.882608 2.390762 2.740998 3.441471</code></pre>
+## [1,] 2.544529 2.605685 2.727995 2.592793 2.922759 3.582689
+## [2,] 2.642688 2.753064 2.973817 2.416421 2.770837 3.479670
+## [3,] 2.560774 2.672912 2.897188 2.472279 2.835495 3.561927
+## [4,] 2.580077 2.698479 2.935283 2.449071 2.807149 3.523305
+## [5,] 2.755264 2.800871 2.892086 2.153414 2.598460 3.488551
+## [6,] 2.601511 2.692850 2.875529 2.391907 2.748605 3.462002</code></pre>
 <p>With <code>summary = F</code>, <code>fitted()</code> returned a matrix of 4,000 rows (i.e., one for each posterior draw) and 6 vectors (i.e., one for each row in our <code>nd</code> data). So now instead of summary information, we have a full expression of the uncertainty in terms of 4,000 draws. If you prefer working within the <strong>tidyverse</strong> and plotting with <strong>ggplot2</strong>, matrices aren’t the most useful data type. Let’s wrangle a bit.</p>
 <div class="sourceCode" id="cb473"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb473-1"><a href="fundamentals-of-moderation-analysis.html#cb473-1" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span></span>
 <span id="cb473-2"><a href="fundamentals-of-moderation-analysis.html#cb473-2" aria-hidden="true" tabindex="-1"></a>  f <span class="sc">%&gt;%</span> </span>
@@ -1071,12 +1071,12 @@ Y &amp; = i_Y + b_1 X + b_2 W + b_3 XW + e_Y.
 <pre><code>## # A tibble: 6 x 5
 ##    iter skeptic         `0`   `1` difference
 ##   &lt;int&gt; &lt;chr&gt;         &lt;dbl&gt; &lt;dbl&gt;      &lt;dbl&gt;
-## 1     1 skeptic = 1.6  2.57  2.57   -0.00162
-## 2     1 skeptic = 2.8  2.68  2.87    0.188  
-## 3     1 skeptic = 5.2  2.92  3.49    0.567  
-## 4     2 skeptic = 1.6  2.64  2.32   -0.326  
-## 5     2 skeptic = 2.8  2.77  2.69   -0.0746 
-## 6     2 skeptic = 5.2  3.02  3.45    0.428</code></pre>
+## 1     1 skeptic = 1.6  2.54  2.59     0.0483
+## 2     1 skeptic = 2.8  2.61  2.92     0.317 
+## 3     1 skeptic = 5.2  2.73  3.58     0.855 
+## 4     2 skeptic = 1.6  2.64  2.42    -0.226 
+## 5     2 skeptic = 2.8  2.75  2.77     0.0178
+## 6     2 skeptic = 5.2  2.97  3.48     0.506</code></pre>
 <p>Now we have our draws in a nice structure, we’re ready to plot.</p>
 <div class="sourceCode" id="cb475"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb475-1"><a href="fundamentals-of-moderation-analysis.html#cb475-1" aria-hidden="true" tabindex="-1"></a>f <span class="sc">%&gt;%</span> </span>
 <span id="cb475-2"><a href="fundamentals-of-moderation-analysis.html#cb475-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> difference)) <span class="sc">+</span></span>
@@ -1098,9 +1098,9 @@ Y &amp; = i_Y + b_1 X + b_2 W + b_3 XW + e_Y.
 <pre><code>## # A tibble: 3 x 7
 ##   skeptic       difference .lower .upper .width .point .interval
 ##   &lt;chr&gt;              &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    
-## 1 skeptic = 1.6     -0.244 -0.53   0.064   0.95 median qi       
-## 2 skeptic = 2.8     -0.002 -0.236  0.236   0.95 median qi       
-## 3 skeptic = 5.2      0.477  0.177  0.786   0.95 median qi</code></pre>
+## 1 skeptic = 1.6     -0.243 -0.53   0.051   0.95 median qi       
+## 2 skeptic = 2.8     -0.003 -0.228  0.229   0.95 median qi       
+## 3 skeptic = 5.2      0.486  0.193  0.786   0.95 median qi</code></pre>
 </div>
 </div>
 <div id="the-johnson-neyman-technique." class="section level3" number="7.4.2">
@@ -1305,25 +1305,25 @@ Y &amp; = i_Y + b_1 X + b_2 W + b_3 XW + e_Y.
 <p>Behold the coefficient summaries.</p>
 <div class="sourceCode" id="cb486"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb486-1"><a href="fundamentals-of-moderation-analysis.html#cb486-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(model7<span class="fl">.6</span>) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##           Estimate Est.Error   Q2.5 Q97.5
-## Intercept    2.620     0.099  2.430 2.813
-## frame       -0.101     0.143 -0.382 0.180</code></pre>
+## Intercept    2.622     0.096  2.434 2.806
+## frame       -0.104     0.141 -0.382 0.173</code></pre>
 <div class="sourceCode" id="cb488"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb488-1"><a href="fundamentals-of-moderation-analysis.html#cb488-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(model7<span class="fl">.7</span>) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##           Estimate Est.Error  Q2.5 Q97.5
-## Intercept    3.069     0.142 2.790 3.348
-## frame        0.479     0.201 0.083 0.874</code></pre>
+## Intercept    3.068     0.143 2.790 3.348
+## frame        0.472     0.205 0.077 0.871</code></pre>
 <p>You can use <code>fitted()</code> to get the posterior means and other summaries for the two <code>frame</code> groups, by model.</p>
 <div class="sourceCode" id="cb490"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb490-1"><a href="fundamentals-of-moderation-analysis.html#cb490-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitted</span>(model7<span class="fl">.6</span>, </span>
 <span id="cb490-2"><a href="fundamentals-of-moderation-analysis.html#cb490-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">newdata =</span> <span class="fu">tibble</span>(<span class="at">frame =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>)) <span class="sc">%&gt;%</span> </span>
 <span id="cb490-3"><a href="fundamentals-of-moderation-analysis.html#cb490-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##      Estimate Est.Error  Q2.5 Q97.5
-## [1,]    2.620     0.099 2.430 2.813
-## [2,]    2.519     0.102 2.319 2.726</code></pre>
+## [1,]    2.622     0.096 2.434 2.806
+## [2,]    2.518     0.103 2.315 2.714</code></pre>
 <div class="sourceCode" id="cb492"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb492-1"><a href="fundamentals-of-moderation-analysis.html#cb492-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fitted</span>(model7<span class="fl">.7</span>, </span>
 <span id="cb492-2"><a href="fundamentals-of-moderation-analysis.html#cb492-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">newdata =</span> <span class="fu">tibble</span>(<span class="at">frame =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>)) <span class="sc">%&gt;%</span> </span>
 <span id="cb492-3"><a href="fundamentals-of-moderation-analysis.html#cb492-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##      Estimate Est.Error  Q2.5 Q97.5
-## [1,]    3.069     0.142 2.790 3.348
-## [2,]    3.548     0.145 3.263 3.843</code></pre>
+## [1,]    3.068     0.143 2.790 3.348
+## [2,]    3.541     0.147 3.243 3.827</code></pre>
 <p>Do note that though <strong>brms</strong> ‘Est.Error’ is the posterior <span class="math inline">\(SD\)</span> for the coefficient, it is not the same thing as descriptive statistic <span class="math inline">\(SD\)</span> of a subset of the data. Thus, although our ‘Estimates’ correspond nicely to the mean values Hayes reported in the middle of page 264, his <span class="math inline">\(SD\)</span>s will not match up with our ‘Est.Error’ values, and nor should they.</p>
 <p>Anyway, our results don’t yield <span class="math inline">\(t\)</span>-tests. But you don’t need those anyway. We’re working within the Bayesian regression paradigm! But if you’re really interested in the sub-model-implied differences between the two levels of <code>frame</code> by <code>skeptic_hi</code> subgroup, all you need is the <code>frame</code> coefficient of <code>model7.6</code> and <code>model7.7</code>. Here we’ll use <code>bind_rows()</code> to combine their posterior samples and then plot.</p>
 <div class="sourceCode" id="cb494"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb494-1"><a href="fundamentals-of-moderation-analysis.html#cb494-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bind_rows</span>(</span>

@@ -1,38 +1,39 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
 <head>
 
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>14 Miscellaneous Topics and Some Frequently Asked Questions | Recoding Introduction to Mediation, Moderation, and Conditional Process Analysis</title>
-  <meta name="description" content="This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
-  <meta name="generator" content="bookdown 0.12 and GitBook 2.6.7" />
+  <meta name="description" content="This project is an effort to connect Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
+  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
 
   <meta property="og:title" content="14 Miscellaneous Topics and Some Frequently Asked Questions | Recoding Introduction to Mediation, Moderation, and Conditional Process Analysis" />
   <meta property="og:type" content="book" />
   
   
-  <meta property="og:description" content="This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
-  <meta name="github-repo" content="ASKURZ/recoding-Hayes-2018" />
+  <meta property="og:description" content="This project is an effort to connect Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
+  <meta name="github-repo" content="ASKurz/recoding-Hayes-2018" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="14 Miscellaneous Topics and Some Frequently Asked Questions | Recoding Introduction to Mediation, Moderation, and Conditional Process Analysis" />
   <meta name="twitter:site" content="@SolomonKurz" />
-  <meta name="twitter:description" content="This project is an effort to connect his Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
+  <meta name="twitter:description" content="This project is an effort to connect Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
   
 
 <meta name="author" content="A Solomon Kurz" />
 
 
-<meta name="date" content="2019-12-20" />
+<meta name="date" content="2021-08-02" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="conditional-process-analysis-with-a-multicategorical-antecedent.html">
-
+<link rel="prev" href="conditional-process-analysis-with-a-multicategorical-antecedent.html"/>
+<link rel="next" href="references.html"/>
+<script src="libs/header-attrs-2.8/header-attrs.js"></script>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -40,6 +41,7 @@
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
 
 
 
@@ -47,28 +49,35 @@
 
 
 
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<link href="libs/vembedr-0.1.4/css/vembedr.css" rel="stylesheet" />
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -77,9 +86,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -112,6 +121,29 @@ code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
 </head>
 
 <body>
@@ -124,105 +156,128 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <nav role="navigation">
 
 <ul class="summary">
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a><ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Welcome</a>
+<ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#why-this"><i class="fa fa-check"></i>Why this?</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#my-assumptions-about-you"><i class="fa fa-check"></i>My assumptions about you</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#how-to-use-and-understand-this-project"><i class="fa fa-check"></i>How to use and understand this project</a></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html#times-change-and-so-do-we"><i class="fa fa-check"></i>Times change and so do we</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#times-change-and-so-do-we"><i class="fa fa-check"></i>Times change and so do we</a>
+<ul>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#section"><i class="fa fa-check"></i>1.0.0.</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#section-1"><i class="fa fa-check"></i>1.1.0.</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#section-2"><i class="fa fa-check"></i>1.2.0.</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#whats-next"><i class="fa fa-check"></i>What’s next?</a></li>
+</ul></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#thank-yous-are-in-order"><i class="fa fa-check"></i>Thank-you’s are in order</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#license-and-citation"><i class="fa fa-check"></i>License and citation</a></li>
 </ul></li>
 <li class="part"><span><b>I FUNDAMENTALS</b></span></li>
-<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
-<li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#references"><i class="fa fa-check"></i>References</a></li>
+<li class="chapter" data-level="1" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
 <li class="chapter" data-level="" data-path="introduction.html"><a href="introduction.html#session-info"><i class="fa fa-check"></i>Session info</a></li>
 </ul></li>
-<li class="chapter" data-level="2" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html"><i class="fa fa-check"></i><b>2</b> Fundamentals of Linear Regression</a><ul>
+<li class="chapter" data-level="2" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html"><i class="fa fa-check"></i><b>2</b> Fundamentals of Linear Regression</a>
+<ul>
 <li class="chapter" data-level="2.1" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#correlation-and-prediction"><i class="fa fa-check"></i><b>2.1</b> Correlation and prediction</a></li>
-<li class="chapter" data-level="2.2" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#the-simple-linear-regression-model"><i class="fa fa-check"></i><b>2.2</b> The simple linear regression model</a><ul>
+<li class="chapter" data-level="2.2" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#the-simple-linear-regression-model"><i class="fa fa-check"></i><b>2.2</b> The simple linear regression model</a>
+<ul>
 <li class="chapter" data-level="2.2.1" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#interpretation-of-the-constant-and-regression-coefficient."><i class="fa fa-check"></i><b>2.2.1</b> Interpretation of the constant and regression coefficient.</a></li>
 <li class="chapter" data-level="2.2.2" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#the-standardized-regression-model."><i class="fa fa-check"></i><b>2.2.2</b> The standardized regression model.</a></li>
 <li class="chapter" data-level="2.2.3" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#simple-linear-regression-with-a-dichotomous-antecedent-variable."><i class="fa fa-check"></i><b>2.2.3</b> Simple linear regression with a dichotomous antecedent variable.</a></li>
 <li class="chapter" data-level="2.2.4" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#a-note-on-symbolic-representations."><i class="fa fa-check"></i><b>2.2.4</b> A note on symbolic representations.</a></li>
 </ul></li>
 <li class="chapter" data-level="2.3" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#alternative-explanations-for-association"><i class="fa fa-check"></i><b>2.3</b> Alternative explanations for association</a></li>
-<li class="chapter" data-level="2.4" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#multiple-linear-regression"><i class="fa fa-check"></i><b>2.4</b> Multiple linear regression</a><ul>
+<li class="chapter" data-level="2.4" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#multiple-linear-regression"><i class="fa fa-check"></i><b>2.4</b> Multiple linear regression</a>
+<ul>
 <li class="chapter" data-level="2.4.1" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#the-standardized-regression-model.-1"><i class="fa fa-check"></i><b>2.4.1</b> The standardized regression model.</a></li>
 </ul></li>
 <li class="chapter" data-level="2.5" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#measures-of-model-fit"><i class="fa fa-check"></i><b>2.5</b> Measures of model fit</a></li>
-<li class="chapter" data-level="2.6" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#statistical-inference"><i class="fa fa-check"></i><b>2.6</b> Statistical inference</a><ul>
+<li class="chapter" data-level="2.6" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#statistical-inference"><i class="fa fa-check"></i><b>2.6</b> Statistical inference</a>
+<ul>
 <li class="chapter" data-level="2.6.1" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#testing-a-null-hypothesis."><i class="fa fa-check"></i><b>2.6.1</b> Testing a null hypothesis.</a></li>
 <li class="chapter" data-level="2.6.2" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#interval-estimation."><i class="fa fa-check"></i><b>2.6.2</b> Interval estimation.</a></li>
 <li class="chapter" data-level="2.6.3" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#testing-a-hypothesis-about-a-set-of-antecedent-variables."><i class="fa fa-check"></i><b>2.6.3</b> Testing a hypothesis about a set of antecedent variables.</a></li>
 </ul></li>
 <li class="chapter" data-level="2.7" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#multicategorical-antecedent-variables"><i class="fa fa-check"></i><b>2.7</b> Multicategorical antecedent variables</a></li>
-<li class="chapter" data-level="2.8" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#assumptions-for-interpretation-and-statistical-inference"><i class="fa fa-check"></i><b>2.8</b> Assumptions for interpretation and statistical inference</a><ul>
+<li class="chapter" data-level="2.8" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#assumptions-for-interpretation-and-statistical-inference"><i class="fa fa-check"></i><b>2.8</b> Assumptions for interpretation and statistical inference</a>
+<ul>
 <li class="chapter" data-level="2.8.1" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#linearity."><i class="fa fa-check"></i><b>2.8.1</b> Linearity.</a></li>
 <li class="chapter" data-level="2.8.2" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#normality."><i class="fa fa-check"></i><b>2.8.2</b> Normality.</a></li>
 <li class="chapter" data-level="2.8.3" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#homoscedasticity."><i class="fa fa-check"></i><b>2.8.3</b> Homoscedasticity.</a></li>
 <li class="chapter" data-level="2.8.4" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#independence."><i class="fa fa-check"></i><b>2.8.4</b> Independence.</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#reference"><i class="fa fa-check"></i>Reference</a></li>
 <li class="chapter" data-level="" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#session-info-1"><i class="fa fa-check"></i>Session info</a></li>
 <li class="chapter" data-level="" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#footnote"><i class="fa fa-check"></i>Footnote</a></li>
 </ul></li>
 <li class="part"><span><b>II MEDIATION ANALYSIS</b></span></li>
-<li class="chapter" data-level="3" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html"><i class="fa fa-check"></i><b>3</b> The Simple Mediation Model</a><ul>
+<li class="chapter" data-level="3" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html"><i class="fa fa-check"></i><b>3</b> The Simple Mediation Model</a>
+<ul>
 <li class="chapter" data-level="3.1" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#the-simple-mediation-model-1"><i class="fa fa-check"></i><b>3.1</b> The simple mediation model</a></li>
-<li class="chapter" data-level="3.2" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#estimation-of-the-direce-indirect-and-total-effects-of-x"><i class="fa fa-check"></i><b>3.2</b> Estimation of the direce, indirect, and total effects of <span class="math inline">\(X\)</span></a></li>
-<li class="chapter" data-level="3.3" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#example-with-dichotomous-x-the-influence-of-presumed-media-influence"><i class="fa fa-check"></i><b>3.3</b> Example with dichotomous <span class="math inline">\(X\)</span>: The influence of presumed media influence</a><ul>
+<li class="chapter" data-level="3.2" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#estimation-of-the-direct-indirect-and-total-effects-of-x"><i class="fa fa-check"></i><b>3.2</b> Estimation of the direct, indirect, and total effects of <span class="math inline">\(X\)</span></a></li>
+<li class="chapter" data-level="3.3" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#example-with-dichotomous-x-the-influence-of-presumed-media-influence"><i class="fa fa-check"></i><b>3.3</b> Example with dichotomous <span class="math inline">\(X\)</span>: The influence of presumed media influence</a>
+<ul>
 <li class="chapter" data-level="3.3.1" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#estimation-of-the-model-in-process-for-spss-and-sas."><i class="fa fa-check"></i><b>3.3.1</b> <del>Estimation of the model in PROCESS for SPSS and SAS.</del></a></li>
 </ul></li>
-<li class="chapter" data-level="3.4" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#statistical-inference-1"><i class="fa fa-check"></i><b>3.4</b> Statistical inference</a><ul>
+<li class="chapter" data-level="3.4" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#statistical-inference-1"><i class="fa fa-check"></i><b>3.4</b> Statistical inference</a>
+<ul>
 <li class="chapter" data-level="3.4.1" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#inference-about-the-total-effect-of-x-on-y."><i class="fa fa-check"></i><b>3.4.1</b> Inference about the total effect of <span class="math inline">\(X\)</span> on <span class="math inline">\(Y\)</span>.</a></li>
 <li class="chapter" data-level="3.4.2" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#inference-about-the-direct-effect-of-x-on-y."><i class="fa fa-check"></i><b>3.4.2</b> Inference about the direct effect of <span class="math inline">\(X\)</span> on <span class="math inline">\(Y\)</span>.</a></li>
 <li class="chapter" data-level="3.4.3" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#inference-about-the-indirect-of-x-on-y-through-m."><i class="fa fa-check"></i><b>3.4.3</b> Inference about the indirect of <span class="math inline">\(X\)</span> on <span class="math inline">\(Y\)</span> through <span class="math inline">\(M\)</span>.</a></li>
 </ul></li>
 <li class="chapter" data-level="3.5" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#an-example-with-continuous-x-economic-stress-among-small-business-owners"><i class="fa fa-check"></i><b>3.5</b> An example with continuous <span class="math inline">\(X\)</span>: Economic stress among small-business owners</a></li>
-<li class="chapter" data-level="" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#reference-1"><i class="fa fa-check"></i>Reference</a></li>
 <li class="chapter" data-level="" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html#session-info-2"><i class="fa fa-check"></i>Session info</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html"><i class="fa fa-check"></i><b>4</b> Causal Steps, Confounding, and Causal Order</a><ul>
+<li class="chapter" data-level="4" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html"><i class="fa fa-check"></i><b>4</b> Causal Steps, Confounding, and Causal Order</a>
+<ul>
 <li class="chapter" data-level="4.1" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#what-about-barron-and-kenny"><i class="fa fa-check"></i><b>4.1</b> What about Barron and Kenny?</a></li>
-<li class="chapter" data-level="4.2" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#confounding-and-causal-order"><i class="fa fa-check"></i><b>4.2</b> Confounding and causal order</a><ul>
+<li class="chapter" data-level="4.2" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#confounding-and-causal-order"><i class="fa fa-check"></i><b>4.2</b> Confounding and causal order</a>
+<ul>
 <li class="chapter" data-level="4.2.1" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#accounting-for-confounding-and-epiphenomenal-association."><i class="fa fa-check"></i><b>4.2.1</b> Accounting for confounding and epiphenomenal association.</a></li>
 </ul></li>
-<li class="chapter" data-level="4.3" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#effect-size"><i class="fa fa-check"></i><b>4.3</b> Effect size</a><ul>
+<li class="chapter" data-level="4.3" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#effect-size"><i class="fa fa-check"></i><b>4.3</b> Effect size</a>
+<ul>
 <li class="chapter" data-level="4.3.1" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#the-partially-standardized-effect."><i class="fa fa-check"></i><b>4.3.1</b> The partially standardized effect.</a></li>
 <li class="chapter" data-level="4.3.2" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#the-completely-standardized-effect."><i class="fa fa-check"></i><b>4.3.2</b> The completely standardized effect.</a></li>
 <li class="chapter" data-level="4.3.3" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#some-problematic-measures-only-for-indirect-effects."><i class="fa fa-check"></i><b>4.3.3</b> Some (problematic) measures only for indirect effects.</a></li>
 </ul></li>
 <li class="chapter" data-level="4.4" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#statistical-power"><i class="fa fa-check"></i><b>4.4</b> Statistical power</a></li>
-<li class="chapter" data-level="4.5" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#multiple-xs-or-ys-analyze-separately-or-simultaneously"><i class="fa fa-check"></i><b>4.5</b> Multiple <span class="math inline">\(X\)</span>s or <span class="math inline">\(Y\)</span>s: Analyze separately or simultaneously?</a><ul>
+<li class="chapter" data-level="4.5" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#multiple-xs-or-ys-analyze-separately-or-simultaneously"><i class="fa fa-check"></i><b>4.5</b> Multiple <span class="math inline">\(X\)</span>s or <span class="math inline">\(Y\)</span>s: Analyze separately or simultaneously?</a>
+<ul>
 <li class="chapter" data-level="4.5.1" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#multiple-x-variables."><i class="fa fa-check"></i><b>4.5.1</b> Multiple <span class="math inline">\(X\)</span> variables.</a></li>
 <li class="chapter" data-level="4.5.2" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#estimation-of-a-model-with-multiple-x-variables-in-process-brms."><i class="fa fa-check"></i><b>4.5.2</b> Estimation of a model with multiple <span class="math inline">\(X\)</span> variables in <del>PROCESS</del> brms.</a></li>
 <li class="chapter" data-level="4.5.3" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#multiple-y-variables."><i class="fa fa-check"></i><b>4.5.3</b> Multiple <span class="math inline">\(Y\)</span> variables.</a></li>
 </ul></li>
 <li class="chapter" data-level="4.6" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#chapter-summary"><i class="fa fa-check"></i><b>4.6</b> Chapter summary</a></li>
-<li class="chapter" data-level="" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#references-1"><i class="fa fa-check"></i>References</a></li>
 <li class="chapter" data-level="" data-path="causal-steps-confounding-and-causal-order.html"><a href="causal-steps-confounding-and-causal-order.html#session-info-3"><i class="fa fa-check"></i>Session info</a></li>
 </ul></li>
-<li class="chapter" data-level="5" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html"><i class="fa fa-check"></i><b>5</b> More Than One Mediator</a><ul>
-<li class="chapter" data-level="5.1" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#the-parallel-multiple-mediator-model"><i class="fa fa-check"></i><b>5.1</b> The parallel multiple mediator model</a><ul>
+<li class="chapter" data-level="5" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html"><i class="fa fa-check"></i><b>5</b> More Than One Mediator</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#the-parallel-multiple-mediator-model"><i class="fa fa-check"></i><b>5.1</b> The parallel multiple mediator model</a>
+<ul>
 <li class="chapter" data-level="5.1.1" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#direct-and-indirect-effects-in-a-parallel-multiple-mediator-model."><i class="fa fa-check"></i><b>5.1.1</b> Direct and indirect effects in a parallel multiple mediator model.</a></li>
 </ul></li>
 <li class="chapter" data-level="5.2" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#example-using-the-presumed-media-influence-study"><i class="fa fa-check"></i><b>5.2</b> Example using the presumed media influence study</a></li>
-<li class="chapter" data-level="5.3" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#statistical-inference-2"><i class="fa fa-check"></i><b>5.3</b> Statistical inference</a><ul>
+<li class="chapter" data-level="5.3" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#statistical-inference-2"><i class="fa fa-check"></i><b>5.3</b> Statistical inference</a>
+<ul>
 <li class="chapter" data-level="5.3.1" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#inference-about-the-direct-and-total-effects."><i class="fa fa-check"></i><b>5.3.1</b> Inference about the direct and total effects.</a></li>
 <li class="chapter" data-level="5.3.2" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#inference-about-specific-indirect-effects."><i class="fa fa-check"></i><b>5.3.2</b> Inference about specific indirect effects.</a></li>
 <li class="chapter" data-level="5.3.3" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#pairwise-comparisons-between-specific-indirect-effects."><i class="fa fa-check"></i><b>5.3.3</b> Pairwise comparisons between specific indirect effects.</a></li>
 <li class="chapter" data-level="5.3.4" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#inference-about-the-total-indirect-effect."><i class="fa fa-check"></i><b>5.3.4</b> Inference about the total indirect effect.</a></li>
 </ul></li>
-<li class="chapter" data-level="5.4" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#the-serial-multiple-mediator-model"><i class="fa fa-check"></i><b>5.4</b> The serial multiple mediator model</a><ul>
+<li class="chapter" data-level="5.4" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#the-serial-multiple-mediator-model"><i class="fa fa-check"></i><b>5.4</b> The serial multiple mediator model</a>
+<ul>
 <li class="chapter" data-level="5.4.1" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#direct-and-indirect-effects-in-a-serial-multiple-mediator-model."><i class="fa fa-check"></i><b>5.4.1</b> Direct and indirect effects in a serial multiple mediator model.</a></li>
 <li class="chapter" data-level="5.4.2" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#statistical-inference."><i class="fa fa-check"></i><b>5.4.2</b> Statistical inference.</a></li>
 <li class="chapter" data-level="5.4.3" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#example-from-the-presumed-media-influence-study."><i class="fa fa-check"></i><b>5.4.3</b> Example from the presumed media influence study.</a></li>
 </ul></li>
 <li class="chapter" data-level="5.5" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#models-with-parallel-and-serial-mediation-properties"><i class="fa fa-check"></i><b>5.5</b> Models with parallel and serial mediation properties</a></li>
 <li class="chapter" data-level="5.6" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#complementarity-and-competition-among-mediators"><i class="fa fa-check"></i><b>5.6</b> Complementarity and competition among mediators</a></li>
-<li class="chapter" data-level="" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#references-2"><i class="fa fa-check"></i>References</a></li>
 <li class="chapter" data-level="" data-path="more-than-one-mediator.html"><a href="more-than-one-mediator.html#session-info-4"><i class="fa fa-check"></i>Session info</a></li>
 </ul></li>
-<li class="chapter" data-level="6" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html"><i class="fa fa-check"></i><b>6</b> Mediation Analysis with a Multicategorical Antecedent</a><ul>
-<li class="chapter" data-level="6.1" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#relative-total-direct-and-indirect-effects"><i class="fa fa-check"></i><b>6.1</b> Relative total, direct, and indirect effects</a><ul>
+<li class="chapter" data-level="6" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html"><i class="fa fa-check"></i><b>6</b> Mediation Analysis with a Multicategorical Antecedent</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#relative-total-direct-and-indirect-effects"><i class="fa fa-check"></i><b>6.1</b> Relative total, direct, and indirect effects</a>
+<ul>
 <li class="chapter" data-level="6.1.1" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#relative-indirect-effects."><i class="fa fa-check"></i><b>6.1.1</b> Relative indirect effects.</a></li>
 <li class="chapter" data-level="6.1.2" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#relative-direct-effects."><i class="fa fa-check"></i><b>6.1.2</b> Relative direct effects.</a></li>
 <li class="chapter" data-level="6.1.3" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#relative-total-effects."><i class="fa fa-check"></i><b>6.1.3</b> Relative total effects.</a></li>
@@ -230,141 +285,161 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.2" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#an-example-sex-discrimination-in-the-workplace"><i class="fa fa-check"></i><b>6.2</b> An example: Sex discrimination in the workplace</a></li>
 <li class="chapter" data-level="6.3" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#using-a-different-group-coding-system"><i class="fa fa-check"></i><b>6.3</b> Using a different group coding system</a></li>
 <li class="chapter" data-level="6.4" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#some-miscellaneous-issues-unrelated-to-those-hayes-covered-in-the-text"><i class="fa fa-check"></i><b>6.4</b> Some miscellaneous issues [unrelated to those Hayes covered in the text]</a></li>
-<li class="chapter" data-level="" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#references-3"><i class="fa fa-check"></i>References</a></li>
 <li class="chapter" data-level="" data-path="mediation-analysis-with-a-multicategorical-antecedent.html"><a href="mediation-analysis-with-a-multicategorical-antecedent.html#session-info-5"><i class="fa fa-check"></i>Session info</a></li>
 </ul></li>
 <li class="part"><span><b>III MODERATION ANALYSIS</b></span></li>
-<li class="chapter" data-level="7" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html"><i class="fa fa-check"></i><b>7</b> Fundamentals of Moderation Analysis</a><ul>
-<li class="chapter" data-level="7.1" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#conditional-and-unconditional-effects"><i class="fa fa-check"></i><b>7.1</b> Conditional and unconditional effects</a><ul>
+<li class="chapter" data-level="7" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html"><i class="fa fa-check"></i><b>7</b> Fundamentals of Moderation Analysis</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#conditional-and-unconditional-effects"><i class="fa fa-check"></i><b>7.1</b> Conditional and unconditional effects</a>
+<ul>
 <li class="chapter" data-level="7.1.1" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#eliminating-the-constraint-of-unconditionality."><i class="fa fa-check"></i><b>7.1.1</b> Eliminating the constraint of unconditionality.</a></li>
 <li class="chapter" data-level="7.1.2" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#symmetry-in-moderation."><i class="fa fa-check"></i><b>7.1.2</b> Symmetry in moderation.</a></li>
 <li class="chapter" data-level="7.1.3" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#interpretation-of-the-regression-coefficients."><i class="fa fa-check"></i><b>7.1.3</b> Interpretation of the regression coefficients.</a></li>
 <li class="chapter" data-level="7.1.4" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#the-importance-of-b_3-wen-asking-about-mediation."><i class="fa fa-check"></i><b>7.1.4</b> The importance of <span class="math inline">\(b_3\)</span> wen asking about mediation.</a></li>
 </ul></li>
-<li class="chapter" data-level="7.2" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#an-example-climate-change-disasters-and-humanitarianism"><i class="fa fa-check"></i><b>7.2</b> An example: Climate change disasters and humanitarianism</a><ul>
+<li class="chapter" data-level="7.2" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#an-example-climate-change-disasters-and-humanitarianism"><i class="fa fa-check"></i><b>7.2</b> An example: Climate change disasters and humanitarianism</a>
+<ul>
 <li class="chapter" data-level="7.2.1" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#estimation-using-process-brms."><i class="fa fa-check"></i><b>7.2.1</b> Estimation using <del>PROCESS</del> brms.</a></li>
 <li class="chapter" data-level="7.2.2" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#interpreting-the-regression-coefficients."><i class="fa fa-check"></i><b>7.2.2</b> Interpreting the regression coefficients.</a></li>
 <li class="chapter" data-level="7.2.3" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#variable-scaling-and-the-interpretation-of-b_1-and-b_3."><i class="fa fa-check"></i><b>7.2.3</b> Variable scaling and the interpretation of <span class="math inline">\(b_1\)</span> and <span class="math inline">\(b_3\)</span>.</a></li>
 </ul></li>
 <li class="chapter" data-level="7.3" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#visualizing-moderation"><i class="fa fa-check"></i><b>7.3</b> Visualizing moderation</a></li>
-<li class="chapter" data-level="7.4" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#probing-an-interaction"><i class="fa fa-check"></i><b>7.4</b> Probing an interaction</a><ul>
+<li class="chapter" data-level="7.4" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#probing-an-interaction"><i class="fa fa-check"></i><b>7.4</b> Probing an interaction</a>
+<ul>
 <li class="chapter" data-level="7.4.1" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#the-pick-a-point-approach."><i class="fa fa-check"></i><b>7.4.1</b> The pick-a-point approach.</a></li>
 <li class="chapter" data-level="7.4.2" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#the-johnson-neyman-technique."><i class="fa fa-check"></i><b>7.4.2</b> The Johnson-Neyman technique.</a></li>
 </ul></li>
 <li class="chapter" data-level="7.5" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#the-difference-between-testing-for-moderation-and-probing-it"><i class="fa fa-check"></i><b>7.5</b> The difference between testing for moderation and probing it</a></li>
 <li class="chapter" data-level="7.6" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#artificial-categorization-and-subgroups"><i class="fa fa-check"></i><b>7.6</b> Artificial categorization and subgroups</a></li>
-<li class="chapter" data-level="" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#references-4"><i class="fa fa-check"></i>References</a></li>
 <li class="chapter" data-level="" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#session-info-6"><i class="fa fa-check"></i>Session info</a></li>
 <li class="chapter" data-level="" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#footnote-1"><i class="fa fa-check"></i>Footnote</a></li>
 </ul></li>
-<li class="chapter" data-level="8" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html"><i class="fa fa-check"></i><b>8</b> Extending the Fundamental Principles of Moderation Analysis</a><ul>
-<li class="chapter" data-level="8.1" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#moderation-with-a-dichotomous-moderator"><i class="fa fa-check"></i><b>8.1</b> Moderation with a dichotomous moderator</a><ul>
+<li class="chapter" data-level="8" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html"><i class="fa fa-check"></i><b>8</b> Extending the Fundamental Principles of Moderation Analysis</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#moderation-with-a-dichotomous-moderator"><i class="fa fa-check"></i><b>8.1</b> Moderation with a dichotomous moderator</a>
+<ul>
 <li class="chapter" data-level="8.1.1" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#visualizing-and-probing-the-interaction."><i class="fa fa-check"></i><b>8.1.1</b> Visualizing and probing the interaction.</a></li>
 </ul></li>
-<li class="chapter" data-level="8.2" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#interaction-between-two-quantitative-variables"><i class="fa fa-check"></i><b>8.2</b> Interaction between two quantitative variables</a><ul>
+<li class="chapter" data-level="8.2" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#interaction-between-two-quantitative-variables"><i class="fa fa-check"></i><b>8.2</b> Interaction between two quantitative variables</a>
+<ul>
 <li class="chapter" data-level="8.2.1" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#visualizing-and-probing-the-interaction.-1"><i class="fa fa-check"></i><b>8.2.1</b> Visualizing and probing the interaction.</a></li>
 </ul></li>
 <li class="chapter" data-level="8.3" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#hierarchical-versus-simultaneous-entry"><i class="fa fa-check"></i><b>8.3</b> Hierarchical versus simultaneous entry</a></li>
-<li class="chapter" data-level="8.4" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#the-equivalence-between-moderated-regression-analysis-and-a-2-x-2-factorial-analysis-of-variance"><i class="fa fa-check"></i><b>8.4</b> The equivalence between moderated regression analysis and a 2 X 2 factorial analysis of variance</a><ul>
+<li class="chapter" data-level="8.4" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#the-equivalence-between-moderated-regression-analysis-and-a-2-x-2-factorial-analysis-of-variance"><i class="fa fa-check"></i><b>8.4</b> The equivalence between moderated regression analysis and a 2 X 2 factorial analysis of variance</a>
+<ul>
 <li class="chapter" data-level="8.4.1" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#simple-effects-parameterization."><i class="fa fa-check"></i><b>8.4.1</b> Simple effects parameterization.</a></li>
 <li class="chapter" data-level="8.4.2" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#main-effects-parameterization."><i class="fa fa-check"></i><b>8.4.2</b> Main effects parameterization.</a></li>
 <li class="chapter" data-level="8.4.3" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#conducting-a-2-times-2-between-participants-factorial-anova-using-process-another-regression-model-with-brms."><i class="fa fa-check"></i><b>8.4.3</b> Conducting <del>a <span class="math inline">\(2 \times 2\)</span> between-participants factorial ANOVA using PROCESS</del> another regression model with brms.</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#references-5"><i class="fa fa-check"></i>References</a></li>
 <li class="chapter" data-level="" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html#session-info-7"><i class="fa fa-check"></i>Session info</a></li>
 </ul></li>
-<li class="chapter" data-level="9" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html"><i class="fa fa-check"></i><b>9</b> Some Myths and Additional Extensions of Moderation Analysis</a><ul>
-<li class="chapter" data-level="9.1" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#truths-and-myths-about-mean-centering"><i class="fa fa-check"></i><b>9.1</b> Truths and myths about mean-centering</a><ul>
+<li class="chapter" data-level="9" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html"><i class="fa fa-check"></i><b>9</b> Some Myths and Additional Extensions of Moderation Analysis</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#truths-and-myths-about-mean-centering"><i class="fa fa-check"></i><b>9.1</b> Truths and myths about mean-centering</a>
+<ul>
 <li class="chapter" data-level="9.1.1" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-effect-of-mean-centering-on-multicollinearity-and-the-standard-error-of-b_3."><i class="fa fa-check"></i><b>9.1.1</b> The effect of mean-centering on multicollinearity and the standard error of <span class="math inline">\(b_3\)</span>.</a></li>
 <li class="chapter" data-level="9.1.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-effect-of-mean-centering-on-b_1-b_2-and-their-standard-errors-posterior-sds."><i class="fa fa-check"></i><b>9.1.2</b> The effect of mean-centering on <span class="math inline">\(b_1\)</span>, <span class="math inline">\(b_2\)</span>, and their <del>standard errors</del> posterior <span class="math inline">\(SD\)</span>s.</a></li>
 <li class="chapter" data-level="9.1.3" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-centering-option-in-process."><i class="fa fa-check"></i><b>9.1.3</b> The <del>centering option in PROCESS</del>.</a></li>
 </ul></li>
-<li class="chapter" data-level="9.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-estimation-and-interpretation-of-standardized-regression-coefficients-in-a-moderation-analysis"><i class="fa fa-check"></i><b>9.2</b> The estimation and interpretation of standardized regression coefficients in a moderation analysis</a><ul>
+<li class="chapter" data-level="9.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-estimation-and-interpretation-of-standardized-regression-coefficients-in-a-moderation-analysis"><i class="fa fa-check"></i><b>9.2</b> The estimation and interpretation of standardized regression coefficients in a moderation analysis</a>
+<ul>
 <li class="chapter" data-level="9.2.1" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#variant-1."><i class="fa fa-check"></i><b>9.2.1</b> Variant 1.</a></li>
 <li class="chapter" data-level="9.2.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#variant-2."><i class="fa fa-check"></i><b>9.2.2</b> Variant 2.</a></li>
 </ul></li>
 <li class="chapter" data-level="9.3" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#a-caution-on-manual-centering-and-standardization-because-of-missing-data"><i class="fa fa-check"></i><b>9.3</b> A caution on manual centering and standardization [because of missing data]</a></li>
-<li class="chapter" data-level="9.4" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#more-than-one-moderator"><i class="fa fa-check"></i><b>9.4</b> More than one moderator</a><ul>
+<li class="chapter" data-level="9.4" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#more-than-one-moderator"><i class="fa fa-check"></i><b>9.4</b> More than one moderator</a>
+<ul>
 <li class="chapter" data-level="9.4.1" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#additive-multiple-moderation."><i class="fa fa-check"></i><b>9.4.1</b> Additive multiple moderation.</a></li>
 <li class="chapter" data-level="9.4.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#moderated-moderation."><i class="fa fa-check"></i><b>9.4.2</b> Moderated moderation.</a></li>
 </ul></li>
-<li class="chapter" data-level="9.5" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#comparing-conditional-effects"><i class="fa fa-check"></i><b>9.5</b> Comparing conditional effects</a><ul>
+<li class="chapter" data-level="9.5" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#comparing-conditional-effects"><i class="fa fa-check"></i><b>9.5</b> Comparing conditional effects</a>
+<ul>
 <li class="chapter" data-level="9.5.1" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#comparing-conditional-effects-in-the-additive-multiple-moderation-model."><i class="fa fa-check"></i><b>9.5.1</b> Comparing conditional effects in the additive multiple moderation model.</a></li>
 <li class="chapter" data-level="9.5.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#comparing-conditional-effects-in-the-moderated-moderation-model."><i class="fa fa-check"></i><b>9.5.2</b> Comparing conditional effects in the moderated moderation model.</a></li>
 <li class="chapter" data-level="9.5.3" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#implementation-in-process-brms.-1"><i class="fa fa-check"></i><b>9.5.3</b> Implementation in <del>PROCESS</del> brms.</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#references-6"><i class="fa fa-check"></i>References</a></li>
 <li class="chapter" data-level="" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#session-info-8"><i class="fa fa-check"></i>Session info</a></li>
 </ul></li>
-<li class="chapter" data-level="10" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html"><i class="fa fa-check"></i><b>10</b> Multicategorical Focal Antecedents and Moderators</a><ul>
+<li class="chapter" data-level="10" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html"><i class="fa fa-check"></i><b>10</b> Multicategorical Focal Antecedents and Moderators</a>
+<ul>
 <li class="chapter" data-level="10.1" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#moderation-of-the-effect-of-a-multicategorical-antecedent-variable"><i class="fa fa-check"></i><b>10.1</b> Moderation of the effect of a multicategorical antecedent variable</a></li>
 <li class="chapter" data-level="10.2" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#an-example-from-the-sex-disrimination-in-the-workplace-study"><i class="fa fa-check"></i><b>10.2</b> An example from the sex disrimination in the workplace study</a></li>
 <li class="chapter" data-level="10.3" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#visualizing-the-model"><i class="fa fa-check"></i><b>10.3</b> Visualizing the model</a></li>
-<li class="chapter" data-level="10.4" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#probing-the-interaction"><i class="fa fa-check"></i><b>10.4</b> Probing the interaction</a><ul>
+<li class="chapter" data-level="10.4" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#probing-the-interaction"><i class="fa fa-check"></i><b>10.4</b> Probing the interaction</a>
+<ul>
 <li class="chapter" data-level="10.4.1" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#the-pick-a-point-approach.-1"><i class="fa fa-check"></i><b>10.4.1</b> The pick-a-point approach.</a></li>
 <li class="chapter" data-level="10.4.2" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#the-johnson-neyman-technique.-1"><i class="fa fa-check"></i><b>10.4.2</b> The Johnson-Neyman technique.</a></li>
 </ul></li>
-<li class="chapter" data-level="10.5" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#when-the-moderator-is-multicategorical"><i class="fa fa-check"></i><b>10.5</b> When the moderator is multicategorical</a><ul>
+<li class="chapter" data-level="10.5" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#when-the-moderator-is-multicategorical"><i class="fa fa-check"></i><b>10.5</b> When the moderator is multicategorical</a>
+<ul>
 <li class="chapter" data-level="10.5.1" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#an-example."><i class="fa fa-check"></i><b>10.5.1</b> An example.</a></li>
 <li class="chapter" data-level="10.5.2" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#probing-the-interaction-and-interpreting-the-regression-coefficients."><i class="fa fa-check"></i><b>10.5.2</b> Probing the interaction and interpreting the regression coefficients.</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#references-7"><i class="fa fa-check"></i>References</a></li>
 <li class="chapter" data-level="" data-path="multicategorical-focal-antecedents-and-moderators.html"><a href="multicategorical-focal-antecedents-and-moderators.html#session-info-9"><i class="fa fa-check"></i>Session info</a></li>
 </ul></li>
 <li class="part"><span><b>IV CONDITIONAL PROCESS ANALYSIS</b></span></li>
-<li class="chapter" data-level="11" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html"><i class="fa fa-check"></i><b>11</b> Fundamentals of Conditional Process Analysis</a><ul>
+<li class="chapter" data-level="11" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html"><i class="fa fa-check"></i><b>11</b> Fundamentals of Conditional Process Analysis</a>
+<ul>
 <li class="chapter" data-level="11.1" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#examples-of-conditional-process-models-in-the-literature"><i class="fa fa-check"></i><b>11.1</b> Examples of conditional process models in the literature</a></li>
 <li class="chapter" data-level="11.2" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#conditional-direct-and-indirect-effects"><i class="fa fa-check"></i><b>11.2</b> Conditional direct and indirect effects</a></li>
 <li class="chapter" data-level="11.3" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#example-hiding-your-feelings-from-your-work-team"><i class="fa fa-check"></i><b>11.3</b> Example: Hiding your feelings from your work team</a></li>
 <li class="chapter" data-level="11.4" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#estimation-of-a-conditional-process-model-using-process"><i class="fa fa-check"></i><b>11.4</b> <del>Estimation of a conditional process model using PROCESS</del></a></li>
-<li class="chapter" data-level="11.5" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#quantifying-and-visualizing-conditional-indirect-and-direct-effects."><i class="fa fa-check"></i><b>11.5</b> Quantifying and visualizing (conditional) indirect and direct effects.</a><ul>
+<li class="chapter" data-level="11.5" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#quantifying-and-visualizing-conditional-indirect-and-direct-effects."><i class="fa fa-check"></i><b>11.5</b> Quantifying and visualizing (conditional) indirect and direct effects.</a>
+<ul>
 <li class="chapter" data-level="11.5.1" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#visualizing-the-direct-and-indirect-effects."><i class="fa fa-check"></i><b>11.5.1</b> Visualizing the direct and indirect effects.</a></li>
 </ul></li>
-<li class="chapter" data-level="11.6" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#statistical-inference-3"><i class="fa fa-check"></i><b>11.6</b> Statistical inference</a><ul>
+<li class="chapter" data-level="11.6" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#statistical-inference-3"><i class="fa fa-check"></i><b>11.6</b> Statistical inference</a>
+<ul>
 <li class="chapter" data-level="11.6.1" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#inference-about-the-direct-effect."><i class="fa fa-check"></i><b>11.6.1</b> Inference about the direct effect.</a></li>
 <li class="chapter" data-level="11.6.2" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#inference-about-the-indirect-effect."><i class="fa fa-check"></i><b>11.6.2</b> Inference about the indirect effect.</a></li>
 <li class="chapter" data-level="11.6.3" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#probing-moderation-of-mediation."><i class="fa fa-check"></i><b>11.6.3</b> Probing moderation of mediation.</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#references-8"><i class="fa fa-check"></i>References</a></li>
 <li class="chapter" data-level="" data-path="fundamentals-of-conditional-process-analysis.html"><a href="fundamentals-of-conditional-process-analysis.html#session-info-10"><i class="fa fa-check"></i>Session info</a></li>
 </ul></li>
-<li class="chapter" data-level="12" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html"><i class="fa fa-check"></i><b>12</b> Further Examples of Conditional Process Analysis</a><ul>
+<li class="chapter" data-level="12" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html"><i class="fa fa-check"></i><b>12</b> Further Examples of Conditional Process Analysis</a>
+<ul>
 <li class="chapter" data-level="12.1" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#revisiting-the-disaster-framing-study"><i class="fa fa-check"></i><b>12.1</b> Revisiting the disaster framing study</a></li>
-<li class="chapter" data-level="12.2" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#moderation-of-the-direct-and-indirect-effects-in-a-conditional-process-model"><i class="fa fa-check"></i><b>12.2</b> Moderation of the direct and indirect effects in a conditional process model</a><ul>
+<li class="chapter" data-level="12.2" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#moderation-of-the-direct-and-indirect-effects-in-a-conditional-process-model"><i class="fa fa-check"></i><b>12.2</b> Moderation of the direct and indirect effects in a conditional process model</a>
+<ul>
 <li class="chapter" data-level="12.2.1" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#estimation-using-process."><i class="fa fa-check"></i><b>12.2.1</b> <del>Estimation using PROCESS</del>.</a></li>
 <li class="chapter" data-level="12.2.2" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#quantifying-direct-and-indirect-effects."><i class="fa fa-check"></i><b>12.2.2</b> Quantifying direct and indirect effects.</a></li>
 <li class="chapter" data-level="12.2.3" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#visualizing-the-direct-and-indirect-effects.-1"><i class="fa fa-check"></i><b>12.2.3</b> Visualizing the direct and indirect effects.</a></li>
 </ul></li>
-<li class="chapter" data-level="12.3" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#statistical-inference-4"><i class="fa fa-check"></i><b>12.3</b> Statistical inference</a><ul>
+<li class="chapter" data-level="12.3" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#statistical-inference-4"><i class="fa fa-check"></i><b>12.3</b> Statistical inference</a>
+<ul>
 <li class="chapter" data-level="12.3.1" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#inference-about-the-direct-effect.-1"><i class="fa fa-check"></i><b>12.3.1</b> Inference about the direct effect.</a></li>
 <li class="chapter" data-level="12.3.2" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#inference-about-the-indirect-effect.-1"><i class="fa fa-check"></i><b>12.3.2</b> Inference about the indirect effect.</a></li>
 <li class="chapter" data-level="12.3.3" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#pruning-the-model."><i class="fa fa-check"></i><b>12.3.3</b> Pruning the model.</a></li>
 </ul></li>
-<li class="chapter" data-level="12.4" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#mediated-moderation"><i class="fa fa-check"></i><b>12.4</b> Mediated moderation</a><ul>
+<li class="chapter" data-level="12.4" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#mediated-moderation"><i class="fa fa-check"></i><b>12.4</b> Mediated moderation</a>
+<ul>
 <li class="chapter" data-level="12.4.1" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#mediated-moderation-as-the-indirect-effect-of-a-product."><i class="fa fa-check"></i><b>12.4.1</b> Mediated moderation as the indirect effect of a product.</a></li>
 <li class="chapter" data-level="12.4.2" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#why-mediated-moderation-is-neither-interesting-nor-meaningful."><i class="fa fa-check"></i><b>12.4.2</b> Why mediated moderation is neither interesting nor meaningful.</a></li>
 </ul></li>
-<li class="chapter" data-level="" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#references-9"><i class="fa fa-check"></i>References</a></li>
 <li class="chapter" data-level="" data-path="further-examples-of-conditional-process-analysis.html"><a href="further-examples-of-conditional-process-analysis.html#session-info-11"><i class="fa fa-check"></i>Session info</a></li>
 </ul></li>
-<li class="chapter" data-level="13" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html"><i class="fa fa-check"></i><b>13</b> Conditional Process Analysis with a Multicategorical Antecedent</a><ul>
+<li class="chapter" data-level="13" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html"><i class="fa fa-check"></i><b>13</b> Conditional Process Analysis with a Multicategorical Antecedent</a>
+<ul>
 <li class="chapter" data-level="13.1" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#revisiting-sexual-discrimination-in-the-workplace"><i class="fa fa-check"></i><b>13.1</b> Revisiting sexual discrimination in the workplace</a></li>
-<li class="chapter" data-level="13.2" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#looking-at-the-components-of-the-indirect-effect-of-x"><i class="fa fa-check"></i><b>13.2</b> Looking at the components of the indirect effect of <span class="math inline">\(X\)</span></a><ul>
+<li class="chapter" data-level="13.2" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#looking-at-the-components-of-the-indirect-effect-of-x"><i class="fa fa-check"></i><b>13.2</b> Looking at the components of the indirect effect of <span class="math inline">\(X\)</span></a>
+<ul>
 <li class="chapter" data-level="13.2.1" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#examining-the-first-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.1</b> Examining the first stage of the mediation process.</a></li>
 <li class="chapter" data-level="13.2.2" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#estimating-the-second-stage-of-the-mediation-process."><i class="fa fa-check"></i><b>13.2.2</b> Estimating the second stage of the mediation process.</a></li>
 </ul></li>
 <li class="chapter" data-level="13.3" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#relative-conditional-indirect-effects"><i class="fa fa-check"></i><b>13.3</b> Relative conditional indirect effects</a></li>
-<li class="chapter" data-level="13.4" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#testing-and-probing-moderation-of-mediation"><i class="fa fa-check"></i><b>13.4</b> Testing and probing moderation of mediation</a><ul>
+<li class="chapter" data-level="13.4" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#testing-and-probing-moderation-of-mediation"><i class="fa fa-check"></i><b>13.4</b> Testing and probing moderation of mediation</a>
+<ul>
 <li class="chapter" data-level="13.4.1" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#a-test-of-moderation-of-the-relative-indirect-effect."><i class="fa fa-check"></i><b>13.4.1</b> A test of moderation of the relative indirect effect.</a></li>
 <li class="chapter" data-level="13.4.2" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#probing-moderation-of-mediation.-2"><i class="fa fa-check"></i><b>13.4.2</b> Probing moderation of mediation.</a></li>
 </ul></li>
 <li class="chapter" data-level="13.5" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#relative-conditional-direct-effects"><i class="fa fa-check"></i><b>13.5</b> Relative conditional direct effects</a></li>
-<li class="chapter" data-level="" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#references-10"><i class="fa fa-check"></i>References</a></li>
 <li class="chapter" data-level="" data-path="conditional-process-analysis-with-a-multicategorical-antecedent.html"><a href="conditional-process-analysis-with-a-multicategorical-antecedent.html#session-info-12"><i class="fa fa-check"></i>Session info</a></li>
 </ul></li>
 <li class="part"><span><b>V MISCELLANEA</b></span></li>
-<li class="chapter" data-level="14" data-path="miscellaneous-topics-and-some-frequently-asked-questions.html"><a href="miscellaneous-topics-and-some-frequently-asked-questions.html"><i class="fa fa-check"></i><b>14</b> Miscellaneous Topics and Some Frequently Asked Questions</a><ul>
-<li class="chapter" data-level="14.1" data-path="miscellaneous-topics-and-some-frequently-asked-questions.html"><a href="miscellaneous-topics-and-some-frequently-asked-questions.html#a-strategy-for-approaching-a-conditional-process-analysis"><i class="fa fa-check"></i><b>14.1</b> A strategy for approaching a conditional process analysis</a><ul>
+<li class="chapter" data-level="14" data-path="miscellaneous-topics-and-some-frequently-asked-questions.html"><a href="miscellaneous-topics-and-some-frequently-asked-questions.html"><i class="fa fa-check"></i><b>14</b> Miscellaneous Topics and Some Frequently Asked Questions</a>
+<ul>
+<li class="chapter" data-level="14.1" data-path="miscellaneous-topics-and-some-frequently-asked-questions.html"><a href="miscellaneous-topics-and-some-frequently-asked-questions.html#a-strategy-for-approaching-a-conditional-process-analysis"><i class="fa fa-check"></i><b>14.1</b> A strategy for approaching a conditional process analysis</a>
+<ul>
 <li class="chapter" data-level="14.1.1" data-path="miscellaneous-topics-and-some-frequently-asked-questions.html"><a href="miscellaneous-topics-and-some-frequently-asked-questions.html#step-1-construct-your-conceptual-diagram-of-the-process."><i class="fa fa-check"></i><b>14.1.1</b> Step 1: Construct your conceptual diagram of the process.</a></li>
 <li class="chapter" data-level="14.1.2" data-path="miscellaneous-topics-and-some-frequently-asked-questions.html"><a href="miscellaneous-topics-and-some-frequently-asked-questions.html#step-2-translate-the-conceptual-model-into-a-statistical-model."><i class="fa fa-check"></i><b>14.1.2</b> Step 2: Translate the conceptual model into a statistical model.</a></li>
 <li class="chapter" data-level="14.1.3" data-path="miscellaneous-topics-and-some-frequently-asked-questions.html"><a href="miscellaneous-topics-and-some-frequently-asked-questions.html#step-3-estimate-the-statistical-model."><i class="fa fa-check"></i><b>14.1.3</b> Step 3: Estimate the statistical model.</a></li>
@@ -374,7 +449,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="14.1.7" data-path="miscellaneous-topics-and-some-frequently-asked-questions.html"><a href="miscellaneous-topics-and-some-frequently-asked-questions.html#step-7-quantify-and-test-conditional-direct-effects-if-relevant."><i class="fa fa-check"></i><b>14.1.7</b> Step 7: Quantify and test conditional direct effects (if relevant).</a></li>
 <li class="chapter" data-level="14.1.8" data-path="miscellaneous-topics-and-some-frequently-asked-questions.html"><a href="miscellaneous-topics-and-some-frequently-asked-questions.html#step-8-tell-your-story."><i class="fa fa-check"></i><b>14.1.8</b> Step 8: Tell your story.</a></li>
 </ul></li>
-<li class="chapter" data-level="14.2" data-path="miscellaneous-topics-and-some-frequently-asked-questions.html"><a href="miscellaneous-topics-and-some-frequently-asked-questions.html#how-do-i-write-about-this"><i class="fa fa-check"></i><b>14.2</b> How do I write about this?</a><ul>
+<li class="chapter" data-level="14.2" data-path="miscellaneous-topics-and-some-frequently-asked-questions.html"><a href="miscellaneous-topics-and-some-frequently-asked-questions.html#how-do-i-write-about-this"><i class="fa fa-check"></i><b>14.2</b> How do I write about this?</a>
+<ul>
 <li class="chapter" data-level="14.2.1" data-path="miscellaneous-topics-and-some-frequently-asked-questions.html"><a href="miscellaneous-topics-and-some-frequently-asked-questions.html#reporting-a-mediation-analysis."><i class="fa fa-check"></i><b>14.2.1</b> Reporting a mediation analysis.</a></li>
 <li class="chapter" data-level="14.2.2" data-path="miscellaneous-topics-and-some-frequently-asked-questions.html"><a href="miscellaneous-topics-and-some-frequently-asked-questions.html#reporting-a-moderation-analysis."><i class="fa fa-check"></i><b>14.2.2</b> Reporting a moderation analysis.</a></li>
 <li class="chapter" data-level="14.2.3" data-path="miscellaneous-topics-and-some-frequently-asked-questions.html"><a href="miscellaneous-topics-and-some-frequently-asked-questions.html#reporting-a-conditional-process-analysis."><i class="fa fa-check"></i><b>14.2.3</b> Reporting a conditional process analysis.</a></li>
@@ -385,9 +461,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="14.6" data-path="miscellaneous-topics-and-some-frequently-asked-questions.html"><a href="miscellaneous-topics-and-some-frequently-asked-questions.html#interaction-between-x-and-m-in-mediation-analysis"><i class="fa fa-check"></i><b>14.6</b> Interaction between <span class="math inline">\(X\)</span> and <span class="math inline">\(M\)</span> in mediation analysis?</a></li>
 <li class="chapter" data-level="14.7" data-path="miscellaneous-topics-and-some-frequently-asked-questions.html"><a href="miscellaneous-topics-and-some-frequently-asked-questions.html#repeated-measures-designs"><i class="fa fa-check"></i><b>14.7</b> Repeated measures designs</a></li>
 <li class="chapter" data-level="14.8" data-path="miscellaneous-topics-and-some-frequently-asked-questions.html"><a href="miscellaneous-topics-and-some-frequently-asked-questions.html#dichotomous-ordinal-count-and-survival-outcomes"><i class="fa fa-check"></i><b>14.8</b> Dichotomous, ordinal, count, and survival outcomes</a></li>
-<li class="chapter" data-level="" data-path="miscellaneous-topics-and-some-frequently-asked-questions.html"><a href="miscellaneous-topics-and-some-frequently-asked-questions.html#reference-2"><i class="fa fa-check"></i>Reference</a></li>
 <li class="chapter" data-level="" data-path="miscellaneous-topics-and-some-frequently-asked-questions.html"><a href="miscellaneous-topics-and-some-frequently-asked-questions.html#session-info-13"><i class="fa fa-check"></i>Session info</a></li>
 </ul></li>
+<li class="chapter" data-level="" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i>References</a></li>
 </ul>
 
       </nav>
@@ -405,76 +481,76 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="miscellaneous-topics-and-some-frequently-asked-questions" class="section level1">
+<div id="miscellaneous-topics-and-some-frequently-asked-questions" class="section level1" number="14">
 <h1><span class="header-section-number">14</span> Miscellaneous Topics and Some Frequently Asked Questions</h1>
 <blockquote>
 <p>The vast majority of scientists would probably argue that when push comes to shove, the theoretical horse should pull the statistical cart. Statistical methods are mathematical tools, some of them quite amazing in what they do, which can help us to discern order amid the apparent chaos in a batch of data. But ultimately, the stories that statistical methods help us tell are told by our brains, not by the mathematics, and our brains are good at making sense of things–of coming up with stories to explain what we perceive. The problem is that the same pattern of results can be interpreted in many different ways, especially if the pattern is found after an extensive round of exploratory data analysis. Without a theoretical orientation to guide our attempts at making sense of our data or, better still, to guide our research design and data collection efforts, our awesome storytelling ability can lead us astray by invoking explanations for findings that may sound good but that are mere conjecture even if we can find a theoretical hook on which to hang them post hoc.</p>
-<p>I won’t argue against this perspective, as I believe it is for the most part right on the money. But I also believe that statistical methods can play an important role in theory development as well–that the statistical cart need not always, should not always, and often does not follow the theoretical horse. When we learn something new analytically, this can change the way we think of things theoretically and how we then go about testing the ideas that our newfound awareness of an analytical method inspired (cf. <a href="https://us.sagepub.com/en-us/nam/the-sage-sourcebook-of-advanced-data-analysis-methods-for-communication-research/book228339">Slater, Hayes, &amp; Snyder, 2008, p. 2</a>). (pp. 507–508)</p>
+<p>I won’t argue against this perspective, as I believe it is for the most part right on the money. But I also believe that statistical methods can play an important role in theory development as well–that the statistical cart need not always, should not always, and often does not follow the theoretical horse. When we learn something new analytically, this can change the way we think of things theoretically and how we then go about testing the ideas that our newfound awareness of an analytical method inspired <span class="citation">(cf. <a href="#ref-hayesSAGESourcebookAdvanced2008" role="doc-biblioref">Andrew F. Hayes et al., 2008, p. 2</a>)</span>. <span class="citation">(<a href="#ref-hayesIntroductionMediationModeration2018" role="doc-biblioref">Andrew F. Hayes, 2018, pp. 507–508</a>)</span></p>
 </blockquote>
-<div id="a-strategy-for-approaching-a-conditional-process-analysis" class="section level2">
+<div id="a-strategy-for-approaching-a-conditional-process-analysis" class="section level2" number="14.1">
 <h2><span class="header-section-number">14.1</span> A strategy for approaching a conditional process analysis</h2>
 <blockquote>
 <p>Things don’t always turn out as we expected and articulated in hypotheses 1, 2, and 3. And sometimes after looking at the data, our thinking about the process at work changes and new hypotheses come to mind that are worth testing. Scientists routinely switch back and forth between the context of justification and the context of discovery, testing hypotheses conceived before the data were analyzed while also exploring one’s data to see what else can be learned from patterns observed but not anticipated.</p>
 </blockquote>
 <p>In the next paragraph, we see Hayes anticipated criticism at this paragraph and some of the subsections to follow. My two cents are that problems arise when we approach statistics from a <span class="math inline">\(p\)</span>-value-based hypothesis-testing perspective, when we pose exploratory research as confirmatory, when we engage in closed science practices, and when we only present the analyses that “worked.” For some engaging thoughts on iterative Bayesian workflows, you might check out Navarro’s blog series, <em>Paths in strange spaces</em>; here’s <a href="https://djnavarro.net/post/paths-in-strange-spaces/">part 1</a>.</p>
-<div id="step-1-construct-your-conceptual-diagram-of-the-process." class="section level3">
+<div id="step-1-construct-your-conceptual-diagram-of-the-process." class="section level3" number="14.1.1">
 <h3><span class="header-section-number">14.1.1</span> Step 1: Construct your conceptual diagram of the process.</h3>
 <p>Build up your model slowly and with the aid of visuals.</p>
 </div>
-<div id="step-2-translate-the-conceptual-model-into-a-statistical-model." class="section level3">
+<div id="step-2-translate-the-conceptual-model-into-a-statistical-model." class="section level3" number="14.1.2">
 <h3><span class="header-section-number">14.1.2</span> Step 2: Translate the conceptual model into a statistical model.</h3>
 <blockquote>
 <p>We don’t estimate the conceptual model. [Presuming mediation,] a conceptual model must be translated into a statistical model in the form of at least two equations, depending on the number of proposed mediators in the model. With an understanding of the principles of moderation and mediation analysis described in this book, you should be able to do this without too much difficulty. (p. 510)</p>
 </blockquote>
 </div>
-<div id="step-3-estimate-the-statistical-model." class="section level3">
+<div id="step-3-estimate-the-statistical-model." class="section level3" number="14.1.3">
 <h3><span class="header-section-number">14.1.3</span> Step 3: Estimate the statistical model.</h3>
-<p>Hayes used OLS-based procedures throughout the text. We have been using Bayesian software. Though I prefer <strong>brms</strong>, you might also check out <a href="https://faculty.missouri.edu/~merklee/blavaan/"><strong>blavaan</strong></a>, <a href="https://mc-stan.org/users/interfaces/rstanarm"><strong>rstanarm</strong></a>, or <a href="https://mc-stan.org/rstan/"><strong>rstan</strong></a>. As a group, these will allow you to fit many more kinds of regression models than available through the OLS paradigm.</p>
+<p>Hayes used OLS-based procedures throughout the text. We have been using Bayesian software. Though I prefer <strong>brms</strong>, you might also check out <a href="https://faculty.missouri.edu/~merklee/blavaan/"><strong>blavaan</strong></a> or <a href="https://mc-stan.org/users/interfaces/rstanarm"><strong>rstanarm</strong></a>. As a group, these will allow you to fit many more kinds of regression models than available through the OLS paradigm.</p>
 </div>
-<div id="step-4-determine-whether-expected-moderation-exists." class="section level3">
+<div id="step-4-determine-whether-expected-moderation-exists." class="section level3" number="14.1.4">
 <h3><span class="header-section-number">14.1.4</span> Step 4: Determine whether expected moderation exists.</h3>
-<p>I’m not a fan of this “whether [x] exists” talk. First, it seems way to black and white. For more thoughts along those lines, check out Gelman’s <a href="http://www.stat.columbia.edu/~gelman/research/published/bayes_management.pdf"><em>The connection between varying treatment effects and the crisis of unreplicable research: A Bayesian perspective</em></a>. Second, it places too much faith in the analyis of a single data set. For more on those lines, consider what Hayes wrote in the middle of this subsection:</p>
+<p>I’m not a fan of this “whether [x] exists” talk. First, it seems way to black and white. For more thoughts along those lines, check out Gelman’s <span class="citation">(<a href="#ref-gelmanConnectionVaryingTreatment2015" role="doc-biblioref">2015</a>)</span> paper, <a href="http://www.stat.columbia.edu/~gelman/research/published/bayes_management.pdf"><em>The connection between varying treatment effects and the crisis of unreplicable research: A Bayesian perspective</em></a>. Second, it places too much faith in the analysis of a single data set. For more on those lines, consider what Hayes wrote in the middle of this subsection:</p>
 <blockquote>
 <p>Just because an interaction is not significant, that doesn’t mean your proposed moderator does not moderate the path you proposed it moderates. Parsimony might dictate that your model should be cleansed of this interaction, but null hypotheses tests are fallible, and sometimes real effects are so weak that we don’t have the power to detect them given the limitations of our resources or other things out of our control. (p. 511)</p>
 </blockquote>
 <p>This is all posed in the language of NHST, but the basic points still hold for other paradigms. If you have a theory-informed model, I recommend showing the results for that model regardless of the sizes of the parameters.</p>
 <p>I have concerns about the next subsection.</p>
-<div id="step-4a." class="section level4">
+<div id="step-4a." class="section level4" number="14.1.4.1">
 <h4><span class="header-section-number">14.1.4.1</span> Step 4A.</h4>
 <blockquote>
-<p>If you have decided to prune your model of nonsignificant interactions, then go back to step 1 and start fresh by redrawing your conceptual diagram in light of the evidence you now have and proceed through these steps again. A certain moral or ethical logic might dictate that you not pretend when describing your analysis that this is where you started in the first place. Yet Bem <a href="https://psychology.yale.edu/sites/default/files/bemempirical.pdf">(1987)</a> makes the argument that spending lots of time talking about ideas that turned out to be “wrongheaded” isn’t going to produce a particularly interesting paper. You’ll have to sort out for yourself where you stand on this continuum of scientific ethics. (p. 512)</p>
+<p>If you have decided to prune your model of nonsignificant interactions, then go back to step 1 and start fresh by redrawing your conceptual diagram in light of the evidence you now have and proceed through these steps again. A certain moral or ethical logic might dictate that you not pretend when describing your analysis that this is where you started in the first place. Yet Bem <span class="citation">(<a href="#ref-bemWritingEmpiricalJournal1987" role="doc-biblioref">1987</a>)</span> makes the argument that spending lots of time talking about ideas that turned out to be “wrongheaded” isn’t going to produce a particularly interesting paper. You’ll have to sort out for yourself where you stand on this continuum of scientific ethics. (p. 512)</p>
 </blockquote>
-<p>Hayes is quite right: “<em>You’ll have to sort out for yourself where you stand on this continuum of scientific ethics</em>.” At this point in the social-psychology replication crisis–a crisis of which Bem’s shoddy work has played no small part (see <a href="http://urisohn.com/sohn_files/wp/wordpress/wp-content/uploads/2019/01/Psychologys-Renaissance-2018.pdf">here</a> or <a href="https://www.nature.com/news/replication-studies-bad-copy-1.10634">here</a> or <a href="https://www.frontiersin.org/articles/10.3389/fpsyg.2015.00621/full">here</a> or <a href="https://journals.sagepub.com/doi/full/10.1177/1745691612465253">here</a> or <a href="https://repository.upenn.edu/cgi/viewcontent.cgi?article=1076&amp;context=oid_papers">here</a>)–, it’s shocking to read Hayes endorsing this advice.</p>
-<p>At a bare minimum, I recommend presenting your failed theory-based models in supplemental materials. You can upload them to the <a href="https://osf.io/">Open Science Framework</a> for free.</p>
+<p>Hayes is quite right: “<em>You’ll have to sort out for yourself where you stand on this continuum of scientific ethics</em>.” At this point in the social-psychology replication crisis–a crisis of which Bem’s shoddy work has played no small part <span class="citation">(<a href="#ref-earpReplicationFalsificationCrisis2015" role="doc-biblioref">Earp &amp; Trafimow, 2015</a>; <a href="#ref-galakCorrectingFailuresReplicate2012" role="doc-biblioref">Galak et al., 2012</a>; see <a href="#ref-nelsonPsychologyRenaissance2018" role="doc-biblioref">Nelson et al., 2018</a>; <a href="#ref-pashlerEditorsIntroductionSpecial2012" role="doc-biblioref">Pashler &amp; Wagenmakers, 2012</a>; <a href="#ref-yongReplicationStudiesBad2012" role="doc-biblioref">Yong, 2012</a>)</span>–, it’s shocking to read Hayes endorsing this advice.</p>
+<p>At a bare minimum, I recommend presenting your failed theory-based models in supplemental materials. You can upload them to the Open Science Framework at <a href="https://osf.io/">https://osf.io/</a> for free.</p>
 </div>
 </div>
-<div id="step-5-probe-and-interpret-interactions-involving-components-of-the-indirect-effect." class="section level3">
+<div id="step-5-probe-and-interpret-interactions-involving-components-of-the-indirect-effect." class="section level3" number="14.1.5">
 <h3><span class="header-section-number">14.1.5</span> Step 5: Probe and interpret interactions involving components of the indirect effect.</h3>
 <blockquote>
 <p>At this stage, probe any interactions involving components of the indirect effect of <span class="math inline">\(X\)</span> so that you will have some understanding of the contingencies of the various effects that are the components of the larger conditional process model you are estimating. This exercise will help inform and clarify your interpretation of the conditional indirect effect(s) of <span class="math inline">\(X\)</span> later on. (p. 512)</p>
 </blockquote>
 </div>
-<div id="step-6-quantify-and-test-conditional-indirect-effects-if-relevant." class="section level3">
+<div id="step-6-quantify-and-test-conditional-indirect-effects-if-relevant." class="section level3" number="14.1.6">
 <h3><span class="header-section-number">14.1.6</span> Step 6: Quantify and test conditional indirect effects (if relevant).</h3>
-<p>Within the paradigm I have introduces throughout this text, “testing” effects is never relevant. However, one can and should think in terms of the magnitudes of the parameters in the model. Think in terms of effect sizes. For a frequentist introduction to effect-size thinking, Geoff Cumming’s work is a fine place to start, such as his <a href="https://journals.sagepub.com/doi/pdf/10.1177/0956797613504966"><em>The new statistics: Why and how</em></a>. For a Bayesian alternative, check out Kruschke and Liddell’s <a href="https://link.springer.com/article/10.3758/s13423-016-1221-4"><em>The Bayesian New Statistics: Hypothesis testing, estimation, meta-analysis, and power analysis from a Bayesian perspective</em></a>.</p>
+<p>Within the paradigm I have introduces throughout this text, “testing” effects is never relevant. However, one can and should think in terms of the magnitudes of the parameters in the model. Think in terms of effect sizes. For a frequentist introduction to effect-size thinking, Geoff Cumming’s work is a fine place to start, such as his <span class="citation">(<a href="#ref-cummingNewStatisticsWhy2014" role="doc-biblioref">2014</a>)</span> article, <a href="https://journals.sagepub.com/doi/pdf/10.1177/0956797613504966"><em>The new statistics: Why and how</em></a>. For a Bayesian alternative, check out Kruschke and Liddell’s <span class="citation">(<a href="#ref-kruschkeBayesianNewStatistics2018" role="doc-biblioref">2018</a>)</span> article, <a href="https://link.springer.com/article/10.3758/s13423-016-1221-4"><em>The Bayesian New Statistics: Hypothesis testing, estimation, meta-analysis, and power analysis from a Bayesian perspective</em></a>.</p>
 </div>
-<div id="step-7-quantify-and-test-conditional-direct-effects-if-relevant." class="section level3">
+<div id="step-7-quantify-and-test-conditional-direct-effects-if-relevant." class="section level3" number="14.1.7">
 <h3><span class="header-section-number">14.1.7</span> Step 7: Quantify and test conditional direct effects (if relevant).</h3>
-<p>“If your model includes moderation of the direct effect of X, you will want to probe this interaction by estimating the conditional direct effects” (p. 513).</p>
+<p>“If your model includes moderation of the direct effect of <span class="math inline">\(X\)</span>, you will want to probe this interaction by estimating the conditional direct effects” (p. 513).</p>
 </div>
-<div id="step-8-tell-your-story." class="section level3">
+<div id="step-8-tell-your-story." class="section level3" number="14.1.8">
 <h3><span class="header-section-number">14.1.8</span> Step 8: Tell your story.</h3>
 <blockquote>
-<p>Real science does not proceed in the manner described in re- search methods and statistics textbooks. Rather, we routinely straddle the fence between the hypothetico-deductive approach and a more discovery- oriented or inquisitive mindset that is open to any story the data may inform. Sometimes the story we originally conceived prior to data analysis is simply wrong and we know it after analyzing the data. No one wants to read (as Daryl Bem once put it rather bluntly) “a personal history about your stillborn thoughts” (Bem, 1987, p. 173). Sometimes our data speak to us in ways that change the story we thought we were going to tell into something much more interesting, and hopefully more accurate. (p. 514)</p>
+<p>Real science does not proceed in the manner described in re- search methods and statistics textbooks. Rather, we routinely straddle the fence between the hypothetico-deductive approach and a more discovery-oriented or inquisitive mindset that is open to any story the data may inform. Sometimes the story we originally conceived prior to data analysis is simply wrong and we know it after analyzing the data. No one wants to read (as Daryl Bem once put it rather bluntly) “a personal history about your stillborn thoughts” (Bem, 1987, p. 173). Sometimes our data speak to us in ways that change the story we thought we were going to tell into something much more interesting, and hopefully more accurate. (p. 514)</p>
 </blockquote>
-<p>I largely agree, though I still recommend against following Bem’s recommendations. Yes, we need to present out work compellingly. But do resist the urge to un-transparently reinvent your research hypotheses for the sake of flashy rhetoric. If you have evidence agains one of the theoretical models in your field, let them know! For an example of scientists embracing the failure of theory, check out Klein and colleagues’ <a href="https://psyarxiv.com/vef2c"><em>Many Labs 4: Failure to replicate mortality salience effect with and without original author involvement</em></a>.</p>
+<p>I largely agree, though I still recommend against following Bem’s recommendations. Yes, we need to present out work compellingly. But do resist the urge to un-transparently reinvent your research hypotheses for the sake of flashy rhetoric. If you have evidence against one of the theoretical models in your field, let them know! For an example of scientists embracing the failure of theory, check out Klein and colleagues’ <span class="citation">(<a href="#ref-kleinManyLabsFailure2019" role="doc-biblioref">2019</a>)</span> <a href="https://psyarxiv.com/vef2c"><em>Many Labs 4: Failure to replicate mortality salience effect with and without original author involvement</em></a>.</p>
 <blockquote>
 <p>Of course, there is always the danger of capitalizing on chance when you let your explorations of the data influence the story you tell. We are great at explaining patterns we see. Our brains are wired to do it. So replication is important, and it may be the only way of establishing the generality of our findings and claims in the end. (p. 514)</p>
 </blockquote>
 <p>Yes indeed. So please stop following the poor examples of Bem and others. Present your research honestly and transparently.</p>
 </div>
 </div>
-<div id="how-do-i-write-about-this" class="section level2">
+<div id="how-do-i-write-about-this" class="section level2" number="14.2">
 <h2><span class="header-section-number">14.2</span> How do I write about this?</h2>
 <blockquote>
 <p>I have become convinced that the ability to communicate in writing is at least as if not more important than the ability to manipulate numbers and think in abstractions. You don’t have to be a good data analyst to be a good scientist, but your future on the front lines of science is limited if you can’t write effectively. (p. 515)</p>
@@ -488,27 +564,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <blockquote>
 <p>Third, throughout this book, I emphasize estimation and interpretation of effects in their unstandardized metric, and I report unstandardized effects when I report the results in my own research. There is a widespread belief that standardized effects are best reported, because the measurement scales used in most sciences are arbitrary and not inherently meaningful, or that standardized effects are more comparable across studies or investigators using different methods. But standardization simply changes one arbitrary measurement scale into another arbitrary scale, and because standardized effects are scaled in terms of variability in the sample, they are not comparable across studies conducted by different investigators regardless of whether the same measurement scales are used. (p. 519)</p>
 </blockquote>
-<p>To my mind, this leads directly to thoughts about effect sizes. I recommend you ponder long and hard on how to interpret your results in terms of effect sizes. If your research is anything like mine, it’s not always clear what the best approach might be. To get your juices flowing, you might check out Kelley and Preacher’s (2012) <a href="https://www.researchgate.net/profile/Ken_Kelley/publication/270757972_On_Effect_Size/links/0046351b0cd48217ce000000/On-Effect-Size.pdf"><em>On effect size</em></a>.</p>
-<div id="reporting-a-mediation-analysis." class="section level3">
+<p>To my mind, this leads directly to thoughts about effect sizes. I recommend you ponder long and hard on how to interpret your results in terms of effect sizes. If your research is anything like mine, it’s not always clear what the best approach might be. To get your juices flowing, you might check out Kelley and Preacher’s <span class="citation">(<a href="#ref-kelley2012effect" role="doc-biblioref">2012</a>)</span> <a href="https://www.researchgate.net/profile/Ken_Kelley/publication/270757972_On_Effect_Size/links/0046351b0cd48217ce000000/On-Effect-Size.pdf"><em>On effect size</em></a>.</p>
+<div id="reporting-a-mediation-analysis." class="section level3" number="14.2.1">
 <h3><span class="header-section-number">14.2.1</span> Reporting a mediation analysis.</h3>
 <blockquote>
 <p>Mediation is a causal phenomenon. You will find some people skeptical of the use of mediation analysis in studies based on data that are purely correlational in nature and involve no experimental manipulation or measurement over time. Some people are quite fanatical about this, and if you are unlucky enough to get such an extreme reviewer when trying to publish your work, there may not be much you can to do to convince him or her otherwise. (p. 520)</p>
 </blockquote>
-<p>In recent years, I’ve shifted more and more in the direction of the ‘fanatics.’ That might seem odd given I’ve poured all this time and effort into translating a book highlighting and endorsing cross-sectional mediation. I think cross-sectional mediation is a fine teaching tool; it’s a good place for budding data analysts to start. But please do not stop there. Do not stop with this book. Mediation is causal process and causal processes are necessarily longitudinal. A fine place to dip your toes into those waters are the works of Maxwell, Cole, and Mitchell (e.g., <a href="https://static1.squarespace.com/static/567e18590e4c11744881ca05/t/5741b973b09f956c84a32d89/1463925107757/Maxwell+%26+Cole+%282007%29+bias+in+cross-sectional+mediation.pdf">here</a> or <a href="https://www.tandfonline.com/doi/full/10.1080/00273171.2011.606716">here</a> or <a href="https://www.tandfonline.com/doi/abs/10.1080/00273171.2013.784696">here</a>). If you care about the causal process under your study, please collect longitudinal data. If you learn best by snarky twitter discussions, <a href="https://twitter.com/SolomonKurz/status/1167815325842325504">go here</a>.</p>
+<p>In recent years, I’ve shifted more and more in the direction of the ‘fanatics.’ That might seem odd given I’ve poured all this time and effort into translating a book highlighting and endorsing cross-sectional mediation. I think cross-sectional mediation is a fine teaching tool; it’s a good place for budding data analysts to start. But please do not stop there. Do not stop with this book. Mediation is causal process and causal processes are necessarily longitudinal. A fine place to dip your toes into those waters are the works of Maxwell, Cole, and Mitchell <span class="citation">(<a href="#ref-maxwellBiasCrosssectionalAnalyses2011" role="doc-biblioref">Maxwell et al., 2011</a>; e.g., <a href="#ref-maxwellBiasCrosssectionalAnalyses2007" role="doc-biblioref">Maxwell &amp; Cole, 2007</a>; <a href="#ref-mitchellComparisonCrosssectionalSequential2013" role="doc-biblioref">Mitchell &amp; Maxwell, 2013</a>)</span>. If you care about the causal process under your study, please collect longitudinal data. If you learn best by snarky twitter discussions, <a href="https://twitter.com/SolomonKurz/status/1167815325842325504">go here</a>.</p>
 </div>
-<div id="reporting-a-moderation-analysis." class="section level3">
+<div id="reporting-a-moderation-analysis." class="section level3" number="14.2.2">
 <h3><span class="header-section-number">14.2.2</span> Reporting a moderation analysis.</h3>
 <blockquote>
 <p>Some of the more interesting studies you will find show that what is commonly assumed turns out to be true only sometimes, or that a well-known manipulation only works for some types of people. When writing about moderation, you have the opportunity to tell the scientific world that things aren’t as simple as perhaps they have seemed or been assumed to be, and that there are conditions that must be placed on our understanding of the world. (p. 522)</p>
 </blockquote>
-<p>I don’t care for the NHST framing in many of the paragraphs to follow. If you find it a struggle to move beyond this way of thinking, I recommend soaking in Gelman’s (2014) editorial commentary, <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.865.5848&amp;rep=rep1&amp;type=pdf"><em>The connection between varying treatment effects and the crisis of unreplicable research: A Bayesian perspective</em></a>. Later we read:</p>
+<p>I don’t care for the NHST framing in many of the paragraphs to follow. If you find it a struggle to move beyond this way of thinking, I recommend soaking in Gelman’s <span class="citation">(<a href="#ref-gelmanConnectionVaryingTreatment2015" role="doc-biblioref">2015</a>)</span> editorial commentary, <a href="https://doi.org/10.1177/0149206314525208"><em>The connection between varying treatment effects and the crisis of unreplicable research: A Bayesian perspective</em></a>. Later we read:</p>
 <blockquote>
 <p>The interpretation of the regression coefficients for <span class="math inline">\(X\)</span> and <span class="math inline">\(W\)</span> in a model that includes <span class="math inline">\(XW\)</span> are highly dependent on the scaling of <span class="math inline">\(X\)</span> and <span class="math inline">\(W\)</span>. If you have centered a variable, say so. If one or both of these variables is dichotomous, tell the reader what numerical codes were used to represent the two groups. Preferably, choose codes for the two groups that differ by one unit. The more information you give to the reader about how your variables are scaled or coded, the more the reader will be able to look at your results in the text, tables, or figures, discern their meaning, and interpret them correctly. (0. 524)</p>
 </blockquote>
 <p>Agreed. And if you’re working under tight word-limit constraints, just give all these details–and others such as centering, standardizing, priors, formal model formulas, HMC chain diagnostic checks, posterior-predictive checks–in supplemental material posted to a stable online repository, such as the <a href="https://osf.io/">Open Science Framework</a>.</p>
-<p>Other than that, <em>please consider plotting your interactions</em>. Hayes gave some examples of that in the text, but I think his approach was inadequate. Include measures of uncertainty (e.g., 95% credible intervals) in your visualizations. For examples of this beyond those I reported in this text, check out <a href="https://www.researchgate.net/profile/Kevin_King3/publication/324067902_Improving_Present_Practices_in_the_Visual_Display_of_Interactions/links/5abbd8f30f7e9bfc045595d8/Improving-Present-Practices-in-the-Visual-Display-of-Interactions.pdf">this nice tutorial</a> by McCabe, Kim, and King. For visualization ideas specific to the <strong>brms</strong>/<strong>tidybayes</strong> framework, check out Kay’s <a href="https://mjskay.github.io/tidybayes/articles/tidy-brms.html"><em>Extracting and visualizing tidy draws from brms models</em></a>.</p>
+<p>Other than that, <em>please consider plotting your interactions</em>. Hayes gave some examples of that in the text, but I think his approach was inadequate. Include measures of uncertainty (e.g., 95% credible intervals) in your visualizations. For examples of this beyond those I reported in this text, check out this nice <span class="citation">(<a href="#ref-mccabe2018improving" role="doc-biblioref">2018</a>)</span> <a href="https://www.researchgate.net/profile/Kevin_King3/publication/324067902_Improving_Present_Practices_in_the_Visual_Display_of_Interactions/links/5abbd8f30f7e9bfc045595d8/Improving-Present-Practices-in-the-Visual-Display-of-Interactions.pdf">tutorial</a> by McCabe, Kim, and King. For visualization ideas specific to the <strong>brms</strong>-<strong>tidybayes</strong> framework, check out Kay’s <span class="citation">(<a href="#ref-kayExtractingVisualizingTidy2020" role="doc-biblioref">2020a</a>)</span> <a href="https://mjskay.github.io/tidybayes/articles/tidy-brms.html"><em>Extracting and visualizing tidy draws from brms models</em></a>.</p>
 </div>
-<div id="reporting-a-conditional-process-analysis." class="section level3">
+<div id="reporting-a-conditional-process-analysis." class="section level3" number="14.2.3">
 <h3><span class="header-section-number">14.2.3</span> Reporting a conditional process analysis.</h3>
 <blockquote>
 <p>One of the challenges you are likely to face when writing about a conditional process analysis is staying within the page allowance that most journal editors provide. A well-written analysis will usually contain multiple tables, perhaps a figure or two to depict the conceptual model and perhaps an interaction or two, and enough text to describe what was found in substantive terms while also providing sufficient detail about the analysis for the reader to understand what was done. Many reviewers, editors, and readers will not be familiar with this approach and may need to be educated within the text, further lengthening the manuscript. Yet I am also amazed how much I am able to cut from my own writing with sufficient editing, so don’t be wedded to every word you write, and don’t be afraid to delete that sentence or two you spent much time pondering, crafting, and fine-tuning but that upon third or fourth reading really isn’t necessary to convey what needs to be conveyed.</p>
@@ -517,64 +593,60 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>As recommended just above, you can also cover all this with online supplemental material posted to a stable online repository, such as the <a href="https://osf.io/">Open Science Framework</a>. I can’t recommend this enough.</p>
 </div>
 </div>
-<div id="should-i-use-structural-equation-modeling-instead-of-regression-analysis" class="section level2">
+<div id="should-i-use-structural-equation-modeling-instead-of-regression-analysis" class="section level2" number="14.3">
 <h2><span class="header-section-number">14.3</span> Should I use structural equation modeling instead of regression analysis?</h2>
-<p>First to clarify, one can do structural equation modeling (SEM) as a Bayesian. At the time of this writing, <strong>brms</strong> is only capable of limited forms of SEM. In fact, all the multivariate models we have fit this far can be thought of as special cases of Bayesian SEM (see <a href="http://www.imachordata.com/bayesian-sem-with-brms/">here</a>). However, it appears <strong>brms</strong> will offer expanded SEM capabilities sometime in the future. To keep up with the Bürkner’s progress, you might intermittently check in to <a href="https://github.com/paul-buerkner/brms/issues/303">this issue</a> on the <strong>brms</strong> GitHub page. And of course, you can always check out the <a href="https://faculty.missouri.edu/~merklee/blavaan/"><strong>blavaan</strong> package</a>.</p>
+<p>First to clarify, one can do structural equation modeling (SEM) as a Bayesian. At the time of this writing, <strong>brms</strong> is only capable of limited forms of SEM. In fact, all the multivariate models we have fit this far can be thought of as special cases of Bayesian SEM (see <a href="http://www.imachordata.com/bayesian-sem-with-brms/">here</a>). However, it appears <strong>brms</strong> will offer expanded SEM capabilities sometime in the future. To keep up with the Bürkner’s progress, you might intermittently check in to <a href="https://github.com/paul-buerkner/brms/issues/303">issue #303</a> on the <strong>brms</strong> GitHub page. And of course, you can always check out the <a href="https://faculty.missouri.edu/~merklee/blavaan/"><strong>blavaan</strong> package</a>.</p>
 </div>
-<div id="the-pitfalls-of-subgroups-analysis" class="section level2">
+<div id="the-pitfalls-of-subgroups-analysis" class="section level2" number="14.4">
 <h2><span class="header-section-number">14.4</span> The pitfalls of subgroups analysis</h2>
 <p>If at all possible, just don’t do this. Hayes covered the following reasons why:</p>
 <ul>
 <li>“First, the subgroups approach may not accurately reflect the process purportedly at work” (p. 531).</li>
-<li>“Second, a direct or indirect effect may be descriptively different in the two groups but may not actually be different when subjected to a formal statistical test of differences” (pp. 531–532). For more on this point, check out Gelman and Stern’s (2006) <a href="http://www.stat.columbia.edu/~gelman/research/published/signif4.pdf"><em>The difference between “significant” and “not significant” is not itself statistically significant</em></a>.</li>
+<li>“Second, a direct or indirect effect may be descriptively different in the two groups but may not actually be different when subjected to a formal statistical test of differences” (pp. 531–532). For more on this point, check out Gelman and Stern’s <span class="citation">(<a href="#ref-gelman2006difference" role="doc-biblioref">2006</a>)</span> <a href="https://www.tandfonline.com/doi/pdf/10.1198/000313006X152649?needAccess=true"><em>The difference between “significant” and “not significant” is not itself statistically significant</em></a>.</li>
 <li>“Third, the subgroups approach conflates statistical significance with sample size” (p. 532).</li>
 <li>“Finally, this approach requires that the proposed moderator be categorical” (p. 532).</li>
 </ul>
 </div>
-<div id="can-a-variable-simultaneously-mediate-and-moderate-another-variables-effect" class="section level2">
+<div id="can-a-variable-simultaneously-mediate-and-moderate-another-variables-effect" class="section level2" number="14.5">
 <h2><span class="header-section-number">14.5</span> Can a variable simultaneously mediate and moderate another variable’s effect?</h2>
 <p>“Just because something is mathematically possible doesn’t mean that it is sensible theoretically or substantively interpretable when it happens” (p. 540).</p>
-<p>I suspect part of this issue has to do with confusion around the longitudinal nature of mediation al processes and a confounding of state versus trait (i.e., within- and between-case variation). See the Cole, Maxwell and Mitchell papers referenced, above, to start thinking about mediation within the context of longitudinal data. The issue of within- versus between-case variation is huge and IMO under-appreciated in the mediation literature. If you’re ready to blow your mind a little, I can think of no better place to start learning about this than Ellen Hamaker’s engaging chapter, <a href="https://www.researchgate.net/publication/266896375_Why_researchers_should_think_within-person_A_paradigmatic_rationale"><em>Why researchers should think “within-person”: A paradigmatic rationale</em></a>.</p>
+<p>I suspect part of this issue has to do with confusion around the longitudinal nature of mediation al processes and a confounding of state versus trait (i.e., within- and between-case variation). See the Cole, Maxwell and Mitchell papers referenced, above, to start thinking about mediation within the context of longitudinal data. The issue of within- versus between-case variation is huge and IMO under-appreciated in the mediation literature. If you’re ready to blow your mind a little, I can think of no better place to start learning about this than Ellen Hamaker’s engaging <span class="citation">(<a href="#ref-hamakerWhyResearchersShould2012" role="doc-biblioref">2012</a>)</span> chapter, <a href="https://www.researchgate.net/publication/266896375_Why_researchers_should_think_within-person_A_paradigmatic_rationale"><em>Why researchers should think “within-person”: A paradigmatic rationale</em></a>.</p>
 </div>
-<div id="interaction-between-x-and-m-in-mediation-analysis" class="section level2">
+<div id="interaction-between-x-and-m-in-mediation-analysis" class="section level2" number="14.6">
 <h2><span class="header-section-number">14.6</span> Interaction between <span class="math inline">\(X\)</span> and <span class="math inline">\(M\)</span> in mediation analysis?</h2>
 <blockquote>
-<p>The mathematics of this approach relies on the counterfactual or potential outcomes approach to causal analysis that is popular in statistics, less widely known in the social science research community, and, to many, a little harder to digest. For discussions of this approach, see <a href="https://pdfs.semanticscholar.org/2d61/1458f70a315dec999cd044def11b28920a0b.pdf">Imai, Keele, and Tingley (2010)</a>, <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.565.9883&amp;rep=rep1&amp;type=pdf">Muthé́n and Asparouhov (2015)</a>, <a href="https://psycnet.apa.org/fulltext/2013-03476-001.pdf">Valeri and VanderWeele (2013)</a>, and <a href="https://www.amazon.com/Explanation-Causal-Inference-Mediation-Interaction/dp/0199325871/ref=sr_1_1?ie=UTF8&amp;qid=1413609445&amp;sr=8-1&amp;keywords=tyler+vanderweele">VanderWeele (2015)</a>.</p>
+<p>The mathematics of this approach relies on the counterfactual or potential outcomes approach to causal analysis that is popular in statistics, less widely known in the social science research community, and, to many, a little harder to digest. For discussions of this approach, see Imai, Keele, and Tingley <span class="citation">(<a href="#ref-imaiGeneralApproachCausal2010" role="doc-biblioref">2010</a>)</span>, Muthé́n and Asparouhov <span class="citation">(<a href="#ref-muthenCausalEffectsMediation2015" role="doc-biblioref">2015</a>)</span>, Valeri and VanderWeele <span class="citation">(<a href="#ref-valeri2013mediation" role="doc-biblioref">2013</a>)</span>, and VanderWeele <span class="citation">(<a href="#ref-vanderweeleExplanationCausalInference2015" role="doc-biblioref">2015</a>)</span>.</p>
 </blockquote>
 </div>
-<div id="repeated-measures-designs" class="section level2">
+<div id="repeated-measures-designs" class="section level2" number="14.7">
 <h2><span class="header-section-number">14.7</span> Repeated measures designs</h2>
 <blockquote>
 <p>In all examples throughout this book, cases were measured on mediator(s) <span class="math inline">\(M\)</span> and outcome <span class="math inline">\(Y\)</span> only once. In nonexperimental studies, they were measured once on the causal antecedent <span class="math inline">\(X\)</span>, whereas in experimental studies they were assigned to one of two or three experimental conditions used as <span class="math inline">\(X\)</span> in the model. Although such research designs are common, also common are “repeated measures” designs that involve measuring cases more than once on the variables in a mediation model. There are several forms such designs take, and there are approaches to mediation and conditional process analysis that can be used depending on the form of the design. (p. 541)</p>
 </blockquote>
-<p>On the next page, Hayes introduced the multilevel approach to mediation. For more on this topic, check out this paper from <a href="https://twitter.com/vuorre">Vuorre</a> and <a href="https://twitter.com/ardollam">Bolger</a>, <a href="https://link.springer.com/article/10.3758/s13428-017-0980-9"><em>Within-subject mediation analysis for experimental data in cognitive psychology and neuroscience</em></a> which introduced a package for Bayesian multilevel mediation models, <a href="https://cran.r-project.org/web/packages/bmlm/index.html"><strong>bmlm</strong></a>. Yes, you can do this in <strong>brms</strong>.</p>
-<p>Hayes also discussed the cross-lag panel model for longitudinal mediation (e.g., <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5568008/">Valente &amp; MacKinnon, 2017</a>). I have not tried it, but I believe you could do this with current versions of <strong>brms</strong>. Here’s a <a href="https://discourse.mc-stan.org/t/cross-lagged-multilevel-panel-model/3992">thread on the Stan forums</a> discussing how from a multilevel perspective.</p>
+<p>On the next page, Hayes introduced the multilevel approach to mediation. For more on this topic, check out the great <span class="citation">(<a href="#ref-vuorreWithinsubjectMediationAnalysis2018" role="doc-biblioref">2018</a>)</span> paper from <a href="https://twitter.com/vuorre">Vuorre</a> and <a href="https://twitter.com/ardollam">Bolger</a>, <a href="https://link.springer.com/article/10.3758/s13428-017-0980-9"><em>Within-subject mediation analysis for experimental data in cognitive psychology and neuroscience</em></a> which introduced a package for Bayesian multilevel mediation models called <a href="https://cran.r-project.org/web/packages/bmlm/index.html"><strong>bmlm</strong></a> <span class="citation">(<a href="#ref-bmlm2017" role="doc-biblioref">Vuorre, 2017</a>, <a href="#ref-R-bmlm" role="doc-biblioref">2019</a>)</span>. Yes, you can do this in <strong>brms</strong>.</p>
+<p>Hayes also discussed the cross-lag panel model for longitudinal mediation <span class="citation">(e.g., <a href="#ref-valenteComparingModelsChange2017" role="doc-biblioref">Valente &amp; MacKinnon, 2017</a>)</span>. I have not tried it, but I believe you could do this with current versions of <strong>brms</strong>. Here’s a <a href="https://discourse.mc-stan.org/t/cross-lagged-multilevel-panel-model/3992">thread on the Stan forums</a> discussing how from a multilevel perspective.</p>
 <blockquote>
-<p>For a more detailed discussion of mediation in panel designs like this, see <a href="https://pdfs.semanticscholar.org/9c0e/320b78f0d0c110cb6deb3586605a0a687e77.pdf">Cole and Maxwell (2003)</a>, <a href="https://www.researchgate.net/profile/Todd_Little/publication/289962988_New_developments_in_latent_variable_panel_analyses_of_longitudinal_data/links/00b7d52bb5f0460233000000/New-developments-in-latent-variable-panel-analyses-of-longitudinal-data.pdf">Little, Preacher, Selig, and Card (2007)</a>, and <a href="http://www.quantpsy.org/pubs/selig_preacher_2009.pdf">Selig and Preacher (2009)</a>.</p>
-<p>Another analytical option is available when <span class="math inline">\(M\)</span> and <span class="math inline">\(Y\)</span> are measured at least three times, regardless of the number of measurements of <span class="math inline">\(X\)</span>. <em>Parallel process latent growth modeling</em> allows for <span class="math inline">\(X\)</span> (either in a single measurement or manipulation, or its change over time) to influence the trajectory in change in the mediator, which in turn can influence the trajectory in the change in <span class="math inline">\(Y\)</span> over time. [Yes, <strong>brms</strong> can do this]. See <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2821108/">Cheong et al. (2003)</a> and Selig and Preacher (2009) for discussions of the mathematics of mediation analysis in a latent growth context. (p. 545, <em>emphasis</em> in the original)</p>
+<p>For a more detailed discussion of mediation in panel designs like this, see Cole and Maxwell <span class="citation">(<a href="#ref-coleTestingMediationalModels2003" role="doc-biblioref">2003</a>)</span>, Little, Preacher, Selig, and Card <span class="citation">(<a href="#ref-little2007new" role="doc-biblioref">2007</a>)</span>, and Selig and Preacher <span class="citation">(<a href="#ref-seligMediationModelsLongitudinal2009" role="doc-biblioref">2009</a>)</span>.</p>
+<p>Another analytical option is available when <span class="math inline">\(M\)</span> and <span class="math inline">\(Y\)</span> are measured at least three times, regardless of the number of measurements of <span class="math inline">\(X\)</span>. <em>Parallel process latent growth modeling</em> allows for <span class="math inline">\(X\)</span> (either in a single measurement or manipulation, or its change over time) to influence the trajectory in change in the mediator, which in turn can influence the trajectory in the change in <span class="math inline">\(Y\)</span> over time. [Yes, <strong>brms</strong> can do this]. See Cheong et al. <span class="citation"><a href="#ref-cheongInvestigationMediationalProcesses2003" role="doc-biblioref">Cheong et al.</a> (<a href="#ref-cheongInvestigationMediationalProcesses2003" role="doc-biblioref">2003</a>)</span> and Selig and Preacher (2009) for discussions of the mathematics of mediation analysis in a latent growth context. (p. 545, <em>emphasis</em> in the original)</p>
 </blockquote>
 </div>
-<div id="dichotomous-ordinal-count-and-survival-outcomes" class="section level2">
+<div id="dichotomous-ordinal-count-and-survival-outcomes" class="section level2" number="14.8">
 <h2><span class="header-section-number">14.8</span> Dichotomous, ordinal, count, and survival outcomes</h2>
 <blockquote>
 <p>[Our version of] this book is focused squarely and exclusively on linear regression analysis using the [single-level Gaussian likelihood] as the computational backbone of mediation, moderation, and conditional process analysis. In all examples that included a mediation component, all mediator(s) <span class="math inline">\(M\)</span> and final consequent variable <span class="math inline">\(Y\)</span> were always treated as continuous dimensions with at least interval level measurement properties. But no doubt you will find yourself in a situation where <span class="math inline">\(M\)</span> and/or <span class="math inline">\(Y\)</span> is dichotomous, or an ordinal scale with only a few scale points, or perhaps a count variable. Although such variables can be modeled with [the Gaussian likelihood], doing so is controversial because there are better methods that respect the special statistical considerations that come up when such variables are on the left sides of equations. (p. 545)</p>
 </blockquote>
-<p>Going beyond the Gaussian likelihood is often framed in terms of the generalized linear model (GLM). To wade into the GLM from within a Bayesian framework, I recommend McElreath’s (2015) <a href="https://xcelab.net/rm/statistical-rethinking/"><em>Statistical rethinking: A Bayesian course with examples in R and Stan</em></a> and Kruschke’s (2014) [<em>Doing Bayesian data analysis, Second Edition: A tutorial with R, JAGS, and Stan</em>]. I have <strong>bookdown</strong> translations of both into <strong>brms</strong>, freely available <a href="https://bookdown.org/connect/#/apps/1850/access">here</a> and <a href="https://bookdown.org/ajkurz/DBDA_recoded/">here</a>, respectively. Liberate yourself from the tyranny of the Gauss. Embrace the GLM.</p>
-</div>
-<div id="reference-2" class="section level2 unnumbered">
-<h2>Reference</h2>
-<p><a href="http://afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html">Hayes, A. F. (2018). <em>Introduction to mediation, moderation, and conditional process analysis: A regression-based approach.</em> (2nd ed.). New York, NY, US: The Guilford Press.</a></p>
+<p>Going beyond the Gaussian likelihood is often framed in terms of the generalized linear model (GLM). To wade into the GLM from within a Bayesian framework, I recommend Kruschke’s <span class="citation">(<a href="#ref-kruschkeDoingBayesianData2015" role="doc-biblioref">2015</a>)</span> text, <a href="https://sites.google.com/site/doingbayesiandataanalysis/"><em>Doing Bayesian data analysis, Second Edition: A tutorial with R, JAGS, and Stan</em></a>, or either edition of McElreath’s text, <a href="https://xcelab.net/rm/statistical-rethinking/"><em>Statistical rethinking: A Bayesian course with examples in R and Stan</em></a> <span class="citation">(<a href="#ref-mcelreathStatisticalRethinkingBayesian2020" role="doc-biblioref">2020</a>, <a href="#ref-mcelreathStatisticalRethinkingBayesian2015" role="doc-biblioref">2015</a>)</span>. I have free ebooks of all three wherein I have translated their code into a <strong>tidyverse</strong> and <strong>brms</strong> framework <span class="citation">(<a href="#ref-kurzStatisticalRethinkingSecondEd2021" role="doc-biblioref">Kurz, 2021</a>, <a href="#ref-kurzDoingBayesianData2021" role="doc-biblioref">2020a</a>, <a href="#ref-kurzStatisticalRethinkingBrms2020" role="doc-biblioref">2020b</a>)</span>. Liberate yourself from the tyranny of the Gauss. Embrace the GLM.</p>
 </div>
 <div id="session-info-13" class="section level2 unnumbered">
 <h2>Session info</h2>
-<div class="sourceCode" id="cb951"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb951-1" data-line-number="1"><span class="kw">sessionInfo</span>()</a></code></pre></div>
-<pre><code>## R version 3.6.0 (2019-04-26)
-## Platform: x86_64-apple-darwin15.6.0 (64-bit)
-## Running under: macOS High Sierra 10.13.6
+<div class="sourceCode" id="cb954"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb954-1"><a href="miscellaneous-topics-and-some-frequently-asked-questions.html#cb954-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<pre><code>## R version 4.0.4 (2021-02-15)
+## Platform: x86_64-apple-darwin17.0 (64-bit)
+## Running under: macOS Catalina 10.15.7
 ## 
 ## Matrix products: default
-## BLAS:   /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRblas.0.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/3.6/Resources/lib/libRlapack.dylib
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -583,36 +655,148 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] compiler_3.6.0  magrittr_1.5    tools_3.6.0     htmltools_0.4.0 Rcpp_1.0.2      stringi_1.4.3  
-##  [7] rmarkdown_1.13  knitr_1.23      stringr_1.4.0   xfun_0.10       digest_0.6.21   rlang_0.4.1    
-## [13] evaluate_0.14</code></pre>
+##  [1] bookdown_0.22     digest_0.6.27     R6_2.5.0          jsonlite_1.7.2    magrittr_2.0.1   
+##  [6] evaluate_0.14     rlang_0.4.11      stringi_1.6.2     jquerylib_0.1.4   bslib_0.2.4      
+## [11] rmarkdown_2.8     tools_4.0.4       stringr_1.4.0     xfun_0.23         compiler_4.0.4   
+## [16] htmltools_0.5.1.1 knitr_1.33        sass_0.3.1</code></pre>
 
 </div>
 </div>
-
-
-
-
-
-
-
-
+<h3>References</h3>
+<div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
+<div id="ref-bemWritingEmpiricalJournal1987" class="csl-entry">
+Bem, D. J. (1987). Writing the empirical journal article. In M. P. Zanna &amp; J. M. Darley (Eds.), <em>The complete academic: <span>A</span> practical guide for the beginning social scientist</em> (pp. 171–201). <span>Lawrence Erlbaum Associates</span>.
+</div>
+<div id="ref-cheongInvestigationMediationalProcesses2003" class="csl-entry">
+Cheong, J., MacKinnon, D. P., &amp; Khoo, S. T. (2003). Investigation of mediational processes using parallel process latent growth curve modeling. <em>Structural Equation Modeling : A Multidisciplinary Journal</em>, <em>10</em>(2), 238. <a href="https://doi.org/10.1207/S15328007SEM1002_5">https://doi.org/10.1207/S15328007SEM1002_5</a>
+</div>
+<div id="ref-coleTestingMediationalModels2003" class="csl-entry">
+Cole, D. A., &amp; Maxwell, S. E. (2003). Testing mediational models with longitudinal data: <span>Questions</span> and tips in the use of structural equation modeling. <em>Journal of Abnormal Psychology</em>, <em>112</em>(4), 558–577. <a href="https://doi.org/10.1037/0021-843X.112.4.558">https://doi.org/10.1037/0021-843X.112.4.558</a>
+</div>
+<div id="ref-cummingNewStatisticsWhy2014" class="csl-entry">
+Cumming, G. (2014). The new statistics: <span>Why</span> and how. <em>Psychological Science</em>, <em>25</em>(1), 7–29. <a href="https://doi.org/10.1177/0956797613504966">https://doi.org/10.1177/0956797613504966</a>
+</div>
+<div id="ref-earpReplicationFalsificationCrisis2015" class="csl-entry">
+Earp, B. D., &amp; Trafimow, D. (2015). Replication, falsification, and the crisis of confidence in social psychology. <em>Frontiers in Psychology</em>, <em>6</em>. <a href="https://doi.org/10.3389/fpsyg.2015.00621">https://doi.org/10.3389/fpsyg.2015.00621</a>
+</div>
+<div id="ref-galakCorrectingFailuresReplicate2012" class="csl-entry">
+Galak, J., LeBoeuf, R. A., Nelson, L. D., &amp; Simmons, J. P. (2012). Correcting the past: <span>Failures</span> to replicate psi. <em>Journal of Personality and Social Psychology</em>, <em>103</em>(6), 933–948. <a href="https://doi.org/10.1037/a0029709">https://doi.org/10.1037/a0029709</a>
+</div>
+<div id="ref-gelmanConnectionVaryingTreatment2015" class="csl-entry">
+Gelman, A. (2015). The connection between varying treatment effects and the crisis of unreplicable research: <span>A Bayesian</span> perspective. <em>Journal of Management</em>, <em>41</em>(2), 632–643. <a href="https://doi.org/10.1177/0149206314525208">https://doi.org/10.1177/0149206314525208</a>
+</div>
+<div id="ref-gelman2006difference" class="csl-entry">
+Gelman, A., &amp; Stern, H. (2006). The difference between <span>“significant”</span> and <span>“not significant”</span> is not itself statistically significant. <em>The American Statistician</em>, <em>60</em>(4), 328–331. <a href="https://doi.org/10.1198/000313006X152649">https://doi.org/10.1198/000313006X152649</a>
+</div>
+<div id="ref-hamakerWhyResearchersShould2012" class="csl-entry">
+Hamaker, E. L. (2012). Why researchers should think "within-person": <span>A</span> paradigmatic rationale. In <em>Handbook of research methods for studying daily life</em> (pp. 43–61). <span>The Guilford Press</span>. <a href="https://www.guilford.com/books/Handbook-of-Research-Methods-for-Studying-Daily-Life/Mehl-Conner/9781462513055">https://www.guilford.com/books/Handbook-of-Research-Methods-for-Studying-Daily-Life/Mehl-Conner/9781462513055</a>
+</div>
+<div id="ref-hayesIntroductionMediationModeration2018" class="csl-entry">
+Hayes, Andrew F. (2018). <em>Introduction to mediation, moderation, and conditional process analysis: <span>A</span> regression-based approach</em> (Second edition). <span>The Guilford Press</span>. <a href="https://www.guilford.com/books/Introduction-to-Mediation-Moderation-and-Conditional-Process-Analysis/Andrew-Hayes/9781462534654">https://www.guilford.com/books/Introduction-to-Mediation-Moderation-and-Conditional-Process-Analysis/Andrew-Hayes/9781462534654</a>
+</div>
+<div id="ref-hayesSAGESourcebookAdvanced2008" class="csl-entry">
+Hayes, Andrew F., Slater, M. D., &amp; Snyder, L. B. (2008). <em>The <span>SAGE</span> sourcebook of advanced data analysis methods for communication research</em>. <a href="https://us.sagepub.com/en-us/nam/the-sage-sourcebook-of-advanced-data-analysis-methods-for-communication-research/book228339">https://us.sagepub.com/en-us/nam/the-sage-sourcebook-of-advanced-data-analysis-methods-for-communication-research/book228339</a>
+</div>
+<div id="ref-imaiGeneralApproachCausal2010" class="csl-entry">
+Imai, K., Keele, L., &amp; Tingley, D. (2010). A general approach to causal mediation analysis. <em>Psychological Methods</em>, <em>15</em>(4), 309–334. <a href="https://doi.org/10.1037/a0020761">https://doi.org/10.1037/a0020761</a>
+</div>
+<div id="ref-kayExtractingVisualizingTidy2020" class="csl-entry">
+Kay, M. (2020a). <em>Extracting and visualizing tidy draws from brms models</em>. <a href="https://mjskay.github.io/tidybayes/articles/tidy-brms.html">https://mjskay.github.io/tidybayes/articles/tidy-brms.html</a>
+</div>
+<div id="ref-kelley2012effect" class="csl-entry">
+Kelley, K., &amp; Preacher, K. J. (2012). On effect size. <em>Psychological Methods</em>, <em>17</em>(2), 137. <a href="https://doi.org/10.1037/a0028086">https://doi.org/10.1037/a0028086</a>
+</div>
+<div id="ref-kleinManyLabsFailure2019" class="csl-entry">
+Klein, R. A., Cook, C. L., Ebersole, C. R., Vitiello, C., Nosek, B. A., Chartier, C. R., Christopherson, C. D., Clay, S., Collisson, B., Crawford, J., Cromar, R., Vidamuerte, D., Gardiner, G., Gosnell, C., Grahe, J., Hall, C., Joy-Gaba, J., Legg, A. M., Levitan, C., … Ratliff, K. (2019). <em>Many <span>Labs</span> 4: <span>Failure</span> to replicate mortality salience effect with and without original author involvement</em>. <span>PsyArXiv</span>. <a href="https://doi.org/10.31234/osf.io/vef2c">https://doi.org/10.31234/osf.io/vef2c</a>
+</div>
+<div id="ref-kruschkeDoingBayesianData2015" class="csl-entry">
+Kruschke, J. K. (2015). <em>Doing <span>Bayesian</span> data analysis: <span>A</span> tutorial with <span>R</span>, <span>JAGS</span>, and <span>Stan</span></em>. <span>Academic Press</span>. <a href="https://sites.google.com/site/doingbayesiandataanalysis/">https://sites.google.com/site/doingbayesiandataanalysis/</a>
+</div>
+<div id="ref-kruschkeBayesianNewStatistics2018" class="csl-entry">
+Kruschke, J. K., &amp; Liddell, T. M. (2018). <span>The Bayesian New Statistics</span>: <span>Hypothesis</span> testing, estimation, meta-analysis, and power analysis from a <span>Bayesian</span> perspective. <em>Psychonomic Bulletin &amp; Review</em>, <em>25</em>(1), 178–206. <a href="https://doi.org/10.3758/s13423-016-1221-4">https://doi.org/10.3758/s13423-016-1221-4</a>
+</div>
+<div id="ref-kurzStatisticalRethinkingSecondEd2021" class="csl-entry">
+Kurz, A. S. (2021). <em>Statistical rethinking with brms, <span class="nocase">ggplot2</span>, and the tidyverse: <span>Second Edition</span></em> (version 0.2.0). <a href="https://bookdown.org/content/4857/">https://bookdown.org/content/4857/</a>
+</div>
+<div id="ref-kurzDoingBayesianData2021" class="csl-entry">
+Kurz, A. S. (2020a). <em>Doing <span>Bayesian</span> data analysis in brms and the tidyverse</em> (version 0.4.0). <a href="https://bookdown.org/content/3686/">https://bookdown.org/content/3686/</a>
+</div>
+<div id="ref-kurzStatisticalRethinkingBrms2020" class="csl-entry">
+Kurz, A. S. (2020b). <em>Statistical rethinking with brms, <span class="nocase">ggplot2</span>, and the tidyverse</em> (version 1.2.0). <a href="https://doi.org/10.5281/zenodo.3693202">https://doi.org/10.5281/zenodo.3693202</a>
+</div>
+<div id="ref-little2007new" class="csl-entry">
+Little, T. D., Preacher, K. J., Selig, J. P., &amp; Card, N. A. (2007). New developments in latent variable panel analyses of longitudinal data. <em>International Journal of Behavioral Development</em>, <em>31</em>(4), 357–365. <a href="https://doi.org/10.1177/0165025407077757">https://doi.org/10.1177/0165025407077757</a>
+</div>
+<div id="ref-maxwellBiasCrosssectionalAnalyses2007" class="csl-entry">
+Maxwell, S. E., &amp; Cole, D. A. (2007). Bias in cross-sectional analyses of longitudinal mediation. <em>Psychological Methods</em>, <em>12</em>(1), 23–44. <a href="https://doi.org/10.1037/1082-989X.12.1.23">https://doi.org/10.1037/1082-989X.12.1.23</a>
+</div>
+<div id="ref-maxwellBiasCrosssectionalAnalyses2011" class="csl-entry">
+Maxwell, S. E., Cole, D. A., &amp; Mitchell, M. A. (2011). Bias in cross-sectional analyses of longitudinal mediation: <span>Partial</span> and complete mediation under an autoregressive model. <em>Multivariate Behavioral Research</em>, <em>46</em>(5), 816–841. <a href="https://doi.org/10.1080/00273171.2011.606716">https://doi.org/10.1080/00273171.2011.606716</a>
+</div>
+<div id="ref-mccabe2018improving" class="csl-entry">
+McCabe, C. J., Kim, D. S., &amp; King, K. M. (2018). Improving present practices in the visual display of interactions. <em>Advances in Methods and Practices in Psychological Science</em>, <em>1</em>(2), 147–165. <a href="https://doi.org/10.1177/2515245917746792">https://doi.org/10.1177/2515245917746792</a>
+</div>
+<div id="ref-mcelreathStatisticalRethinkingBayesian2020" class="csl-entry">
+McElreath, R. (2020). <em>Statistical rethinking: <span>A Bayesian</span> course with examples in <span>R</span> and <span>Stan</span></em> (Second Edition). <span>CRC Press</span>. <a href="https://xcelab.net/rm/statistical-rethinking/">https://xcelab.net/rm/statistical-rethinking/</a>
+</div>
+<div id="ref-mcelreathStatisticalRethinkingBayesian2015" class="csl-entry">
+McElreath, R. (2015). <em>Statistical rethinking: <span>A Bayesian</span> course with examples in <span>R</span> and <span>Stan</span></em>. <span>CRC press</span>. <a href="https://xcelab.net/rm/statistical-rethinking/">https://xcelab.net/rm/statistical-rethinking/</a>
+</div>
+<div id="ref-mitchellComparisonCrosssectionalSequential2013" class="csl-entry">
+Mitchell, M. A., &amp; Maxwell, S. E. (2013). A comparison of the cross-sectional and sequential designs when assessing longitudinal mediation. <em>Multivariate Behavioral Research</em>, <em>48</em>(3), 301–339. <a href="https://doi.org/10.1080/00273171.2013.784696">https://doi.org/10.1080/00273171.2013.784696</a>
+</div>
+<div id="ref-muthenCausalEffectsMediation2015" class="csl-entry">
+Muthén, B., &amp; Asparouhov, T. (2015). Causal effects in mediation modeling: <span>An</span> introduction with applications to latent variables. <em>Structural Equation Modeling: A Multidisciplinary Journal</em>, <em>22</em>(1), 12–23. <a href="https://doi.org/10.1080/10705511.2014.935843">https://doi.org/10.1080/10705511.2014.935843</a>
+</div>
+<div id="ref-nelsonPsychologyRenaissance2018" class="csl-entry">
+Nelson, L. D., Simmons, J., &amp; Simonsohn, U. (2018). Psychology’s renaissance. <em>Annual Review of Psychology</em>, <em>69</em>(1), 511–534. <a href="https://doi.org/10.1146/annurev-psych-122216-011836">https://doi.org/10.1146/annurev-psych-122216-011836</a>
+</div>
+<div id="ref-pashlerEditorsIntroductionSpecial2012" class="csl-entry">
+Pashler, H., &amp; Wagenmakers, E. (2012). Editors’ introduction to the special section on replicability in psychological science: <span>A</span> crisis of confidence? <em>Perspectives on Psychological Science</em>, <em>7</em>(6), 528–530. <a href="https://doi.org/10.1177/1745691612465253">https://doi.org/10.1177/1745691612465253</a>
+</div>
+<div id="ref-seligMediationModelsLongitudinal2009" class="csl-entry">
+Selig, J. P., &amp; Preacher, K. J. (2009). Mediation models for longitudinal data in developmental research. <em>Research in Human Development</em>, <em>6</em>(2-3), 144–164. <a href="https://doi.org/10.1080/15427600902911247">https://doi.org/10.1080/15427600902911247</a>
+</div>
+<div id="ref-valenteComparingModelsChange2017" class="csl-entry">
+Valente, M. J., &amp; MacKinnon, D. P. (2017). Comparing models of change to estimate the mediated effect in the pretest-posttest control group design. <em>Structural Equation Modeling : A Multidisciplinary Journal</em>, <em>24</em>(3), 428–450. <a href="https://doi.org/10.1080/10705511.2016.1274657">https://doi.org/10.1080/10705511.2016.1274657</a>
+</div>
+<div id="ref-valeri2013mediation" class="csl-entry">
+Valeri, L., &amp; VanderWeele, T. J. (2013). Mediation analysis allowing for exposure<span></span>mediator interactions and causal interpretation: Theoretical assumptions and implementation with <span>SAS</span> and <span>SPSS</span> macros. <em>Psychological Methods</em>, <em>18</em>(2), 137. <a href="https://doi.org/10.1037/a0031034">https://doi.org/10.1037/a0031034</a>
+</div>
+<div id="ref-vanderweeleExplanationCausalInference2015" class="csl-entry">
+VanderWeele, T. (2015). <em>Explanation in causal inference: <span>Methods</span> for mediation and interaction</em> (1st edition). <span>Oxford University Press</span>.
+</div>
+<div id="ref-bmlm2017" class="csl-entry">
+Vuorre, M. (2017). <em><span class="nocase">bmlm</span>: <span>Bayesian</span> multilevel mediation</em> [Manual]. <a href="https://cran.r-project.org/package=bmlm">https://cran.r-project.org/package=bmlm</a>
+</div>
+<div id="ref-R-bmlm" class="csl-entry">
+Vuorre, M. (2019). <em><span class="nocase">bmlm</span>: <span>Bayesian</span> multilevel mediation</em> [Manual]. <a href="https://github.com/mvuorre/bmlm/">https://github.com/mvuorre/bmlm/</a>
+</div>
+<div id="ref-vuorreWithinsubjectMediationAnalysis2018" class="csl-entry">
+Vuorre, M., &amp; Bolger, N. (2018). Within-subject mediation analysis for experimental data in cognitive psychology and neuroscience. <em>Behavior Research Methods</em>, <em>50</em>(5), 2125–2143. <a href="https://doi.org/10.3758/s13428-017-0980-9">https://doi.org/10.3758/s13428-017-0980-9</a>
+</div>
+<div id="ref-yongReplicationStudiesBad2012" class="csl-entry">
+Yong, E. (2012). Replication studies: <span>Bad</span> copy. <em>Nature News</em>, <em>485</em>(7398), 298. <a href="https://doi.org/10.1038/485298a">https://doi.org/10.1038/485298a</a>
+</div>
+</div>
             </section>
 
           </div>
         </div>
       </div>
-<a href="conditional-process-analysis-with-a-multicategorical-antecedent.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="conditional-process-analysis-with-a-multicategorical-antecedent.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="references.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -620,12 +804,12 @@ gitbook.start({
 "github": false,
 "facebook": true,
 "twitter": true,
-"google": false,
 "linkedin": false,
 "weibo": false,
 "instapaper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -637,6 +821,10 @@ gitbook.start({
 "text": null
 },
 "history": {
+"link": null,
+"text": null
+},
+"view": {
 "link": null,
 "text": null
 },
@@ -655,8 +843,9 @@ gitbook.start({
     script.type = "text/javascript";
     var src = "true";
     if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(src))
-      src = src.replace(/^https?:/, '');
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();

@@ -126,7 +126,7 @@ This book is licensed under the Creative Commons Zero v1.0 Universal license. Yo
   year = {2021},
   month = {aug},
   edition = {version 1.2.0},
-  url = {https://bookdown.org/ajkurz/recoding_Hayes_2018/}
+  url = {https://bookdown.org/content/b472c7b3-ede5-40f0-9677-75c3704c7e5c}
 }
 ```
 

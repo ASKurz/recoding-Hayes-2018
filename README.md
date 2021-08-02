@@ -1,6 +1,6 @@
 # Recoding *Introduction to Mediation, Moderation, and Conditional Process Analysis*
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.3589999.svg)](https://doi.org/10.5281/zenodo.3589999)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5154026.svg)](https://doi.org/10.5281/zenodo.5154026)
 
 Andrew Hayes's *Introduction to Mediation, Moderation, and Conditional Process Analysis*  text, [the second edition of which just came out](http://afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html), has become a staple in social science graduate education. Both editions of his text have been from a frequentist OLS perspective. This project is an effort to connect his work with the Bayesian paradigm. Herein I refit his models with my favorite **R** package for Bayesian regression, Bürkner’s [**brms**](https://github.com/paul-buerkner/brms) use the packages from the [**tidyverse**](https://www.tidyverse.org) to visualization and data manipulation. 
 

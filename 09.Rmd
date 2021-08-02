@@ -42,12 +42,12 @@ As we'll see in just a bit, there are some important reasons for Bayesians using
 $$Y = i_Y + b_1 X + b_2 W + b_3 XW + e_Y.$$
 
 `model9.2` is our mean-centered model, which we can express formally as
-$$
+
 \begin{align*}
 Y & = i_Y + b_1 \left (X - \overline X \right ) + b_2 \left (W - \overline W \right ) + b_3 \left (X - \overline X \right ) \left (W - \overline W \right ) + e_Y, \; \text{or more simply} \\
 & = i_Y + b_1 X' + b_2 W' + b_3 X'W' + e_Y,
 \end{align*}
-$$
+
 where $X' = \left (X - \overline X \right)$ and so on.
 
 ```{r model9.1, warning = F, message = F}
@@ -948,7 +948,7 @@ As usual, we will follow along, but with alternative methods to the statistical 
 
 ### Comparing conditional effects in the additive multiple moderation model.
 
-When we're interested in estimating the difference in the conditional effec of $X$ on $Y$ (i.e., $\theta_{X \rightarrow Y}$) for $W = w_1$ and $Z = z_1$ versus when $W = w_2$ and $Z = z_2$, that follows the formula
+When we're interested in estimating the difference in the conditional effect of $X$ on $Y$ (i.e., $\theta_{X \rightarrow Y}$) for $W = w_1$ and $Z = z_1$ versus when $W = w_2$ and $Z = z_2$, that follows the formula
 
 \begin{align*}
 \Delta \theta_{X \rightarrow Y} & = (b_1 + b_4 w_1 + b_5 z_1) - (b_1 + b_4 w_2 + b_5 z_2) \\

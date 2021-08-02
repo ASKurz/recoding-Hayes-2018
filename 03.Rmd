@@ -146,7 +146,7 @@ Let's get down to business and examine the indirect effect, the $ab$ pathway. In
 * $a$ = `pmi_cond` and
 * $b$ = `reaction_pmi`.
 
-You can isolate them with `fixef()[i]`.
+You can isolate them with `fixef()[i, ]`.
 
 ```{r}
 fixef(model3.1)[5, ]
@@ -222,7 +222,7 @@ Because `model3.1` is a multivariate model, `fitted()` returned the model-implie
 fitted(model3.1, newdata = nd, resp = "reaction") %>% round(digits = 3)
 ```
 
-Note how this is where the two values in the $Y$ adjusted column in Table 3.1 came from. 
+Note how this is where the two values in the $Y$ adjusted column in Table 3.1 came from.
 
 However, if we want to reproduce how Hayes computed the total effect (i.e., $c' + ab$), we'll need to work with the posterior draws themselves, `post`. Recall, we've already saved the indirect effect as a vector, `ab`. The direct effect, $c'$, is labeled `b_reaction_cond` within `post`. To get the total effect, $c$, all we need to is add those vectors together.
 

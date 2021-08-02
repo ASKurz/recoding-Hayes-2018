@@ -12,7 +12,7 @@ options(width = 110)
 
 You can look up the various examples in the literature on your own. The main point is
 
-> moderation can be combined with mediation in a number of different ways. But these examples [we skipped for the sake of brevity] only scratch the surface of what is possible. Think about the number of possibilities when you increase the number of mediators, distinguish between moderation of paths in a parallel versus serial multiple mediator model, or allow for multiple moderators of different paths or the same path, and so forth. The possibilities are nearly endless. But regardless of the configuration of moderated paths or complexity of the model, conditional process analysis involves the estimation and interpretation of direct and indirect effects, just as in a simple mediation analysis. However, when causal effects in a mediation model are moderated, they will be conditional on those moderators. Thus, an understanding of the concepts of the *conditional direct effect* and the *conditional indirect effect* is required before one should attempt to under- take a conditional process analysis. (p. 401, *emphasis* in the original)
+> moderation can be combined with mediation in a number of different ways. But these examples [we skipped for the sake of brevity] only scratch the surface of what is possible. Think about the number of possibilities when you increase the number of mediators, distinguish between moderation of paths in a parallel versus serial multiple mediator model, or allow for multiple moderators of different paths or the same path, and so forth. The possibilities are nearly endless. But regardless of the configuration of moderated paths or complexity of the model, conditional process analysis involves the estimation and interpretation of direct and indirect effects, just as in a simple mediation analysis. However, when causal effects in a mediation model are moderated, they will be conditional on those moderators. Thus, an understanding of the concepts of the *conditional direct effect* and the *conditional indirect effect* is required before one should attempt to undertake a conditional process analysis. (p. 401, *emphasis* in the original)
 
 ## Conditional direct and indirect effects
 
@@ -121,7 +121,7 @@ where $M$ is `negtone`, $Y$ is `perform`, and $W$ is `negexp`. We can extract ou
 fixef(model11.1)[c("perform_negtone", "perform_negtone:negexp"), ]
 ```
 
-## ~~Estimation of a conditional process model using PROCESS~~ 
+## ~~Estimation of a conditional process model using PROCESS~~
 
 We just fit the model in the last section. No need to repeat.
 

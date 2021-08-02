@@ -743,7 +743,7 @@ pp_check(model2.8) +
   theme_bw()
 ```
 
-What we did was simulate 10 data sets worth of `govact` values, plot their densities (i.e., the thin blue lines) and compare them with the density of the original `govact` values. What we want is for the thin blue lines to largely align with the thick blue line. Though not perfect, the simulations from our `model2.8` did a pretty okay job of reproducing the original `govact` distribution. For more ideas on this method, see the [**brms** reference manual](https://CRAN.R-project.org/package=brms/brms.pdf) [@brms2020RM] and Gabry's [-@gabryGraphicalPosteriorPredictive2019] vignette, [*Graphical posterior predictive checks using the bayesplot package*](https://CRAN.R-project.org/package=bayesplot/vignettes/graphical-ppcs.html).
+What we did was simulate 10 data sets worth of `govact` values, plot their densities (i.e., the thin blue lines) and compare them with the density of the original `govact` values. What we want is for the thin blue lines to largely align with the thick blue line. Though not perfect, the simulations from our `model2.8` did a pretty okay job of reproducing the original `govact` distribution. For more ideas on this method, see the [**brms** reference manual](https://CRAN.R-project.org/package=brms/brms.pdf) [@brms2021RM] and Gabry's [-@gabryGraphicalPosteriorPredictive2019] vignette, [*Graphical posterior predictive checks using the bayesplot package*](https://CRAN.R-project.org/package=bayesplot/vignettes/graphical-ppcs.html).
 
 ## Statistical inference
 

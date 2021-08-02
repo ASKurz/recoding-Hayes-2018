@@ -458,7 +458,7 @@ This is why we plot. To get quick plots for the interaction effect with **brms**
 conditional_effects(model7.3)
 ```
 
-By default, `conditional_effects()` will show three levels of the variable on the right side of the interaction term. The formula in `model7.3` was `justify ~ frame + skeptic + frame:skeptic `, with `frame:skeptic` as the interaction term and `skeptic` making up the right hand side of the term. The three levels of `skeptic` in the plot, above, are the mean $\pm 1$ standard deviation. See the [**brms** reference manual](https://CRAN.R-project.org/package=brms/brms.pdf) for details on the `conditional_effects()` function [@brms2020RM].
+By default, `conditional_effects()` will show three levels of the variable on the right side of the interaction term. The formula in `model7.3` was `justify ~ frame + skeptic + frame:skeptic `, with `frame:skeptic` as the interaction term and `skeptic` making up the right hand side of the term. The three levels of `skeptic` in the plot, above, are the mean $\pm 1$ standard deviation. See the [**brms** reference manual](https://CRAN.R-project.org/package=brms/brms.pdf) for details on the `conditional_effects()` function [@brms2021RM].
 
 On page 244, Hayes discussed using the 16th, 50th, and 84th percentiles for the moderator variable. We can compute those with `quantile()`.
 

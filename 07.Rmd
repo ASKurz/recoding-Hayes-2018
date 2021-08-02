@@ -20,8 +20,8 @@ library(tidyverse)
 d <-
   crossing(x = -1:2,
            w = 0:2) %>% 
-  mutate(A   = 4 + 1 * x + 2 * w,
-         B   = 4 + 1 * x + 2 * w + 1.5 * x * w)
+  mutate(A = 4 + 1 * x + 2 * w,
+         B = 4 + 1 * x + 2 * w + 1.5 * x * w)
 
 d
 ```
@@ -33,17 +33,17 @@ library(dutchmasters)
 
 theme_07 <- 
   theme_gray() + 
-  theme(plot.background  = element_rect(fill = dutchmasters$little_street[7]),
-        panel.background = element_rect(fill = dutchmasters$little_street[2]),
-        strip.background = element_rect(fill = alpha(dutchmasters$little_street[5], 2/3),
-                                        color = "transparent"),
+  theme(axis.text = element_text(color = dutchmasters$little_street[6]),
         legend.background = element_rect(fill = "transparent"),
         legend.key = element_rect(fill = "transparent", color = "transparent"),
+        panel.background = element_rect(fill = dutchmasters$little_street[2]),
         panel.grid = element_blank(),
+        plot.background  = element_rect(fill = dutchmasters$little_street[7]),
+        strip.background = element_rect(fill = alpha(dutchmasters$little_street[5], 2/3),
+                                        color = "transparent"),
         text = element_text(family = "Courier",
                             color = dutchmasters$little_street[6],
-                            size = 14),
-        axis.text = element_text(color = dutchmasters$little_street[6]))
+                            size = 14))
 ```
 
 This chapter's color palette comes from the [**dutchmasters** package](https://github.com/EdwinTh/dutchmasters) [@R-dutchmasters], which was itself based of Vermeer's [-@vermeerLittleStreet1657] [*The little street*](https://en.wikipedia.org/wiki/The_Little_Street). To get a quick glance at the full palette, we'll also use `viz_palette()`, a convenience function from the [**ochRe** package](https://github.com/ropenscilabs/ochRe) [@R-ochRe].
@@ -278,18 +278,15 @@ We'll extract the $R^2$ iterations in the usual way once for each model, and the
 ```{r, fig.width = 8, fig.height = 2.5}
 # for each of the three models, we create a separare R2 tibble
 r2_1 <- 
-  bayes_R2(model7.1,
-           summary = F) %>% 
+  bayes_R2(model7.1, summary = F) %>% 
   data.frame()
 
 r2_2 <- 
-  bayes_R2(model7.2,
-           summary = F) %>% 
+  bayes_R2(model7.2, summary = F) %>% 
   data.frame()
 
 r2_3 <- 
-  bayes_R2(model7.3,
-           summary = F) %>% 
+  bayes_R2(model7.3, summary = F) %>% 
   data.frame()
 
 # here we combine them into one tibble, indexed by `model`
@@ -301,8 +298,8 @@ r2 <-
 
 # now we plot
 r2 %>% 
-  ggplot(aes(x = R2)) +
-  geom_density(aes(fill = model), size = 0, alpha = 2/3) +
+  ggplot(aes(x = R2, fill = model)) +
+  geom_density(size = 0, alpha = 2/3) +
   scale_fill_manual(values = dutchmasters$little_street[c(3, 4, 8)] %>% as.character()) +
   scale_x_continuous(expression(italic(R)^2~distribution), limits = 0:1) +
   scale_y_continuous(NULL, breaks = NULL) +
@@ -386,7 +383,7 @@ disaster <-
 
 And here's how we might fit the model.
 
-```{r model7.4}
+```{r model7.4, message = F, warning = F}
 model7.4 <-
   update(model7.3, 
          newdata = disaster,
@@ -430,7 +427,7 @@ disaster <-
 
 Time to fit `model7.5`.
 
-```{r model7.5}
+```{r model7.5, message = F, warning = F}
 model7.5 <-
   update(model7.4, 
          newdata = disaster,
@@ -475,8 +472,8 @@ The first two columns in Hayes's Table 7.5 contain the values he combined with t
 (
   nd <-
   crossing(frame = 0:1,
-         skeptic = quantile(disaster$skeptic, 
-                            probs = c(.16, .5, .84)))
+           skeptic = quantile(disaster$skeptic, 
+                              probs = c(.16, .5, .84)))
 )
 ```
 
@@ -549,8 +546,6 @@ As with other modeling contexts, there the results from our moderation models, l
 As in earlier sections and chapters, our approach will largely follow Hayes's, but we will not be emphasizing statistical tests, $p$-values, and so on. You'll see.
 
 ### The pick-a-point approach.
-
-[e.g., @aikenMultipleRegressionTesting1991; @cohenAppliedMultipleRegression2003; @darlingtonRegressionAnalysisLinear2017; @hayesStatisticalMethodsCommunication2005; @jaccardInteractionEffectsMultiple2003; @spillerSpotlightsFloodlightsMagic2013]
 
 > The pick-a-point approach [@rogosaComparingNonparallelRegression1980; @bauerProbingInteractionsFixed2005], sometimes called an *analysis of simple slopes* or a *spotlight analysis*, is perhaps the most popular approach to probing an interaction and is described in most discussions of multiple regression with interactions [e.g., @aikenMultipleRegressionTesting1991; @cohenAppliedMultipleRegression2003; @darlingtonRegressionAnalysisLinear2017; @hayesStatisticalMethodsCommunication2005; @jaccardInteractionEffectsMultiple2003; @spillerSpotlightsFloodlightsMagic2013]. This procedure involves selecting a value or values of the moderator $W$, calculating the conditional effect of $X$ on $Y (\theta_{X \rightarrow Y})$ at that value or values, and then conducting an inferential test or generating a confidence interval. (p. 249, *emphasis* in the original)
 
@@ -635,8 +630,7 @@ Now we have our draws in a nice structure, we're ready to plot.
 ```{r, fig.width = 10, fig.height = 2.5}
 f %>% 
   ggplot(aes(x = difference)) +
-  geom_density(color = "transparent",
-               fill = dutchmasters$little_street[9]) +
+  geom_density(color = "transparent", fill = dutchmasters$little_street[9]) +
   geom_vline(xintercept = 0, color = dutchmasters$little_street[7], linetype = 2) +
   scale_y_continuous(NULL, breaks = NULL) +
   labs(subtitle = "The effect of frame on justify given three different values of skeptic",
@@ -667,8 +661,11 @@ Since Figure 7.9 had `skeptic` values ranging from 1 to 6 with ticks on the 0.5'
 We've got a lot of moving parts in the code, below. To help make sure everything adds up, we'll save several important values as **R** objects.
 
 ```{r, fig.width = 7, fig.height = 5}
-iter             <- 4000  # this number comes from the total number of post-warmup posterior iterations from `brm()`
-n_skeptic_values <- 13    # we're choosing 13 in this example to follow some of the sensibilities in Figure 7.9. You'll see.
+# this number comes from the total number of post-warmup posterior iterations from `brm()`
+iter <- 4000
+
+# we're choosing 13 in this example to follow some of the sensibilities in Figure 7.9. You'll see.
+n_skeptic_values <- 13    
 
 # as before, we'll make `nd` to feed in to `fitted()`
 nd <-
@@ -874,7 +871,7 @@ disaster <-
 
 With our dummy in hand, we're ready to fit the two models.
 
-```{r model7.6}
+```{r model7.6, warning = F, message = F}
 model7.6 <-
   brm(data = disaster %>% filter(skeptic_hi == 0), 
       family = gaussian,

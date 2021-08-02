@@ -158,11 +158,6 @@ The `print()` function works very much the same way. To get a more focused look,
 posterior_summary(model2.3)
 ```
 
-https://CRAN.R-project.org/package=rstanarm.html#the-log-posterior-function-and-gradient
-
-https://CRAN.R-project.org/package=rstan/vignettes/rstan.html#the-log-posterior-function-and-gradient
-
-
 That also yields the log posterior, `lp__`, which you can learn more about in [this section](https://CRAN.R-project.org/package=rstan/vignettes/rstan.html#the-log-posterior-function-and-gradient) of the [-@standevelopmentteamRStanInterfaceStan2020] vignette by the Stan Development Team,  [*RStan: the R interface to Stan*](https://cran.r-project.org/web/packages/rstan/vignettes/rstan.html) or [this brief blog post](https://www.jax.org/news-and-insights/jax-blog/2015/october/lp-in-stan-output) by Xulong Wang. We won't focus on the `lp__` directly in this project. But its influence will be lurking in the shadows.
 
 But anyways, the `Q2.5` and `Q97.5`, are the lower- and upper-levels of the 95% credible intervals. The `Q` prefix stands for quantile ([see this thread](https://github.com/paul-buerkner/brms/issues/425)). In this case, these are a renamed version of the `l-95% CI` and `u-95% CI` columns from our `summary()` output.
@@ -217,8 +212,7 @@ glbwarm %>%
   geom_point(aes(y = govact, size = n),
              show.legend = F) +
   geom_ribbon(data = f,
-              aes(ymin = Q2.5,
-                  ymax = Q97.5),
+              aes(ymin = Q2.5, ymax = Q97.5),
               fill = "grey75", alpha = 3/4) +
   geom_line(data = f,
             aes(y = Estimate)) +
@@ -614,7 +608,7 @@ Our coefficients match up nicely with those on page 52 in the text. Just as with
 
 Here's how we'd fit a *partially*-standardized model--a model in which all variables except for `sex` are standardized.
 
-```{r model2.10}
+```{r model2.10, warning = F, message = F}
 model2.10 <- 
   update(model2.9,
          newdata = glbwarm,
@@ -817,7 +811,7 @@ posterior_samples(model2.8) %>%
   theme_bw()
 ```
 
-For more discussion the NHST paradigm and how it compares with variations of Bayesian statistics, check out Kruschke's [-@kruschkeDoingBayesianData2015] text, [*Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan*](https://sites.google.com/site/doingbayesiandataanalysis/), particularly chapters 10 through 13. You can find my [-@kurzDoingBayesianData2020] **brms** + **tidyverse** translation of that text at [https://bookdown.org/content/3686/](https://bookdown.org/content/3686/).
+For more discussion the NHST paradigm and how it compares with variations of Bayesian statistics, check out Kruschke's [-@kruschkeDoingBayesianData2015] text, [*Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan*](https://sites.google.com/site/doingbayesiandataanalysis/), particularly chapters 10 through 13. You can find my [-@kurzDoingBayesianData2021] **brms** + **tidyverse** translation of that text at [https://bookdown.org/content/3686/](https://bookdown.org/content/3686/).
 
 ### Interval estimation.
 
@@ -876,9 +870,9 @@ Throughout this project, I'm going to be lazy and default to conventional 95% in
 
 ### Testing a hypothesis about a set of antecedent variables.
 
-Here we'll make use of the `update()` function to hastily fit our reduced model, `model5`.
+Here we'll make use of the `update()` function to hastily fit our reduced model, `model2.11`.
 
-```{r model2.11}
+```{r model2.11, warning = F, message = F}
 model2.11 <- 
   update(model2.8,
          govact ~ 1 + ideology + sex + age,

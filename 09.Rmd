@@ -158,6 +158,7 @@ Wading in further, we can use the `neff_ratio()` function to collect the $n_{eff
 ratios_model9.1 <- 
   neff_ratio(model9.1, 
              pars = c("b_Intercept", "b_negemot", "b_age", "b_negemot:age", "sigma"))
+
 ratios_model9.2 <- 
   neff_ratio(model9.2,
              pars = c("b_Intercept", "b_negemot_c", "b_age_c", "b_negemot_c:age_c", "sigma"))
@@ -224,7 +225,7 @@ vcov(model9.1, correlation = T)["negemot", "negemot:age"]
 
 Boom! That's where those correlations come from.
 
-This entire topic of HMC diagnostics can seem baffling, especially when compared to the simplicity of OLS. If this is your first introduction, you might want to watch lectures [10](https://www.youtube.com/watch?v=BWEtS3HuU5A&list=PLDcUM9US4XdM9_N6XUUFrhghGJ4K25bFc) and [11](https://www.youtube.com/watch?v=13mEekRdOcQ&list=PLDcUM9US4XdM9_N6XUUFrhghGJ4K25bFc) from McElreath's [Statistical Rethinking Fall 2017 lecture series](https://www.youtube.com/playlist?list=PLDcUM9US4XdM9_N6XUUFrhghGJ4K25bFc). Accordingly, you might check out Chapter 8 of his [-@mcelreathStatisticalRethinkingBayesian2015] text, Chapter 9 of his [-@mcelreathStatisticalRethinkingBayesian2020] text, and either of my ebooks translating his work into **brms** and **tidyverse** code [@kurzStatisticalRethinkingBrms2020; @kurzStatisticalRethinkingSecondEd2020].
+This entire topic of HMC diagnostics can seem baffling, especially when compared to the simplicity of OLS. If this is your first introduction, you might want to watch lectures [10](https://www.youtube.com/watch?v=BWEtS3HuU5A&list=PLDcUM9US4XdM9_N6XUUFrhghGJ4K25bFc) and [11](https://www.youtube.com/watch?v=13mEekRdOcQ&list=PLDcUM9US4XdM9_N6XUUFrhghGJ4K25bFc) from McElreath's [Statistical Rethinking Fall 2017 lecture series](https://www.youtube.com/playlist?list=PLDcUM9US4XdM9_N6XUUFrhghGJ4K25bFc). Accordingly, you might check out Chapter 8 of his [-@mcelreathStatisticalRethinkingBayesian2015] text, Chapter 9 of his [-@mcelreathStatisticalRethinkingBayesian2020] text, and either of my ebooks translating his work into **brms** and **tidyverse** code [@kurzStatisticalRethinkingBrms2020; @kurzStatisticalRethinkingSecondEd2021].
 
 ### The effect of mean-centering on multicollinearity and the standard error of $b_3$.
 
@@ -303,7 +304,7 @@ For more details, you might also see the [*Standardizing predictors and outputs*
 
 > A second explanation given for why mean-centering is preferred is that it makes $b_1$ and $b_2$, the regression coefficients for $X$ and $W$, more meaningful. This is generally true and thus not a myth, although it is not necessarily true in all circumstances... .
 >
-> Mean-centering $X$ and $W$ prior to computation of the product and estimation of the model will produce $b_1$ and $b_2$ that are always meaningful, rather than meaningful only when $X$ and/or $W$ are meaningful when equal to zero... [After mean centering,] $b_1$ estimates the difference in $Y$ between two cases that differ by one unit on $X$ among cases that are *average* on $W$. Similarly, $b_2$ estimates the difference in $Y$ between two cases that differ by one unit on $W$ among cases that are *average* on $X$. These will always estimate conditional effects of $X$ on $Yv within the range of the data, and they can always be interpreted. (p. 310. *emphasis* in the original)
+> Mean-centering $X$ and $W$ prior to computation of the product and estimation of the model will produce $b_1$ and $b_2$ that are always meaningful, rather than meaningful only when $X$ and/or $W$ are meaningful when equal to zero... [After mean centering,] $b_1$ estimates the difference in $Y$ between two cases that differ by one unit on $X$ among cases that are *average* on $W$. Similarly, $b_2$ estimates the difference in $Y$ between two cases that differ by one unit on $W$ among cases that are *average* on $X$. These will always estimate conditional effects of $X$ on $Y$ within the range of the data, and they can always be interpreted. (p. 310. *emphasis* in the original)
 
 If you only care about posterior means, you can use `model9.1` to reproduce the results at the bottom of page 310 like this.
 
@@ -331,7 +332,7 @@ post %>%
   round(digits = 3)
 ```
 
-And note how the standard error Hayes computed at the top of page 311 corresponds nicely with the posterior $SD$ we just computed. Hayes employed a fancy formula; we just used `sd()`. At any rate, the main message is centering did not effect our estimate of the conditional effect of $X$. It turns out $(\theta_{X \rightarrow Y} | W) = (\theta_{\overline X \rightarrow Y} | \overline W)$.
+And note how the standard error Hayes computed at the top of page 311 corresponds nicely with the posterior $SD$ we just computed. Hayes employed a fancy formula; we just used `sd()`. At any rate, the main message is centering did not effect our estimate of the conditional effect of $X$. It turns out $(\theta_{X \rightarrow Y} | W) = \left (\theta_{\overline X \rightarrow Y} | \overline W \right)$.
 
 ### The ~~centering option in PROCESS~~.
 
@@ -780,8 +781,7 @@ post %>%
   mutate(`age = 30` = `b_negemot:sex` + `b_negemot:sex:age` * 30, 
          `age = 50` = `b_negemot:sex` + `b_negemot:sex:age` * 50, 
          `age = 70` = `b_negemot:sex` + `b_negemot:sex:age` * 70) %>% 
-  pivot_longer(contains("="),
-               names_to = "theta_XW_on_Y_given") %>%
+  pivot_longer(contains("="), names_to = "theta_XW_on_Y_given") %>%
   group_by(theta_XW_on_Y_given) %>%
   mean_qi(value) %>% 
   mutate_if(is.double, round, digits = 3)
@@ -796,8 +796,7 @@ post %>%
   mutate(`age = 30` = `b_negemot:sex` + `b_negemot:sex:age` * 30, 
          `age = 50` = `b_negemot:sex` + `b_negemot:sex:age` * 50, 
          `age = 70` = `b_negemot:sex` + `b_negemot:sex:age` * 70) %>% 
-  pivot_longer(contains("="),
-               names_to = "theta_XW_on_Y_given") %>%
+  pivot_longer(contains("="), names_to = "theta_XW_on_Y_given") %>%
   mutate(`theta XW on Y given` = str_extract(theta_XW_on_Y_given, "\\d+") %>% as.double()) %>% 
   group_by(`theta XW on Y given`) %>%
   mean_qi(value) %>%
@@ -896,7 +895,7 @@ b_{\text{negemot} \times \text{age}} \text{age} +
 b_{\text{negemot} \times \text{sex} \times \text{age}} \text{sex} \times \text{age}.
 $$
 
-Following Hayes at the bottom of page 341, here is the difference in the effect of negative emotions between men and women among 30 year olds (i.e., $\theta_{XW \rightarrow Y} | (Z = 30)$).
+Following Hayes at the bottom of page 341, here is the difference in the effect of negative emotions between men and women among 30 year olds, $\theta_{XW \rightarrow Y} | (Z = 30)$.
 
 ```{r, warning = F}
 post %>% 

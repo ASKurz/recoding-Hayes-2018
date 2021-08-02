@@ -152,7 +152,7 @@ post %>%
   pivot_wider(names_from = name, values_from = mean)
 ```
 
-That kind of summary isn't the most Bayesian of us.
+That kind of summary isn't the most Bayesian of us. Why not plot, instead?
 
 ```{r, fig.width = 6, fig.height = 4, warning = F, message = F}
 post %>% 
@@ -179,7 +179,7 @@ post %>%
   facet_grid(w~name)
 ```
 
-Here the posterior distribution for each is on full display.
+Now the posterior distribution for each is on full display.
 
 #### The direct effect.
 
@@ -233,7 +233,10 @@ We've already been expressing uncertainty in terms of percentile-based 95% inter
 library(tidybayes)
 
 # breaks
-breaks <- mode_hdi(post$b_perform_dysfunc, .width = .95) %>% pivot_longer(starts_with("y")) %>% pull(value)
+breaks <- 
+  mode_hdi(post$b_perform_dysfunc, .width = .95) %>% 
+  pivot_longer(starts_with("y")) %>% 
+  pull(value)
 
 post %>% 
   ggplot(aes(x = b_perform_dysfunc)) +
@@ -262,7 +265,10 @@ post <-
   mutate(ab_3 = b_negtone_dysfunc * `b_perform_negtone:negexp`)
 
 # breaks
-breaks <- mode_hdi(post$ab_3, .width = .95) %>% pivot_longer(starts_with("y")) %>% pull(value)
+breaks <- 
+  mode_hdi(post$ab_3, .width = .95) %>% 
+  pivot_longer(starts_with("y")) %>% 
+  pull(value)
 
 post %>% 
   ggplot(aes(x = ab_3)) +
@@ -335,8 +341,7 @@ post %>%
   mutate(`a(b1 + b3w)` = a * (b1 + b3 * w)) %>% 
   select(w:`a(b1 + b3w)`) %>% 
   mutate(label = str_c("W = ", w),
-         w = fct_reorder(label,
-                         w)) %>% 
+         w = fct_reorder(label, w)) %>% 
 
   ggplot(aes(y = `a(b1 + b3w)`)) +
   geom_hline(yintercept = 0, color = "grey50", linetype = 2) +

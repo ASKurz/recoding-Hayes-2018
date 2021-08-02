@@ -195,9 +195,8 @@ breaks <-
 
 # plot!
 r2 %>% 
-  ggplot(aes(x = difference)) +
-  stat_halfeye(aes(y = 0), 
-               fill = "grey50", color = "white",
+  ggplot(aes(x = difference, y = 0)) +
+  stat_halfeye(fill = "grey50", color = "white",
                point_interval = median_qi, .width = 0.95) +
   scale_x_continuous(expression(Delta*italic(R)^2),
                      breaks = breaks, labels = round(breaks, digits = 2)) +
@@ -335,9 +334,7 @@ post %>%
                fill = "grey50", color = "white") +
   scale_x_continuous(expression("b_liking_respappr (i.e., "*italic(b)*")"),
                      breaks = c(-1, median(post$b_liking_respappr), 1),
-                     labels = c(-1, 
-                                median(post$b_liking_respappr) %>% round(3),
-                                1)) +
+                     labels = c(-1, median(post$b_liking_respappr) %>% round(3), 1)) +
   scale_y_continuous(NULL, breaks = NULL) +
   coord_cartesian(xlim = c(-1, 1)) +
   dark_theme_bw() +
@@ -438,8 +435,7 @@ Here they are in a `stat_halfeye()` plot.
 
 ```{r, fig.width = 6, fig.height = 2.5}
 post %>% 
-  pivot_longer(a4b:a5b,
-               names_to = "parameter") %>% 
+  pivot_longer(a4b:a5b, names_to = "parameter") %>% 
  
   ggplot(aes(x = value, y = parameter)) +
   stat_halfeye(point_interval = median_qi, .width = c(0.95, 0.5),
@@ -571,7 +567,7 @@ nd <-
   protest %>% 
   distinct(d1, d2, condition) %>% 
   expand(nesting(condition, d1, d2),
-         sexism =seq(from = 3.5, to = 6.5, length.out = 30)) %>% 
+         sexism = seq(from = 3.5, to = 6.5, length.out = 30)) %>% 
   mutate(respappr = mean(protest$respappr))
 
 # feed `nd` into `add_epred_draws()` and then summarize with `median_qi()`

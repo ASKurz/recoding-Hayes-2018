@@ -283,8 +283,8 @@ We can always plot, too.
 
 ```{r, fig.width = 6, fig.height = 2.5}
 w <- c(1.592, 2.800, 5.200)
-  
-  post %>% 
+
+post %>% 
   expand(nesting(b_donate_frame, `b_donate_frame:skeptic`),
          w = w) %>% 
   mutate(`conditional direct effect` = b_donate_frame + `b_donate_frame:skeptic` * w) %>% 

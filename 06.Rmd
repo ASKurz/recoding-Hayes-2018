@@ -401,7 +401,7 @@ With these in hand, we can compute $a_1$ and $a_2$.
 ```{r, message = F}
 post <-
   post %>% 
-  mutate(a1 = (M_ip + M_cp)/2 - M_np,
+  mutate(a1 = (M_ip + M_cp) / 2 - M_np,
          a2 = M_cp - M_ip)
 
 post %>% 

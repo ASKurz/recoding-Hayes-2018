@@ -342,7 +342,7 @@ In other words, each of those orange lines is a credible expression of $\theta_{
 
 Although this method is not necessary, it can be handy to slowly build your model. This method can also serve nice rhetorical purposes in a paper. Anyway, here's our multivariable but non-moderation model, `model8.4`.
 
-```{r model8.4}
+```{r model8.4, warning = F, message = F}
 model8.4 <-
   update(model8.1,
          formula = justify ~ 1 + skeptic + frame,
@@ -359,8 +359,7 @@ r2 <-
   # we'll need a difference score
   mutate(difference = moderation_model - multivariable_model) %>% 
   # putting the data in the long format and grouping will make summarizing easier
-  pivot_longer(everything(),
-               names_to = "R2")
+  pivot_longer(everything(), names_to = "R2")
 
 r2 %>% 
   group_by(R2) %>% 
@@ -542,8 +541,7 @@ We don't have an $F$-test for our Bayesian moderation model. But we do have an i
 ```{r, fig.width = 3.25, fig.height = 3}
 post %>% 
   ggplot(aes(x = `b_policy:kerry`)) +
-  geom_density(size = 0,
-               fill = ochre_palettes[["olsen_qual"]][2]) +
+  geom_density(size = 0, fill = ochre_palettes[["olsen_qual"]][2]) +
   geom_vline(xintercept = fixef(model8.5)["policy:kerry", c(1, 3, 4)],
              color = ochre_palettes[["olsen_seq"]][8], linetype = c(1, 2, 2)) +
   scale_x_continuous(NULL,
@@ -675,7 +673,7 @@ But we digress. Here's our analogue to the "Model 2" portion of Table 8.5.
 rbind(
   fixef(model8.6) %>% round(digits = 3),
   bayes_R2(model8.6) %>% round(digits = 3)
-  )
+)
 ```
 
 Like with `model8.6`, above, we'll need a bit of algebra to compute our $\overline Y_i$ vectors.

@@ -384,8 +384,8 @@ post %>%
   
   ggplot(aes(x = ab)) +
   geom_histogram(color = "white", size = .25, 
-               fill = colorblind_pal()(5)[5],
-               binwidth = .025, boundary = 0) +
+                 fill = colorblind_pal()(5)[5],
+                 binwidth = .025, boundary = 0) +
   geom_vline(xintercept = quantile(post$ab, probs = c(.025, .975)),
              linetype = 3, color = colorblind_pal()(6)[6]) +
   labs(subtitle = str_c("95% of the posterior draws are between ", ll, " and ", ul),

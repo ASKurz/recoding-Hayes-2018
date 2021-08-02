@@ -21,7 +21,7 @@ header-includes:
   \usepackage[T1]{fontenc}
 github-repo: ASKurz/recoding-Hayes-2018
 twitter-handle: SolomonKurz
-description: "This project is an effort to connect his Hayes's conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner's brms, and use the tidyverse for data manipulation and plotting."
+description: "This project is an effort to connect Hayes's conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner's brms, and use the tidyverse for data manipulation and plotting."
 ---
 
 # Welcome {-}

@@ -99,7 +99,7 @@ r2 %>%
   theme_minimal()
 ```
 
-The model coefficient summaries cohere well with those in Table 10.1. 
+The model coefficient summaries cohere well with those in Table 10.1.
 
 ```{r}
 print(model10.1, digits = 3)
@@ -323,7 +323,7 @@ This time, our $\Delta R^2$ distribution was more similar to the results Hayes r
 
 Here's the updated LOO-CV.
 
-```{r}
+```{r, warning = F, message = F}
 model10.3b <- add_criterion(model10.3b, "loo")
 model10.4b <- add_criterion(model10.4b, "loo")
 
@@ -385,7 +385,7 @@ r2 %>%
 
 That $\Delta R^2$ distribution matches up nicely with the one Hayes reported at the bottom of page 370. Now compare the models with the LOO.
 
-```{r}
+```{r, warning = F, message = F}
 model10.3c <- add_criterion(model10.3c, "loo")
 model10.4c <- add_criterion(model10.4c, "loo")
 

@@ -113,7 +113,7 @@ This is what Figure 7.2 was all about.
 
 ### Symmetry in moderation.
 
-It turns out that, mathematically, there’s no difference in speaking about $X$ moderating $W$ than speaking about $W$ moderating $X$. These are all just capital letters standing in for variables and perhaps you’ll recall from grade school that $a + b + ab$ is just the same as $b + a + ba$. Thus we can rearrange the simple moderation equations above to
+It turns out that, mathematically, there's no difference in speaking about $X$ moderating $W$ than speaking about $W$ moderating $X$. These are all just capital letters standing in for variables and perhaps you’ll recall from grade school that $a + b + ab$ is just the same as $b + a + ba$. Thus we can rearrange the simple moderation equations above to
 
 $$Y = i_Y + b_1 X + (b_2 + b_3 X) W + e_Y$$
 
@@ -264,7 +264,7 @@ posterior_summary(model7.2)
 posterior_summary(model7.3)
 ```
 
-Just focusing on our primary model, `model7.3`, here's another way to look at the coefficients. 
+Just focusing on our primary model, `model7.3`, here's another way to look at the coefficients.
 
 ```{r, fig.width = 10, fig.height = 1.5}
 mcmc_plot(model7.3) +
@@ -326,7 +326,7 @@ r2_2 %>%
 
 In addition to the $R^2$, one can use information criteria to compare the models. Here we'll use the LOO to compare all three.
 
-```{r}
+```{r, message = F, warning = F}
 model7.1 <- add_criterion(model7.1, "loo")
 model7.2 <- add_criterion(model7.2, "loo")
 model7.3 <- add_criterion(model7.3, "loo")
@@ -505,7 +505,7 @@ fitted(model7.3, newdata = nd) %>%
 
 That plot is okay, but we can do better.
 
-In order to plot the model-implied effects across the full range of `skeptic` values presented in Figure 7.7, you need to change the range of those values in the `nd` data. Also, although the effect is subtle in the above example, 95% intervals often follow a bowtie shape. In order to insure the contours of that shape are smooth, it's often helpful to specify 30 or so evenly-spaced values in the variable on the x-axis, `skeptic` in this case. We'll employ the `seq()` function for that and specify `length.out = 30`. In addition, we add a few other flourishes to make our plot more closely resemble the one in the text.
+In order to plot the model-implied effects across the full range of `skeptic` values presented in Figure 7.7, you need to change the range of those values in the `nd` data. Also, although the effect is subtle in the above example, 95% intervals often follow a bowtie shape. In order to insure the contours of that shape are smooth, it's often helpful to specify 30 or so evenly-spaced values in the variable on the $x$-axis, `skeptic` in this case. We'll employ the `seq()` function for that and specify `length.out = 30`. In addition, we add a few other flourishes to make our plot more closely resemble the one in the text.
 
 Here's our Figure 7.7.
 

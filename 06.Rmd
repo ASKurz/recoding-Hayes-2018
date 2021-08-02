@@ -96,7 +96,7 @@ Check the coefficient summaries.
 fixef(model6.1)
 ```
 
-Our $R^2$ differences a bit from the OLS version in the text. This shouldn't be surprising when it's near the boundary. 
+Our $R^2$ differences a bit from the OLS version in the text. This shouldn't be surprising when it's near the boundary.
 
 ```{r}
 bayes_R2(model6.1)
@@ -171,8 +171,8 @@ bayes_R2(model6.2, summary = F) %>%
   
   ggplot(aes(x = value, fill = name)) +
   geom_density(size = 0, alpha = 2/3) +
-  annotate("text", x = .18, y = 6.75, label = "liking", color = pokepal(pokemon = "plusle")[2], family = "Times") +
-  annotate("text", x = .355, y = 6.75, label = "respappr", color = pokepal(pokemon = "plusle")[6], family = "Times") +
+  annotate("text", x = .2, y = 7, label = "liking", color = pokepal(pokemon = "plusle")[2], family = "Times") +
+  annotate("text", x = .355, y = 6, label = "respappr", color = pokepal(pokemon = "plusle")[6], family = "Times") +
   scale_fill_manual(values = pokepal(pokemon = "plusle")[c(2, 6)]) +
   scale_x_continuous(NULL, limits = c(0:1)) +
   scale_y_continuous(NULL, breaks = NULL) +
@@ -290,7 +290,7 @@ r2 <-
 r2 %>% 
   ggplot(aes(x = R2, fill = fit)) +
   geom_density(size = 0, alpha = 2/3) +
-  annotate("text", x = .15, y = 6.75, label = "model3", color = pokepal(pokemon = "plusle")[7], family = "Times") +
+  annotate("text", x = .18, y = 6.75, label = "model3", color = pokepal(pokemon = "plusle")[7], family = "Times") +
   annotate("text", x = .35, y = 6.75, label = "model2", color = pokepal(pokemon = "plusle")[6], family = "Times") +
   scale_fill_manual(values = pokepal(pokemon = "plusle")[c(6, 7)]) +
   scale_x_continuous(NULL, limits = 0:1) +

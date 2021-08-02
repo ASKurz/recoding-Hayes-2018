@@ -113,7 +113,7 @@ fitted(model12.2, newdata = nd) %>%
         legend.title = element_blank())
 ```
 
-In Hayes's Figure 12.2, he emphasized the differences at the three levels of `skeptic`. If you want the full difference score distributions in a pick-a-point-approach sort of way, you might plot the densities with `tidybayes::geom_stat_halfeye()`, which places coefficient plots at the base of the densities. In this case, we show the posterior medians with the dots, the 50% intervals with the thick horizontal lines, and the 95% intervals with the thinner horizontal lines.
+In Hayes's Figure 12.2, he emphasized the differences at the three levels of `skeptic`. If you want the full difference score distributions in a pick-a-point-approach sort of way, you might plot the densities with `tidybayes::stat_halfeye()`, which places coefficient plots at the base of the densities. In this case, we show the posterior medians with the dots, the 50% intervals with the thick horizontal lines, and the 95% intervals with the thinner horizontal lines.
 
 ```{r, fig.width = 6, fig.height = 2.5, warning = F}
 nd <-
@@ -344,7 +344,7 @@ effects %>%
   theme(legend.position = "none")
 ```
 
-Note how wide those 95% intervals are relative to the scale of the y-axis, which I specifically kept within the same range as Figure 12.7 in the text. To me the message is clear: include credible-interval ribbons in your regression slope plots. They help depict how uncertain the posterior is in a way a simple line slopes just don't.
+Note how wide those 95% intervals are relative to the scale of the $y$-axis, which I specifically kept within the same range as Figure 12.7 in the text. To me the message is clear: include credible-interval ribbons in your regression slope plots. They help depict how uncertain the posterior is in a way a simple line slopes just don't.
 
 ## Statistical inference
 
@@ -444,7 +444,7 @@ print(model12.5, digits = 3)
 
 Since we're altering the model, we may as well use information criteria to compare the two versions.
 
-```{r}
+```{r, warning = F, message = F}
 model12.4 <- add_criterion(model12.4, "loo")
 model12.5 <- add_criterion(model12.5, "loo")
 

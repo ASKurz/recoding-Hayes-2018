@@ -205,7 +205,7 @@ r2 %>%
   theme(panel.grid = element_blank())
 ```
 
-And we might also compare the models by their information criteria. 
+And we might also compare the models by their information criteria.
 
 ```{r, message = F, warning = F}
 model13.1 <- add_criterion(model13.1, c("waic", "loo"))
@@ -512,7 +512,7 @@ tibble(model13.1 = bayes_R2(model13.1, resp = "liking", summary = F)[, 1],
 
 We'll also compare the models by their information criteria. 
 
-```{r}
+```{r, warning = F, message = F}
 model13.3 <- add_criterion(model13.3, c("waic", "loo"))
 
 loo_compare(model13.1, model13.3, criterion = "loo")
@@ -556,9 +556,9 @@ post %>%
   facet_grid(~ name)
 ```
 
-Holy smokes, them are some wide 95% CIs! No wonder the information criteria and $R^2$ comparisons were so uninspiring. 
+Holy smokes, them are some wide 95% CIs! No wonder the information criteria and $R^2$ comparisons were so uninspiring.
 
-Notice that the y-axis is on the parameter space. When Hayes made his Figure 13.5, he put the y-axis on the `liking` space, instead. When we want things in the parameter space, we work with the output of `posterior_samples()`; when we want them in the criterion space, we typically use `fitted()`. This time, however, we'll practice again with `tidbayes::add_epred_draws()`.
+Notice that the $y$-axis is on the parameter space. When Hayes made his Figure 13.5, he put the $y$-axis on the `liking` space, instead. When we want things in the parameter space, we work with the output of `posterior_samples()`; when we want them in the criterion space, we typically use `fitted()`. This time, however, we'll practice again with `tidbayes::add_epred_draws()`.
 
 ```{r, fig.width = 10, fig.height = 3.5}
 # we need new `nd` data
@@ -594,7 +594,7 @@ f %>%
   facet_wrap(~ condition)
 ```
 
-Relative to the text, we expanded the range of the y-axis a bit to show more of that data (and there's even more data outside of our expanded range). Also note how after doing so and after including the 95% CI bands, the crossing regression line effect in Hayes's Figure 13.5 isn't as impressive looking any more.
+Relative to the text, we expanded the range of the $y$-axis a bit to show more of that data (and there's even more data outside of our expanded range). Also note how after doing so and after including the 95% CI bands, the crossing regression line effect in Hayes's Figure 13.5 isn't as impressive looking any more.
 
 On pages 497 and 498, Hayes discussed more omnibus $F$-tests. Much like with the $M$ criterion, we won't come up with Bayesian $F$-tests, but we might go ahead and make pairwise comparisons at the three percentiles Hayes prefers.
 

@@ -105,7 +105,7 @@ fitted(model8.1,
            x = c(4, 4.6), y = c(3.5, 2.6),
            label = c(paste("the slope when frame = 1 is about", green_slope),
                      paste("the slope when frame = 0 is about", blue_slope)),
-           angle = c(28, 5)) +
+           angle = c(28, 5), color = "black") +
   scale_color_manual(NULL, values = ochre_palettes[["olsen_qual"]][(5:6)]) +
   scale_x_continuous(breaks = 1:6) +
   coord_cartesian(xlim = c(1, 6),
@@ -137,7 +137,7 @@ The `head()` function returned six rows, each one corresponding to the credible 
 
 Each row of `post`, each iteration or posterior draw, yields a full model equation that is a credible description of the data--or at least as credible as we can get within the limits of the model we have specified, our priors (which we typically cop out on and just use defaults in this project), and how well those fit when applied to the data at hand. So when we use **brms** convenience functions like `fitted()`, we pass specific predictor values through those 4,000 unique model equations, which returns 4,000 similar but distinct expected $Y$-values. So although a nice way to summarize those 4,000 values is with summaries such as the posterior mean/median and 95% intervals, another way is to just plot an individual regression line for each of the iterations. That is what's going on when we depict out models with a spaghetti plot.
 
-The thing I like about spaghetti plots is that they give a three-dimensional sense of the posterior. Note that each individual line is very skinny and semitransparent. When you pile a whole bunch of them atop each other, the peaked or most credible regions of the posterior are the most saturated in color. Less credible posterior regions almost seamlessly merge into the background. Also, note how the combination of many similar but distinct straight lines results in a bowtie shape. Hopefully this clarifies where that shape’s been coming from when we use `geom_ribbon()` to plot the 95% intervals.
+The thing I like about spaghetti plots is that they give a three-dimensional sense of the posterior. Note that each individual line is very skinny and semitransparent. When you pile a whole bunch of them atop each other, the peaked or most credible regions of the posterior are the most saturated in color. Less credible posterior regions almost seamlessly merge into the background. Also, note how the combination of many similar but distinct straight lines results in a bowtie shape. Hopefully this clarifies where that shape's been coming from when we use `geom_ribbon()` to plot the 95% intervals.
 
 Back to the text, on the bottom of page 274, Hayes pointed out the conditional effect of `skeptic` when `frame == 1` is $b_1 + b_3 = 0.306$. We can show that with a little arithmetic followed up with `tidybayes::mean_qi()`.
 
@@ -367,7 +367,7 @@ r2 %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
-Note that the Bayesian $R^2$ performed differently than the $F$-test in the text. 
+Note that the Bayesian $R^2$ performed differently than the $F$-test in the text.
 
 ```{r, fig.width = 8, fig.height = 2.5}
 r2 %>% 

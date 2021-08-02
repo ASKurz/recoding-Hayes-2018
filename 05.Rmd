@@ -147,7 +147,7 @@ For more in this family of **tidybayes** functions, check out the [*Point summar
 
 In the middle paragraph of page 158, Hayes showed how the mean difference in `imprt` between the two `cond` groups multiplied by `b1`, the coefficient of `import` predicting `reaction`, is equal to the `a1b1` indirect effect. He did that with simple algebra using the group means and the point estimates, following the formula 
 
-$$a_1 b_1 = \{[\overline M_1 | (X = 1)] - [\overline M_1 | (X = 0)]\} b_1.$$
+$$a_1 b_1 = \left \{ \left [\overline M_1 | (X = 1) \right] - \left[\overline M_1 | (X = 0) \right ] \right \} b_1.$$
 
 Let's follow along. First, we'll get those two group means and save them as numbers to arbitrary precision.
 
@@ -217,8 +217,8 @@ To use the equations on the top of page 161, we'll just work directly with the o
 
 ```{r, warning = F}
 post %>% 
-  mutate(Y_bar_given_X_1   = b_import_Intercept + b_reaction_cond * 1 + b_reaction_import * b_import_Intercept + b_reaction_pmi * b_pmi_Intercept,
-         Y_bar_given_X_0   = b_import_Intercept + b_reaction_cond * 0 + b_reaction_import * b_import_Intercept + b_reaction_pmi * b_pmi_Intercept) %>% 
+  mutate(Y_bar_given_X_1 = b_import_Intercept + b_reaction_cond * 1 + b_reaction_import * b_import_Intercept + b_reaction_pmi * b_pmi_Intercept,
+         Y_bar_given_X_0 = b_import_Intercept + b_reaction_cond * 0 + b_reaction_import * b_import_Intercept + b_reaction_pmi * b_pmi_Intercept) %>% 
   mutate(`c_prime by hand` = Y_bar_given_X_1 - Y_bar_given_X_0) %>% 
   pivot_longer(c(c_prime, `c_prime by hand`)) %>% 
   group_by(name) %>% 

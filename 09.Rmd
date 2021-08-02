@@ -42,13 +42,13 @@ As we'll see in just a bit, there are some important reasons for Bayesians using
 $$Y = i_Y + b_1 X + b_2 W + b_3 XW + e_Y.$$
 
 `model9.2` is our mean-centered model, which we can express formally as
-
+$$
 \begin{align*}
-Y & = i_Y + b_1 (X - \overline X) + b_2 (W - \overline W) + b_3 (X - \overline X)(W - \overline W) + e_Y, \; \text{or more simply} \\
+Y & = i_Y + b_1 \left (X - \overline X \right ) + b_2 \left (W - \overline W \right ) + b_3 \left (X - \overline X \right ) \left (W - \overline W \right ) + e_Y, \; \text{or more simply} \\
 & = i_Y + b_1 X' + b_2 W' + b_3 X'W' + e_Y,
 \end{align*}
-
-where $X' = (X - \overline X)$ and so on.
+$$
+where $X' = \left (X - \overline X \right)$ and so on.
 
 ```{r model9.1, warning = F, message = F}
 model9.1 <- 
@@ -84,7 +84,7 @@ However, notice the 'Bulk_ESS' and 'Tail_ESS' columns. The values for `model9.2`
 
 The [**bayesplot** package](https://github.com/stan-dev/bayesplot) offers a variety of [diagnostic plots](https://cran.r-project.org/web/packages/bayesplot/vignettes/visual-mcmc-diagnostics.html#effective-sample-size). Here we'll use the `mcmc_acf()` function to make autocorrelation plots for all model parameters. Note that when we add `add_chain = T` to `brms::posterior_samples()`, we add an index to the data that allows us to keep track of which iteration comes from which chain. That index will come in handy for our `mcmc_acf()` plots.
 
-But before we get there, we'll be using an [xkcd](https://xkcd.com)-inspired theme with help from the [**xkcd** package](https://CRAN.R-project.org/package=xkcd) [@torres-manzaneraXkcdPlottingGgplot22018a] for our plots in this chapter.
+But before we get there, we'll be using an [xkcd](https://xkcd.com)-inspired theme with help from the [**xkcd** package](https://CRAN.R-project.org/package=xkcd) [@torres-manzaneraXkcdPlottingGgplot22018] for our plots in this chapter.
 
 ```{r, warning = F, message = F}
 # install.packages("xkcd", dependencies = T)
@@ -499,7 +499,7 @@ That's a lot of output. Here's what those summaries look like in a coefficient p
 # summarize just like before
 post %>% 
    pivot_longer(starts_with("Ymi"),
-               names_to = "row") %>% 
+                names_to = "row") %>% 
   group_by(row) %>% 
   mean_qi(value) %>% 
   

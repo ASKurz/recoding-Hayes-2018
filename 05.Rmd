@@ -43,15 +43,16 @@ library(brms)
 Bayesian correlations, recall, just take an intercepts-only multivariate model.
 
 ```{r model5.1}
-model5.1 <- 
-  brm(data = pmi, 
-      family = gaussian,
-      mvbind(pmi, import) ~ 1,
-      cores = 4,
-      file = "fits/model05.01")
+model5.1 <- brm(
+  data = pmi, 
+  family = gaussian,
+  bf(mvbind(pmi, import) ~ 1) +
+    set_rescor(TRUE),
+  cores = 4,
+  file = "fits/model05.01")
 ```
 
-A little indexing with the `posterior_summary()` function will get us the Bayesian correlation with its posterior $SD$ and intervals.
+A little indexing with the `posterior_summary()` function will get us the Bayesian correlation with its posterior $\textit{SD}$ and intervals.
 
 ```{r}
 posterior_summary(model5.1)["rescor__pmi__import", ] %>% round(digits = 3)
@@ -68,12 +69,12 @@ y_model  <- bf(reaction ~ 1 + import + pmi + cond)
 And now we fit the model.
 
 ```{r model5.2}
-model5.2 <-
-  brm(data = pmi, 
-      family = gaussian,
-      y_model + m1_model + m2_model + set_rescor(FALSE),
-      cores = 4,
-      file = "fits/model05.02")
+model5.2 <- brm(
+  data = pmi, 
+  family = gaussian,
+  y_model + m1_model + m2_model + set_rescor(FALSE),
+  cores = 4,
+  file = "fits/model05.02")
 ```
 
 ```{r}
@@ -105,10 +106,9 @@ bayes_R2(model5.2, summary = F) %>%
 It'll take a bit of data wrangling to rename our model parameters to the $a$, $b$... configuration. We'll compute the indirect effects and $c$, too.
 
 ```{r}
-post <- posterior_samples(model5.2)
+draws <- as_draws_df(model5.2)
 
-post <-
-  post %>% 
+draws <- draws %>% 
   mutate(a1 = b_import_cond,
          a2 = b_pmi_cond,
          b1 = b_reaction_import,
@@ -126,7 +126,7 @@ We've been summarizing our posteriors within the `summarize()` function. This ap
 ```{r, warning = F, message = F}
 library(tidybayes)
 
-post %>% 
+draws %>% 
   pivot_longer(a1:c) %>% 
   group_by(name) %>% 
   median_qi(value)
@@ -135,7 +135,7 @@ post %>%
 In the `value` column, we have our measure of central tendency (i.e., median). The 95% intervals are in the next two columns. With **tidybayes**, we can ask for different kinds of intervals and different kinds of measures of central tendency, as indicated by the `.width` and `.point` columns, respectively. For example, here's the output for the same variables when we ask for posterior means and 80% intervals.
 
 ```{r, warning = F, message = F}
-post %>% 
+draws %>% 
   pivot_longer(a1:c) %>% 
   group_by(name) %>% 
   mean_qi(value, .width = .8) %>% 
@@ -166,7 +166,7 @@ Let's follow along. First, we'll get those two group means and save them as numb
 Here we follow the formula in the last sentence of the paragraph and then compare the results to the posterior for `a1b1`.
 
 ```{r, warning = F, message = F}
-post %>% 
+draws %>% 
   # use Hayes's formula to make a new vector, `handmade a1b1` 
   mutate(`handmade a1b1` = (cond_1_import_mean - cond_0_import_mean) * b1) %>% 
   # wrangle as usual
@@ -193,7 +193,7 @@ cond_1_pmi_mean <- pmi_means[2, 2] %>% pull()
 ```
 
 ```{r, warning = F}
-post %>% 
+draws %>% 
   mutate(`handmade a2b2` = (cond_1_pmi_mean - cond_0_pmi_mean) * b2) %>% 
   pivot_longer(c(a2b2, `handmade a2b2`)) %>% 
   group_by(name) %>% 
@@ -204,19 +204,18 @@ post %>%
 To get the total indirect effect as discussed on page 160, we simply add the `a1b1` and `a2b2` columns.
 
 ```{r, warning = F}
-post <-
-  post %>% 
+draws <- draws %>% 
   mutate(total_indirect_effect = a1b1 + a2b2) 
 
-post %>% 
+draws %>% 
   mean_qi(total_indirect_effect) %>% 
   mutate_if(is_double, round, digits = 3)
 ```
 
-To use the equations on the top of page 161, we'll just work directly with the original vectors in `post`.
+To use the equations on the top of page 161, we'll just work directly with the original vectors in `draws`.
 
 ```{r, warning = F}
-post %>% 
+draws %>% 
   mutate(Y_bar_given_X_1 = b_import_Intercept + b_reaction_cond * 1 + b_reaction_import * b_import_Intercept + b_reaction_pmi * b_pmi_Intercept,
          Y_bar_given_X_0 = b_import_Intercept + b_reaction_cond * 0 + b_reaction_import * b_import_Intercept + b_reaction_pmi * b_pmi_Intercept) %>% 
   mutate(`c_prime by hand` = Y_bar_given_X_1 - Y_bar_given_X_0) %>% 
@@ -228,14 +227,14 @@ post %>%
 We computed `c` a while ago.
 
 ```{r, warning = F}
-post %>% 
+draws %>% 
   mean_qi(c)
 ```
 
 And `c` minus `c_prime` is straight subtraction.
 
 ```{r, warning = F}
-post %>% 
+draws %>% 
   mutate(`c minus c_prime` = c - c_prime) %>% 
   mean_qi(`c minus c_prime`)
 ```
@@ -248,8 +247,8 @@ We've been focusing on this all along with our posterior intervals.
 
 We're not going to bother with $p$-values and we've already computed the 95% Bayesian credible intervals, above. But we can examine our parameters with a density plot.
 
-```{r, fig.width = 8, fig.height = 2.5}
-post %>% 
+```{r, fig.width = 8, fig.height = 2.5, warning = F}
+draws %>% 
   pivot_longer(c(c, c_prime)) %>%
   
   ggplot(aes(x = value, fill = name, color = name)) +
@@ -269,7 +268,7 @@ post %>%
 Again, no need to worry about bootstrapping within the Bayesian paradigm. We can compute high-quality percentile-based intervals with our HMC-based posterior samples.
 
 ```{r, warning = F}
-post %>%
+draws %>%
   pivot_longer(c(a1b1, a2b2)) %>% 
   group_by(name) %>% 
   median_qi(value) %>% 
@@ -281,19 +280,18 @@ post %>%
 Within the Bayesian paradigm, it's straightforward to compare indirect effects. All one has to do is compute a difference score and summarize it somehow. Here it is, `a1b1` minus `a2b2`.
 
 ```{r, warning = F}
-post <-
-  post %>% 
+draws <- draws %>% 
   mutate(difference = a1b1 - a2b2) 
 
-post %>%
+draws %>%
   mean_qi(difference) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
 
-Why not plot?
+Why not plot the comparison?
 
 ```{r, fig.width = 4.5, fig.height = 2.5}
-post %>% 
+draws %>% 
   ggplot(aes(x = difference)) +
   geom_vline(xintercept = 0, color = "black", linetype = 2) +
   geom_density(color = "black", fill = "black", alpha = .5) +
@@ -311,7 +309,7 @@ Although note well this does not mean their difference is exactly zero. The shap
 Here's the plot.
 
 ```{r, fig.width = 4.5, fig.height = 2.5}
-post %>% 
+draws %>% 
   ggplot(aes(x = total_indirect_effect, fill = factor(0), color = factor(0))) +
   geom_density(alpha = .5) +
   scale_color_ptol() +
@@ -341,15 +339,15 @@ post %>%
 The model syntax is similar to the earlier multiple mediator model. All we change is adding `import` to the list of predictors in the submodel for `m2_model`. But this time, let's take the approach from last chapter where we define our `bf()` formulas all within `brm()`.
 
 ```{r model5.3}
-model5.3 <-
-  brm(data = pmi, 
-      family = gaussian,
-      bf(import ~ 1 + cond) + 
-        bf(pmi ~ 1 + import + cond) + 
-        bf(reaction ~ 1 + import + pmi + cond) + 
-        set_rescor(FALSE),
-      cores = 4,
-      file = "fits/model05.03")
+model5.3 <- brm(
+  data = pmi, 
+  family = gaussian,
+  bf(import ~ 1 + cond) + 
+    bf(pmi ~ 1 + import + cond) + 
+    bf(reaction ~ 1 + import + pmi + cond) + 
+    set_rescor(FALSE),
+  cores = 4,
+  file = "fits/model05.03")
 ```
 
 ```{r}
@@ -379,8 +377,7 @@ bayes_R2(model5.3, summary = F) %>%
 As before, here we'll save the posterior samples into a data frame and rename the parameters a bit to match Hayes's nomenclature.
 
 ```{r}
-post <- 
-  posterior_samples(model5.3) %>% 
+draws <- as_draws_df(model5.3) %>% 
   mutate(a1 = b_import_cond,
          a2 = b_pmi_cond,
          b1 = b_reaction_import,
@@ -392,7 +389,7 @@ post <-
 Here are the parameter summaries for the pathways depicted in Figure 5.6.
 
 ```{r, warning = F}
-post %>% 
+draws %>% 
   pivot_longer(a1:d21) %>% 
   group_by(name) %>% 
   mean_qi(value) %>% 
@@ -402,7 +399,7 @@ post %>%
 To get our version of the parameter summaries in Table 5.2, all you have to do is add the summaries for the intercepts to what we did above.
 
 ```{r, warning = F}
-post %>% 
+draws %>% 
   rename(im1 = b_import_Intercept,
          im2 = b_pmi_Intercept,
          iy  = b_reaction_Intercept) %>% 
@@ -417,18 +414,17 @@ post %>%
 Here we compute the four indirect effects.
 
 ```{r}
-post <-
-  post %>%  
+draws <- draws %>%  
   mutate(a1b1    = a1 * b1,
          a2b2    = a2 * b2,
          a1d21b2 = a1 * d21 * b2) %>% 
   mutate(total_indirect_effect = a1b1 + a2b2 + a1d21b2)
 ```
 
-Anticipating the skew typical of indirect effects, we’ll summarize these posteriors with medians rather than means.
+Anticipating the skew typical of indirect effects, we'll summarize these posteriors with medians rather than means.
 
 ```{r, warning = F}
-post %>% 
+draws %>% 
   pivot_longer(a1b1:total_indirect_effect) %>% 
   group_by(name) %>% 
   median_qi(value) %>% 
@@ -439,7 +435,7 @@ post %>%
 To get the contrasts Hayes presented in page 179, we just do a little subtraction.
 
 ```{r, warning = F}
-post %>%  
+draws %>%  
   mutate(c1 = a1b1 - a2b2,
          c2 = a1b1 - a1d21b2,
          c3 = a2b2 - a1d21b2) %>% 
@@ -452,14 +448,14 @@ post %>%
 
 And just because it's fun, we may as well plot our indirect effects.
 
-```{r, fig.width = 8, fig.height = 2.5}
+```{r, fig.width = 8, fig.height = 2.5, warning = F}
 # this will help us save a little space with the plot code
 my_labels <- c(expression(italic(a)[1]*italic(b)[1]),
                expression(italic(a)[1]*italic(d)[21]*italic(b)[1]),
                expression(italic(a)[2]*italic(b)[2]),
                "total indirect effect")
 # wrangle
-post %>% 
+draws %>% 
   pivot_longer(a1b1:total_indirect_effect) %>% 
 
   # plot!

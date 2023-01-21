@@ -45,12 +45,13 @@ library(brms)
 Recall that if you want the correlations with Bayesian estimation and those sweet Bayesian credible intervals, you set up an intercept-only multivariate model.
 
 ```{r model4.1}
-model4.1 <- 
-  brm(data = estress, 
-      family = gaussian,
-      mvbind(ese, estress, affect, withdraw) ~ 1,
-      cores = 4,
-      file = "fits/model04.01")
+model4.1 <- brm(
+  data = estress, 
+  family = gaussian,
+  bf(mvbind(ese, estress, affect, withdraw) ~ 1) +
+    set_rescor(TRUE),
+  cores = 4,
+  file = "fits/model04.01")
 ```
 
 Behold the summary.
@@ -64,7 +65,7 @@ Since we have posteriors for the correlations, why not plot them? Here we take o
 ```{r, message = F, warning = F, fig.width = 10, fig.height = 1.75}
 library(ggdark)
 
-posterior_samples(model4.1) %>% 
+as_draws_df(model4.1) %>% 
   pivot_longer(c(rescor__ese__estress, rescor__ese__affect, rescor__estress__withdraw)) %>% 
   
   ggplot(aes(x = value, fill = name)) +
@@ -86,14 +87,14 @@ posterior_samples(model4.1) %>%
 In the last chapter, we said there were multiple ways to set up a multivariate model in **brms**. Our first approach was to externally define the submodels using the `bf()` function, save them as objects, and then include those objects within the `brm()` function. Another approach is to just define the separate `bf()` submodels directly in the `brm()` function, combining them with the `+` operator. That's the approach we will practice in this chapter. Here's what it looks like for our first mediation model.
 
 ```{r model4.2}
-model4.2 <-
-  brm(data = estress, 
-      family = gaussian,
-      bf(withdraw ~ 1 + estress + affect + ese + sex + tenure) +
-        bf(affect ~ 1 + estress + ese + sex + tenure) +
-        set_rescor(FALSE),
-      cores = 4,
-      file = "fits/model04.02")
+model4.2 <- brm(
+  data = estress, 
+  family = gaussian,
+  bf(withdraw ~ 1 + estress + affect + ese + sex + tenure) +
+    bf(affect ~ 1 + estress + ese + sex + tenure) +
+    set_rescor(FALSE),
+  cores = 4,
+  file = "fits/model04.02")
 ```
 
 Worked like a charm. Here's the summary.
@@ -132,22 +133,21 @@ bayes_R2(model4.2, summary = F) %>%
 Here we retrieve the posterior samples, compute the indirect effect, and summarize the indirect effect with `quantile()`.
 
 ```{r}
-post <-
-  posterior_samples(model4.2) %>% 
+draws <- as_draws_df(model4.2) %>% 
   mutate(ab = b_affect_estress * b_withdraw_affect)
 
-quantile(post$ab, probs = c(.5, .025, .975)) %>% 
+quantile(draws$ab, probs = c(.5, .025, .975)) %>% 
   round(digits = 3)
 ```
 
 The results are similar to those in the text (p. 127). Here's what it looks like.
 
 ```{r, fig.width = 4, fig.height = 3.5}
-post %>% 
+draws %>% 
   ggplot(aes(x = ab)) +
   geom_density(aes(fill = factor(0)),
                color = "transparent", show.legend = F) +
-  geom_vline(xintercept = quantile(post$ab, probs = c(.5, .025, .975)),
+  geom_vline(xintercept = quantile(draws$ab, probs = c(.5, .025, .975)),
              color = "black", linetype = c(1, 3, 3)) +
   scale_fill_viridis_d(option = "A", begin = .6) +
   scale_y_continuous(NULL, breaks = NULL) +
@@ -160,8 +160,8 @@ Once again, those sweet Bayesian credible intervals get the job done.
 
 Here's a way to get both the direct effect, $c'$ (i.e., `b_withdraw_estress`), and the total effect, $c$ (i.e., $c'$ + $ab$) of `estress` on `withdraw`.
 
-```{r, message = F}
-post %>% 
+```{r, warning = F}
+draws %>% 
   mutate(c       = b_withdraw_estress + ab,
          c_prime = b_withdraw_estress) %>% 
   pivot_longer(c(c_prime, c)) %>% 
@@ -180,7 +180,7 @@ Both appear pretty small. Which leads us to the next section...
 
 ### The partially standardized effect.
 
-We get $SD$s using the `sd()` function. Here's the $SD$ for our $Y$ variable, `withdraw`.
+We get $\textit{SD}$'s using the `sd()` function. Here's the $\textit{SD}$ for our $Y$ variable, `withdraw`.
 
 ```{r}
 sd(estress$withdraw)
@@ -188,10 +188,10 @@ sd(estress$withdraw)
 
 Here we compute the partially standardized effect sizes for $c'$ and $ab$ by dividing those vectors in our `post` object by `sd(estress$withdraw)`, which we saved as `sd_y`.
 
-```{r, message = F}
+```{r, warning = F}
 sd_y <- sd(estress$withdraw)
 
-post %>% 
+draws %>% 
   mutate(c_prime_ps = b_withdraw_estress / sd_y,
          ab_ps      = ab / sd_y) %>% 
   mutate(c_ps = c_prime_ps + ab_ps) %>% 
@@ -206,8 +206,8 @@ post %>%
 
 The results are similar, though not identical, to those in the text. Here we have both rounding error and estimation differences at play. The plots:
 
-```{r, fig.height = 3, fig.width = 10}
-post %>% 
+```{r, fig.height = 3, fig.width = 10, warning = F}
+ draws %>% 
   mutate(c_prime_ps = b_withdraw_estress / sd_y,
          ab_ps      = ab / sd_y) %>% 
   mutate(c_ps = c_prime_ps + ab_ps) %>% 
@@ -233,24 +233,24 @@ pmi <- read_csv("data/pmi/pmi.csv")
 Refit the model, this time with the `bf()` statements defined right within `brm()`.
 
 ```{r model4.3}
-model4.3 <-
-  brm(data = pmi, 
-      family = gaussian,
-       bf(reaction ~ 1 + pmi + cond) + 
-        bf(pmi ~ 1 + cond) + 
-        set_rescor(FALSE),
-      cores = 4,
-      file = "fits/model04.03")
+model4.3 <- brm(
+  data = pmi, 
+  family = gaussian,
+  bf(reaction ~ 1 + pmi + cond) + 
+    bf(pmi ~ 1 + cond) + 
+    set_rescor(FALSE),
+  cores = 4,
+  file = "fits/model04.03")
 ```
 
-The partially-standardized parameters require some `posterior_samples()` wrangling.
+The partially-standardized parameters require some `as_draws_df()` wrangling.
 
-```{r, message = F}
-post <- posterior_samples(model4.3)
+```{r, warning = F}
+draws <- as_draws_df(model4.3)
 
 sd_y <- sd(pmi$reaction)
 
-post %>% 
+draws %>% 
   mutate(ab      = b_pmi_cond * b_reaction_pmi,
          c_prime = b_reaction_cond) %>% 
   mutate(ab_ps      = ab / sd_y,
@@ -273,15 +273,14 @@ Happily, these results are closer to those in the text than with the previous ex
 
 One way to get a standardized solution is to standardize the variables in the data and then fit the model with those standardized variables. To do so, we'll revisit our custom `standardize()`, put it to work, and fit the standardized version of the model from Section 3.5, which we'll call `model4.4`.
 
-```{r, message = F, warning = F}
+```{r}
 # make the function
 sandardize <- function(x) {
   (x - mean(x)) / sd(x)
 }
 
 # use the function
-estress <-
-  estress %>% 
+estress <- estress %>% 
   mutate(withdraw_z = sandardize(withdraw), 
          estress_z  = sandardize(estress), 
          affect_z   = sandardize(affect))
@@ -290,14 +289,14 @@ estress <-
 Fit the model.
 
 ```{r model4.4}
-model4.4 <-
-  brm(data = estress, 
-      family = gaussian,
-      bf(withdraw_z ~ 1 + estress_z + affect_z) + 
-        bf(affect_z ~ 1 + estress_z) + 
-        set_rescor(FALSE),
-      cores = 4,
-      file = "fits/model04.04")
+model4.4 <- brm(
+  data = estress, 
+  family = gaussian,
+  bf(withdraw_z ~ 1 + estress_z + affect_z) + 
+    bf(affect_z ~ 1 + estress_z) + 
+    set_rescor(FALSE),
+  cores = 4,
+  file = "fits/model04.04")
 ```
 
 Here they are, our newly standardized coefficients.
@@ -308,8 +307,8 @@ fixef(model4.4) %>% round(digits = 3)
 
 Here we do the wrangling necessary to spell out the standardized effects for $ab$, $c'$, and $c$.
 
-```{r, message = F}
-posterior_samples(model4.4) %>% 
+```{r, warning = F}
+as_draws_df(model4.4) %>% 
   mutate(ab_s      = b_affectz_estress_z * b_withdrawz_affect_z,
          c_prime_s = b_withdrawz_estress_z) %>%
   mutate(c_s = ab_s + c_prime_s) %>% 
@@ -325,14 +324,14 @@ posterior_samples(model4.4) %>%
 Let's confirm that we can recover these values by applying the formulas on page 135 to the unstandardized model, which we'll call `model4.5`. First, we'll have to fit that model since we haven't fit that one since Chapter 3.
 
 ```{r model4.5}
-model4.5 <-
-  brm(data = estress, 
-      family = gaussian,
-      bf(withdraw ~ 1 + estress + affect) + 
-        bf(affect ~ 1 + estress) + 
-        set_rescor(FALSE),
-      cores = 4,
-      file = "fits/model04.05")
+model4.5 <- brm(
+  data = estress, 
+  family = gaussian,
+  bf(withdraw ~ 1 + estress + affect) + 
+    bf(affect ~ 1 + estress) + 
+    set_rescor(FALSE),
+  cores = 4,
+  file = "fits/model04.05")
 ```
 
 Check the unstandardized coefficient summaries.
@@ -343,19 +342,20 @@ fixef(model4.5) %>% round(digits = 3)
 
 On pages 135--136, Hayes provided the formulas to compute the standardized effects, which are
 
+$$
 \begin{align*}
-c'_{cs} & = \frac{SD_X(c')}{SD_{Y}} = SD_{X}(c'_{ps}), \\
-ab_{cs} & = \frac{SD_X(ab)}{SD_{Y}} = SD_{X}(ab_{ps}), \text{and} \\
-c_{cs}  & = \frac{SD_X(c)}{SD_{Y}} = c'_{cs} + ab_{ps},
+c'_{cs} & = \frac{\textit{SD}_X(c')}{\textit{SD}_{Y}} = \textit{SD}_{X}(c'_{ps}), \\
+ab_{cs} & = \frac{\textit{SD}_X(ab)}{\textit{SD}_{Y}} = \textit{SD}_{X}(ab_{ps}), \text{and} \\
+c_{cs}  & = \frac{\textit{SD}_X(c)}{\textit{SD}_{Y}} = c'_{cs} + ab_{ps},
 \end{align*}
-
+$$
 where the $ps$ subscript indicates *partially standardized*. Here we put them in action to standardize the unstandardized results.
 
-```{r, message = F}
+```{r, warning = F}
 sd_x <- sd(estress$estress)
 sd_y <- sd(estress$withdraw)
 
-posterior_samples(model4.5) %>% 
+as_draws_df(model4.5) %>% 
   mutate(ab      = b_affect_estress * b_withdraw_affect,
          c_prime = b_withdraw_estress) %>% 
   mutate(ab_s      = (sd_x * ab) / sd_y,
@@ -392,16 +392,16 @@ The same basic problems with multicollinearity applies to the Bayesian paradigm,
 
 ### Estimation of a model with multiple $X$ variables in ~~PROCESS~~ brms.
 
-Hayes discussed the limitation that his PROCESS program may only handle a single $X$ variable in the `x=` part of the command line, for which he displayed a workaround. We don't have such a limitation in **brms**. Using Hayes's hypothetical data syntax for a model with three $X$s, the **brms** code would be like this.
+Hayes discussed the limitation that his PROCESS program may only handle a single $X$ variable in the `x=` part of the command line, for which he displayed a workaround. We don't have such a limitation in **brms**. Using Hayes's hypothetical data syntax for a model with three $X$'s, the **brms** code would look like this.
 
 ```{r, eval = F}
-model4.6 <-
-  brm(data = data, 
-      family = gaussian,
-      bf(dv ~ 1 + iv1 + iv2 + iv3 + med) + 
-        bf(med ~ 1 + iv1 + iv2 + iv3) + 
-        set_rescor(FALSE),
-      cores = 4)
+model4.6 <- brm(
+  data = data, 
+  family = gaussian,
+  bf(dv ~ 1 + iv1 + iv2 + iv3 + med) + 
+    bf(med ~ 1 + iv1 + iv2 + iv3) + 
+    set_rescor(FALSE),
+  cores = 4)
 ```
 
 To show it in action, let's simulate some data.
@@ -425,14 +425,14 @@ Before we proceed, if data simulation is new to you, you might check out [Roger 
 Here we fit the model.
 
 ```{r model4.6}
-model4.6 <-
-  brm(data = d, 
-      family = gaussian,
-      bf(dv ~ 1 + iv1 + iv2 + iv3 + med) + 
-        bf(med ~ 1 + iv1 + iv2 + iv3) + 
-        set_rescor(FALSE),
-      cores = 4,
-      file = "fits/model04.06")
+model4.6 <- brm(
+  data = d, 
+  family = gaussian,
+  bf(dv ~ 1 + iv1 + iv2 + iv3 + med) + 
+    bf(med ~ 1 + iv1 + iv2 + iv3) + 
+    set_rescor(FALSE),
+  cores = 4,
+  file = "fits/model04.06")
 ```
 
 Behold the results.
@@ -464,16 +464,16 @@ head(d)
 Fitting this model requires a slew of `bf()` statements.
 
 ```{r model4.7}
-model4.7 <-
-  brm(data = d, 
-      family = gaussian,
-      bf(dv1 ~ 1 + iv + med) + 
-        bf(dv2 ~ 1 + iv + med) + 
-        bf(dv3 ~ 1 + iv + med) + 
-        bf(med ~ 1 + iv) + 
-        set_rescor(FALSE),
-      cores = 4,
-      file = "fits/model04.07")
+model4.7 <- brm(
+  data = d, 
+  family = gaussian,
+  bf(dv1 ~ 1 + iv + med) + 
+    bf(dv2 ~ 1 + iv + med) + 
+    bf(dv3 ~ 1 + iv + med) + 
+    bf(med ~ 1 + iv) + 
+    set_rescor(FALSE),
+  cores = 4,
+  file = "fits/model04.07")
 ```
 
 ```{r}

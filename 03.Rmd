@@ -25,7 +25,7 @@ M & = i_M + a X + e_M \\
 Y & = i_Y + c' X + b M + e_Y.
 \end{align*}
 
-When using OLS software, as Hayes promotes throughout the text, these equations are estimated sequentially. However, the **brms** package has multivariate capabilities. As such, our results will be from a Bayesian multivariate model that simultaneously computes both equations at once. They are both part of a joint model. And when we consider more advanced models later in the text, our multivariate models will fit even more than two equations at once. None of this is a problem for **brms**.
+When using OLS software, as Hayes promotes throughout the text, these equations are estimated sequentially. However, the **brms** package has multivariate capabilities. As such, our results will be from a Bayesian multivariate model that computes both equations at once. They're both part of a joint model. When we consider more advanced models later in the text, our multivariate models will fit even more than two equations at once. None of this is a problem for **brms**.
 
 ## Example with dichotomous $X$: The influence of presumed media influence
 
@@ -53,7 +53,7 @@ pmi %>%
   count(cond)
 ```
 
-Here is how to get the ungrouped mean and $SD$ values for `reaction` and `pmi`, as presented in Table 3.1.
+Here is how to get the ungrouped mean and $\textit{SD}$ values for `reaction` and `pmi`, as presented in Table 3.1.
 
 ```{r, message = F}
 pmi %>% 
@@ -64,7 +64,7 @@ pmi %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
-You might get the mean and $SD$ values for `reaction` and `pmi` grouped by `cond` like this.
+You might get the mean and $\textit{SD}$ values for `reaction` and `pmi` grouped by `cond` like this.
 
 ```{r, warning = F, message = F}
 pmi %>% 
@@ -90,15 +90,15 @@ y_model <- bf(reaction ~ 1 + pmi + cond)
 m_model <- bf(pmi ~ 1 + cond)
 ```
 
-Now we have our `bf()` objects in hand, we'll combine them with the `+` operator within the `brm()` function. We'll also specify `set_rescor(FALSE)`--we're not interested in adding a residual correlation between `reaction` and `pmi`.
+Now we have our `bf()` objects in hand, we'll combine them with the `+` operator within the `brm()` function. We'll also specify `set_rescor(FALSE)` because we are not interested in adding a residual correlation between `reaction` and `pmi`.
 
 ```{r, model3.1}
-model3.1 <-
-  brm(data = pmi, 
-      family = gaussian,
-      y_model + m_model + set_rescor(FALSE),
-      cores = 4,
-      file = "fits/model03.01")
+model3.1 <- brm(
+  data = pmi, 
+  family = gaussian,
+  y_model + m_model + set_rescor(FALSE),
+  cores = 4,
+  file = "fits/model03.01")
 ```
 
 Here are our results.
@@ -128,11 +128,12 @@ library(ggthemes)
 
 bayes_R2(model3.1, summary = F) %>% 
   data.frame() %>% 
-  gather() %>% 
+  pivot_longer(everything()) %>% 
+  mutate(name = str_remove(name, "R2")) %>% 
   
-  ggplot(aes(x = value, fill = key)) +
+  ggplot(aes(x = value, fill = name)) +
   geom_density(color = "transparent", alpha = 2/3) +
-  scale_fill_colorblind() +  # we got this color palette from the ggthemes package
+  scale_fill_colorblind(NULL) +  # we got this color palette from the ggthemes package
   coord_cartesian(xlim = 0:1) +
   labs(title = expression(paste("The ", italic("R")^{2}, " distributions for model3.1")),
        x = NULL) +
@@ -159,33 +160,32 @@ So the naive approach would be to just multiply them.
 (fixef(model3.1)[5, ] * fixef(model3.1)[3, ]) %>% round(digits = 3)
 ```
 
-Now, this does get us the correct 'Estimate' (i.e., posterior mean). However, the posterior $SD$ and 95% intervals are off. If you want to do this properly, you need to work with the poster samples themselves. We do that with the `posterior_samples()` function.
+Now, this does get us the correct 'Estimate' (i.e., posterior mean). However, the posterior $\textit{SD}$ and 95% intervals are off. If you want to do this properly, you need to work with the poster samples themselves. We do that with the `as_draws_df()` function.
 
 ```{r}
-post <- posterior_samples(model3.1)
+draws <- as_draws_df(model3.1)
 
-glimpse(post)
+glimpse(draws)
 ```
 
 Here we compute the indirect effect, `ab`.
 
 ```{r}
-post <-
-  post %>% 
+draws <- draws %>% 
   mutate(ab = b_pmi_cond * b_reaction_pmi)
 ```
 
 Now we have `ab` as a properly computed vector, we can summarize it with the `quantile()` function.
 
 ```{r}
-quantile(post$ab, probs = c(.5, .025, .975)) %>% 
+quantile(draws$ab, probs = c(.5, .025, .975)) %>% 
   round(digits = 3)
 ```
 
 And we can even visualize it as a density.
 
 ```{r, fig.width = 4, fig.height = 2}
-post %>% 
+draws %>% 
   ggplot(aes(x = ab)) +
   geom_density(color = "transparent", 
                fill = colorblind_pal()(3)[3]) +
@@ -198,13 +198,13 @@ post %>%
 It's also worth pointing out that as the indirect effect isn't perfectly symmetric, its mean and median aren't quite the same.
 
 ```{r}
-post %>% 
+draws %>% 
   summarize(mean   = mean(ab),
             median = median(ab)) %>% 
   round(digits = 3)
 ```
 
-Their magnitudes are similar, but this asymmetry will be a source of contrast to our estimates and the OLS estimates Hayes reported in the text. This is also something to consider when reporting on central tendency. When the indirect effect--or any other parameter, for that matter--is quite asymmetric, you might prefer reporting the median rather than the mean.
+Their magnitudes are similar, but this asymmetry will be a source of contrast to our estimates and the OLS estimates Hayes reported throughout his text. This is also something to consider when reporting on central tendency. When the indirect effect--or any other parameter, for that matter--is quite asymmetric, you might prefer reporting the median rather than the mean.
 
 On page 90, Hayes computed the *adjusted means* for $Y$. For both `cond == 1` and `cond == 0`, he computed the expected values for `reaction` when `pmi` was at its mean. A natural way to do that in **brms** is with `fitted()`. First we'll put our input values for `cond` and `pmi` in a tibble, which we'll call `nd`. Then we'll feed `nd` into the `newdata` argument within the `fitted()` function.
 
@@ -224,18 +224,17 @@ fitted(model3.1, newdata = nd, resp = "reaction") %>% round(digits = 3)
 
 Note how this is where the two values in the $Y$ adjusted column in Table 3.1 came from.
 
-However, if we want to reproduce how Hayes computed the total effect (i.e., $c' + ab$), we'll need to work with the posterior draws themselves, `post`. Recall, we've already saved the indirect effect as a vector, `ab`. The direct effect, $c'$, is labeled `b_reaction_cond` within `post`. To get the total effect, $c$, all we need to is add those vectors together.
+However, if we want to reproduce how Hayes computed the total effect (i.e., $c' + ab$), we'll need to work with the posterior draws themselves, `draws`. Recall, we've already saved the indirect effect as a vector, `ab`. The direct effect, $c'$, is labeled `b_reaction_cond` within `draws`. To get the total effect, $c$, all we need to is add those vectors together.
 
 ```{r}
-post <-
-  post %>% 
+draws <- draws %>% 
   mutate(total_effect = b_reaction_cond + ab)
 ```
 
 Here are the posterior mean with its quantile-based 95% intervals.
 
 ```{r}
-post %>% 
+draws %>% 
   summarize(mean = mean(total_effect),
             ll   = quantile(total_effect, prob = .025),
             ul   = quantile(total_effect, prob = .975))
@@ -256,7 +255,7 @@ As we mentioned in Chapter 2, we can indeed focus on rejecting $H_0$ when using 
 So instead of $t$- and $p$-values for $c'$, we are going to focus on the distribution. We already gave the mean and 95% intervals, above. Here's a look at the density.
 
 ```{r, fig.width = 4, fig.height = 2}
- post %>% 
+ draws %>% 
   ggplot(aes(x = total_effect)) +
   geom_density(color = "transparent", 
                fill = colorblind_pal()(3)[2]) +
@@ -270,7 +269,7 @@ So instead of $t$- and $p$-values for $c'$, we are going to focus on the distrib
 Like in the last section, we will just look at the posterior distribution for the direct effect (i.e., $c'$, `b_reaction_cond`).
 
 ```{r, fig.width = 4, fig.height = 2}
-post %>% 
+draws %>% 
   ggplot(aes(x = b_reaction_cond)) +
   geom_density(color = "transparent", 
                fill = colorblind_pal()(4)[4]) +
@@ -284,7 +283,7 @@ post %>%
 If you wanted to quantify what proportion of the density was less than 0, you could execute something like this.
 
 ```{r}
-post %>% 
+draws %>% 
   summarize(proportion_below_zero = mean(b_reaction_cond < 0))
 ```
 
@@ -318,17 +317,17 @@ With HMC we do not take random samples of the data themselves. Rather, we take r
 
 ##### Step 2.
 
-After we fit our model with the `brm()` function and save our posterior draws in a data frame (i.e., `post <- posterior_samples(my_model_fit)`), we then make a new column (a.k.a. vector, variable) that is the product of our coefficients for the $a$ and $b$ pathways. In the example above, this looked like `post %>% mutate(ab = b_pmi_cond * b_reaction_pmi)`. Let's take a look at those columns.
+After we fit our model with the `brm()` function and save our posterior draws in a data frame (i.e., `draws <- as_draws_df(my_model_fit)`), we then make a new column (a.k.a. vector, variable) that is the product of our coefficients for the $a$ and $b$ pathways. In the example above, this looked like `draws %>% mutate(ab = b_pmi_cond * b_reaction_pmi)`. Let's take a look at those columns.
 
-```{r}
-post %>% 
+```{r, warning = F}
+draws %>% 
   select(b_pmi_cond, b_reaction_pmi, ab) %>% 
   slice(1:10)
 ```
 
-Our data frame, `post`, has 4,000 rows. Why 4,000? By default, **brms** runs 4 HMC chains. Each chain has 2,000 iterations, 1,000 of which are warmups, which we always discard. As such, there are 1,000 good iterations left in each chain and $1{,}000 \times 4 = 4{,}000$. We can change these defaults as needed.
+Our `draws` data frame has 4,000 rows. Why 4,000? By default, **brms** runs 4 HMC chains. Each chain has 2,000 iterations, 1,000 of which are warmups, which we always discard. As such, there are 1,000 good iterations left in each chain and $1{,}000 \times 4 = 4{,}000$. We can change these defaults as needed.
 
-Each row in `post` contains the parameter values based on one of those draws. And again, these are draws from the posterior distribution. They are not draws from the data.
+Each row in `draws` contains the parameter values based on one of those draws. And again, these are draws from the posterior distribution. They are not draws from the data.
 
 ##### Step 3.
 
@@ -338,8 +337,8 @@ We don't refit the model $k$ times based on the samples from the data. We take a
 
 When we use the `quantile()` function to compute our Bayesian credible intervals, we've sorted. Conceptually, we've done this.
 
-```{r}
-post %>% 
+```{r, warning = F}
+draws %>% 
   select(ab) %>% 
   arrange(ab) %>% 
   slice(1:10)
@@ -377,16 +376,15 @@ Here's our version of Figure 3.5.
 
 ```{r, fig.width = 4.5, fig.height = 3.5}
 # these will come in handy in the subtitle
-ll <- quantile(post$ab, probs = .025) %>% round(digits = 3)
-ul <- quantile(post$ab, probs = .975) %>% round(digits = 3)
+ll <- quantile(draws$ab, probs = .025) %>% round(digits = 3)
+ul <- quantile(draws$ab, probs = .975) %>% round(digits = 3)
 
-post %>% 
-  
+draws %>% 
   ggplot(aes(x = ab)) +
   geom_histogram(color = "white", size = .25, 
                  fill = colorblind_pal()(5)[5],
                  binwidth = .025, boundary = 0) +
-  geom_vline(xintercept = quantile(post$ab, probs = c(.025, .975)),
+  geom_vline(xintercept = quantile(draws$ab, probs = c(.025, .975)),
              linetype = 3, color = colorblind_pal()(6)[6]) +
   labs(subtitle = str_c("95% of the posterior draws are between ", ll, " and ", ul),
        x = expression(Indirect~effect~(italic(ab))),
@@ -400,7 +398,7 @@ Hayes discussed setting the seed in PROCESS on page 104. You can do this with th
 
 #### Alternative "asymmetric" confidence interval approaches.
 
-This section does not quite refer to us. I'm a little surprised Hayes didn't at least dedicate a paragraph or two on Bayesian estimation. Sure, he mentioned Monte Carlo, but not within the context of Bayes. So it goes. But if you're interested, you can read about Bayesian intervals for mediation models in Yuan and MacKinnon's [-@yuanBayesianMediationAnalysis2009] [*Bayesian mediation analysis*](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2885293/pdf/nihms171111.pdf). And yes, Hayes is aware of this. He has cited it in his work [e.g., @hayesIndexTestLinear2015].
+This section does not quite refer to us. I'm a little surprised Hayes didn't at least dedicate a paragraph or two on Bayesian estimation. Sure, he mentioned Monte Carlo, but not within the context of Bayes. So it goes... But if you're interested, you can read about Bayesian intervals for mediation models in Yuan and MacKinnon's [-@yuanBayesianMediationAnalysis2009] [*Bayesian mediation analysis*](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2885293/pdf/nihms171111.pdf). And yes, Hayes is aware of this. He has cited it in his work [e.g., @hayesIndexTestLinear2015].
 
 ## An example with continuous $X$: Economic stress among small-business owners
 
@@ -422,12 +420,12 @@ m_model <- bf(affect ~ 1 + estress)
 With our `y_model` and `m_model` defined, we're ready to fit.
 
 ```{r model3.2}
-model3.2 <-
-  brm(data = estress, 
-      family = gaussian,
-      y_model + m_model + set_rescor(FALSE),
-      cores = 4,
-      file = "fits/model03.02")
+model3.2 <- brm(
+  data = estress, 
+  family = gaussian,
+  y_model + m_model + set_rescor(FALSE),
+  cores = 4,
+  file = "fits/model03.02")
 ```
 
 Let's take a look at the results.
@@ -446,28 +444,27 @@ These are also quite similar to those in the text. Here's our indirect effect.
 
 ```{r}
 # putting the posterior draws into a data frame
-post <- posterior_samples(model3.2)
+draws <- as_draws_df(model3.2)
 
 # computing the ab coefficient with multiplication
-post <-
-  post %>% 
+draws <- draws %>% 
   mutate(ab = b_affect_estress*b_withdraw_affect)
 
 # getting the posterior median and 95% intervals with `quantile()`
-quantile(post$ab, probs = c(.5, .025, .975)) %>% round(digits = 3)
+quantile(draws$ab, probs = c(.5, .025, .975)) %>% round(digits = 3)
 ```
 
 We can visualize its shape, median, and 95% intervals in a density plot.
 
 ```{r, fig.width = 4, fig.height = 2}
-post %>% 
+draws %>% 
   ggplot(aes(x = ab)) +
   geom_density(color = "transparent", 
                fill = colorblind_pal()(7)[7]) +
-  geom_vline(xintercept = quantile(post$ab, probs = c(.025, .5, .975)), 
+  geom_vline(xintercept = quantile(draws$ab, probs = c(.025, .5, .975)), 
              color = "white", linetype = c(2, 1, 2), size = c(.5, .8, .5)) +
-  scale_x_continuous(breaks = quantile(post$ab, probs = c(.025, .5, .975)),
-                     labels = quantile(post$ab, probs = c(.025, .5, .975)) %>% round(2) %>% as.character()) +
+  scale_x_continuous(breaks = quantile(draws$ab, probs = c(.025, .5, .975)),
+                     labels = quantile(draws$ab, probs = c(.025, .5, .975)) %>% round(2) %>% as.character()) +
   scale_y_continuous(NULL, breaks = NULL) +
   labs(title = expression(Behold~our~italic("ab")*'!'),
        x = NULL) +
@@ -483,11 +480,10 @@ posterior_summary(model3.2)["b_withdraw_estress", ]
 It has wide flapping intervals which do straddle zero. A little addition will give us the direct effect, $c$.
 
 ```{r}
-post <-
-  post %>% 
+draws <- draws %>% 
   mutate(c = b_withdraw_estress + ab)
 
-quantile(post$c, probs = c(.5, .025, .975)) %>% round(digits = 3)
+quantile(draws$c, probs = c(.5, .025, .975)) %>% round(digits = 3)
 ```
 
 ## Session info {-}

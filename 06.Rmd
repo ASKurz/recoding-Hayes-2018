@@ -122,7 +122,7 @@ bayes_R2(model6.1, summary = F) %>%
 
 To use the model-implied equations to compute the means for each group on the criterion, we'll extract the posterior draws.
 
-```{r, message = F}
+```{r, warning = F}
 draws <- as_draws_df(model6.1)
 
 draws %>% 
@@ -149,12 +149,12 @@ y_model <- bf(liking   ~ 1 + d1 + d2 + respappr)
 There's a third way to fit multivariate models in **brms**. It uses either the `mvbrmsformula()` function, or its abbreviated version, `mvbf()`. With these, we first define our submodels in `br()` statements like before. We then combine them within `mvbf()`, separated with a comma. If we'd like to avoid estimating a residual correlation, which we do in this project--, we then set `rescore = FALSE`. Here's how it looks like for our second model.
 
 ```{r model6.2}
-model6.2 <-
-  brm(data = protest, 
-      family = gaussian,
-      mvbf(m_model, y_model, rescor = FALSE),
-      cores = 4,
-      file = "fits/model06.02")
+model6.2 <- brm(
+  data = protest, 
+  family = gaussian,
+  mvbf(m_model, y_model, rescor = FALSE),
+  cores = 4,
+  file = "fits/model06.02")
 ```
 
 ```{r}
@@ -204,7 +204,7 @@ draws %>%
 
 Working with the $\overline M_{ij}$ formulas in page 199 is quite similar to what we did above.
 
-```{r, message = F}
+```{r, warning = F}
 draws %>% 
   mutate(M_np = b_respappr_Intercept + b_respappr_d1 * 0 + b_respappr_d2 * 0,
          M_ip = b_respappr_Intercept + b_respappr_d1 * 1 + b_respappr_d2 * 0,
@@ -219,7 +219,7 @@ draws %>%
 
 The $\overline Y^*_{ij}$ formulas are more of the same.
 
-```{r, message = F}
+```{r, warning = F}
 draws <- draws %>% 
   mutate(Y_np = b_liking_Intercept + b_liking_d1 * 0 + b_liking_d2 * 0 + b_liking_respappr * mean(protest$respappr),
          Y_ip = b_liking_Intercept + b_liking_d1 * 1 + b_liking_d2 * 0 + b_liking_respappr * mean(protest$respappr),
@@ -237,7 +237,7 @@ Note, these are where the adjusted $Y$ values came from in Table 6.1.
 
 This is as fine a spot as any to introduce coefficient plots. The **brms**, **tidybayes**, and **bayesplot** packages all offer convenience functions for coefficient plots. Before we get all lazy using convenience functions, it's good to know how to make coefficient plots by hand. Here's ours for those last three $\overline Y^*_{ij}$-values.
 
-```{r, fig.width = 6, fig.height = 1}
+```{r, fig.width = 6, fig.height = 1, warning = F}
 draws %>% 
   pivot_longer(starts_with("Y_")) %>% 
   
@@ -264,12 +264,12 @@ The points are the posterior medians, the thick inner lines the 50% intervals, a
 If we want to examine $R^2$ change for dropping the dummy variables, we'll first fit a model that omits them.
 
 ```{r model6.3}
-model6.3 <-
-  brm(data = protest, 
-      family = gaussian,
-      liking ~ 1 + respappr,
-      cores = 4,
-      file = "fits/model06.03")
+model6.3 <- brm(
+  data = protest, 
+  family = gaussian,
+  liking ~ 1 + respappr,
+  cores = 4,
+  file = "fits/model06.03")
 ```
 
 Here are the competing $R^2$ distributions.
@@ -287,8 +287,8 @@ r2 <-
 r2 %>% 
   ggplot(aes(x = R2, fill = fit)) +
   geom_density(size = 0, alpha = 2/3) +
-  annotate("text", x = .18, y = 6.75, label = "model3", color = pokepal(pokemon = "plusle")[7], family = "Times") +
-  annotate("text", x = .35, y = 6.75, label = "model2", color = pokepal(pokemon = "plusle")[6], family = "Times") +
+  annotate("text", x = .15, y = 6.4, label = "model3", color = pokepal(pokemon = "plusle")[7], family = "Times") +
+  annotate("text", x = .33, y = 6.9, label = "model2", color = pokepal(pokemon = "plusle")[6], family = "Times") +
   scale_fill_manual(values = pokepal(pokemon = "plusle")[c(6, 7)]) +
   scale_x_continuous(NULL, limits = 0:1) +
   scale_y_continuous(NULL, breaks = NULL) +
@@ -334,8 +334,7 @@ draws %>%
 Here we'll make our alternative dummies, what we'll call `d_1` and `d_2`, with orthogonal contrast coding.
 
 ```{r}
-protest <-
-  protest %>% 
+protest <- protest %>% 
   mutate(d_1 = if_else(protest == 0, -2/3, 1/3),
          d_2 = if_else(protest == 0, 0, 
                        if_else(protest == 1, -1/2, 1/2)))
@@ -351,12 +350,12 @@ y_model <- bf(liking   ~ 1 + d_1 + d_2 + respappr)
 Now we fit using the `mvbf()` approach.
 
 ```{r model6.4}
-model6.4 <-
-  brm(data = protest, 
-      family = gaussian,
-      mvbf(m_model, y_model, rescor = FALSE),
-      cores = 4,
-      file = "fits/model06.04")
+model6.4 <- brm(
+  data = protest, 
+  family = gaussian,
+  mvbf(m_model, y_model, rescor = FALSE),
+  cores = 4,
+  file = "fits/model06.04")
 ```
 
 Here are our intercepts and regression coefficient summaries.
@@ -378,7 +377,7 @@ posterior_summary(model6.4) %>%
 
 Thus it's easy to get the $\overline M_{ij}$ means with a little posterior manipulation.
 
-```{r, message = F}
+```{r, warning = F}
 draws <- as_draws_df(model6.4) %>% 
   mutate(M_np = b_respappr_Intercept + b_respappr_d_1 * -2/3 + b_respappr_d_2 *    0,
          M_ip = b_respappr_Intercept + b_respappr_d_1 *  1/3 + b_respappr_d_2 * -1/2,
@@ -394,7 +393,7 @@ draws %>%
 
 With these in hand, we can compute $a_1$ and $a_2$.
 
-```{r, message = F}
+```{r, warning = F}
 draws <- draws %>% 
   mutate(a1 = (M_ip + M_cp) / 2 - M_np,
          a2 = M_cp - M_ip)
@@ -408,7 +407,7 @@ draws %>%
 
 Happily, our model output will allow us to work with Hayes's $\overline Y^*_{ij}$ equations in the middle of page 210.
 
-```{r, message = F}
+```{r, warning = F}
 draws <- draws %>% 
   mutate(Y_np = b_liking_Intercept + b_liking_d_1 * -2/3 + b_liking_d_2 *    0 + b_liking_respappr * mean(protest$respappr),
          Y_ip = b_liking_Intercept + b_liking_d_1 *  1/3 + b_liking_d_2 * -1/2 + b_liking_respappr * mean(protest$respappr),
@@ -424,7 +423,7 @@ draws %>%
 
 And with these in hand, we can compute $c'_1$ and $c'_2$.
 
-```{r, message = F}
+```{r, warning = F}
 draws <- draws %>% 
   mutate(c1_prime = (Y_ip + Y_cp) / 2 - Y_np,
          c2_prime = Y_cp - Y_ip)
@@ -455,7 +454,7 @@ draws %>%
 
 Now we can compute and `summarize()` our $c_1$ and $c_2$.
 
-```{r, message = F}
+```{r, warning = F}
 draws <- draws %>% 
   mutate(c1 = c1_prime + a1b,
          c2 = c2_prime + a2b)
@@ -472,8 +471,7 @@ draws %>%
 Do you recall how way back in Chapter 2 we covered an alternative way to fit models with multicategorical grouping variables? Well, we did. The basic strategy is to save our grouping variable as a factor and then enter it into the model with the special `0 +` syntax, which removes the typical intercept. Since this chapter is all about multicategorical variables, it might make sense to explore what happens when we use this approach. For our first step, well prepare the data.
 
 ```{r}
-protest <-
-  protest %>% 
+protest <- protest %>% 
   mutate(group = factor(protest,
                         levels = 0:2,
                         labels = c("none", "individual", "collective")))
@@ -485,12 +483,12 @@ protest %>%
 Before we fit a full mediation model, we should warm up. Here we fit a univariable model for `liking`. This is an alternative to what we did way back with `model6.1`.
 
 ```{r model6.5}
-model6.5 <-
-  brm(data = protest, 
-      family = gaussian,
-      liking ~ 0 + group,
-      cores = 4,
-      file = "fits/model06.05")
+model6.5 <- brm(
+  data = protest, 
+  family = gaussian,
+  liking ~ 0 + group,
+  cores = 4,
+  file = "fits/model06.05")
 ```
 
 Check the summary.
@@ -542,12 +540,12 @@ y_model <- bf(liking   ~ 0 + group + respappr)
 Now fit `model6` using the `mvbf()` approach.
 
 ```{r model6.6}
-model6.6 <-
-  brm(data = protest, 
-      family = gaussian,
-      mvbf(m_model, y_model, rescor = FALSE),
-      cores = 4,
-      file = "fits/model06.06")
+model6.6 <- brm(
+  data = protest, 
+  family = gaussian,
+  mvbf(m_model, y_model, rescor = FALSE),
+  cores = 4,
+  file = "fits/model06.06")
 ```
 
 What will the summary hold?

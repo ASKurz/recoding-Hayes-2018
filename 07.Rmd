@@ -6,7 +6,7 @@
 options(width = 110)
 ```
 
-> The effect of $X$ on some variable $Y$ is moderated by $W$ if its size, sign, or strength depends on or can be predicted by $W$. In that case, $W$ is said to be a *moderator* of $X$’s effect on $Y$, or that $W$ and $X$ interact in their influence on $Y$. Identifying a moderator of an effect helps to establish the boundary conditions of that effect or the circumstances, stimuli, or type of people for which the effect is large versus small, present versus absent, positive versus negative, and so forth. [@hayesIntroductionMediationModeration2018, p. 220, *emphasis* in the original]
+> The effect of $X$ on some variable $Y$ is moderated by $W$ if its size, sign, or strength depends on or can be predicted by $W$. In that case, $W$ is said to be a *moderator* of $X$'s effect on $Y$, or that $W$ and $X$ interact in their influence on $Y$. Identifying a moderator of an effect helps to establish the boundary conditions of that effect or the circumstances, stimuli, or type of people for which the effect is large versus small, present versus absent, positive versus negative, and so forth. [@hayesIntroductionMediationModeration2018, p. 220, *emphasis* in the original]
 
 ## Conditional and unconditional effects
 
@@ -17,9 +17,8 @@ Hayes's Table 7.1 and the related Figure 7.2 showcase this well. You might repro
 ```{r, warning = F, message = F}
 library(tidyverse)
 
-d <-
-  crossing(x = -1:2,
-           w = 0:2) %>% 
+d <- crossing(x = -1:2,
+              w = 0:2) %>% 
   mutate(A = 4 + 1 * x + 2 * w,
          B = 4 + 1 * x + 2 * w + 1.5 * x * w)
 
@@ -31,8 +30,7 @@ In previous chapters, we altered our plot themes using either built-in settings 
 ```{r, warning = F, message = F}
 library(dutchmasters)
 
-theme_07 <- 
-  theme_gray() + 
+theme_07 <- theme_gray() + 
   theme(axis.text = element_text(color = dutchmasters$little_street[6]),
         legend.background = element_rect(fill = "transparent"),
         legend.key = element_rect(fill = "transparent", color = "transparent"),
@@ -145,9 +143,9 @@ disaster <- read_csv("data/disaster/disaster.csv")
 glimpse(disaster)
 ```
 
-Here is how to get the ungrouped mean and $SD$ values for `justify` and `skeptic`, as presented in Table 7.3.
+Here is how to get the ungrouped mean and $\textit{SD}$ values for `justify` and `skeptic`, as presented in Table 7.3.
 
-```{r, message = F}
+```{r}
 disaster %>% 
   pivot_longer(justify:skeptic) %>% 
   group_by(name) %>% 
@@ -176,12 +174,12 @@ library(brms)
 Now fit the simple univariable model.
 
 ```{r model7.1}
-model7.1 <-
-  brm(data = disaster, 
-      family = gaussian,
-      justify ~ 1 + frame,
-      cores = 4,
-      file = "fits/model07.01")
+model7.1 <- brm(
+  data = disaster, 
+  family = gaussian,
+  justify ~ 1 + frame,
+  cores = 4,
+  file = "fits/model07.01")
 ```
 
 ```{r}
@@ -194,15 +192,14 @@ The 'Estimate' (i.e., posterior mean) of the model intercept is the expected `ju
 fixef(model7.1)["Intercept", 1] + fixef(model7.1)["frame", 1]
 ```
 
-which matches up nicely with the equation on page 233. But this wouldn't be very Bayesian of us. It'd be more satisfying if we had an expression of the uncertainty in the value. For that, we'll follow our usual practice of extracting the posterior samples, making nicely-named vectors, and summarizing a bit.
+which matches up nicely with the equation on page 233. But this wouldn't be very Bayesian of us. It'd be more satisfying if we had an expression of the uncertainty in the value. For that, we'll follow our usual practice of extracting the posterior draws, making nicely-named vectors, and summarizing a bit.
 
-```{r, message = F}
-post <-
-  posterior_samples(model7.1) %>% 
+```{r, warning = F}
+draws <- as_draws_df(model7.1) %>% 
   mutate(when_x_is_0 = b_Intercept,
          when_x_is_1 = b_Intercept + b_frame)
 
-post %>%
+draws %>%
   pivot_longer(when_x_is_0:when_x_is_1) %>% 
   group_by(name) %>% 
   summarize(mean = mean(value),
@@ -219,7 +216,7 @@ posterior_interval(model7.1)["b_frame", ]
 And we can always plot.
 
 ```{r, fig.width = 3, fig.height = 2.5}
-post %>% 
+draws %>% 
   ggplot(aes(x = b_frame)) +
   geom_density(size = 0, fill = dutchmasters$little_street[1]) +
   geom_vline(xintercept = 0, color = dutchmasters$little_street[11]) +
@@ -231,27 +228,26 @@ post %>%
 
 We'll use the `update()` function to hastily fit `model7.2` and `model7.3`.
 
-```{r model7.2, message = F, warning = F}
-model7.2 <-
-  update(model7.1, 
-         newdata = disaster,
-         formula = justify ~ 1 + frame + skeptic,
-         cores = 4,
-         file = "fits/model07.02")
+```{r model7.2}
+model7.2 <- update(
+  model7.1, 
+  newdata = disaster,
+  formula = justify ~ 1 + frame + skeptic,
+  cores = 4,
+  file = "fits/model07.02")
 
-model7.3 <-
-  update(model7.1, 
-         newdata = disaster,
-         formula = justify ~ 1 + frame + skeptic + frame:skeptic,
-         cores = 4,
-         file = "fits/model07.03")
+model7.3 <- update(
+  model7.1, 
+  newdata = disaster,
+  formula = justify ~ 1 + frame + skeptic + frame:skeptic,
+  cores = 4,
+  file = "fits/model07.03")
 ```
 
 Note our use of the `frame:skeptic` syntax in `model7.3`. With that syntax we didn't need to make an interaction variable in the data by hand. The **brms** package just handled it for us. An alternative syntax would have been `frame*skeptic`. But if you really wanted to make the interaction variable by hand, you'd do this.
 
 ```{r}
-disaster <-
-  disaster %>% 
+disaster <- disaster %>% 
   mutate(interaction_variable = frame * skeptic)
 ```
 
@@ -276,22 +272,18 @@ By default, the `brms::mcmc_plot()` function returns coefficient plots which dep
 We'll extract the $R^2$ iterations in the usual way once for each model, and then combine them for a plot.
 
 ```{r, fig.width = 8, fig.height = 2.5}
-# for each of the three models, we create a separare R2 tibble
-r2_1 <- 
-  bayes_R2(model7.1, summary = F) %>% 
+# for each of the three models, we create a separate R2 tibble
+r2_1 <- bayes_R2(model7.1, summary = F) %>% 
   data.frame()
 
-r2_2 <- 
-  bayes_R2(model7.2, summary = F) %>% 
+r2_2 <- bayes_R2(model7.2, summary = F) %>% 
   data.frame()
 
-r2_3 <- 
-  bayes_R2(model7.3, summary = F) %>% 
+r2_3 <- bayes_R2(model7.3, summary = F) %>% 
   data.frame()
 
 # here we combine them into one tibble, indexed by `model`
-r2 <-
-  r2_1 %>% 
+r2 <- r2_1 %>% 
   bind_rows(r2_2) %>% 
   bind_rows(r2_3) %>% 
   mutate(model = rep(str_c("7.", 1:3), each = 4000))
@@ -326,10 +318,10 @@ r2_2 %>%
 
 In addition to the $R^2$, one can use information criteria to compare the models. Here we'll use the LOO to compare all three.
 
-```{r, message = F, warning = F}
-model7.1 <- add_criterion(model7.1, "loo")
-model7.2 <- add_criterion(model7.2, "loo")
-model7.3 <- add_criterion(model7.3, "loo")
+```{r}
+model7.1 <- add_criterion(model7.1, criterion = "loo")
+model7.2 <- add_criterion(model7.2, criterion = "loo")
+model7.3 <- add_criterion(model7.3, criterion = "loo")
 
 loo_compare(model7.1, model7.2, model7.3) %>% 
   print(simplify = F)
@@ -347,10 +339,10 @@ The `model_weights()` results put almost all the relative weight on `model7.3`. 
 
 Here are the results of the equations in the second half of page 237.
 
-```{r, message = F}
-post <- posterior_samples(model7.3)
+```{r, warning = F}
+draws <- as_draws_df(model7.3)
 
-post %>% 
+draws %>% 
   mutate(if_2   = b_frame + `b_frame:skeptic` * 2,
          if_3.5 = b_frame + `b_frame:skeptic` * 3.5,
          if_5   = b_frame + `b_frame:skeptic` * 5) %>% 
@@ -376,20 +368,19 @@ When you add an interaction term into a model, such as $x_1 \cdot x_2$, this is 
 Making the mean-centered version of our $W$ variable, `skeptic`, is a simple `mutate()` operation. We'll just call it `skeptic_c`.
 
 ```{r}
-disaster <-
-  disaster %>% 
+disaster <- disaster %>% 
   mutate(skeptic_c = skeptic - mean(skeptic))
 ```
 
 And here's how we might fit the model.
 
-```{r model7.4, message = F, warning = F}
-model7.4 <-
-  update(model7.3, 
-         newdata = disaster,
-         formula = justify ~ 1 + frame + skeptic_c + frame:skeptic_c,
-         cores = 4,
-         file = "fits/model07.04")
+```{r model7.4}
+model7.4 <- update(
+  model7.3, 
+  newdata = disaster,
+  formula = justify ~ 1 + frame + skeptic_c + frame:skeptic_c,
+  cores = 4,
+  file = "fits/model07.04")
 ```
 
 Here are the summaries of our fixed effects.
@@ -408,32 +399,31 @@ bayes_R2(model7.4) %>% round(digits = 3)
 If you're bothered by the differences resulting from sampling variation, you might increase the number of HMC iterations from the 2,000-per-chain default. Doing so might look something like this.
 
 ```{r, eval = F}
-model7.3 <-
-  update(model7.3,
-         chains = 4, cores = 4, warmup = 1000, iter = 10000)
+model7.3 <- update(
+  model7.3,
+  chains = 4, cores = 4, warmup = 1000, iter = 10000)
 
-model7.4 <-
-  update(model7.4,
-         chains = 4, cores = 4, warmup = 1000, iter = 10000)
+model7.4 <- update(
+  model7.4,
+  chains = 4, cores = 4, warmup = 1000, iter = 10000)
 ```
 
 Before we fit `model7.5`, we'll recode `frame` to a -.5/.5 metric and name it `frame_.5`.
 
 ```{r}
-disaster <-
-  disaster %>% 
+disaster <- disaster %>% 
   mutate(frame_.5 = ifelse(frame == 0, -.5, .5))
 ```
 
 Time to fit `model7.5`.
 
-```{r model7.5, message = F, warning = F}
-model7.5 <-
-  update(model7.4, 
-         newdata = disaster,
-         formula = justify ~ 1 + frame_.5 + skeptic_c + frame_.5:skeptic_c,
-         cores = 4,
-         file = "fits/model07.05")
+```{r model7.5}
+model7.5 <- update(
+  model7.4, 
+  newdata = disaster,
+  formula = justify ~ 1 + frame_.5 + skeptic_c + frame_.5:skeptic_c,
+  cores = 4,
+  file = "fits/model07.05")
 ```
 
 Our posterior summaries match up nicely with the output in Hayes's Table 7.4.
@@ -470,10 +460,9 @@ The first two columns in Hayes's Table 7.5 contain the values he combined with t
 
 ```{r}
 (
-  nd <-
-  crossing(frame = 0:1,
-           skeptic = quantile(disaster$skeptic, 
-                              probs = c(.16, .5, .84)))
+  nd <- crossing(
+    frame   = 0:1,
+    skeptic = quantile(disaster$skeptic, probs = c(.16, .5, .84)))
 )
 ```
 
@@ -483,7 +472,7 @@ Now we've got our `nd`, we'll get our posterior estimates for $Y$ with `fitted()
 fitted(model7.3, newdata = nd)
 ```
 
-When using the default `summary = TRUE` settings in `fitted()`, the function returns posterior means, $SD$s and 95% intervals for $Y$ based on each row in the `nd` data we specified in the `newdata = nd` argument. You don't have to name your newdata `nd` or anything like that; it's just my convention.
+When using the default `summary = TRUE` settings in `fitted()`, the function returns posterior means, $\textit{SD}$'s and 95% intervals for $Y$ based on each row in the `nd` data we specified in the `newdata = nd` argument. You don't have to name your newdata `nd` or anything like that; it's just my convention.
 
 Here' a quick plot of what those values imply.
 
@@ -510,12 +499,11 @@ In order to plot the model-implied effects across the full range of `skeptic` va
 Here's our Figure 7.7.
 
 ```{r, fig.width = 5.5, fig.height = 4.5}
-nd <- 
-  crossing(frame   = 0:1,
-           skeptic = seq(from = 0, to = 7, length.out = 30))
+nd <- crossing(frame   = 0:1,
+               skeptic = seq(from = 0, to = 7, length.out = 30))
 
 fitted(model7.3, newdata = nd) %>% 
-  as_tibble() %>% 
+  data.frame() %>% 
   bind_cols(nd) %>% 
   
   ggplot(aes(x = skeptic)) +
@@ -555,7 +543,7 @@ Though we will not be using inferential tests, we will use various ways of expre
 
 Yes, if you wanted to use the regression centering approach, you could do that in **brms**. Just center the necessary variables in the way Hayes described in the text, refit the model, and `summarize()`. I suspect this would be particularly approachable for someone new to **R** and to the ins and outs of data wrangling. But I'm going leave that as an exercise for the interested reader.
 
-Now that we've already got a posterior for our model, we can just either algebraically manipulate the vectors yielded by `posterior_samples()` or push predictions through `fitted()`. To give a sense, we'll start off with the 16^th^ percentile for `skeptic`. Recall we can get that with the `quantile()` function.
+Now that we've already got a posterior for our model, we can just either algebraically manipulate the vectors yielded by `as_draws_df()` or push predictions through `fitted()`. To give a sense, we'll start off with the 16^th^ percentile for `skeptic`. Recall we can get that with the `quantile()` function.
 
 ```{r}
  quantile(disaster$skeptic, probs = .16)
@@ -564,7 +552,7 @@ Now that we've already got a posterior for our model, we can just either algebra
 Now we just need to feed that value and different values of `frame` into the posterior samples of the model coefficients. We then create a `difference` score for the model-implied estimates given `frame` is either 0 or 1 and then plot that `difference`.
 
 ```{r, fig.width = 4, fig.height = 2.5}
-post %>% 
+draws %>% 
   # use the model formula
   mutate(y_given_frame_0_skeptic_1.6 = b_Intercept + b_frame * 0 + b_skeptic * 1.6 + `b_frame:skeptic` * 0 * 1.6,
          y_given_frame_1_skeptic_1.6 = b_Intercept + b_frame * 1 + b_skeptic * 1.6 + `b_frame:skeptic` * 1 * 1.6) %>% 
@@ -584,22 +572,20 @@ post %>%
 
 Note how nicely that distribution corresponds to the output in the lower left corner of Hayes's Figure 7.8. If we wanted the values for other values of `skeptic` (e.g., 2.8 and 5.2 as in the text), we'd just rinse, wash, and repeat. A nice quality of this method is it requires you to work explicitly with the model formula. But it's also clunky if you want to do this over many values. The `fitted()` function offers an alternative approach.
 
-Recall how the default `fitted()` settings are to return summaries of a model's $Y$-variable given values of the predictor variables. In the previous section we put our preferred `frame` and `skeptic` values into a data object named `nd` and used the `newdata` argument to push those values through `fitted()`. Buy default, this yielded the typical posterior means, $SD$s, and 95% intervals for the predictions. However, if one sets `summary = F`, the output will differ. First. Let's revisit what `nd` looks like.
+Recall how the default `fitted()` settings are to return summaries of a model's $Y$-variable given values of the predictor variables. In the previous section we put our preferred `frame` and `skeptic` values into a data object named `nd` and used the `newdata` argument to push those values through `fitted()`. Buy default, this yielded the typical posterior means, $\textit{SD}$'s, and 95% intervals for the predictions. However, if one sets `summary = F`, the output will differ. First. Let's revisit what `nd` looks like.
 
 ```{r}
 (
-  nd <-
-  crossing(frame   = 0:1,
-           skeptic = quantile(disaster$skeptic, 
-                              probs = c(.16, .5, .84)))
-  )
+  nd <- crossing(
+    frame   = 0:1,
+    skeptic = quantile(disaster$skeptic, probs = c(.16, .5, .84)))
+)
 ```
 
 Here's what happens when we use `summary = F`.
 
 ```{r}
-f <-
-  fitted(model7.3, newdata = nd, summary = F)
+f <- fitted(model7.3, newdata = nd, summary = F)
 
 f %>% str()
 f %>% head()
@@ -607,10 +593,8 @@ f %>% head()
 
 With `summary = F`, `fitted()` returned a matrix of 4,000 rows (i.e., one for each posterior draw) and 6 vectors (i.e., one for each row in our `nd` data). So now instead of summary information, we have a full expression of the uncertainty in terms of 4,000 draws. If you prefer working within the **tidyverse** and plotting with **ggplot2**, matrices aren't the most useful data type. Let's wrangle a bit.
 
-
 ```{r}
-f <-
-  f %>% 
+f <- f %>% 
   data.frame() %>% 
   set_names(mutate(nd, name = str_c(frame, "_", skeptic)) %>% pull(name)) %>% 
   mutate(iter = 1:n()) %>% 
@@ -668,14 +652,11 @@ iter <- 4000
 n_skeptic_values <- 13    
 
 # as before, we'll make `nd` to feed in to `fitted()`
-nd <-
-  crossing(frame   = 0:1,
-           skeptic = seq(from = .5, to = 6.5, length.out = n_skeptic_values))
-
+nd <- crossing(frame   = 0:1,
+               skeptic = seq(from = .5, to = 6.5, length.out = n_skeptic_values))
 
 # after the initial `fitted()` action, we need a few steps to wrangle the data into a useful format
-f <-
-  fitted(model7.3, newdata = nd, summary = F) %>% 
+f <- fitted(model7.3, newdata = nd, summary = F) %>% 
   data.frame() %>% 
   set_names(mutate(nd, name = str_c(frame, "_", skeptic)) %>% pull(name)) %>% 
   mutate(iter = 1:n()) %>% 
@@ -689,7 +670,7 @@ f <-
 f %>% 
   ggplot(aes(x = skeptic %>% as.character, y = difference)) +
   geom_hline(yintercept = 0, color = dutchmasters$little_street[7]) +
-  geom_violin(size = 0, fill = dutchmasters$little_street[6]) +
+  geom_violin(linewidth = 0, fill = dutchmasters$little_street[6]) +
   stat_summary(fun = median,
                fun.min = function(x){quantile(x, probs = .025)},
                fun.max = function(x){quantile(x, probs = .975)},
@@ -701,11 +682,11 @@ f %>%
 
 [Note. I got the `atop()` trick for the label for the $y$-axis from [Drew Steen's answer to this stackoverflow question](https://stackoverflow.com/questions/13223846/ggplot2-two-line-label-with-expression?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa).]
 
-This isn't quite our version of Figure 7.9, but I'm hoping it'll add some pedagogical value for what we're doing. Since we specified `summary = F` within `fitted()`, we got full posterior distributions for each of our 26 conditions. *Because Figure 7.9 is all about differences between each `frame` pair across the various values of `skeptic`*, we needed to make a `difference` score for each pair; this is what we did with the last `mutate()` line before the plot code. This initial version of the plot shows the full posterior distribution for each `difference` score. The posteriors are depicted with violin plots, which are density plots set on their side and symmetrically reflected as if by a mirror to give a pleasing leaf- or violin-like shape (though [beware](https://twitter.com/naomicaselli/status/973601256609599488?lang=en)). The light dots and vertical lines are the posterior medians and 95% intervals for each.
+This isn't quite our version of Figure 7.9, but I'm hoping it'll add some pedagogical value for what we're doing. Since we specified `summary = F` within `fitted()`, we got full posterior distributions for each of our 26 conditions. *Because Figure 7.9 is all about differences between each `frame` pair across the various values of `skeptic`*, we needed to make a `difference` score for each pair; this is what we did with the last `mutate()` line before the plot code. This initial version of the plot shows the full posterior distribution for each `difference` score. The posteriors are depicted with violin plots, which are density plots set on their side and symmetrically reflected as if by a mirror to give a pleasing leaf- or violin-like shape (though [beware](https://twitter.com/naomicaselli/status/973601256609599488)). The light dots and vertical lines are the posterior medians and 95% intervals for each.
 
 Going from left to right, it appears we have a clearly emerging trend. We can more simply express the trend by summarizing each posterior with medians and 95% intervals.
 
-```{r, fig.width = 7, fig.height = 5, warning = F}
+```{r, fig.width = 7, fig.height = 5}
 f %>% 
   group_by(skeptic) %>% 
   median_qi(difference) %>% 
@@ -717,7 +698,7 @@ f %>%
               fill = dutchmasters$little_street[5],
               alpha = 1/2) +
   geom_line(aes(y = difference),
-          color = dutchmasters$little_street[5], size = 1) +
+            color = dutchmasters$little_street[5], linewidth = 1) +
   scale_x_continuous(breaks = 1:6) +
   coord_cartesian(xlim = c(1, 6),
                   ylim = c(-1, 1.5)) +
@@ -739,9 +720,8 @@ This is another section where the NHST-type paradigm contrasts with many within 
 Another way into this topic is posterior predictive checking. We've already done a bit of this in previous chapters. The basic idea, recall, is that better models should give us a better sense of the patterns in the data. In the plot below, we continue to show the interaction effect with two regression lines, but this time we separate them into their own panels by `frame`. In addition, we add the original data which we also separate and color code by `frame`.
 
 ```{r, fig.width = 8, fig.height = 4}
-nd <-
-  crossing(frame   = 0:1,
-           skeptic = seq(from = 0, to = 10, length.out = 30))
+nd <- crossing(frame   = 0:1,
+               skeptic = seq(from = 0, to = 10, length.out = 30))
 
 fitted(model7.3, newdata = nd) %>% 
   data.frame() %>% 
@@ -811,10 +791,8 @@ Building further, consider this sentence from the text:
 From an NHST/frequentist perspective, this makes clear sense. But we're dealing with an entire posterior distribution. Consider again a figure from above.
 
 ```{r, fig.width = 10, fig.height = 2.5}
-nd <-
-  crossing(frame   = 0:1,
-           skeptic = quantile(disaster$skeptic,
-                              probs = c(.16, .5, .84)))
+nd <- crossing(frame   = 0:1,
+               skeptic = quantile(disaster$skeptic, probs = c(.16, .5, .84)))
 
 fitted(model7.3, newdata = nd, summary = F) %>% 
   data.frame() %>% 
@@ -864,25 +842,25 @@ I suppose you could consider this our version of Figure 7.10.
 There are multiple ways to dichotomize the data by `skeptic`. A quick simple way is to use `if_else()` to make a `skeptic_hi` dummy.
 
 ```{r}
-disaster <-
-  disaster %>% 
+disaster <- disaster %>% 
   mutate(skeptic_hi = if_else(skeptic >= mean(skeptic), 1, 0))
 ```
 
 With our dummy in hand, we're ready to fit the two models.
 
-```{r model7.6, warning = F, message = F}
-model7.6 <-
-  brm(data = disaster %>% filter(skeptic_hi == 0), 
-      family = gaussian,
-      justify ~ 1 + frame,
-      cores = 4,
-      file = "fits/model07.06")
+```{r model7.6}
+model7.6 <- brm(
+  data = disaster %>% filter(skeptic_hi == 0), 
+  family = gaussian,
+  justify ~ 1 + frame,
+  cores = 4,
+  file = "fits/model07.06")
 
-model7.7 <-
-  update(model7.6, newdata = disaster %>% filter(skeptic_hi == 1),
-         cores = 4,
-         file = "fits/model07.07")
+model7.7 <- update(
+  model7.6, 
+  newdata = disaster %>% filter(skeptic_hi == 1),
+  cores = 4,
+  file = "fits/model07.07")
 ```
 
 Behold the coefficient summaries.
@@ -904,14 +882,14 @@ fitted(model7.7,
   round(digits = 3)
 ```
 
-Do note that though **brms** 'Est.Error' is the posterior $SD$ for the coefficient, it is not the same thing as descriptive statistic $SD$ of a subset of the data. Thus, although our 'Estimates' correspond nicely to the mean values Hayes reported in the middle of page 264, his $SD$s will not match up with our 'Est.Error' values, and nor should they.
+Do note that though **brms** 'Est.Error' is the posterior $\textit{SD}$ for the coefficient, it is not the same thing as descriptive statistic $\textit{SD}$ of a subset of the data. Thus, although our 'Estimates' correspond nicely to the mean values Hayes reported in the middle of page 264, his $\textit{SD}$'s will not match up with our 'Est.Error' values, and nor should they.
 
-Anyway, our results don't yield $t$-tests. But you don't need those anyway. We're working within the Bayesian regression paradigm! But if you're really interested in the sub-model-implied differences between the two levels of `frame` by `skeptic_hi` subgroup, all you need is the `frame` coefficient of `model7.6` and `model7.7`. Here we'll use `bind_rows()` to combine their posterior samples and then plot.
+Anyway, our results don't yield $t$-tests. But you don't need those anyway. We're working within the Bayesian modeling paradigm! But if you're really interested in the sub-model-implied differences between the two levels of `frame` by `skeptic_hi` subgroup, all you need is the `frame` coefficient of `model7.6` and `model7.7`. Here we'll use `bind_rows()` to combine their posterior samples and then plot.
 
-```{r, fig.width = 6, fig.height = 3}
+```{r, fig.width = 6, fig.height = 3, warning = F}
 bind_rows(
-  posterior_samples(model7.6) %>% select(b_frame),
-  posterior_samples(model7.7) %>% select(b_frame)
+  as_draws_df(model7.6) %>% select(b_frame),
+  as_draws_df(model7.7) %>% select(b_frame)
 ) %>% 
   mutate(model = rep(c("model7.6", "model7.7"), each = 4000)) %>% 
     
@@ -925,7 +903,7 @@ bind_rows(
   theme_07
 ```
 
-As within the frequentist paradigm, please don't mean split as a Bayesian. When possible, use all available data and use the regression formula to model theoretically-meaningful variables in your analyses.
+As within the frequentist paradigm, please don't mean split as Bayesians. When possible, use all available data and use the regression formula to model theoretically-meaningful variables in your analyses.
 
 ## Session info {-}
 

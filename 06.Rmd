@@ -67,8 +67,7 @@ You'll have to wait a minute to see where the adjusted $Y$ values came from.
 With a little `if_else()`, computing the dummies `d1` and `d2` is easy enough.
 
 ```{r}
-protest <-
-  protest %>% 
+protest <- protest %>% 
   mutate(d1 = if_else(protest == 1, 1, 0),
          d2 = if_else(protest == 2, 1, 0))
 ```
@@ -82,12 +81,12 @@ library(brms)
 This is the first time we've had a simple univariate regression model in a while--no special `mvbind()` syntax or multiple `bf()` formulas, just straight up `brms::brm()`.
 
 ```{r model6.1}
-model6.1 <-
-  brm(data = protest, 
-      family = gaussian,
-      liking ~ 1 + d1 + d2,
-      cores = 4,
-      file = "fits/model06.01")
+model6.1 <- brm(
+  data = protest, 
+  family = gaussian,
+  liking ~ 1 + d1 + d2,
+  cores = 4,
+  file = "fits/model06.01")
 ```
 
 Check the coefficient summaries.
@@ -121,12 +120,12 @@ bayes_R2(model6.1, summary = F) %>%
         plot.background = element_rect(fill = pokepal(pokemon = "plusle")[8]))
 ```
 
-To use the model-implied equations to compute the means for each group on the criterion, we'll extract the posterior samples.
+To use the model-implied equations to compute the means for each group on the criterion, we'll extract the posterior draws.
 
 ```{r, message = F}
-post <- posterior_samples(model6.1)
+draws <- as_draws_df(model6.1)
 
-post %>% 
+draws %>% 
   mutate(Y_np = b_Intercept + b_d1 * 0 + b_d2 * 0,
          Y_ip = b_Intercept + b_d1 * 1 + b_d2 * 0,
          Y_cp = b_Intercept + b_d1 * 0 + b_d2 * 1) %>% 
@@ -182,13 +181,12 @@ bayes_R2(model6.2, summary = F) %>%
         plot.background = element_rect(fill = pokepal(pokemon = "plusle")[8]))
 ```
 
-To get the model summaries as presented in the second two columns in Table 6.2, we use `posterior_samples()`, rename a bit, and summarize. Like in the last chapter, here we'll do so with a little help from **tidybayes**.
+To get the model summaries as presented in the second two columns in Table 6.2, we use `as_draws_df()`, rename a bit, and summarize. Like in the last chapter, here we'll do so with a little help from **tidybayes**.
 
 ```{r, warning = F, message = F}
 library(tidybayes)
 
-post <-
-  posterior_samples(model6.2) %>% 
+draws <- as_draws_df(model6.2) %>% 
   mutate(a1       = b_respappr_d1,
          a2       = b_respappr_d2,
          b        = b_liking_respappr,
@@ -197,7 +195,7 @@ post <-
          i_m      = b_respappr_Intercept,
          i_y      = b_liking_Intercept)
 
-post %>% 
+draws %>% 
   pivot_longer(a1:i_y) %>% 
   group_by(name) %>% 
   mean_qi(value) %>% 
@@ -207,7 +205,7 @@ post %>%
 Working with the $\overline M_{ij}$ formulas in page 199 is quite similar to what we did above.
 
 ```{r, message = F}
-post %>% 
+draws %>% 
   mutate(M_np = b_respappr_Intercept + b_respappr_d1 * 0 + b_respappr_d2 * 0,
          M_ip = b_respappr_Intercept + b_respappr_d1 * 1 + b_respappr_d2 * 0,
          M_cp = b_respappr_Intercept + b_respappr_d1 * 0 + b_respappr_d2 * 1) %>% 
@@ -222,13 +220,12 @@ post %>%
 The $\overline Y^*_{ij}$ formulas are more of the same.
 
 ```{r, message = F}
-post <-
-  post %>% 
+draws <- draws %>% 
   mutate(Y_np = b_liking_Intercept + b_liking_d1 * 0 + b_liking_d2 * 0 + b_liking_respappr * mean(protest$respappr),
          Y_ip = b_liking_Intercept + b_liking_d1 * 1 + b_liking_d2 * 0 + b_liking_respappr * mean(protest$respappr),
          Y_cp = b_liking_Intercept + b_liking_d1 * 0 + b_liking_d2 * 1 + b_liking_respappr * mean(protest$respappr))
 
-post %>% 
+draws %>% 
   pivot_longer(starts_with("Y_")) %>% 
   mutate(name = factor(name, levels = c("Y_np", "Y_ip", "Y_cp"))) %>% 
   group_by(name) %>% 
@@ -241,7 +238,7 @@ Note, these are where the adjusted $Y$ values came from in Table 6.1.
 This is as fine a spot as any to introduce coefficient plots. The **brms**, **tidybayes**, and **bayesplot** packages all offer convenience functions for coefficient plots. Before we get all lazy using convenience functions, it's good to know how to make coefficient plots by hand. Here's ours for those last three $\overline Y^*_{ij}$-values.
 
 ```{r, fig.width = 6, fig.height = 1}
-post %>% 
+draws %>% 
   pivot_longer(starts_with("Y_")) %>% 
   
   ggplot(aes(x = value, y = name, color = name)) +
@@ -323,7 +320,7 @@ r2 %>%
 Now compute the posterior means and 95% intervals for $a_1 b$ and $a_2 b$, the conditional indirect effects.
 
 ```{r, warning = F}
-post %>% 
+draws %>% 
   mutate(a1b = a1 * b,
          a2b = a2 * b) %>%
   pivot_longer(a1b:a2b) %>% 
@@ -382,13 +379,12 @@ posterior_summary(model6.4) %>%
 Thus it's easy to get the $\overline M_{ij}$ means with a little posterior manipulation.
 
 ```{r, message = F}
-post <-
-  posterior_samples(model6.4) %>% 
+draws <- as_draws_df(model6.4) %>% 
   mutate(M_np = b_respappr_Intercept + b_respappr_d_1 * -2/3 + b_respappr_d_2 *    0,
          M_ip = b_respappr_Intercept + b_respappr_d_1 *  1/3 + b_respappr_d_2 * -1/2,
          M_cp = b_respappr_Intercept + b_respappr_d_1 *  1/3 + b_respappr_d_2 *  1/2)
 
-post %>% 
+draws %>% 
   pivot_longer(starts_with("M_")) %>% 
   mutate(name = factor(name, levels = c("M_np", "M_ip", "M_cp"))) %>% 
   group_by(name) %>% 
@@ -399,12 +395,11 @@ post %>%
 With these in hand, we can compute $a_1$ and $a_2$.
 
 ```{r, message = F}
-post <-
-  post %>% 
+draws <- draws %>% 
   mutate(a1 = (M_ip + M_cp) / 2 - M_np,
          a2 = M_cp - M_ip)
 
-post %>% 
+draws %>% 
   pivot_longer(a1:a2) %>% 
   group_by(name) %>% 
   summarize(mean = mean(value),
@@ -414,13 +409,12 @@ post %>%
 Happily, our model output will allow us to work with Hayes's $\overline Y^*_{ij}$ equations in the middle of page 210.
 
 ```{r, message = F}
-post <-
-  post %>% 
+draws <- draws %>% 
   mutate(Y_np = b_liking_Intercept + b_liking_d_1 * -2/3 + b_liking_d_2 *    0 + b_liking_respappr * mean(protest$respappr),
          Y_ip = b_liking_Intercept + b_liking_d_1 *  1/3 + b_liking_d_2 * -1/2 + b_liking_respappr * mean(protest$respappr),
          Y_cp = b_liking_Intercept + b_liking_d_1 *  1/3 + b_liking_d_2 *  1/2 + b_liking_respappr * mean(protest$respappr))
 
-post %>% 
+draws %>% 
   pivot_longer(starts_with("Y_")) %>% 
   mutate(name = factor(name, levels = c("Y_np", "Y_ip", "Y_cp"))) %>% 
   group_by(name) %>%
@@ -431,12 +425,11 @@ post %>%
 And with these in hand, we can compute $c'_1$ and $c'_2$.
 
 ```{r, message = F}
-post <-
-  post %>% 
+draws <- draws %>% 
   mutate(c1_prime = (Y_ip + Y_cp) / 2 - Y_np,
          c2_prime = Y_cp - Y_ip)
 
-post %>% 
+draws %>% 
   pivot_longer(c1_prime:c2_prime) %>% 
   group_by(name) %>% 
   summarize(mean = mean(value),
@@ -445,16 +438,15 @@ post %>%
 
 It appears Hayes has a typo in the formula for $c'_2$ on page 211. The value he has down for $\overline Y^*_{IP}$, 5.145, is incorrect. It's not the one he displayed at the bottom of the previous page and it also contradicts the analyses herein. So it goes... These things happen.
 
-We haven't spelled it out, but the $b$ parameter is currently labeled `b_liking_respappr` in our `post` object. Here we'll make a `b` column to make things easier. While we're at it, we'll compute the indirect effects, too.
+We haven't spelled it out, but the $b$ parameter is currently labeled `b_liking_respappr` in our `draws` object. Here we'll make a `b` column to make things easier. While we're at it, we'll compute the indirect effects, too.
 
 ```{r, warning = F}
-post <-
-  post %>%
+draws <- draws %>%
   mutate(b = b_liking_respappr) %>% 
   mutate(a1b = a1 * b,
          a2b = a2 * b)
 
-post %>% 
+draws %>% 
   pivot_longer(a1b:a2b) %>% 
   group_by(name) %>% 
   mean_qi(value) %>% 
@@ -464,12 +456,11 @@ post %>%
 Now we can compute and `summarize()` our $c_1$ and $c_2$.
 
 ```{r, message = F}
-post <-
-  post %>% 
+draws <- draws %>% 
   mutate(c1 = c1_prime + a1b,
          c2 = c2_prime + a2b)
 
-post %>% 
+draws %>% 
   pivot_longer(c1:c2) %>% 
   group_by(name) %>% 
   summarize(mean = mean(value),
@@ -570,8 +561,7 @@ If you flip back to page 199, you'll notice the posterior mean in the first thre
 Let's get to the $a_j b$ estimates.
 
 ```{r, warning = F}
-post <- 
-  posterior_samples(model6.6) %>% 
+draws <- as_draws_df(model6.6) %>% 
   mutate(a1 = b_respappr_groupnone,
          a2 = b_respappr_groupindividual,
          a3 = b_respappr_groupcollective,
@@ -580,7 +570,7 @@ post <-
          a2b = a2 * b,
          a3b = a3 * b)
 
-post %>% 
+draws %>% 
   pivot_longer(a1b:a3b) %>% 
   group_by(name) %>% 
   mean_qi(value) %>% 
@@ -591,14 +581,13 @@ With this parameterization, it's a little difficult to interpret the $a_j b$ est
 
 ```{r, warning = F}
 # compute the difference scores
-post <- 
-  post %>% 
+draws <- draws %>% 
   mutate(diff_individual_minus_none       = a2b - a1b,
          diff_collective_minus_none       = a3b - a1b,
          diff_collective_minus_individual = a3b - a2b)
 
 # summarize
-post %>% 
+draws %>% 
   pivot_longer(contains("diff")) %>% 
   group_by(name) %>% 
   mean_qi(value) %>% 

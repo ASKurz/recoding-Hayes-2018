@@ -39,13 +39,14 @@ library(brms)
 Recall that we fit mediation models with **brms** using multivariate syntax. In previous attempts, we've defined and saved the model components outside of the `brm()` function and then plugged then into `brm()` using their identifier. Just to shake things up a bit, we'll just do all the steps right in `brm()`, this time.
 
 ```{r model11.1}
-model11.1 <-
-  brm(data = teams, family = gaussian,
-      bf(negtone ~ 1 + dysfunc) +
-        bf(perform ~ 1 + dysfunc + negtone + negexp + negtone:negexp) + 
-        set_rescor(FALSE),
-      chains = 4, cores = 4,
-      file = "fits/model11.01")
+model11.1 <- brm(
+  data = teams, 
+  family = gaussian,
+  bf(negtone ~ 1 + dysfunc) +
+    bf(perform ~ 1 + dysfunc + negtone + negexp + negtone:negexp) + 
+    set_rescor(FALSE),
+  chains = 4, cores = 4,
+  file = "fits/model11.01")
 ```
 
 Check the model summary.
@@ -70,35 +71,37 @@ mean(teams$perform) %>% round(digits = 3)  # m_bar
 For our Figure 11.4 and other similar figures in this chapter, we'll use spaghetti plots. Recall that with a spaghetti plots for linear models, we only need two values for the variable on the $x$-axis, rather than the typical 30+.
 
 ```{r}
-nd <-
-  crossing(negtone = c(-.8, .8),
-           negexp  = quantile(teams$negexp, probs = c(.16, .50, .84))) %>% 
-  mutate(dysfunc = mean(teams$dysfunc))
+nd <- crossing(negtone = c(-.8, .8),
+               negexp  = quantile(teams$negexp, probs = c(.16, .50, .84))) %>% 
+  mutate(dysfunc = mean(teams$dysfunc),
+         row     = 1:n())
+
+nd
 ```
 
 Here's our Figure 11.4, which uses only the first 40 HMC iterations for the spaghetti-plot lines.
 
-```{r, fig.width = 10, fig.height = 3.25, warning = F, message = F}
-# `fitted()`
+```{r, fig.width = 10, fig.height = 3.25}
+# compute
 fitted(model11.1, 
        newdata = nd,
        resp = "perform", 
        summary = F) %>% 
   # wrangle
-  as_tibble() %>% 
-  mutate(iter = 1:n()) %>% 
-  pivot_longer(-iter) %>% 
-  arrange(name, iter) %>% 
-  select(-iter) %>% 
-  bind_cols(expand(nd, nesting(negtone, negexp), iter = 1:4000)) %>% 
+  data.frame() %>% 
+  set_names(pull(nd, row)) %>% 
+  mutate(draw = 1:n()) %>% 
+  pivot_longer(-draw) %>% 
+  mutate(row = as.double(name)) %>% 
+  left_join(nd, by = "row") %>% 
   mutate(negexp = factor(str_c("expresivity = ", negexp), 
                          levels = c("expresivity = -0.49", "expresivity = -0.06", "expresivity = 0.6"))) %>% 
-  filter(iter < 41) %>% 
+  filter(draw < 41) %>% 
   
   # plot
-  ggplot(aes(x = negtone, y = value, group = iter)) +
+  ggplot(aes(x = negtone, y = value, group = draw)) +
   geom_line(color = "skyblue3",
-            size = 1/4) +
+            linewidth = 1/4) +
   coord_cartesian(xlim = c(-.5, .5),
                   ylim = c(-.6, .6)) +
   labs(x = expression(paste("Negative Tone of the Work Climate (", italic(M), ")")),
@@ -131,18 +134,16 @@ We just fit the model in the last section. No need to repeat.
 
 #### The conditional indirect effect of $X$.
 
-One way to make a version of Table 11.2 is to work with the `posterior_samples()`, simply summarizing the distributions with means.
+One way to make a version of Table 11.2 is to work with the `as_draws_df()`, simply summarizing the distributions with means.
 
-```{r, message = F}
-post <-
-  posterior_samples(model11.1)
+```{r, message = F, warning = F}
+draws <- as_draws_df(model11.1)
 
-post %>% 
-  mutate(a  = b_negtone_dysfunc,
-         b1 = b_perform_negtone,
-         b3 = `b_perform_negtone:negexp`) %>% 
-  expand(nesting(a, b1, b3),
-         w = c(-0.531, -0.006, 0.600)) %>% 
+draws %>% 
+  transmute(a  = b_negtone_dysfunc,
+            b1 = b_perform_negtone,
+            b3 = `b_perform_negtone:negexp`) %>% 
+  expand_grid(w = c(-0.531, -0.006, 0.600)) %>% 
   mutate(conditional_effect          =      b1 + b3 * w,
          conditional_indirect_effect = a * (b1 + b3 * w)) %>% 
   select(-(b1:b3)) %>% 
@@ -155,12 +156,11 @@ post %>%
 That kind of summary isn't the most Bayesian of us. Why not plot, instead?
 
 ```{r, fig.width = 6, fig.height = 4, warning = F, message = F}
-post %>% 
-  mutate(a  = b_negtone_dysfunc,
-         b1 = b_perform_negtone,
-         b3 = `b_perform_negtone:negexp`) %>% 
-  expand(nesting(a, b1, b3),
-         w = c(-0.531, -0.006, 0.600)) %>% 
+draws %>% 
+  transmute(a  = b_negtone_dysfunc,
+            b1 = b_perform_negtone,
+            b3 = `b_perform_negtone:negexp`) %>% 
+  expand_grid(w = c(-0.531, -0.006, 0.600)) %>% 
   mutate(conditional_effect          =      b1 + b3 * w,
          conditional_indirect_effect = a * (b1 + b3 * w)) %>% 
   select(-(b1:b3)) %>% 
@@ -191,37 +191,34 @@ posterior_summary(model11.1)["b_perform_dysfunc", ] %>% round(digits = 3)
 
 ### Visualizing the direct and indirect effects.
 
-For Figure 11.7 we'll use the first 400 HMC iterations.
+For Figure 11.7 we'll use the first 400 HMC iterations, and a faceted approach to make the plot.
 
-```{r, fig.width = 6, fig.height = 4.5}
-post <-
-  post %>% 
-  mutate(`-0.7` = b_negtone_dysfunc * (b_perform_negtone + `b_perform_negtone:negexp` * -0.7),
-         `0.7`  = b_negtone_dysfunc * (b_perform_negtone + `b_perform_negtone:negexp` * 0.7))
+```{r, fig.width = 7, fig.height = 4.5}
+draws %>% 
+  mutate(a  = b_negtone_dysfunc,
+         b1 = b_perform_negtone,
+         b3 = `b_perform_negtone:negexp`,
+         `italic(c)*minute` = b_perform_dysfunc) %>% 
+  expand_grid(negexp = c(-1, 1)) %>% 
+  mutate(`italic(ab)[1]+italic(ab)[3]*italic(W)` = a * b1 + a * b3 * negexp) %>% 
+  pivot_longer(cols = c(`italic(c)*minute`, `italic(ab)[1]+italic(ab)[3]*italic(W)`)) %>% 
+  filter(.draw < 401) %>% 
   
-post %>% 
-  select(b_perform_dysfunc, `-0.7`:`0.7`) %>% 
-  pivot_longer(-b_perform_dysfunc) %>% 
-  mutate(negexp = name %>% as.double(),
-         iter   = rep(1:4000, times = 2)) %>% 
-  filter(iter < 401) %>% 
-  
-  ggplot(aes(x = negexp, group = iter)) +
-  geom_hline(aes(yintercept = b_perform_dysfunc),
-             color = "skyblue3",
-             size = .3, alpha = .3) +
-  geom_line(aes(y = value),
-            color = "skyblue3",
-            size = .3, alpha = .3) +
+  ggplot(aes(x = negexp, y = value, group = .draw)) +
+  geom_line(color = "skyblue3",
+            linewidth = .3, alpha = .3) +
   coord_cartesian(xlim = c(-.5, .6),
                   ylim = c(-1.25, .75)) +
   labs(x = expression(paste("Nonverbal Negative Expressivity (", italic(W), ")")),
        y = "Effect of Dysfunctional Behavior on Team Performance") +
   theme_bw() +
-  theme(panel.grid = element_blank())
+  theme(panel.grid = element_blank(),
+        strip.background = element_rect(color = "transparent", fill = "transparent"),
+        strip.text = element_text(hjust = 0)) +
+  facet_wrap(~ name, labeller = label_parsed)
 ```
 
-Since the `b_perform_dysfunc` values are constant across $W$, the individual HMC iterations end up perfectly parallel in the spaghetti plot. This is an example of a visualization I'd avoid making with a spaghetti plot for a professional presentation. But hopefully it has some pedagogical value, here.
+Since the $c'$ values are constant across $W$, the individual HMC iterations end up perfectly parallel in the spaghetti plot on the right This is an example of a visualization I'd avoid making with a spaghetti plot for a professional presentation. But hopefully it has some pedagogical value, here.
 
 ## Statistical inference
 
@@ -234,17 +231,17 @@ library(tidybayes)
 
 # breaks
 breaks <- 
-  mode_hdi(post$b_perform_dysfunc, .width = .95) %>% 
+  mode_hdi(draws$b_perform_dysfunc, .width = .95) %>% 
   pivot_longer(starts_with("y")) %>% 
   pull(value)
 
-post %>% 
+draws %>% 
   ggplot(aes(x = b_perform_dysfunc)) +
   geom_histogram(binwidth = .025, boundary = 0, 
                  color = "white", fill = "skyblue3", size = 1/4) +
   stat_pointinterval(aes(y = 0), 
                      point_interval = mode_hdi, .width = .95) +
-  scale_x_continuous("The direct effect (i.e., b_perform_dysfunc)", 
+  scale_x_continuous(expression("The direct effect "*italic(c)*minute*" (i.e., b_perform_dysfunc)"), 
                      breaks = breaks, labels = round(breaks, digits = 3)) +
   scale_y_continuous(NULL, breaks = NULL) +
   theme_bw() +
@@ -260,18 +257,16 @@ Since we're plotting in a style similar to Kruschke, we switched from emphasizin
 Much like above, we can make a plot of the conditional indirect effect $ab_3$.
 
 ```{r, fig.width = 3.5, fig.height = 2.75}
-post <-
-  post %>% 
-  mutate(ab_3 = b_negtone_dysfunc * `b_perform_negtone:negexp`)
+draws <- draws %>% 
+  mutate(ab3 = b_negtone_dysfunc * `b_perform_negtone:negexp`)
 
 # breaks
-breaks <- 
-  mode_hdi(post$ab_3, .width = .95) %>% 
+breaks <- mode_hdi(draws$ab3, .width = .95) %>% 
   pivot_longer(starts_with("y")) %>% 
   pull(value)
 
-post %>% 
-  ggplot(aes(x = ab_3)) +
+draws %>% 
+  ggplot(aes(x = ab3)) +
   geom_histogram(binwidth = .025, boundary = 0, 
                  color = "white", fill = "skyblue3", size = 1/4) +
   stat_pointinterval(aes(y = 0), 
@@ -289,23 +284,22 @@ post %>%
 
 > One of the contributions of @preacherAddressingModeratedMediation2007 to the literature on moderated mediation analysis was their discussion of inference for conditional indirect effects. They suggested two approaches, one a normal theory-based approach that is an analogue of the Sobel test in unmoderated mediation analysis, and another based on bootstrapping. (p. 426)
 
-One of the contributions of this project is moving away from NHST in favor of Bayesian modeling. Since we’ve already been referencing him with our plot themes, you might check out Kruschke's [-@kruschkeDoingBayesianData2015] [textbook](https://sites.google.com/site/doingbayesiandataanalysis/) for more discussion on Bayes versus NHST.
+One of the contributions of this project is moving away from NHST in favor of Bayesian modeling. Since we've already been referencing him with our plot themes, you might check out Kruschke's [-@kruschkeDoingBayesianData2015] [textbook](https://sites.google.com/site/doingbayesiandataanalysis/) for more discussion on Bayes versus NHST.
 
 #### Normal theory approach.
 
-As we're square within the Bayesian modeling paradigm, we have no need to appeal to normal theory for the posterior $SD$s or 95% intervals.
+As we're square within the Bayesian modeling paradigm, we have no need to appeal to normal theory for the posterior $\textit{SD}$'s or 95% intervals.
 
 #### ~~Bootstrap confidence intervals~~ Two types of Bayesian credible intervals.
 
 We produced the posterior means corresponding to those in Table 11.3 some time ago. Here they are, again, with percentile-based 95% intervals via `tidybayes::mean_qi()`.
 
-```{r, warning = F, message = F}
-post %>% 
-  mutate(a  = b_negtone_dysfunc,
-         b1 = b_perform_negtone,
-         b3 = `b_perform_negtone:negexp`) %>% 
-  expand(nesting(a, b1, b3),
-         w = c(-0.531, -0.006, 0.600)) %>% 
+```{r, warning = F}
+draws %>% 
+  transmute(a  = b_negtone_dysfunc,
+            b1 = b_perform_negtone,
+            b3 = `b_perform_negtone:negexp`) %>% 
+  expand_grid(w = c(-0.531, -0.006, 0.600)) %>% 
   mutate(`a(b1 + b3w)` = a * (b1 + b3 * w)) %>% 
   group_by(w) %>% 
   mean_qi(`a(b1 + b3w)`) %>% 
@@ -313,17 +307,17 @@ post %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
-If we wanted to summarize those same effects with posterior modes and 95% highest posterior density intervals, instead, we'd replace our `mean_qi()` lnie with `mode_hdi()`.
+If we wanted to summarize those same effects with posterior modes and 95% highest posterior density intervals, instead, we'd replace our `mean_qi()` line with `mode_hdi()`.
 
-```{r, warning = F, message = F}
-post %>% 
-  mutate(a  = b_negtone_dysfunc,
-         b1 = b_perform_negtone,
-         b3 = `b_perform_negtone:negexp`) %>% 
-  expand(nesting(a, b1, b3),
-         w = c(-0.531, -0.006, 0.600)) %>% 
+```{r, warning = F}
+draws %>% 
+  transmute(a  = b_negtone_dysfunc,
+            b1 = b_perform_negtone,
+            b3 = `b_perform_negtone:negexp`) %>% 
+  expand_grid(w = c(-0.531, -0.006, 0.600)) %>% 
   mutate(`a(b1 + b3w)` = a * (b1 + b3 * w)) %>% 
   group_by(w) %>% 
+  # here's the change
   mode_hdi(`a(b1 + b3w)`) %>% 
   select(w:.upper) %>% 
   mutate_if(is.double, round, digits = 3)
@@ -332,12 +326,11 @@ post %>%
 And we might plot these with something like this.
 
 ```{r, fig.width = 6, fig.height = 3, warning = F}
-post %>% 
-  mutate(a  = b_negtone_dysfunc,
-         b1 = b_perform_negtone,
-         b3 = `b_perform_negtone:negexp`) %>% 
-  expand(nesting(a, b1, b3),
-         w = c(-0.531, -0.006, 0.600)) %>% 
+draws %>% 
+  transmute(a  = b_negtone_dysfunc,
+            b1 = b_perform_negtone,
+            b3 = `b_perform_negtone:negexp`) %>% 
+  expand_grid(w = c(-0.531, -0.006, 0.600)) %>% 
   mutate(`a(b1 + b3w)` = a * (b1 + b3 * w)) %>% 
   select(w:`a(b1 + b3w)`) %>% 
   mutate(label = str_c("W = ", w),
@@ -346,7 +339,7 @@ post %>%
   ggplot(aes(y = `a(b1 + b3w)`)) +
   geom_hline(yintercept = 0, color = "grey50", linetype = 2) +
   geom_histogram(binwidth = .05, boundary = 0, 
-                 color = "white", fill = "skyblue3", size = 1/4) +
+                 color = "white", fill = "skyblue3", linewidth = 1/4) +
   stat_pointinterval(aes(x = 0),
                      point_interval = mode_hdi, .width = .95) +
   scale_x_continuous(NULL, breaks = NULL) +
@@ -370,17 +363,18 @@ On page 429, Hayes discussed how @preacherAddressingModeratedMediation2007's att
 
 However, our Bayesian HMC approach makes no such assumption. All we need to do is manipulate the posterior as usual. Here it is, this time using all 4,000 iterations.
 
-```{r, fig.width = 6, fig.height = 4.5}
-post %>% 
-  transmute(iter   = 1:n(),
+```{r, fig.width = 6, fig.height = 4.5, warning = F}
+draws %>% 
+  transmute(.draw  = .draw,
             `-0.8` = b_perform_negtone + `b_perform_negtone:negexp` * -0.8,
             `0.8`  = b_perform_negtone + `b_perform_negtone:negexp` * 0.8) %>% 
-  pivot_longer(-iter) %>% 
+  pivot_longer(-.draw) %>% 
   mutate(name = name %>% as.double()) %>% 
   
-  ggplot(aes(x = name, y = value, group = iter)) +
+  ggplot(aes(x = name, y = value, group = .draw)) +
+  geom_hline(yintercept = 0, color = "grey50", linetype = 2) +
   geom_line(color = "skyblue3",
-            size = 1/6, alpha = 1/15) +
+            linewidth = 1/6, alpha = 1/15) +
   coord_cartesian(xlim = c(-.5, .6),
                   ylim = c(-1.25, .75)) +
   labs(x = expression(italic(W)),

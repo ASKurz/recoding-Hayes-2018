@@ -8,7 +8,7 @@ In this chapter, our Bayesian approach complicates some of Hayes's flow. We'll s
 
 ## Truths and myths about mean-centering
 
-> Mean-centering has been recommended in a few highly regarded books on regression analysis [e.g., @aikenMultipleRegressionTesting1991; @cohenAppliedMultipleRegression2003], and several explanations have been offered for why mean-centering should be undertaken prior to computation of the product and model estimation. The explanation that seems to have resulted in the most misunderstanding is that $X$ and $W$ are likely to be highly correlated with $XW$ and this will produce estimation problems caused by collinearity and result in poor or "strange" estimates of regression coefficients, large standard errors, and reduced power of the statistical test of the interaction. But this is, in large part, simply a myth. As I describe later, there are some reasons that mean- centering the focal antecedent or moderator variables can be a beneficial thing to do, which is why it has been *recommended* by some. However, it is incorrect to claim that it is *necessary*, that a failure to do so will lead one to incorrect inferences about moderation, or that the resulting regression coefficients are somehow strange or inherently uninterpretable. [@hayesIntroductionMediationModeration2018, pp. 304--305, *emphasis* in the original]
+> Mean-centering has been recommended in a few highly regarded books on regression analysis [e.g., @aikenMultipleRegressionTesting1991; @cohenAppliedMultipleRegression2003], and several explanations have been offered for why mean-centering should be undertaken prior to computation of the product and model estimation. The explanation that seems to have resulted in the most misunderstanding is that $X$ and $W$ are likely to be highly correlated with $XW$ and this will produce estimation problems caused by collinearity and result in poor or "strange" estimates of regression coefficients, large standard errors, and reduced power of the statistical test of the interaction. But this is, in large part, simply a myth. As I describe later, there are some reasons that mean-centering the focal antecedent or moderator variables can be a beneficial thing to do, which is why it has been *recommended* by some. However, it is incorrect to claim that it is *necessary*, that a failure to do so will lead one to incorrect inferences about moderation, or that the resulting regression coefficients are somehow strange or inherently uninterpretable. [@hayesIntroductionMediationModeration2018, pp. 304--305, *emphasis* in the original]
 
 Here we load a couple necessary packages, load the data, and take a `glimpse()`.
 
@@ -23,8 +23,7 @@ glimpse(glbwarm)
 Before we fit our models, we'll go ahead and make our mean-centered predictors, `negemot_c` and `age_c`.
 
 ```{r}
-glbwarm <-
-  glbwarm %>% 
+glbwarm <- glbwarm %>% 
   mutate(negemot_c = negemot - mean(negemot),
          age_c     = age     - mean(age))
 ```
@@ -50,20 +49,20 @@ Y & = i_Y + b_1 \left (X - \overline X \right ) + b_2 \left (W - \overline W \ri
 
 where $X' = \left (X - \overline X \right)$ and so on.
 
-```{r model9.1, warning = F, message = F}
-model9.1 <- 
-  brm(data = glbwarm, 
-      family = gaussian,
-      govact ~ 1 + negemot + age + negemot:age,
-      cores = 4,
-      file = "fits/model09.01")
+```{r model9.1}
+model9.1 <- brm(
+  data = glbwarm, 
+  family = gaussian,
+  govact ~ 1 + negemot + age + negemot:age,
+  cores = 4,
+  file = "fits/model09.01")
 
-model9.2 <- 
-  update(model9.1, 
-         newdata = glbwarm,
-         govact ~ 1 + negemot_c + age_c + negemot_c:age_c,
-         cores = 4,
-         file = "fits/model09.02")
+model9.2 <- brm(
+  data = glbwarm, 
+  family = gaussian,
+  govact ~ 1 + negemot_c + age_c + negemot_c:age_c,
+  cores = 4,
+  file = "fits/model09.02")
 ```
 
 As with Hayes's OLS models, our HMC models yield the same Bayesian $R^2$ distributions, within simulation error.
@@ -82,108 +81,88 @@ print(model9.2, digits = 3)
 
 However, notice the 'Bulk_ESS' and 'Tail_ESS' columns. The values for `model9.2` were substantially larger than those for `model9.1`. These columns denote the number of effective samples (a.k.a. the effective sample size). Versions of **brms** before 2.10.0 returned a single effective sample size (ESS) value per parameter. We will cover where the change came from in a bit. But first, recall that we've been using **brms** defaults, which results in 4 HMC chains, each of which contains 2,000 draws (iterations), the first 1,000 of which are warmup values. After we discard the warmup values, that leaves 1,000 draws from each chain--4,000 total. As it turns out, Markov chains, and thus HMC chains, are typically *autocorrelated*, which means that each draw is partially dependent on the previous draw. Ideally, the autocorrelations are near zero. That's often not the case.
 
-The [**bayesplot** package](https://github.com/stan-dev/bayesplot) offers a variety of [diagnostic plots](https://cran.r-project.org/web/packages/bayesplot/vignettes/visual-mcmc-diagnostics.html#effective-sample-size). Here we'll use the `mcmc_acf()` function to make autocorrelation plots for all model parameters. Note that when we add `add_chain = T` to `brms::posterior_samples()`, we add an index to the data that allows us to keep track of which iteration comes from which chain. That index will come in handy for our `mcmc_acf()` plots.
+The [**bayesplot** package](https://github.com/stan-dev/bayesplot) offers a variety of [diagnostic plots](https://cran.r-project.org/web/packages/bayesplot/vignettes/visual-mcmc-diagnostics.html#effective-sample-size). Here we'll use the `mcmc_acf()` function to make autocorrelation plots for all model parameters.
 
-But before we get there, we'll be using an [xkcd](https://xkcd.com)-inspired theme with help from the [**xkcd** package](https://CRAN.R-project.org/package=xkcd) [@torres-manzaneraXkcdPlottingGgplot22018] for our plots in this chapter.
+But before we get there, we'll be using an **ggthemes**-based theme for our plots in this chapter.
 
 ```{r, warning = F, message = F}
-# install.packages("xkcd", dependencies = T)
-
-library(xkcd)
-```
-
-If you haven't used the **xkcd** package, before, you might also need to take a few extra steps outlined in the paper by Torres-Manzanera [-@torres-manzaneraXkcdPlottingXKCD], [*xkcd: Plotting XKCD graphs*](https://cran.r-project.org/web/packages/xkcd/vignettes/xkcd-intro.pdf), part of which requires help from the [**extrafont** package](https://cran.r-project.org/package=extrafont/) [@winstonchangExtrafontToolsUsing2014].
-
-```{r, eval = F}
-library(extrafont)
-
-download.file("http://simonsoftware.se/other/xkcd.ttf",
-              dest = "xkcd.ttf", mode = "wb")
- 
-system("mkdir ~/.fonts")
-system("cp xkcd.ttf  ~/.fonts")
-# this line of code returned an error message
-# font_import(pattern = "[X/x]kcd", prompt = FALSE)
-
-# this line from (https://stackoverflow.com/questions/49221040/error-in-font-import-while-installing-xkcd-font) fixed the problem
-font_import(path = "~/.fonts", pattern = "[X/x]kcd", prompt=FALSE)
-fonts()
-fonttable()
- if(.Platform$OS.type != "unix") {
-   ## Register fonts for Windows bitmap output
-   loadfonts(device="win")
- } else {
-   loadfonts()
- }
-```
-
-After installing, I still experienced error messages, which were alleviated after I followed [these steps outlined by Remi.b](https://stackoverflow.com/questions/48553545/polygon-edge-not-found-with-the-xkcd-package). You may or may not need them.
-
-But anyways, here are our `mcmc_acf()` plots.
-
-```{r, fig.width = 8, fig.height = 4, message = F, warning = F}
+# load
 library(bayesplot)
+library(ggthemes)
 
-post1 <- posterior_samples(model9.1, add_chain = T)
-mcmc_acf(post1, 
-         pars = c("b_Intercept", "b_negemot", "b_age", "b_negemot:age", "sigma"),
-         lags = 4) +
-  theme_xkcd()
+# adjust the global settings
+theme_set(
+  theme_tufte(base_size = 13) +
+    theme(panel.background = element_rect(fill = "grey98", linewidth = 0))
+)
 
-post2 <- posterior_samples(model9.2, add_chain = T)
-mcmc_acf(post2, 
-         pars = c("b_Intercept", "b_negemot_c", "b_age_c", "b_negemot_c:age_c", "sigma"),
-         lags = 4) +
-  theme_xkcd() 
+# to reset the default ggplot2 theme to its default parameters, execute:
+# theme_set(theme_gray())
 ```
 
-As it turns out, `theme_xkcd()` can't handle special characters like "_", so it returns rectangles instead. So it goes...
+The `theme_tufte()` function will let us follow some of Edward Tufte's preferred aesthecic principles [@tufteVisualDisplayQuantitative2001], and the `theme_set()` function will make these the default plot settings. To undo this, just execute `theme_set(theme_gray())`. But anyways, here are our `mcmc_acf()` plots.
 
-But again, high autocorrelations in the HMC chains have consequences for the effective sample size. In their [-@gabryVisualMCMC2020] vignette, [**Visual MCMC diagnostics using the bayesplot package**](https://CRAN.R-project.org/package=bayesplot/vignettes/visual-mcmc-diagnostics.html), Gabry and Modrák wrote:
+```{r, fig.width = 8, fig.height = 4}
+draws1 <- as_draws_df(model9.1)
+draws2 <- as_draws_df(model9.2)
+
+mcmc_acf(draws1, 
+         pars = c("b_Intercept", "b_negemot", "b_age", "b_negemot:age", "sigma"),
+         lags = 4)
+
+mcmc_acf(draws2, 
+         pars = c("b_Intercept", "b_negemot_c", "b_age_c", "b_negemot_c:age_c", "sigma"),
+         lags = 4)
+```
+
+High autocorrelations in the HMC chains have consequences for the effective sample size. In their [-@gabryVisualMCMC2020] vignette, [**Visual MCMC diagnostics using the bayesplot package**](https://CRAN.R-project.org/package=bayesplot/vignettes/visual-mcmc-diagnostics.html), Gabry and Modrák wrote:
 
 > The effective sample size is an estimate of the number of independent draws from the posterior distribution of the estimand of interest. Because the draws within a Markov chain are *not* independent if there is autocorrelation, the effective sample size, $n_{eff}$, will be smaller than the total sample size, $N$. The larger the ratio of $n_{eff}$ to $N$ the better.
 
 In that quote, they spoke as if there was only one measure of ESS. Though this has been the case for some time, times have changed. In a [-@vehtariRanknormalizationFoldingLocalization2019] [paper](https://arxiv.org/pdf/1903.08008.pdf), Stan-team allstars Vehtari, Gelman, Simpson, Carpenter, and Bürkner proposed two measures of ESS: "bulk-ESS" and "tail-ESS." From their paper, we read:
 
-> if you plan to report quantile estimates or posterior intervals, we strongly suggest assessing the
-convergence of the chains for these quantiles. In Section 4.3 we show that convergence of Markov chains is not uniform across the parameter space and propose diagnostics and effective sample sizes specifically for extreme quantiles. This is *different* from the standard ESS estimate (which we refer to as the "bulk-ESS"), which mainly assesses how well the centre of the distribution is resolved. Instead, these "tail-ESS" measures allow the user to estimate the MCSE for interval estimates. (p. 5, *emphasis* in the original)
+> if you plan to report quantile estimates or posterior intervals, we strongly suggest assessing the convergence of the chains for these quantiles. In Section 4.3 we show that convergence of Markov chains is not uniform across the parameter space and propose diagnostics and effective sample sizes specifically for extreme quantiles. This is *different* from the standard ESS estimate (which we refer to as the "bulk-ESS"), which mainly assesses how well the centre of the distribution is resolved. Instead, these "tail-ESS" measures allow the user to estimate the MCSE for interval estimates. (p. 5, *emphasis* in the original)
 
 You can read the paper for technical details. In short, the `Bulk_ESS` in the output of **brms** 2.10.0 and up is what was previously referred to as `Eff.Sample`, the effective sample size. This indexed the number of effective samples in "the centre of the" posterior distribution (i.e., the posterior mean or median). But since we also care about uncertainty in our models, we also care about how well we have characterized the tails of the posterior distribution in 95% intervals and such. The new `Tail_ESS` in **brms** output allows us to gauge the effective sample size for those intervals.
 
 The `Bulk_ESS` and `Tail_ESS` values were all well above 2,000 with `model9.2` and the autocorrelations were very low, too. `model9.1` had higher autocorrelations and lower ESS values. The upshot is that even though we have 4,000 samples for each parameter, those samples don't necessarily give us the same quality of information fully independent samples would. `Bulk_ESS` and `Tail_ESS` values help you determine how concerned you should be. And, as it turns out, things like centering can help increase a models `Bulk_ESS` and `Tail_ESS` values.
 
-Wading in further, we can use the `neff_ratio()` function to collect the $n_{eff}$ to $N$ ratio for each model parameter and then use `mcmc_neff()` to make a visual diagnostic. Here we do so for `model9.1` and `model9.2`.
+Wading in further, we can use the `neff_ratio()` function to collect the $N_\textit{eff}$ to $N$ ratio for each model parameter and then use `mcmc_neff()` to make a visual diagnostic. Here we do so for `model9.1` and `model9.2`.
 
 ```{r, fig.width = 8, fig.height = 1.75}
-ratios_model9.1 <- 
-  neff_ratio(model9.1, 
-             pars = c("b_Intercept", "b_negemot", "b_age", "b_negemot:age", "sigma"))
+ratios_model9.1 <- neff_ratio(
+  model9.1, 
+  pars = c("b_Intercept", "b_negemot", "b_age", "b_negemot:age", "sigma"))
 
-ratios_model9.2 <- 
-  neff_ratio(model9.2,
-             pars = c("b_Intercept", "b_negemot_c", "b_age_c", "b_negemot_c:age_c", "sigma"))
+ratios_model9.2 <- neff_ratio(
+  model9.2,
+  pars = c("b_Intercept", "b_negemot_c", "b_age_c", "b_negemot_c:age_c", "sigma"))
 
 mcmc_neff(ratios_model9.1) + 
-  yaxis_text(hjust = 0) +
-  theme_xkcd()
+  yaxis_text(hjust = 0)
 
 mcmc_neff(ratios_model9.2) + 
-  yaxis_text(hjust = 0) +
-  theme_xkcd()
+  yaxis_text(hjust = 0)
 ```
 
-Although none of the $n_{eff}$ to $N$ ratios were in the shockingly-low range for either model, there were substantially higher for `model9.2`.
+Although none of the $N_\textit{eff}$ to $N$ ratios were in the shockingly-low range for either model, there were substantially higher for `model9.2`.
 
-In addition to autocorrelations and $n_{eff}$ to $N$ ratios, there is also the issue that the parameters in the model can themselves be correlated. If you like a visual approach, you can use `brms::pairs()` to retrieve histograms for each parameter along with scatter plots showing the shape of their correlations. Here we'll use the `off_diag_args` argument to customize some of the plot settings.
+In addition to autocorrelations and $N_\textit{eff}$ to $N$ ratios, there is also the issue that the parameters in the model can themselves be correlated. If you like a visual approach, you can use `brms::pairs()` to make quick and dirty histograms for each parameter along with scatter plots showing the shape of their correlations. 
 
-```{r, fig.width = 6.5, fig.height = 5.5}
-pairs(model9.1,
-      off_diag_args = list(size = 1/10,
-                           alpha = 1/5))
+Here we'll take a similar approach, but with functions from the [**GGally** package](https://CRAN.R-project.org/package=GGally) [@R-GGally], which will also compute the point estimates for the bivariate correlations.
 
-pairs(model9.2,
-      off_diag_args = list(size = 1/10,
-                           alpha = 1/5))
+```{r, fig.width = 7, fig.height = 6, warning = F, message = F}
+library(GGally)
+
+draws1 %>% 
+  select(b_Intercept:sigma) %>% 
+  ggpairs(upper = list(continuous = wrap("cor", stars = FALSE)),
+          lower = list(continuous = wrap("points", size = 1/10, alpha = 1/4)))
+
+draws2 %>% 
+  select(b_Intercept:sigma) %>% 
+  ggpairs(upper = list(continuous = wrap("cor", stars = FALSE)),
+          lower = list(continuous = wrap("points", size = 1/10, alpha = 1/4)))
 ```
 
 When fitting models with HMC, centering can make a difference for the parameter correlations. If you prefer a more numeric approach, `vcov()` will yield the variance/covariance matrix--or correlation matrix when using `correlation = T`--for the parameters in a model.
@@ -193,28 +172,28 @@ vcov(model9.1, correlation = T) %>% round(digits = 2)
 vcov(model9.2, correlation = T) %>% round(digits = 2)
 ```
 
-*And so wait, what does that even mean for a parameter to correlate with another parameter?* you might ask. Fair enough. Let's compute a parameter correlation step by step. The first step requires `posterior_samples()`.
+*And so wait, what does that even mean for a parameter to correlate with another parameter?* you might ask. Fair enough. Let's compute a parameter correlation step by step. The first step requires `as_draws_df()`.
 
 ```{r}
-post <- posterior_samples(model9.1)
+draws <- as_draws_df(model9.1)
 
-head(post)
+head(draws)
 ```
 
-Now we've put our posterior iterations into a data object, `post`, we can make a scatter plot of two parameters. Here we'll choose `b_negemot` and the interaction coefficient, `b_negemot:age`.
+Now we've put our posterior draws into a data object, `draws`, we can make a scatter plot of two parameters. Here we'll choose `b_negemot` and the interaction coefficient, `b_negemot:age`.
 
-```{r, fig.width = 4, fig.height = 4.5}
-post %>% 
+```{r, fig.width = 4, fig.height = 4.25}
+draws %>% 
   ggplot(aes(x = b_negemot, y = `b_negemot:age`)) +
   geom_point(size = 1/10, alpha = 1/5) +
-  labs(subtitle = "Each dot is the parameter pair\nfrom a single iteration. Looking\nacross the 4,000 total posterior\niterations, it becomes clear the\ntwo parameters are highly\nnegatively correlated.") +
-  theme_xkcd()
+  labs(subtitle = "Each dot is the parameter pair from\na single draw. Looking across the\n4,000 total posterior draws, it\nbecomes clear the two parameters\nare highly negatively correlated.")
 ```
 
 And indeed, the Pearson's correlation coefficient is strong.
 
 ```{r}
-cor(post$b_negemot, post$`b_negemot:age`)
+draws %>% 
+  summarise(rho = cor(b_negemot, `b_negemot:age`))
 ```
 
 And what was that part from the `vcov()` output, again?
@@ -232,8 +211,7 @@ This entire topic of HMC diagnostics can seem baffling, especially when compared
 This can be difficult to keep track of, but what we just looked at were the correlations among **model parameters**. These are *not* the same as correlations among **variables**. As such, those correlations are not the same as those in Table 9.2. But we can get those, too. First we'll have to do a little more data processing to get all the necessary mean-centered variables and standardized variables.
 
 ```{r}
-glbwarm <-
-  glbwarm %>% 
+glbwarm <- glbwarm %>% 
   mutate(negemot_x_age     = negemot   * age,
          negemot_c_x_age_c = negemot_c * age_c,
          negemot_z         = (negemot - mean(negemot)) / sd(negemot),
@@ -241,29 +219,32 @@ glbwarm <-
   mutate(negemot_z_x_age_z = negemot_z * age_z)
 ```
 
-And recall that to get our sweet Bayesian correlations, we use the multivariate `mvbind()` syntax to fit an intercepts-only model. Here we do that for all three of the Table 9.2 sections.
+Recall that to get our sweet Bayesian correlations, we use the multivariate `mvbind()` syntax to fit an intercepts-only model. Here we do that for all three of the Table 9.2 sections.
 
 ```{r model9.3}
-model9.3 <- 
-  brm(data = glbwarm, 
-      family = gaussian,
-      mvbind(negemot, age, negemot_x_age) ~ 1,
-      cores = 4,
-      file = "fits/model09.03")
+model9.3 <- brm(
+  data = glbwarm, 
+  family = gaussian,
+ bf(mvbind(negemot, age, negemot_x_age) ~ 1) +
+   set_rescor(TRUE),
+  cores = 4,
+  file = "fits/model09.03")
 
-model9.4 <- 
-  brm(data = glbwarm, 
-      family = gaussian,
-      mvbind(negemot_c, age_c, negemot_c_x_age_c) ~ 1,
-      cores = 4,
-      file = "fits/model09.04")
+model9.4 <- brm(
+  data = glbwarm, 
+  family = gaussian,
+  bf(mvbind(negemot_c, age_c, negemot_c_x_age_c) ~ 1) +
+       set_rescor(TRUE),
+  cores = 4,
+  file = "fits/model09.04")
 
-model9.5 <- 
-  brm(data = glbwarm, 
-      family = gaussian,
-      mvbind(negemot_z, age_z, negemot_z_x_age_z) ~ 1,
-      cores = 4,
-      file = "fits/model09.05")
+model9.5 <- brm(
+  data = glbwarm, 
+  family = gaussian,
+  bf(mvbind(negemot_z, age_z, negemot_z_x_age_z) ~ 1) +
+    set_rescor(TRUE),
+  cores = 4,
+  file = "fits/model09.05")
 ```
 
 Here are their summaries.
@@ -300,7 +281,7 @@ fixef(model9.2)["negemot_c:age_c", "Est.Error"]
 
 For more details, you might also see the [*Standardizing predictors and outputs*](https://mc-stan.org/docs/2_25/stan-users-guide/standardizing-predictors-and-outputs.html) subsection of Chapter 22 in the *Stan user's guide* [@standevelopmentteamStanUserGuide2021]--[Stan](http://mc-stan.org), of course, being the computational engine underneath our **brms** hood.
 
-### The effect of mean-centering on $b_1$, $b_2$, and their ~~standard errors~~ posterior $SD$s.
+### The effect of mean-centering on $b_1$, $b_2$, and their ~~standard errors~~ posterior $\textit{SD}$'s.
 
 > A second explanation given for why mean-centering is preferred is that it makes $b_1$ and $b_2$, the regression coefficients for $X$ and $W$, more meaningful. This is generally true and thus not a myth, although it is not necessarily true in all circumstances... .
 >
@@ -320,19 +301,19 @@ fixef(model9.2)["negemot_c", 1] +
   fixef(model9.2)["negemot_c:age_c", 1] * mean(glbwarm$age_c)
 ```
 
-But we're proper Bayesians and like a summary of the spread in the posterior. So we'll evoke `posterior_samples()` and the other usual steps, this time just focusing on `model9.1`.
+But we're proper Bayesians and like a summary of the spread in the posterior. So we'll evoke `as_draws_df()` and the other usual steps, this time just focusing on `model9.1`.
 
-```{r}
-post <- posterior_samples(model9.1)
+```{r, warning = F}
+draws <- as_draws_df(model9.1)
 
-post %>% 
+draws %>% 
   transmute(our_contidional_effect_given_W_bar = b_negemot + `b_negemot:age` * mean(glbwarm$age)) %>%
   summarize(mean = mean(our_contidional_effect_given_W_bar),
             sd   = sd(our_contidional_effect_given_W_bar)) %>% 
   round(digits = 3)
 ```
 
-And note how the standard error Hayes computed at the top of page 311 corresponds nicely with the posterior $SD$ we just computed. Hayes employed a fancy formula; we just used `sd()`. At any rate, the main message is centering did not effect our estimate of the conditional effect of $X$. It turns out $(\theta_{X \rightarrow Y} | W) = \left (\theta_{\overline X \rightarrow Y} | \overline W \right)$.
+Note how the standard error Hayes computed at the top of page 311 corresponds nicely with the posterior $\textit{SD}$ we just computed. Hayes employed a fancy formula; we just used `sd()`. At any rate, the main message is centering did not effect our estimate of the conditional effect of $X$. It turns out $(\theta_{X \rightarrow Y} | W) = \left (\theta_{\overline X \rightarrow Y} | \overline W \right)$.
 
 ### The ~~centering option in PROCESS~~.
 
@@ -347,20 +328,19 @@ I'm not aware of a similar function in **brms**. You'll have to use your data wr
 We've already computed standardized predictors. Now we just need to standardize the criterion, `govact`.
 
 ```{r}
-glbwarm <-
-  glbwarm %>% 
+glbwarm <- glbwarm %>% 
   mutate(govact_z = (govact - mean(govact)) / sd(govact))
 ```
 
 Fit the model.
 
-```{r model9.6, warning = F, message = F}
-model9.6 <- 
-  update(model9.1, 
-         newdata = glbwarm,
-         govact_z ~ 1 + negemot_z + age_z + negemot_z:age_z,
-         cores = 4,
-         file = "fits/model09.06")
+```{r model9.6}
+model9.6 <- update(
+  model9.1, 
+  newdata = glbwarm,
+  govact_z ~ 1 + negemot_z + age_z + negemot_z:age_z,
+  cores = 4,
+  file = "fits/model09.06")
 ```
 
 Check the Bayesian $R^2$.
@@ -382,20 +362,19 @@ If you go all the way up back to Table 9.1, you'll see our results are pretty si
 This time we need to standardize our interaction term, `negemot_x_age_z`, by hand.
 
 ```{r}
-glbwarm <-
-  glbwarm %>% 
+glbwarm <- glbwarm %>% 
   mutate(negemot_x_age_z = (negemot_x_age - mean(negemot_x_age)) / sd(negemot_x_age))
 ```
 
 Now we're ready to `update()`.
 
-```{r model9.7, warning = F, message = F}
-model9.7 <- 
-  update(model9.1, 
-         newdata = glbwarm,
-         govact_z ~ 1 + negemot_z + age_z + negemot_x_age_z,
-         cores = 4,
-         file = "fits/model09.07")
+```{r model9.7}
+model9.7 <- update(
+  model9.1, 
+  newdata = glbwarm,
+  govact_z ~ 1 + negemot_z + age_z + negemot_x_age_z,
+  cores = 4,
+  file = "fits/model09.07")
 ```   
 
 ```{r}
@@ -415,24 +394,23 @@ It's worthwhile considering the issue of listwise deletion when data are partial
 ```{r}
 set.seed(9)
 
-glbwarm <-
-  glbwarm %>% 
+glbwarm <- glbwarm %>% 
   mutate(missing = rbinom(n = n(), size = 1, prob = .1)) %>% 
   mutate(negemot_z_missing = ifelse(missing == 1, NA, negemot_z))
 ```
 
 If you've never used `rbinom()` before, execute `?rbinom` or look it up in your favorite web search engine. Here's our listwise deletion model, which corresponds to what you'd get from a typical OLS-based program.
 
-```{r model9.8, warning = F, message = F}
-model9.8 <- 
-  update(model9.6, 
-         newdata = glbwarm,
-         govact_z ~ 1 + negemot_z_missing + age_z + negemot_z_missing:age_z,
-         cores = 4,
-         file = "fits/model09.08")
+```{r model9.8}
+model9.8 <- update(
+  model9.6, 
+  newdata = glbwarm,
+  govact_z ~ 1 + negemot_z_missing + age_z + negemot_z_missing:age_z,
+  cores = 4,
+  file = "fits/model09.08")
 ```
 
-Let's compare the listwise deletion results with the model based on all the data.
+Note the warning. Let's compare the listwise deletion results with the model based on all the data.
 
 ```{r}
 print(model9.6)
@@ -453,12 +431,12 @@ my_model <-
 With our multivariate formula saved as `my_model`, we're ready to plug it into `brm()` and fit.
 
 ```{r model9.9}
-model9.9 <- 
-  brm(data = glbwarm,
-      family = gaussian,
-      my_model,
-      cores = 4,
-      file = "fits/model09.09")
+model9.9 <- brm(
+  data = glbwarm,
+  family = gaussian,
+  my_model,
+  cores = 4,
+  file = "fits/model09.09")
 ```
 
 Let's see what we've done.
@@ -469,12 +447,12 @@ print(model9.9)
 
 When using the multivariate `mi()` syntax, your `print()` output becomes more complicated. We got regression sub-models for both `govact_z` and `negemot_z_missing`. But look at the line at the top of the output that reads "Data: glbwarm (Number of observations: 815)". The multivariate `mi()` syntax used all the available data. No listwise deletion necessary.
 
-The `print()` output for our model obscured some of the results. To clarify what the `mi()` syntax did, let's peek at the first columns returned by `posterior_samples()`.
+The `print()` output for our model obscured some of the results. To clarify what the `mi()` syntax did, let's peek at the first columns returned by `as_draws_df()`.
 
-```{r}
-post <- posterior_samples(model9.9)
+```{r, warning = F}
+draws <- as_draws_df(model9.9)
 
-post[, 1:20] %>% 
+draws[, 1:20] %>% 
   glimpse()
 ```
 
@@ -483,7 +461,7 @@ Columns `b_govactz_Intercept` through `sigma_negemotzmissing` were business as u
 ```{r, warning = F, message = F}
 library(tidybayes)
 
-post %>% 
+draws %>% 
   pivot_longer(starts_with("Ymi"),
                names_to = "row") %>% 
   group_by(row) %>% 
@@ -497,7 +475,7 @@ That's a lot of output. Here's what those summaries look like in a coefficient p
 
 ```{r, fig.width = 6, fig.height = 2, warning = F}
 # summarize just like before
-post %>% 
+draws %>% 
    pivot_longer(starts_with("Ymi"),
                 names_to = "row") %>% 
   group_by(row) %>% 
@@ -508,11 +486,10 @@ post %>%
   geom_hline(yintercept = 0, color = "grey75") +
   geom_pointinterval(size = 1/3) +
   scale_x_discrete("rank-ordered row number", breaks = NULL) +
-  ylab("imputed value") +
-  theme_xkcd()
+  ylab("imputed value")
 ```
 
-Each missing `negemot_z` value got an entire posterior distribution. And just as the model is uncertain about what those values might have been, that uncertainty was baked right into the primary submodel predicting `govact_z`. That's a good thing. We want our Bayesian models to use as much information as they can and yield results with as much certainty as possible. But we don't want our models to be more certain than the data--and priors--allow. When you use listwise deletion methods, you leave information on the table, which we don't want. But when you use old fashioned ad hock methods like mean imputation, you underestimate the uncertainty in the model, which we also don't want. We want the middle path.
+Each missing `negemot_z` value got an entire posterior distribution. Just as the model is uncertain about what those values might have been, that uncertainty was baked right into the primary submodel predicting `govact_z`. That's a good thing. We want our Bayesian models to use as much information as they can and yield results with as much certainty as possible. But we don't want our models to be more certain than the data--and priors--allow. When you use listwise deletion methods, you leave information on the table, which we don't want. But when you use old fashioned ad hock methods like mean imputation, you underestimate the uncertainty in the model, which we also don't want. We want the middle path.
 
 Here's a focused look at two other important new parameters.
 
@@ -539,13 +516,13 @@ None of this is a problem for **brms**. But instead of using the `model=i` synta
 
 It's trivial to add `sex`, its interaction with `negemot`, and the two covariates (i.e., `posemot` and `ideology`) to the model. We can even do it within `update()`.
 
-```{r model9.10, warning = F, message = F}
-model9.10 <- 
-  update(model9.1, 
-         newdata = glbwarm,
-         govact ~ 1 + negemot + sex + age + posemot + ideology + negemot:sex + negemot:age,
-         cores = 4,
-         file = "fits/model09.10")
+```{r model9.10}
+model9.10 <- update(
+  model9.1, 
+  newdata = glbwarm,
+  govact ~ 1 + negemot + sex + age + posemot + ideology + negemot:sex + negemot:age,
+  cores = 4,
+  file = "fits/model09.10")
 ```
 
 Our output matches nicely with the formula at the bottom of page 232 and the PROCESS output in Figure 9.2. 
@@ -556,30 +533,28 @@ print(model9.10, digits = 3)
 
 On page 325, Hayes discussed the unique variance each of the two moderation terms accounted for after controlling for the other covariates. In order to get our Bayesian version of these, we'll have to fit two additional models, one after removing each of the interaction terms.
 
-```{r model9.11, warning = F, message = F}
-model9.11 <- 
-  update(model9.10, 
-         newdata = glbwarm,
-         govact ~ 1 + negemot + sex + age + posemot + ideology + negemot:sex,
-         cores = 4,
-         file = "fits/model09.11")
+```{r model9.11}
+model9.11 <- update(
+  model9.10, 
+  newdata = glbwarm,
+  govact ~ 1 + negemot + sex + age + posemot + ideology + negemot:sex,
+  cores = 4,
+  file = "fits/model09.11")
 
-model9.12 <- 
-  update(model9.10, 
-         newdata = glbwarm,
-         govact ~ 1 + negemot + sex + age + posemot + ideology + negemot:age,
-         cores = 4,
-         file = "fits/model09.12")
+model9.12 <- update(
+  model9.10, 
+  newdata = glbwarm,
+  govact ~ 1 + negemot + sex + age + posemot + ideology + negemot:age,
+  cores = 4,
+  file = "fits/model09.12")
 ```
 
 Here we'll extract the `bayes_R2()` iterations for each of the three models, place them all in a single tibble, and then do a little arithmetic to get the difference scores. After all that data wrangling, we'll `summarize()` as usual.
 
-
 ```{r}
-r2 <-
-  tibble(r2_without_age_interaction = bayes_R2(model9.11, summary = F)[, 1],
-         r2_without_sex_interaction = bayes_R2(model9.12, summary = F)[, 1],
-         r2_with_both_interactions  = bayes_R2(model9.10, summary = F)[, 1]) %>% 
+r2 <- tibble(r2_without_age_interaction = bayes_R2(model9.11, summary = F)[, 1],
+             r2_without_sex_interaction = bayes_R2(model9.12, summary = F)[, 1],
+             r2_with_both_interactions  = bayes_R2(model9.10, summary = F)[, 1]) %>% 
   mutate(`delta R2 due to age interaction` = r2_with_both_interactions - r2_without_age_interaction,
          `delta R2 due to sex interaction` = r2_with_both_interactions - r2_without_sex_interaction)
 
@@ -606,11 +581,9 @@ Hopefully it's clear how our proportions turned percentages correspond to the nu
 If we want to prep for our version of Figure 9.3, we'll need to carefully specify the predictor values we'll pass through the `fitted()` function. Here we do so and save them in `nd`.
 
 ```{r}
-nd <-
-  crossing(negemot = seq(from = .5, to = 6.5, length.out = 30),
-           sex     = 0:1) %>% 
-  expand(nesting(negemot, sex),
-         age = c(30, 50, 70)) %>% 
+nd <- crossing(negemot = seq(from = .5, to = 6.5, length.out = 30),
+               sex     = 0:1) %>% 
+  expand_grid(age = c(30, 50, 70)) %>% 
   mutate(posemot  = mean(glbwarm$posemot),
          ideology = mean(glbwarm$ideology))
 
@@ -633,19 +606,22 @@ fitted(model9.10, newdata = nd) %>%
   geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5, fill = sex),
               alpha = 1/3, color = "transparent") +
   geom_line(aes(y = Estimate, color = sex),
-            size = 1) +
+            linewidth = 1) +
+  scale_fill_manual(values = colorblind_pal()(8)[2:3]) +
+  scale_color_manual(values = colorblind_pal()(8)[2:3]) +
   scale_x_continuous(breaks = 1:6) +
   coord_cartesian(xlim = c(1, 6),
                   ylim = c(3, 6)) +
   labs(x = expression("Negative Emotions about Climate Change, "*italic(X)),
        y = expression("Support for Government Action to Mitigate Climate Change, "*italic(Y))) +
-  theme_xkcd() +
   theme(legend.position = "top",
         legend.title = element_blank()) +
   facet_grid(age ~ .)
 ```
 
-Recall that the conditional effect of $X$ for various values of $W$ and $Z$ is
+Note how we've colored the lines and ribbons with help from the handy `ggthemes::colorblind_pal()` function, which provides colorblind-friendly colors for categorical variables.
+
+Anyway, recall that the conditional effect of $X$ for various values of $W$ and $Z$ is
 
 $$\theta_{X \rightarrow Y} = b_1 + b_4 W + b_5 Z.$$
 
@@ -658,12 +634,12 @@ b_{\text{negemot} \times \text{sex}} \text{sex} +
 b_{\text{negemot} \times \text{age}} \text{age}.
 $$
 
-This is easiest to show with `posterior_samples()` and a little algebra. As in the middle of page 329, here we solve for both sexes and `age == 50`.
+This is easiest to show with `as_draws_df()` and a little algebra. As in the middle of page 329, here we solve for both sexes and `age == 50`.
 
 ```{r, warning = F}
-post <- posterior_samples(model9.10)
+draws <- as_draws_df(model9.10)
 
-post %>% 
+draws %>% 
   # algebra
   mutate(men   = b_negemot + `b_negemot:sex` * 1 + `b_negemot:age` * 50,
          women = b_negemot + `b_negemot:sex` * 0 + `b_negemot:age` * 50) %>% 
@@ -680,7 +656,7 @@ post %>%
 Switching our discussion to $b_5$ (i.e., $b_{\text{negemot} \times \text{age}}$), Hayes showed its value for two groups 10 years apart. Here it is for `model9.10`.
 
 ```{r, warning = F}
-post %>% 
+draws %>% 
   # algebra
   transmute(`10 * b_5`   = `b_negemot:age` * 10) %>% 
   mean_qi() %>% 
@@ -690,7 +666,7 @@ post %>%
 Further down on page 329, Hayes solved for the conditional effect of `negemot` for women at 50 versus 30.
 
 ```{r, warning = F}
-post %>% 
+draws %>% 
   mutate(women_50 = b_negemot + `b_negemot:sex` * 0 + `b_negemot:age` * 50,
          women_30 = b_negemot + `b_negemot:sex` * 0 + `b_negemot:age` * 30) %>% 
   mutate(`women_50 - women_30` = women_50 - women_30) %>% 
@@ -704,7 +680,7 @@ post %>%
 Here it is for men.
 
 ```{r, warning = F}
-post %>% 
+draws %>% 
   mutate(men_50 = b_negemot + `b_negemot:sex` * 1 + `b_negemot:age` * 50,
          men_30 = b_negemot + `b_negemot:sex` * 1 + `b_negemot:age` * 30) %>% 
   mutate(`men_50 - men_30` = men_50 - men_30) %>% 
@@ -721,15 +697,15 @@ If you look closely, you'll see `women_50 - women_30` is the same as `men_50 - m
 
 To fit the moderated moderation model in **brms**, just add to two new interaction terms to the `formula`.
 
-```{r model9.13, warning = F, message = F}
-model9.13 <- 
-  update(model9.10, 
-         newdata = glbwarm,
-         govact ~ 1 + negemot + sex + age + posemot + ideology + 
-           negemot:sex + negemot:age + sex:age + 
-           negemot:sex:age,
-         cores = 4,
-         file = "fits/model09.13")
+```{r model9.13}
+model9.13 <- update(
+  model9.10, 
+  newdata = glbwarm,
+  govact ~ 1 + negemot + sex + age + posemot + ideology + 
+    negemot:sex + negemot:age + sex:age + 
+    negemot:sex:age,
+  cores = 4,
+  file = "fits/model09.13")
 ```
 
 Check the summary.
@@ -761,23 +737,24 @@ fitted(model9.13, newdata = nd) %>%
               alpha = 1/3, color = "transparent") +
   geom_line(aes(y = Estimate, color = sex),
             size = 1) +
+  scale_fill_manual(values = colorblind_pal()(8)[2:3]) +
+  scale_color_manual(values = colorblind_pal()(8)[2:3]) +
   scale_x_continuous(breaks = 1:6) +
   coord_cartesian(xlim = c(1, 6),
                   ylim = c(3, 6)) +
   labs(x = expression("Negative Emotions about Climate Change, "*italic(X)),
        y = expression("Support for Government Action to Mitigate Climate Change, "*italic(Y))) +
-  theme_xkcd() +
   theme(legend.position = "top",
         legend.title = element_blank()) +
   facet_grid(age ~ .)
 ```
 
-For the pick-a-point values Hayes covered on page 338, recall that when using `posterior_sample()`, our $b_4$ is `b_negemot:sex` and our $b_7$ is `b_negemot:sex:age`.
+For the pick-a-point values Hayes covered on page 338, recall that when using `as_draws_df()`, our $b_4$ is `b_negemot:sex` and our $b_7$ is `b_negemot:sex:age`.
 
 ```{r, warning = F}
-post <- posterior_samples(model9.13)
+draws <- as_draws_df(model9.13)
 
-post %>% 
+draws %>% 
   mutate(`age = 30` = `b_negemot:sex` + `b_negemot:sex:age` * 30, 
          `age = 50` = `b_negemot:sex` + `b_negemot:sex:age` * 50, 
          `age = 70` = `b_negemot:sex` + `b_negemot:sex:age` * 70) %>% 
@@ -787,12 +764,12 @@ post %>%
   mutate_if(is.double, round, digits = 3)
 ```
 
-Our method for making a JN technique plot with `fitted()` way back in Chapter 7 isn't going to work, here. At least not as far as I can see. Rather, we're going to have to skillfully manipulate our `post` object. For those new to **R**, this might be a little confusing at first. So I'm going to make a crude attempt first and then get more sophisticated.
+Our method for making a JN technique plot with `fitted()` way back in Chapter 7 isn't going to work, here. At least not as far as I can see. Rather, we're going to have to skillfully manipulate our `draws` object. For those new to **R**, this might be a little confusing at first. So I'm going to make a crude attempt first and then get more sophisticated.
 
 Crude attempt:
 
 ```{r, fig.width = 6, fig.height = 4.5, warning = F}
-post %>% 
+draws %>% 
   mutate(`age = 30` = `b_negemot:sex` + `b_negemot:sex:age` * 30, 
          `age = 50` = `b_negemot:sex` + `b_negemot:sex:age` * 50, 
          `age = 70` = `b_negemot:sex` + `b_negemot:sex:age` * 70) %>% 
@@ -810,27 +787,26 @@ post %>%
   geom_line(aes(y = value), 
             size = 1) +
   coord_cartesian(xlim = c(20, 85),
-                  ylim = c(-.25, .75)) +
-  theme_xkcd()
+                  ylim = c(-.25, .75))
 ```
 
-Notice how we just took the code from our pick-a-point analysis and dumped it into a plot. So one obvious approach would be to pick like 30 or 50 `age` values to plug into `transmute()` and just do the same thing. If you're super afraid of coding, that'd be one intuitive but extremely verbose attempt. I have done stuff like that earlier in my **R** career. There's no shame in being extremely verbose and redundant if that's what makes sense. Another way is to think in terms of functions. When we made `age = 30` within `transmute()`, we took a specific `age` value (i.e., 30) and plugged it into the formula `b_negemot:sex + b_negemot:sex:age * i` where $i$ = 30. And when we made `age = 50` we did exactly the same thing but switched out the 30 for a 50. So what we need is a function that will take a range of values for $i$, plug them into our `b_negemot:sex + b_negemot:sex:age * i` formula, and then neatly return the output. A nice base **R** function for that is `sapply()`.
+Notice how we just took the code from our pick-a-point analysis and dumped it into a plot. So one obvious approach would be to pick like 30 or 50 `age` values to plug into `transmute()`, and just do the same thing. If you're super afraid of coding, that'd be one intuitive but extremely verbose attempt. I have done stuff like that earlier in my **R** career. There's no shame in being extremely verbose and redundant if that's what makes sense. Another way is to think in terms of functions. When we made `age = 30` within `transmute()`, we took a specific `age` value (i.e., 30) and plugged it into the formula `b_negemot:sex + b_negemot:sex:age * i` where $i$ = 30. And when we made `age = 50` we did exactly the same thing but switched out the 30 for a 50. So what we need is a function that will take a range of values for $i$, plug them into our `b_negemot:sex + b_negemot:sex:age * i` formula, and then neatly return the output. A nice base **R** function for that is `sapply()`.
 
 ```{r}
 sapply(15:90, function(i) {
-  post$`b_negemot:sex` + post$`b_negemot:sex:age` * i
+  draws$`b_negemot:sex` + draws$`b_negemot:sex:age` * i
 }
 ) %>% 
   data.frame() %>% 
   str()
 ```
 
-Okay, so that looks a little monstrous. What we did in the first argument was tell `sapply()` which values we'd like to use in some function. We chose each integer ranging from 15 to 90--which, if you do the math, is 76 values. We then told `sapply()` to plug those values into a custom function, which we defined as `function(i) {post$b_negemot:sex + post$b_negemot:sex:age * i}`. In our custom function, `i` was a placeholder for each of those 76 integers. But remember that `post` has 4,000 rows, each one corresponding to one of the 4,000 posterior iterations. Thus, for each of our 76 `i`-values, we got 4,000 results. After all that `sapply()` returned a matrix. Since we like to work within the **tidyverse** and use **ggplot2**, we just went ahead and put those results in a tibble.
+Okay, so that looks a little monstrous. What we did in the first argument was tell `sapply()` which values we'd like to use in some function. We chose each integer ranging from 15 to 90--which, if you do the math, is 76 values. We then told `sapply()` to plug those values into a custom function, which we defined as `function(i) {draws$b_negemot:sex + draws$b_negemot:sex:age * i}`. In our custom function, `i` was a placeholder for each of those 76 integers. But remember that `draws` has 4,000 rows, each one corresponding to one of the 4,000 posterior iterations. Thus, for each of our 76 `i`-values, we got 4,000 results. After all that `sapply()` returned a matrix. Since we like to work within the **tidyverse** and use **ggplot2**, we just went ahead and put those results in a tibble.
 
 With our `sapply()` output in hand, all we need to do is a little more indexing and summarizing and we're ready to plot. The result is our very own version of Figure 9.7.
 
-```{r, fig.width = 6, fig.height = 4.5, message = F, warning = F}
-sapply(15:90, function(i) post$`b_negemot:sex` + post$`b_negemot:sex:age` * i) %>% 
+```{r, fig.width = 6, fig.height = 4.5}
+sapply(15:90, function(i) draws$`b_negemot:sex` + draws$`b_negemot:sex:age` * i) %>% 
   data.frame() %>% 
   set_names(15:90) %>% 
   pivot_longer(everything()) %>% 
@@ -844,19 +820,18 @@ sapply(15:90, function(i) post$`b_negemot:sex` + post$`b_negemot:sex:age` * i) %
   geom_ribbon(aes(ymin = .lower, ymax = .upper),
               alpha = 1/2) +
   geom_line(aes(y = value), 
-            size = 1) +
+            linewidth = 1) +
   coord_cartesian(xlim = c(20, 85),
                   ylim = c(-.25, .75)) +
   labs(x = expression(paste("Age, ", italic(Z))),
-       y = "Conditional Two-way Interaction Between\nNegative Emotions and Sex") +
-  theme_xkcd()
+       y = "Conditional Two-way Interaction Between\nNegative Emotions and Sex")
 ```
 
 Or for kicks and giggles, another way to get a clearer sense of how our data informed the shape of the plot, here we replace our `geom_ribbon() + geom_line()` code with `geom_pointrange()`.
 
 ```{r, fig.width = 6, fig.height = 4.5, warning = F}
 sapply(15:90, function(i) {
-  post$`b_negemot:sex` + post$`b_negemot:sex:age` * i
+  draws$`b_negemot:sex` + draws$`b_negemot:sex:age` * i
 }) %>% 
   data.frame() %>% 
   set_names(15:90) %>% 
@@ -869,17 +844,16 @@ sapply(15:90, function(i) {
   geom_hline(yintercept = 0, color = "grey75") +
   geom_vline(xintercept = 38.114, color = "grey75") +
   geom_pointrange(aes(y = value, ymin = .lower, ymax = .upper),
-                  shape = 16, size = 1/3) +
+                  shape = 16, linewidth = 1/3) +
   coord_cartesian(xlim = c(20, 85),
                   ylim = c(-.25, .75)) +
   labs(x = expression("Age, "*italic(Z)),
-       y = "Conditional Two-way Interaction Between\nNegative Emotions and Sex") +
-  theme_xkcd()
+       y = "Conditional Two-way Interaction Between\nNegative Emotions and Sex")
 ```
 
 Although I probably wouldn't try to use a plot like this in a manuscript, I hope it makes clear how the way we've been implementing the JN technique is just the pick-a-point approach in bulk. No magic, here.
 
-For all you **tidyverse** fanatics out there, don't worry. There are more **tidyverse**-centric ways to get the plot values than with `sapply()`. We'll get to them soon enough. It's advantageous to have good old base **R** `sapply()` up your sleeve, too. And new **R** users, it's helpful to know that `sapply()` is one part of the `apply()` family of base **R** functions, which you might learn more about [here](https://www.r-{bloggers.com}r-tutorial-on-the-apply-family-of-functions/) or [here](http://www.dummies.com/programming/r/how-to-use-the-apply-family-of-functions-in-r/) or [here](https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/).
+For all you **tidyverse** fanatics out there, don't worry. There are more **tidyverse**-centric ways to get the plot values than with `sapply()`. We'll get to them soon enough. It's advantageous to have good old base **R** `sapply()` up your sleeve, too. And new **R** users, it's helpful to know that `sapply()` is one part of the `apply()` family of base **R** functions, about which you might learn more [here](https://www.r-{bloggers.com}r-tutorial-on-the-apply-family-of-functions/) or [here](http://www.dummies.com/programming/r/how-to-use-the-apply-family-of-functions-in-r/) or [here](https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/).
 
 Now the conditional effect of $X$ on $Y$ given $W$ and $Z$ is
 
@@ -895,10 +869,10 @@ b_{\text{negemot} \times \text{age}} \text{age} +
 b_{\text{negemot} \times \text{sex} \times \text{age}} \text{sex} \times \text{age}.
 $$
 
-Following Hayes at the bottom of page 341, here is the difference in the effect of negative emotions between men and women among 30 year olds, $\theta_{XW \rightarrow Y} | (Z = 30)$.
+Following Hayes at the bottom of page 341, here is the difference in the effect of negative emotions between men and women among 30-year-olds, $\theta_{XW \rightarrow Y} | (Z = 30)$.
 
 ```{r, warning = F}
-post %>% 
+draws %>% 
   # algebra
   mutate(men   = b_negemot + `b_negemot:sex` * 1 + `b_negemot:age` * 30 + `b_negemot:sex:age` * 1 * 30,
          women = b_negemot + `b_negemot:sex` * 0 + `b_negemot:age` * 30 + `b_negemot:sex:age` * 0 * 30) %>% 
@@ -915,7 +889,7 @@ post %>%
 In contrast, here is $\theta_{XW \rightarrow Y} | (Z = 50)$.
 
 ```{r, warning = F}
-post %>% 
+draws %>% 
   mutate(men   = b_negemot + `b_negemot:sex` * 1 + `b_negemot:age` * 50 + `b_negemot:sex:age` * 1 * 50,
          women = b_negemot + `b_negemot:sex` * 0 + `b_negemot:age` * 50 + `b_negemot:sex:age` * 0 * 50) %>% 
   mutate(`men - women` = men - women) %>% 
@@ -929,7 +903,7 @@ post %>%
 Finally, here we compute $\theta_{XW \rightarrow Y} | (Z = 70)$.
 
 ```{r, warning = F}
-post %>% 
+draws %>% 
   transmute(men   = b_negemot + `b_negemot:sex` * 1 + `b_negemot:age` * 70 + `b_negemot:sex:age` * 1 * 70,
             women = b_negemot + `b_negemot:sex` * 0 + `b_negemot:age` * 70 + `b_negemot:sex:age` * 0 * 70) %>% 
   mutate(`men - women` = men - women) %>% 
@@ -972,13 +946,13 @@ Since we don't have the `contrast` feature automated like in PROCESS, we'll have
 
 $$\Delta \theta_{X \rightarrow Y} = (b_1 + b_4 w_1 + b_5 z_1 + b_7 w_1 z_1) - (b_1 + b_4 w_2 + b_5 z_2 + b_7 w_2 z_2).$$
 
-```{r, message = F}
+```{r, warning = F}
 w1 <- 1
 z1 <- 30
 w2 <- 0
 z2 <- 50
 
-post %>% 
+draws %>% 
   mutate(`30-year-old men`   = b_negemot + `b_negemot:sex` * w1 + `b_negemot:age` * z1 + `b_negemot:sex:age` * w1 * z1, 
          `50-year-old women` = b_negemot + `b_negemot:sex` * w2 + `b_negemot:age` * z2 + `b_negemot:sex:age` * w2 * z2) %>%
   mutate(contrast = `30-year-old men` - `50-year-old women`) %>% 
@@ -991,14 +965,14 @@ post %>%
   mutate_if(is.double, round, digits = 4)
 ```
 
-Notice how our posterior $SD$ corresponded nicely to the standard error in Hayes's contrast test. And we didn't even have to worry about using the frightening Formula 9.21 on page 345. That information was contained in the posterior distribution all along. All we had to do was combine the parameter iterations with a little algebra and then `summarize()`.
+Notice how our posterior $\textit{SD}$ corresponded nicely to the standard error in Hayes's contrast test. And we didn't even have to worry about using the frightening Formula 9.21 on page 345. That information was contained in the posterior distribution all along. All we had to do was combine the parameter iterations with a little algebra and then `summarize()`.
 
 For good measure, we'll compute using the equation in the second line,
 
 $$\Delta \theta_{X \rightarrow Y} = b_4 (w_1 - w_2) + b_5 (z_1 - z_2) + b_7 (w_1 z_1 - w_2 z_2).$$
 
-```{r, message = F}
-post %>% 
+```{r, warning = F}
+draws %>% 
   mutate(contrast = `b_negemot:sex` * (w1 - w2) + `b_negemot:age` * (z1 - z2) + `b_negemot:sex:age` * (w1 * z1 - w2 * z2)) %>% 
   pivot_longer(contrast) %>%
   group_by(name) %>%
@@ -1015,5 +989,10 @@ Same results.
 
 ```{r}
 sessionInfo()
+```
+
+```{r, echo = F, message = F, warning = F, results = "hide"}
+ggplot2::theme_set(ggplot2::theme_gray())
+pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```
 

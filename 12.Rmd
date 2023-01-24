@@ -344,7 +344,7 @@ Note how wide those 95% intervals are relative to the scale of the $y$-axis, whi
 
 We've already computed the 95% intervals for the direct effect, $\theta_{X \rightarrow Y}$, conditional on the three levels of $W$. Here's a different look at those intervals, superimposed on the 80% and 50% intervals, using the `tidybayes::stat_interval()` function.
 
-```{r, fig.width = 6, fig.height = 4}
+```{r, fig.width = 6, fig.height = 4, warning = F}
 draws %>% 
   pivot_longer(starts_with("direct")) %>% 
   mutate(name = str_remove(name, "direct effect when W is ") %>% as.double()) %>% 

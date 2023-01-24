@@ -1092,8 +1092,6 @@ sessionInfo()
 pacman::p_unload(pacman::p_loaded(), character.only = TRUE)
 ```
 
-## Footnote {-}
-
 [^2.1]: Hayes did not cover count regression with the Poisson likelihood in this textbook. If you'd like to learn more, one place to start is with [McElreath's lecture on binomial and Poisson models](https://youtu.be/hRJtKCIDTwc).
 
 [^2.2]: We will not be covering structural equation modeling (SEM) in this book If you're interested, you might check out [this video series](https://www.youtube.com/playlist?list=PLw93TUuxrFAZkJVc5dhgTZpOT7qmTjlT7) by Erin M. Buchanan on SEM within **R**, particularly with the handy [**lavaan**](https://lavaan.ugent.be/) package [@R-lavaan; @Merkle2018blavaan].

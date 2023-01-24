@@ -808,7 +808,7 @@ as_draws_df(model2.8) %>%
   theme_bw()
 ```
 
-For more discussion the NHST paradigm and how it compares with variations of Bayesian statistics, check out Kruschke's [-@kruschkeDoingBayesianData2015] text, [*Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan*](https://sites.google.com/site/doingbayesiandataanalysis/), particularly chapters 10 through 13. You can find my [-@kurzDoingBayesianData2023] **brms** + **tidyverse** translation of that text at [https://bookdown.org/content/3686/](https://bookdown.org/content/3686/).
+For more discussion the NHST paradigm and how it compares with variations of Bayesian statistics, check out Kruschke's [-@kruschkeDoingBayesianData2015] text, [*Doing Bayesian data analysis: A tutorial with R, JAGS, and Stan*](https://sites.google.com/site/doingbayesiandataanalysis/), particularly chapters 10 through 13. You can find my [-@kurzDoingBayesianDataAnalysis2023] **brms** + **tidyverse** translation of that text at [https://bookdown.org/content/3686/](https://bookdown.org/content/3686/).
 
 ### Interval estimation.
 

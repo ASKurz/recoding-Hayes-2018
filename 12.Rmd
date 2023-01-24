@@ -33,12 +33,12 @@ $$Y = b_0 + b_1 X + e_Y,$$
 where the $X$ is `frame` the $Y$ is `donate`. Here's the model.
 
 ```{r model12.1}
-model12.1 <-
-  brm(data = disaster, 
-      family = gaussian,
-      donate ~ 1 + frame,
-      chains = 4, cores = 4,
-      file = "fits/model12.01")
+model12.1 <- brm(
+  data = disaster, 
+  family = gaussian,
+  donate ~ 1 + frame,
+  chains = 4, cores = 4,
+  file = "fits/model12.01")
 ```
 
 Check the summary.
@@ -53,7 +53,7 @@ Hayes interpreted the coefficient for `frame` through the lens of a $t$ statisti
 library(tidybayes)
 theme_set(theme_tidybayes() + cowplot::panel_border())
 
-posterior_samples(model12.1) %>% 
+as_draws_df(model12.1) %>% 
   ggplot(aes(x = b_frame, y = 0)) +
   stat_halfeye() +
   geom_vline(xintercept = 0, linetype = 2) +
@@ -68,12 +68,12 @@ $$Y = b_0 + b_1 X + b_2 W + b_3 XW + e_Y,$$
 where `skeptic` is the $W$ variable.
 
 ```{r model12.2}
-model12.2 <-
-  brm(data = disaster, 
-      family = gaussian,
-      donate ~ 1 + frame + skeptic + frame:skeptic,
-      chains = 4, cores = 4,
-      file = "fits/model12.02")
+model12.2 <- brm(
+  data = disaster, 
+  family = gaussian,
+  donate ~ 1 + frame + skeptic + frame:skeptic,
+  chains = 4, cores = 4,
+  file = "fits/model12.02")
 ```
 
 Our `model12.2` summary matches nicely with the text.
@@ -85,12 +85,11 @@ print(model12.2, digits = 3)
 Here's our Figure 12.2.
 
 ```{r, fig.width = 6, fig.height = 5}
-nd <-
-  crossing(frame   = 0:1,
-           skeptic = seq(from = 0, to = 7, length.out = 30))
+nd <- crossing(frame   = 0:1,
+               skeptic = seq(from = 0, to = 7, length.out = 30))
 
 fitted(model12.2, newdata = nd) %>% 
-  as_tibble() %>% 
+  data.frame() %>% 
   bind_cols(nd) %>% 
   mutate(frame = ifelse(frame == 0, str_c("Natural causes (X = ", frame, ")"),
                         str_c("Climate change (X = ", frame, ")"))) %>% 
@@ -115,14 +114,14 @@ fitted(model12.2, newdata = nd) %>%
 
 In Hayes's Figure 12.2, he emphasized the differences at the three levels of `skeptic`. If you want the full difference score distributions in a pick-a-point-approach sort of way, you might plot the densities with `tidybayes::stat_halfeye()`, which places coefficient plots at the base of the densities. In this case, we show the posterior medians with the dots, the 50% intervals with the thick horizontal lines, and the 95% intervals with the thinner horizontal lines.
 
-```{r, fig.width = 6, fig.height = 2.5, warning = F}
-nd <-
-  crossing(frame   = 0:1,
-           skeptic = quantile(disaster$skeptic, probs = c(.16, .5, .86)))
+```{r, fig.width = 6, fig.height = 2.5}
+nd <- crossing(frame   = 0:1,
+               skeptic = quantile(disaster$skeptic, probs = c(.16, .5, .86)))
 
-fitted(model12.2, summary = F,
+fitted(model12.2, 
+       summary = F,
        newdata = nd) %>% 
-  as_tibble() %>% 
+  data.frame() %>% 
   set_names(mutate(nd, label = str_c(frame, "_", skeptic)) %>% pull(label)) %>% 
   mutate(iter = 1:n()) %>% 
   pivot_longer(-iter) %>% 
@@ -141,14 +140,14 @@ fitted(model12.2, summary = F,
 Here's our simple mediation model, `model12.3`, using the multivariate syntax right in the `brm()` function.
 
 ```{r model12.3}
-model12.3 <-
-  brm(data = disaster, 
-      family = gaussian,
-      bf(justify ~ 1 + frame) +
-        bf(donate ~ 1 + frame + justify) +
-        set_rescor(FALSE),
-      chains = 4, cores = 4,
-      file = "fits/model12.03")
+model12.3 <- brm(
+  data = disaster, 
+  family = gaussian,
+  bf(justify ~ 1 + frame) +
+    bf(donate ~ 1 + frame + justify) +
+    set_rescor(FALSE),
+  chains = 4, cores = 4,
+  file = "fits/model12.03")
 ```
 
 ```{r}
@@ -161,10 +160,10 @@ Consider the Bayesian $R^2$ summaries.
 bayes_R2(model12.3) %>% round(digits = 3)
 ```
 
-If you want the indirect effect with its intervals, you use `posterior_samples()` and data wrangle, as usual.
+If you want the indirect effect with its intervals, you use `as_draws_df()` and data wrangle, as usual.
 
-```{r, warning = F, message = F}
-posterior_samples(model12.3) %>% 
+```{r}
+as_draws_df(model12.3) %>% 
   mutate(ab = b_justify_frame * b_donate_justify) %>% 
   mean_qi(ab)
 ```
@@ -181,14 +180,14 @@ Y & = i_Y + c_1' X + c_2' W + c_3' XW + b M + e_Y.
 We don't need to do anything particularly special to fit a model like this with **brms**. It just requires we do a careful job specifying the formulas in our `bf()` arguments. If you find this syntax a little too cumbersome, you can always specify the formulas outside of `brm()`, save them as one or multiple objects, and plug those objects into `brm()`.
 
 ```{r model12.4}
-model12.4 <-
-  brm(data = disaster, 
-      family = gaussian,
-      bf(justify ~ 1 + frame + skeptic + frame:skeptic) +
-        bf(donate ~ 1 + frame + justify + skeptic + frame:skeptic) +
-        set_rescor(FALSE),
-      chains = 4, cores = 4,
-      file = "fits/model12.04")
+model12.4 <- brm(
+  data = disaster, 
+  family = gaussian,
+  bf(justify ~ 1 + frame + skeptic + frame:skeptic) +
+    bf(donate ~ 1 + frame + justify + skeptic + frame:skeptic) +
+    set_rescor(FALSE),
+  chains = 4, cores = 4,
+  file = "fits/model12.04")
 ```
 
 Check the model summary.
@@ -221,33 +220,31 @@ This is $b$.
 fixef(model12.4)["donate_justify", ] %>% round(digits = 3)
 ```
 
-We'll need to employ `posterior_samples()` to compute $(a_1 + a_3 W)b$, as shown in Table 12.2.
+We'll need to employ `as_draws_df()` to compute $(a_1 + a_3 W)b$, as shown in Table 12.2.
 
-```{r, warning = F, message = F}
-post <- 
-  posterior_samples(model12.4) %>% 
+```{r, warning = F}
+draws <- as_draws_df(model12.4) %>% 
   mutate(`indirect effect when W is 1.592` = (b_justify_frame + `b_justify_frame:skeptic` * 1.592) * b_donate_justify,
          `indirect effect when W is 2.800` = (b_justify_frame + `b_justify_frame:skeptic` * 2.800) * b_donate_justify,
          `indirect effect when W is 5.200` = (b_justify_frame + `b_justify_frame:skeptic` * 5.200) * b_donate_justify)
 
-post %>% 
+draws %>% 
   pivot_longer(starts_with("indirect")) %>% 
   group_by(name) %>% 
-  median_qi(value, .prob = .95) %>% 
+  median_qi(value, .width = .95) %>% 
   mutate_if(is.double, round, digits = 3)
 ```
 
 And if you really want that full-on Table 12.2 layout, try this.
 
-```{r, message = F}
-post %>% 
-  mutate(a1 = b_justify_frame,
-         a3 = `b_justify_frame:skeptic`,
-         b  = b_donate_justify,
-         c1 = b_donate_frame,
-         c3 = `b_donate_frame:skeptic`) %>% 
-  expand(nesting(a1, a3, b, c1, c3),
-         w = c(1.592, 2.800, 5.200)) %>% 
+```{r, warning = F, message = F}
+draws %>% 
+  transmute(a1 = b_justify_frame,
+            a3 = `b_justify_frame:skeptic`,
+            b  = b_donate_justify,
+            c1 = b_donate_frame,
+            c3 = `b_donate_frame:skeptic`) %>% 
+  expand_grid(w = c(1.592, 2.800, 5.200)) %>% 
   mutate(`a1 + a3w`      = a1 + a3 * w,
          `(a1 + a3w)b`   = (a1 + a3 * w) * b,
          `direct effect` = c1 + c3 * w) %>% 
@@ -264,14 +261,13 @@ post %>%
 
 We already computed this in the last code block, above. But since we just focused on the posterior means, here's a summary of their medians and 95% intervals.
 
-```{r, warning = F, message = F}
-post <- 
-  post %>% 
+```{r, warning = F}
+draws <- draws %>% 
   mutate(`direct effect when W is 1.592` = b_donate_frame + `b_donate_frame:skeptic` * 1.592,
          `direct effect when W is 2.800` = b_donate_frame + `b_donate_frame:skeptic` * 2.800,
          `direct effect when W is 5.200` = b_donate_frame + `b_donate_frame:skeptic` * 5.200)
 
-post %>% 
+draws %>% 
   pivot_longer(starts_with("direct")) %>% 
   group_by(name) %>% 
   median_qi(value, .width = .95) %>% 
@@ -284,9 +280,8 @@ We can always plot, too.
 ```{r, fig.width = 6, fig.height = 2.5}
 w <- c(1.592, 2.800, 5.200)
 
-post %>% 
-  expand(nesting(b_donate_frame, `b_donate_frame:skeptic`),
-         w = w) %>% 
+draws %>% 
+  expand_grid(w = w) %>% 
   mutate(`conditional direct effect` = b_donate_frame + `b_donate_frame:skeptic` * w) %>% 
 
   ggplot(aes(x = `conditional direct effect`, y = w, fill = w %>% as.character())) +
@@ -298,13 +293,11 @@ post %>%
 
 ### Visualizing the direct and indirect effects.
 
-We'll need to do some `post` wrangling before we're ready to make our Figure 12.7. We'll save the results as `effects`.
+We'll need to do some `draws` wrangling before we're ready to make our Figure 12.7. We'll save the results as `effects`.
 
 ```{r}
-effects <-
-  post %>% 
-  expand(nesting(b_justify_frame, `b_justify_frame:skeptic`, b_donate_justify, b_donate_frame, `b_donate_frame:skeptic`),
-         w = seq(from = 0, to = 6, length.out = 30)) %>% 
+effects <- draws %>% 
+  expand_grid(w = seq(from = 0, to = 6, length.out = 30)) %>% 
   mutate(`direct effect`   = b_donate_frame + `b_donate_frame:skeptic` * w,
          `indirect effect` = (b_justify_frame + `b_justify_frame:skeptic` * w) * b_donate_justify) %>% 
   pivot_longer(c(`direct effect`, `indirect effect`)) %>% 
@@ -318,12 +311,11 @@ Now we plot.
 
 ```{r, fig.width = 6, fig.height = 4}
 # we'll need this for `geom_text()`
-text <-
-  tibble(x     = c(4.2, 4.7),
-         y     = c(.28, -.28),
-         angle = c(3.6, 335),
-         name  = factor(c("direct effect", "indirect effect"),
-                        levels = c("direct effect", "indirect effect")))
+text <- tibble(
+  x     = c(4.2, 4.7),
+  y     = c(.28, -.28),
+  angle = c(3.6, 335),
+  name  = factor(c("direct effect", "indirect effect"), levels = c("direct effect", "indirect effect")))
 
 # plot!
 effects %>% 
@@ -353,7 +345,7 @@ Note how wide those 95% intervals are relative to the scale of the $y$-axis, whi
 We've already computed the 95% intervals for the direct effect, $\theta_{X \rightarrow Y}$, conditional on the three levels of $W$. Here's a different look at those intervals, superimposed on the 80% and 50% intervals, using the `tidybayes::stat_interval()` function.
 
 ```{r, fig.width = 6, fig.height = 4}
-post %>% 
+draws %>% 
   pivot_longer(starts_with("direct")) %>% 
   mutate(name = str_remove(name, "direct effect when W is ") %>% as.double()) %>% 
   
@@ -371,12 +363,11 @@ post %>%
 
 To get a sense of $a_3 b$, we just:
 
-```{r, warning = F, message = F}
-post <- 
-  post %>% 
+```{r, warning = F}
+draws <- draws %>% 
   mutate(a3b = `b_justify_frame:skeptic` * b_donate_justify) 
 
-post %>% 
+draws %>% 
   select(a3b) %>% 
   median_qi(a3b) %>% 
   mutate_if(is.double, round, digits = 3)
@@ -385,7 +376,7 @@ post %>%
 Here we'll combine `stat_intervalh()` and `stat_pointintervalh()` to visualize $a_3 b$ with a coefficient plot.
 
 ```{r, fig.width = 6, fig.height = 1}
-post %>% 
+draws %>% 
   ggplot(aes(x = a3b, y = 1)) +
   stat_interval(.width = c(.95, .8, .5)) +
   stat_pointinterval(point_interval = median_qi, .width = c(.95, .8, .5),
@@ -404,8 +395,8 @@ As we discussed in Chapter 11, our Bayesian version of the JN technique should b
 
 We computed and inspected these 95% intervals, above. Here's another way we might `stat_halfeye()` to look at their entire densities.
 
-```{r, fig.width = 5, fig.height = 3}
-post %>% 
+```{r, fig.width = 5, fig.height = 3, warning = F}
+draws %>% 
   pivot_longer(starts_with("indirect")) %>% 
   rename(`conditional indirect effect` = value) %>% 
   mutate(W = str_remove(name, "indirect effect when W is ") %>% as.double()) %>% 
@@ -426,14 +417,14 @@ post %>%
 Fitting the model without the interaction term is just a small change to one of our `formula` arguments.
 
 ```{r model12.5}
-model12.5 <-
-  brm(data = disaster, 
-      family = gaussian,
-      bf(justify ~ 1 + frame + skeptic + frame:skeptic) +
-        bf(donate ~ 1 + frame + justify + skeptic) +
-        set_rescor(FALSE),
-      chains = 4, cores = 4,
-      file = "fits/model12.05")
+model12.5 <- brm(
+  data = disaster, 
+  family = gaussian,
+  bf(justify ~ 1 + frame + skeptic + frame:skeptic) +
+    bf(donate ~ 1 + frame + justify + skeptic) +
+    set_rescor(FALSE),
+  chains = 4, cores = 4,
+  file = "fits/model12.05")
 ```
 
 Here are the results.
@@ -444,9 +435,9 @@ print(model12.5, digits = 3)
 
 Since we're altering the model, we may as well use information criteria to compare the two versions.
 
-```{r, warning = F, message = F}
-model12.4 <- add_criterion(model12.4, "loo")
-model12.5 <- add_criterion(model12.5, "loo")
+```{r}
+model12.4 <- add_criterion(model12.4, criterion = "loo")
+model12.5 <- add_criterion(model12.5, criterion = "loo")
 
 loo_compare(model12.4, model12.5) %>% 
   print(simplify = F)

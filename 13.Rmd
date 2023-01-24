@@ -246,7 +246,7 @@ f1 %>%
   theme(panel.grid = element_blank())
 ```
 
-Did you notice our use of the `add_epred_draws()` function? `add_epred_draws()` is a convenience function from **tidybayes**, that works in a similar way to `brms::fitted()`. The advantage of `the add_epred_draws()` approach is it returns the output in a tidy tibble format and, if you use the `newdata` argument, it will automatically add those predictor values to the output. To learn more about `add_epred_draws()` and other similar functions, check out Kay's [-@kayExtractingVisualizingTidy2020] tutorial, [*Extracting and visualizing tidy draws from brms models*](https://mjskay.github.io/tidybayes/articles/tidy-brms.html).
+Did you notice our use of the `add_epred_draws()` function? `add_epred_draws()` is a convenience function from **tidybayes**, that works in a similar way to `brms::fitted()`. The advantage of `the add_epred_draws()` approach is it returns the output in a tidy tibble format and, if you use the `newdata` argument, it will automatically add those predictor values to the output. To learn more about `add_epred_draws()` and other similar functions, check out Kay's [-@kayExtractingVisualizingTidy2021] tutorial, [*Extracting and visualizing tidy draws from brms models*](https://mjskay.github.io/tidybayes/articles/tidy-brms.html).
 
 Now we have `f1`, it's easy to get the typical numeric summaries for all of the differences.
 

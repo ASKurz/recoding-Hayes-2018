@@ -112,7 +112,7 @@ fitted(model11.1,
   facet_wrap(~ negexp)
 ```
 
-Also, the plot theme in this chapter is a nod to the style [John Kruschke](http://www.indiana.edu/~kruschke/DoingBayesianDataAnalysis/) frequently uses in his papers and texts [e.g., @kruschkeDoingBayesianData2015].
+Also, the plot theme in this chapter is a nod to the style [John Kruschke](https://jkkweb.sitehost.iu.edu/) frequently uses in his papers and texts [e.g., @kruschkeDoingBayesianData2015].
 
 Using Hayes's notation from the top of page 412, we can express $M$'s conditional effect on $Y$ as
 

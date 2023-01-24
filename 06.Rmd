@@ -38,7 +38,7 @@ protest <- read_csv("data/protest/protest.csv")
 glimpse(protest)
 ```
 
-Here are the ungrouped means and $SD$s for `respappr` and `liking` shown at the bottom of Table 6.1.
+Here are the ungrouped means and $\textit{SD}$'s for `respappr` and `liking` shown at the bottom of Table 6.1.
 
 ```{r, message = F}
 protest %>%
@@ -60,7 +60,7 @@ protest %>%
   mutate_if(is.double, round, digits = 3)
 ```
  
-It looks like Hayes has a typo in the $SD$ for `liking` when `protest == 0`. It seems he accidentally entered the value for when `protest == 1` in that slot.
+It looks like Hayes has a typo in the $\textit{SD}$ for `liking` when `protest == 0`. It seems he accidentally entered the value for when `protest == 1` in that slot.
 
 You'll have to wait a minute to see where the adjusted $Y$ values came from.
 
@@ -111,7 +111,7 @@ bayes_R2(model6.1, summary = F) %>%
   data.frame() %>% 
   
   ggplot(aes(x = R2)) +
-  geom_density(size = 0, fill = pokepal(pokemon = "plusle")[2]) +
+  geom_density(linewidth = 0, fill = pokepal(pokemon = "plusle")[2]) +
   scale_y_continuous(NULL, breaks = NULL) +
   coord_cartesian(xlim = 0:1) +
   xlab(expression(italic(R)^2)) +
@@ -169,7 +169,7 @@ bayes_R2(model6.2, summary = F) %>%
   pivot_longer(everything()) %>% 
   
   ggplot(aes(x = value, fill = name)) +
-  geom_density(size = 0, alpha = 2/3) +
+  geom_density(linewidth = 0, alpha = 2/3) +
   annotate("text", x = .2, y = 7, label = "liking", color = pokepal(pokemon = "plusle")[2], family = "Times") +
   annotate("text", x = .355, y = 6, label = "respappr", color = pokepal(pokemon = "plusle")[6], family = "Times") +
   scale_fill_manual(values = pokepal(pokemon = "plusle")[c(2, 6)]) +
@@ -246,7 +246,7 @@ draws %>%
                fun = median,
                fun.min = function(x) {quantile(x, probs = .025)},
                fun.max = function(x) {quantile(x, probs = .975)},
-               size = .75) +
+               size = 0.75) +
   stat_summary(geom = "linerange",
                fun.min = function(x) {quantile(x, probs = .25)},
                fun.max = function(x) {quantile(x, probs = .75)},
@@ -286,7 +286,7 @@ r2 <-
 # plot!
 r2 %>% 
   ggplot(aes(x = R2, fill = fit)) +
-  geom_density(size = 0, alpha = 2/3) +
+  geom_density(linewidth = 0, alpha = 2/3) +
   annotate("text", x = .15, y = 6.4, label = "model3", color = pokepal(pokemon = "plusle")[7], family = "Times") +
   annotate("text", x = .33, y = 6.9, label = "model2", color = pokepal(pokemon = "plusle")[6], family = "Times") +
   scale_fill_manual(values = pokepal(pokemon = "plusle")[c(6, 7)]) +
@@ -306,7 +306,7 @@ r2 %>%
   pivot_wider(names_from = fit, values_from = R2) %>% 
 
   ggplot(aes(x = model6.2 - model6.3)) +
-  geom_density(size = 0, fill = pokepal(pokemon = "plusle")[4]) +
+  geom_density(linewidth = 0, fill = pokepal(pokemon = "plusle")[4]) +
   geom_vline(xintercept = 0, color = pokepal(pokemon = "plusle")[8]) +
   scale_y_continuous(NULL, breaks = NULL) +
   labs(title = expression(The~Delta*italic(R)^2~distribution),
@@ -516,7 +516,7 @@ fixef(model6.5) %>%
   ggplot(aes(y = group)) +
   # this is the main function for our coefficient plots
   geom_pointrange(aes(x = Estimate, xmin = Q2.5, xmax = Q97.5, color = group),
-                  size = 3/4) +
+                  linewidth = 3/4) +
   geom_point(data = group_means,
              aes(x = mu_liking)) +
   scale_color_manual(values = pokepal(pokemon = "plusle")[c(3, 7, 9)]) +

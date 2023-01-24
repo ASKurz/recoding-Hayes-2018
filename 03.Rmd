@@ -381,7 +381,7 @@ ul <- quantile(draws$ab, probs = .975) %>% round(digits = 3)
 
 draws %>% 
   ggplot(aes(x = ab)) +
-  geom_histogram(color = "white", size = .25, 
+  geom_histogram(color = "white", linewidth = 0.25, 
                  fill = colorblind_pal()(5)[5],
                  binwidth = .025, boundary = 0) +
   geom_vline(xintercept = quantile(draws$ab, probs = c(.025, .975)),

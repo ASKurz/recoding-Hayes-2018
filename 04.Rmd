@@ -275,15 +275,15 @@ One way to get a standardized solution is to standardize the variables in the da
 
 ```{r}
 # make the function
-sandardize <- function(x) {
+standardize <- function(x) {
   (x - mean(x)) / sd(x)
 }
 
 # use the function
 estress <- estress %>% 
-  mutate(withdraw_z = sandardize(withdraw), 
-         estress_z  = sandardize(estress), 
-         affect_z   = sandardize(affect))
+  mutate(withdraw_z = standardize(withdraw), 
+         estress_z  = standardize(estress), 
+         affect_z   = standardize(affect))
 ```
 
 Fit the model.

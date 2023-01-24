@@ -564,7 +564,7 @@ fitted(model2.8,
 As **brms** doesn't automatically give us the standardized coefficients the way OLS output often does, we'll have to be proactive. One solution is just to standardized the data themselves and then re-fit the model with those standardized variables. That leads us to the issue of how one standardized variables to begin with. Recall that standardizing entails subtracting the mean of a variable from that variable and then dividing that value by the standard deviation. We don't want to do that by hand. So one handy way is to make a custom function to do that work for us.
 
 ```{r}
-sandardize <- function(x) {
+standardize <- function(x) {
   (x - mean(x)) / sd(x)
 }
 ```
@@ -575,11 +575,11 @@ Here we'll employ our custom `standardize()` function to make standardized versi
 
 ```{r}
 glbwarm <- glbwarm %>% 
-  mutate(posemot_z  = sandardize(posemot), 
-         negemot_z  = sandardize(negemot), 
-         ideology_z = sandardize(ideology),
-         sex_z      = sandardize(sex),
-         age_z      = sandardize(age))
+  mutate(posemot_z  = standardize(posemot), 
+         negemot_z  = standardize(negemot), 
+         ideology_z = standardize(ideology),
+         sex_z      = standardize(sex),
+         age_z      = standardize(age))
 ```
 
 Now we've got us our standardized variables, let's fit a standardized model.

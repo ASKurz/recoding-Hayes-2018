@@ -1,6 +1,6 @@
 --- 
 title: "Recoding *Introduction to Mediation, Moderation, and Conditional Process Analysis*"
-subtitle: "version 1.2.0"
+subtitle: "version 1.3.0"
 author: "A Solomon Kurz"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
@@ -64,6 +64,34 @@ In this project, I use a handful of formatting conventions gleaned from [*R4DS*]
 * **R** objects, such as data or function arguments, are in typewriter font atop a gray background (e.g., `d` or `size = 2`).
 * Hyperlinks are denoted by their typical [blue-colored font](https://www.afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html).
 
+## **R** setup {-}
+
+To get the full benefit from this ebook, you'll need some software. Happily, everything will be free (provided you have access to a decent personal computer and an good internet connection).
+
+First, you'll need to install **R**, which you can learn about at [https://cran.r-project.org/](https://cran.r-project.org/).
+
+Though not necessary, your **R** experience might be more enjoyable if done through the free RStudio interface, which you can learn about at [https://rstudio.com/products/rstudio/](https://rstudio.com/products/rstudio/).
+
+Once you have installed **R**, execute the following to install the bulk of the add-on packages. This will probably take a few minutes to finish. Go make yourself a coffee.
+
+```{r, eval = F}
+packages <- c("tidyverse", "rstan", "brms", "bayesplot", "directlabels", "GGally", "ggdark", "ggdist", "ggthemes", "HDInterval", "MASS", "palettetown", "psych")
+
+install.packages(packages, dependencies = T)
+```
+
+A couple of the other packages are not officially available via the Comprehensive R Archive Network (CRAN; https://cran.r-project.org/). You can download them directly from GitHub by executing the following.
+
+```{r, eval = F}
+devtools::install_github("EdwinTh/dutchmasters")
+devtools::install_github("ropenscilabs/ochRe")
+```
+
+It's possible you'll have problems installing some of these packages. Here are the likely suspects and where you can find help:
+
+* for difficulties installing **brms**, go to [https://github.com/paul-buerkner/brms#how-do-i-install-brms](https://github.com/paul-buerkner/brms#how-do-i-install-brms) or search around in the [**brms** section of the Stan forums ](https://discourse.mc-stan.org/c/interfaces/brms/36); and
+* for difficulties installing **rstan**, go to [https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started](https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started).
+
 ## Times change and so do we {-}
 
 For a brief rundown of the version history, we have:
@@ -112,6 +140,7 @@ We'll see. In the meantime, feel free to make suggestions or report typos and co
 Before we move on, I'd like to thank the following for their helpful contributions:
 
 * Eric Green ([\@ericpgreen](https://github.com/ericpgreen))
+* Desislava Petkova ([\@dipetkov](https://github.com/dipetkov))
 * Jose Storopoli ([\@storopoli](https://github.com/storopoli))
 
 For information on how you might help improve this ebook, go to [https://github.com/ASKurz/recoding-Hayes-2018/blob/master/CONTRIBUTING.md](https://github.com/ASKurz/recoding-Hayes-2018/blob/master/CONTRIBUTING.md).

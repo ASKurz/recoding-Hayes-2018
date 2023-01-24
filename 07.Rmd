@@ -47,7 +47,6 @@ theme_07 <- theme_gray() +
 This chapter's color palette comes from the [**dutchmasters** package](https://github.com/EdwinTh/dutchmasters) [@R-dutchmasters], which was itself based of Vermeer's [-@vermeerLittleStreet1657] [*The little street*](https://en.wikipedia.org/wiki/The_Little_Street). To get a quick glance at the full palette, we'll also use `viz_palette()`, a convenience function from the [**ochRe** package](https://github.com/ropenscilabs/ochRe) [@R-ochRe].
 
 ```{r, fig.width = 7.5, fig.height = 3, warning = F, message = F}
-# devtools::install_github("ropenscilabs/ochRe")
 library(ochRe)
 
 viz_palette(dutchmasters$little_street)

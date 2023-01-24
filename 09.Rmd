@@ -117,7 +117,7 @@ mcmc_acf(draws2,
 
 High autocorrelations in the HMC chains have consequences for the effective sample size. In their [-@gabryVisualMCMC2022] vignette, [**Visual MCMC diagnostics using the bayesplot package**](https://CRAN.R-project.org/package=bayesplot/vignettes/visual-mcmc-diagnostics.html), Gabry and Modrák wrote:
 
-> The effective sample size is an estimate of the number of independent draws from the posterior distribution of the estimand of interest. Because the draws within a Markov chain are *not* independent if there is autocorrelation, the effective sample size, $n_{eff}$, will be smaller than the total sample size, $N$. The larger the ratio of $n_{eff}$ to $N$ the better.
+> The effective sample size is an estimate of the number of independent draws from the posterior distribution of the estimand of interest. Because the draws within a Markov chain are *not* independent if there is autocorrelation, the effective sample size, $n_\textit{eff}$, will be smaller than the total sample size, $N$. The larger the ratio of $n_\textit{eff}$ to $N$ the better.
 
 In that quote, they spoke as if there was only one measure of ESS. Though this has been the case for some time, times have changed. In a [-@vehtariRanknormalizationFoldingLocalization2019] [paper](https://arxiv.org/pdf/1903.08008.pdf), Stan-team allstars Vehtari, Gelman, Simpson, Carpenter, and Bürkner proposed two measures of ESS: "bulk-ESS" and "tail-ESS." From their paper, we read:
 
@@ -186,7 +186,7 @@ Now we've put our posterior draws into a data object, `draws`, we can make a sca
 draws %>% 
   ggplot(aes(x = b_negemot, y = `b_negemot:age`)) +
   geom_point(size = 1/10, alpha = 1/5) +
-  labs(subtitle = "Each dot is the parameter pair from\na single draw. Looking across the\n4,000 total posterior draws, it\nbecomes clear the two parameters\nare highly negatively correlated.")
+  labs(subtitle = "Each dot is the parameter pair from a\nsingle draw. Looking across the 4,000\ntotal posterior draws, it becomes clear\nthe two parameters are strongly\nnegatively correlated.")
 ```
 
 And indeed, the Pearson's correlation coefficient is strong.
@@ -484,7 +484,7 @@ draws %>%
   # plot!
   ggplot(aes(x = row, y = value, ymin = .lower, ymax = .upper)) +
   geom_hline(yintercept = 0, color = "grey75") +
-  geom_pointinterval(size = 1/3) +
+  geom_pointinterval(linewidth = 1/3) +
   scale_x_discrete("rank-ordered row number", breaks = NULL) +
   ylab("imputed value")
 ```
@@ -736,7 +736,7 @@ fitted(model9.13, newdata = nd) %>%
   geom_ribbon(aes(ymin = Q2.5, ymax = Q97.5, fill = sex),
               alpha = 1/3, color = "transparent") +
   geom_line(aes(y = Estimate, color = sex),
-            size = 1) +
+            linewidth = 1) +
   scale_fill_manual(values = colorblind_pal()(8)[2:3]) +
   scale_color_manual(values = colorblind_pal()(8)[2:3]) +
   scale_x_continuous(breaks = 1:6) +
@@ -785,7 +785,7 @@ draws %>%
   geom_ribbon(aes(ymin = .lower, ymax = .upper),
               alpha = 1/2) +
   geom_line(aes(y = value), 
-            size = 1) +
+            linewidth = 1) +
   coord_cartesian(xlim = c(20, 85),
                   ylim = c(-.25, .75))
 ```

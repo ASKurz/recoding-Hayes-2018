@@ -9,7 +9,7 @@ Since there's no code or data plots in this chapter, there's nothing to translat
 ```{r, echo = F, message = F}
 library(magrittr)
 
-vembedr::embed_url("https://www.youtube.com/watch?v=P0YdlBh1pqs&frags=pl%2Cwn") %>%
+vembedr::embed_url("https://youtu.be/P0YdlBh1pqs") %>%
   vembedr::use_align("center")
 ```
 

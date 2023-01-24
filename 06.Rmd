@@ -101,7 +101,7 @@ Our $R^2$ differences a bit from the OLS version in the text. This shouldn't be 
 bayes_R2(model6.1)
 ```
 
-Here's its shape. For the plots in this chapter, we'll take a few formatting cues from Edward Tufte [-@tufteVisualDisplayQuantitative2001], courtesy of the [**ggthemes** package](https://CRAN.R-project.org/package=ggthemes). The `theme_tufte()` function will change the default font and remove some chart junk. We will take our color palette from [Pokemon](http://pokemonbyreview.blogspot.com/2017/02/311-312-plusle-minun.html) via the [**palettetown** package](https://CRAN.R-project.org/package=palettetown) [@R-palettetown].
+Here's its shape. For the plots in this chapter, we'll take a few formatting cues from Edward Tufte [-@tufteVisualDisplayQuantitative2001], courtesy of the [**ggthemes** package](https://CRAN.R-project.org/package=ggthemes). The `theme_tufte()` function will change the default font and remove some chart junk. We will take our color palette from [Pokemon](https://pokemonbyreview.blogspot.com/2017/02/311-312-plusle-minun.html) via the [**palettetown** package](https://CRAN.R-project.org/package=palettetown) [@R-palettetown].
 
 ```{r, fig.width = 4, fig.height = 2.5}
 library(ggthemes)

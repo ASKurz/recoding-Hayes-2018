@@ -115,7 +115,7 @@ mcmc_acf(draws2,
          lags = 4)
 ```
 
-High autocorrelations in the HMC chains have consequences for the effective sample size. In their [-@gabryVisualMCMC2020] vignette, [**Visual MCMC diagnostics using the bayesplot package**](https://CRAN.R-project.org/package=bayesplot/vignettes/visual-mcmc-diagnostics.html), Gabry and Modrák wrote:
+High autocorrelations in the HMC chains have consequences for the effective sample size. In their [-@gabryVisualMCMC2022] vignette, [**Visual MCMC diagnostics using the bayesplot package**](https://CRAN.R-project.org/package=bayesplot/vignettes/visual-mcmc-diagnostics.html), Gabry and Modrák wrote:
 
 > The effective sample size is an estimate of the number of independent draws from the posterior distribution of the estimand of interest. Because the draws within a Markov chain are *not* independent if there is autocorrelation, the effective sample size, $n_{eff}$, will be smaller than the total sample size, $N$. The larger the ratio of $n_{eff}$ to $N$ the better.
 
@@ -204,7 +204,7 @@ vcov(model9.1, correlation = T)["negemot", "negemot:age"]
 
 Boom! That's where those correlations come from.
 
-This entire topic of HMC diagnostics can seem baffling, especially when compared to the simplicity of OLS. If this is your first introduction, you might want to watch lectures [10](https://www.youtube.com/watch?v=BWEtS3HuU5A&list=PLDcUM9US4XdM9_N6XUUFrhghGJ4K25bFc) and [11](https://www.youtube.com/watch?v=13mEekRdOcQ&list=PLDcUM9US4XdM9_N6XUUFrhghGJ4K25bFc) from McElreath's [Statistical Rethinking Fall 2017 lecture series](https://www.youtube.com/playlist?list=PLDcUM9US4XdM9_N6XUUFrhghGJ4K25bFc). Accordingly, you might check out Chapter 8 of his [-@mcelreathStatisticalRethinkingBayesian2015] text, Chapter 9 of his [-@mcelreathStatisticalRethinkingBayesian2020] text, and either of my ebooks translating his work into **brms** and **tidyverse** code [@kurzStatisticalRethinkingBrms2020; @kurzStatisticalRethinkingSecondEd2021].
+This entire topic of HMC diagnostics can seem baffling, especially when compared to the simplicity of OLS. If this is your first introduction, you might want to watch lectures [10](https://youtu.be/BWEtS3HuU5A) and [11](https://youtu.be/13mEekRdOcQ) from McElreath's [Statistical Rethinking Fall 2017 lecture series](https://www.youtube.com/playlist?list=PLDcUM9US4XdM9_N6XUUFrhghGJ4K25bFc). Accordingly, you might check out Chapter 8 of his [-@mcelreathStatisticalRethinkingBayesian2015] text, Chapter 9 of his [-@mcelreathStatisticalRethinkingBayesian2020] text, and either of my ebooks translating his work into **brms** and **tidyverse** code [@kurzStatisticalRethinkingBrms2023; @kurzStatisticalRethinkingSecondEd2023].
 
 ### The effect of mean-centering on multicollinearity and the standard error of $b_3$.
 
@@ -279,7 +279,7 @@ fixef(model9.1)["negemot:age", "Est.Error"]
 fixef(model9.2)["negemot_c:age_c", "Est.Error"]
 ```
 
-For more details, you might also see the [*Standardizing predictors and outputs*](https://mc-stan.org/docs/2_25/stan-users-guide/standardizing-predictors-and-outputs.html) subsection of Chapter 22 in the *Stan user's guide* [@standevelopmentteamStanUserGuide2021]--[Stan](http://mc-stan.org), of course, being the computational engine underneath our **brms** hood.
+For more details, you might also see the [*Standardizing predictors and outputs*](https://mc-stan.org/docs/stan-users-guide/standardizing-predictors-and-outputs.html) subsection of Chapter 25 in the *Stan user's guide* [@standevelopmentteamStanUserGuide2022]--[Stan](https://mc-stan.org/), of course, being the computational engine underneath our **brms** hood.
 
 ### The effect of mean-centering on $b_1$, $b_2$, and their ~~standard errors~~ posterior $\textit{SD}$'s.
 
@@ -389,7 +389,7 @@ The results correspond nicely to those in Table 9.1, too.
 
 ## A caution on manual centering and standardization [because of missing data]
 
-It's worthwhile considering the issue of listwise deletion when data are partially missing. The **brms** default is to delete rows with missingness, `NA` in **R**, for the predictors. However, **brms** allows users to perform one-step Bayesian imputation for missing values using the `mi()` syntax. You can learn all the details in Bürkner's [-@Bürkner2021HandleMissingValues] vignette, [*Handle missing values with brms*](https://CRAN.R-project.org/package=brms/vignettes/brms_missings.html). First we'll fit see what happens when you fit a model in **brms** when some of the `negemot_z` values are missing, but without using the `mi()` syntax. And of course before we do that, we'll make a `negemot_z_missing` variable, which is identical to `negemot_z`, but about 10% of the values are missing.
+It's worthwhile considering the issue of listwise deletion when data are partially missing. The **brms** default is to delete rows with missingness, `NA` in **R**, for the predictors. However, **brms** allows users to perform one-step Bayesian imputation for missing values using the `mi()` syntax. You can learn all the details in Bürkner's [-@Bürkner2022HandleMissingValues] vignette, [*Handle missing values with brms*](https://CRAN.R-project.org/package=brms/vignettes/brms_missings.html). First we'll fit see what happens when you fit a model in **brms** when some of the `negemot_z` values are missing, but without using the `mi()` syntax. And of course before we do that, we'll make a `negemot_z_missing` variable, which is identical to `negemot_z`, but about 10% of the values are missing.
 
 ```{r}
 set.seed(9)
@@ -419,7 +419,7 @@ print(model9.8)
 
 In this case, the model results were similar to those based on all the data because we used `rbinom()` to delete the predictor values completely at random. With real data and real-live missing data mechanisms, the situation isn't often so rosy. But anyway, the real story, here, is the `Data: glbwarm (Number of observations: n)` line at the top of the `print()` outputs. The number, $n$, was 815 in the model using all the data and 731 for the one based on listwise deletion. That's a lot of missing information.
 
-The `mi()` syntax will allow us to use all the rows in a model, even if one or more of the predictors contain missing values. The syntax makes the model a multivariate model in that now we'll be modeling both `govact_z` *and* `negemot_z_missing`. As we've covered in prior chapters, there are multiple ways to write a multivariate model in **brms** [see @Bürkner2021Multivariate]. One nice way is to write the model for each criterion separately in a `bf()` statement. You combine the `bf()` statements together with the `+` operator. And for models like the ones in Hayes's text, you'll also want to tack on `set_rescor(FALSE)`. You can do this within the `brm()` function, as usual. But I find that this clutters the code up more than I like. So another approach is to save the combination of `bf()` statements as an object.
+The `mi()` syntax will allow us to use all the rows in a model, even if one or more of the predictors contain missing values. The syntax makes the model a multivariate model in that now we'll be modeling both `govact_z` *and* `negemot_z_missing`. As we've covered in prior chapters, there are multiple ways to write a multivariate model in **brms** [see @Bürkner2022Multivariate]. One nice way is to write the model for each criterion separately in a `bf()` statement. You combine the `bf()` statements together with the `+` operator. And for models like the ones in Hayes's text, you'll also want to tack on `set_rescor(FALSE)`. You can do this within the `brm()` function, as usual. But I find that this clutters the code up more than I like. So another approach is to save the combination of `bf()` statements as an object.
 
 ```{r}
 my_model <- 
@@ -504,7 +504,7 @@ Another method we could have used is multiple imputation. With multiple imputati
 
 But we didn't quite use multiple imputation. With one-step Bayesian imputation using the `mi()` syntax, you get an entire posterior distribution for each missing value. And if you have variables in the data set that might help predict what those missing values are, you'd just plug that into the missing data submodel. Improving the imputation model can improve the subsequent substantive model.
 
-For more on the `mi()` approach, see Bürkner's [-@Bürkner2021HandleMissingValues] [vignette](https://CRAN.R-project.org/package=brms/vignettes/brms_missings.html). McElreath lectured on this topic ([here](https://www.youtube.com/watch?v=Yi0EqAu043A) and [here](https://www.youtube.com/watch?v=UgLF0aLk85s)) within the context of his *Statistical rethinking* texts [@mcelreathStatisticalRethinkingBayesian2015; @mcelreathStatisticalRethinkingBayesian2020], and you can find links to my translations of both of his texts [here](https://solomonkurz.netlify.app/bookdown/). For a more general introduction to missing data theory, check out van Burren's [-@vanbuurenFlexibleImputationMissing2018] book, [*Flexible imputation of missing data*](https://stefvanbuuren.name/fimd/), or Enders' great [-@enders2010applied] text, [*Applied missing data analysis*](http://www.appliedmissingdata.com). You can also find Enders lecturing on missing data [here](https://vimeo.com/147353266).
+For more on the `mi()` approach, see Bürkner's [-@Bürkner2022HandleMissingValues] [vignette](https://CRAN.R-project.org/package=brms/vignettes/brms_missings.html). McElreath lectured on this topic ([here](https://youtu.be/Yi0EqAu043A) and [here](https://youtu.be/UgLF0aLk85s)) within the context of his *Statistical rethinking* texts [@mcelreathStatisticalRethinkingBayesian2015; @mcelreathStatisticalRethinkingBayesian2020], and you can find links to my translations of both of his texts [here](https://solomonkurz.netlify.app/book/). For a more general introduction to missing data theory, check out van Burren's [-@vanbuurenFlexibleImputationMissing2018] book, [*Flexible imputation of missing data*](https://stefvanbuuren.name/fimd/), or Enders's great [-@enders2022applied] text, [*Applied missing data analysis*](https://www.appliedmissingdata.com/). You can also find Enders lecturing on missing data [here](https://vimeo.com/147353266).
 
 The take home message is there is no need to ignore missing data or use outdated procedures like listwise deletion. Be a champion and model your missing data with **brms**.
 
@@ -853,7 +853,7 @@ sapply(15:90, function(i) {
 
 Although I probably wouldn't try to use a plot like this in a manuscript, I hope it makes clear how the way we've been implementing the JN technique is just the pick-a-point approach in bulk. No magic, here.
 
-For all you **tidyverse** fanatics out there, don't worry. There are more **tidyverse**-centric ways to get the plot values than with `sapply()`. We'll get to them soon enough. It's advantageous to have good old base **R** `sapply()` up your sleeve, too. And new **R** users, it's helpful to know that `sapply()` is one part of the `apply()` family of base **R** functions, about which you might learn more [here](https://www.r-{bloggers.com}r-tutorial-on-the-apply-family-of-functions/) or [here](http://www.dummies.com/programming/r/how-to-use-the-apply-family-of-functions-in-r/) or [here](https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/).
+For all you **tidyverse** fanatics out there, don't worry. There are more **tidyverse**-centric ways to get the plot values than with `sapply()`. We'll get to them soon enough. It's advantageous to have good old base **R** `sapply()` up your sleeve, too. And new **R** users, it's helpful to know that `sapply()` is one part of the `apply()` family of base **R** functions, about which you might learn more [here](https://www.r-bloggers.com/2015/07/r-tutorial-on-the-apply-family-of-functions/) or [here](https://nsaunders.wordpress.com/2010/08/20/a-brief-introduction-to-apply-in-r/).
 
 Now the conditional effect of $X$ on $Y$ given $W$ and $Z$ is
 

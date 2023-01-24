@@ -25,7 +25,7 @@ d <- crossing(x = -1:2,
 d
 ```
 
-In previous chapters, we altered our plot themes using either built-in settings from **ggplot2** or extra themes from the **ggthemes** package. When we wanted to change them further, we did so with extra `theme()` arguments. One, it's nice to be know how to make one's own custom theme and, two, it'd be handy to condense our code a bit. Here we'll take a few cues from the [Building a New Theme](https://bookdown.org/rdpeng/RProgDA/building-a-new-theme.html) section from Peng, Kross, and Anderson's [-@pengMasteringSoftwareDevelopment2017] text, [*Mastering software development in R*](https://bookdown.org/rdpeng/RProgDA/). We'll make our own theme, `theme_07`, by saving a handful of augmentations from the default `theme_gray()` theme.
+In previous chapters, we altered our plot themes using either built-in settings from **ggplot2** or extra themes from the **ggthemes** package. When we wanted to change them further, we did so with extra `theme()` arguments. One, it's nice to be know how to make one's own custom theme and, two, it'd be handy to condense our code a bit. Here we'll take a few cues from the [Building a New Theme](https://bookdown.org/rdpeng/RProgDA/building-a-new-theme.html) section from Peng, Kross, and Anderson's [-@pengMasteringSoftwareDevelopment2020] text, [*Mastering software development in R*](https://bookdown.org/rdpeng/RProgDA/). We'll make our own theme, `theme_07`, by saving a handful of augmentations from the default `theme_gray()` theme.
 
 ```{r, warning = F, message = F}
 library(dutchmasters)
@@ -327,7 +327,7 @@ loo_compare(model7.1, model7.2, model7.3) %>%
   print(simplify = F)
 ```
 
-The LOO point estimate for both multivariable models were clearly lower than that for `model7.1`. The point estimate for the moderation model, `model7.3`, was within the double-digit range lower than that for `model7.2`, which typically suggests better fit. But notice how wide the standard error was. There's a lot of uncertainty, there. Hopefully this isn't surprising. Our $R^2$ difference was small and uncertain, too. We can also compare them with AIC-type model weighting, which you can learn more about [starting at this point in this lecture](https://www.youtube.com/watch?v=t0pRuy1_190) or the related [-@vehtariBayesianStackingPseudoBMA] vignette, [*Bayesian stacking and pseudo-BMA weights using the loo package*](https://cran.r-project.org/web/packages/loo/vignettes/loo2-weights.html) [@vehtariBayesianStackingPseudoBMA]. Here we'll keep things simple and weight with the LOO.
+The LOO point estimate for both multivariable models were clearly lower than that for `model7.1`. The point estimate for the moderation model, `model7.3`, was within the double-digit range lower than that for `model7.2`, which typically suggests better fit. But notice how wide the standard error was. There's a lot of uncertainty, there. Hopefully this isn't surprising. Our $R^2$ difference was small and uncertain, too. We can also compare them with AIC-type model weighting, which you can learn more about [starting at this point in this lecture](https://youtu.be/t0pRuy1_190) or the related [-@vehtariBayesianStackingPseudoBMA] vignette, [*Bayesian stacking and pseudo-BMA weights using the loo package*](https://cran.r-project.org/web/packages/loo/vignettes/loo2-weights.html) [@vehtariBayesianStackingPseudoBMA]. Here we'll keep things simple and weight with the LOO.
 
 ```{r}
 model_weights(model7.1, model7.2, model7.3,
@@ -448,7 +448,7 @@ This is why we plot. To get quick plots for the interaction effect with **brms**
 conditional_effects(model7.3)
 ```
 
-By default, `conditional_effects()` will show three levels of the variable on the right side of the interaction term. The formula in `model7.3` was `justify ~ frame + skeptic + frame:skeptic `, with `frame:skeptic` as the interaction term and `skeptic` making up the right hand side of the term. The three levels of `skeptic` in the plot, above, are the mean $\pm 1$ standard deviation. See the [**brms** reference manual](https://CRAN.R-project.org/package=brms/brms.pdf) for details on the `conditional_effects()` function [@brms2021RM].
+By default, `conditional_effects()` will show three levels of the variable on the right side of the interaction term. The formula in `model7.3` was `justify ~ frame + skeptic + frame:skeptic `, with `frame:skeptic` as the interaction term and `skeptic` making up the right hand side of the term. The three levels of `skeptic` in the plot, above, are the mean $\pm 1$ standard deviation. See the [**brms** reference manual](https://CRAN.R-project.org/package=brms/brms.pdf) for details on the `conditional_effects()` function [@brms2022RM].
 
 On page 244, Hayes discussed using the 16th, 50th, and 84th percentiles for the moderator variable. We can compute those with `quantile()`.
 

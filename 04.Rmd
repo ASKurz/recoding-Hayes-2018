@@ -378,7 +378,7 @@ Hayes recommended against these, so I'm not going to bother working any examples
 
 ## Statistical power
 
-As Hayes discussed, power is an important but thorny issue within the frequentist paradigm. Given that we're not particularly interested in rejecting the point-null hypothesis as Bayesians and that we bring in priors (which we've largely avoided explicitly mentioning in his project but have been quietly using all along), the issue is even more difficult for Bayesians. To learn more on the topic, check out Chapter 13 in Kruschke's [-@kruschkeDoingBayesianData2015] [text](https://sites.google.com/site/doingbayesiandataanalysis/); Miočević, MacKinnon, and Levy's [-@miocevicPowerBayesianMediation2017] [paper](https://www.tandfonline.com/doi/abs/10.1080/10705511.2017.1312407?src=recsys&journalCode=hsem20) on power in small-sample Bayesian analyses; or Gelman and Carlin's [-@gelmanPowerCalculationsAssessing2014] [paper](http://journals.sagepub.com/doi/pdf/10.1177/1745691614551642) offering an alternative to the power paradigm. You might look at Matti Vuorre's [Sample size planning with brms](https://gitlab.com/vuorre/bayesplan) project. And finally, I have a series of blog posts on Bayesian power analyses. You can find the first post [here](https://solomonkurz.netlify.com/post/bayesian-power-analysis-part-i/).
+As Hayes discussed, power is an important but thorny issue within the frequentist paradigm. Given that we're not particularly interested in rejecting the point-null hypothesis as Bayesians and that we bring in priors (which we've largely avoided explicitly mentioning in his project but have been quietly using all along), the issue is even more difficult for Bayesians. To learn more on the topic, check out Chapter 13 in Kruschke's [-@kruschkeDoingBayesianData2015] [text](https://sites.google.com/site/doingbayesiandataanalysis/); Miočević, MacKinnon, and Levy's [-@miocevicPowerBayesianMediation2017] [paper](https://doi.org/10.1080/10705511.2017.1312407) on power in small-sample Bayesian analyses; or Gelman and Carlin's [-@gelmanPowerCalculationsAssessing2014] [paper](https://journals.sagepub.com/doi/pdf/10.1177/1745691614551642) offering an alternative to the power paradigm. You might look at Matti Vuorre's [Sample size planning with brms](https://gitlab.com/vuorre/bayesplan) project. And finally, I have a series of blog posts on Bayesian power analyses. You can find the first post [here](https://solomonkurz.netlify.app/blog/bayesian-power-analysis-part-i/).
 
 ## Multiple $X$s or $Y$s: Analyze separately or simultaneously?
 
@@ -420,7 +420,7 @@ d <-
 head(d)
 ```
 
-Before we proceed, if data simulation is new to you, you might check out [Roger Peng](https://twitter.com/rdpeng)'s [helpful tutorial](https://www.youtube.com/watch?v=tvv4IA8PEzw) or [this great post](https://aosmith.rbind.io/2018/08/29/getting-started-simulating-data/) by [Ariel Muldoon](https://twitter.com/aosmith16).
+Before we proceed, if data simulation is new to you, you might check out [Roger Peng](https://rdpeng.org/)'s [helpful tutorial](https://youtu.be/tvv4IA8PEzw) or [this great post](https://aosmith.rbind.io/2018/08/29/getting-started-simulating-data/) by [Ariel Muldoon](https://aosmith.rbind.io/).
 
 Here we fit the model.
 
@@ -441,7 +441,7 @@ Behold the results.
 print(model4.6)
 ```
 
-Good old `brms::brm()` came through just fine. If you wanted to simulate data with a particular correlation structure for the `iv` variables, you might use the `mvnorm()` function from the [**MASS** package](https://CRAN.R-project.org/package=MASS) [@R-MASS], about which you might learn more [here](http://blog.revolutionanalytics.com/2016/02/multivariate_data_with_r.html).
+Good old `brms::brm()` came through just fine. If you wanted to simulate data with a particular correlation structure for the `iv` variables, you might use the `mvnorm()` function from the [**MASS** package](https://CRAN.R-project.org/package=MASS) [@R-MASS], about which you might learn more [here](https://blog.revolutionanalytics.com/2016/02/multivariate_data_with_r.html).
 
 ### Multiple $Y$ variables.
 

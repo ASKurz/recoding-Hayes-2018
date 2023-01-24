@@ -143,7 +143,7 @@ draws %>%
   mutate_if(is_double, round, digits = 3)
 ```
 
-For more in this family of **tidybayes** functions, check out the [*Point summaries and intervals*](https://mjskay.github.io/tidybayes/articles/tidy-brms.html#point-summaries-and-intervals) subsection of Kay's [-@kayExtractingVisualizingTidy2020] vignette, [*Extracting and visualizing tidy draws from brms models*](https://mjskay.github.io/tidybayes/articles/tidy-brms.html).
+For more in this family of **tidybayes** functions, check out the [*Point summaries and intervals*](https://mjskay.github.io/tidybayes/articles/tidy-brms.html#point-summaries-and-intervals) subsection of Kay's [-@kayExtractingVisualizingTidy2021] vignette, [*Extracting and visualizing tidy draws from brms models*](https://mjskay.github.io/tidybayes/articles/tidy-brms.html).
 
 In the middle paragraph of page 158, Hayes showed how the mean difference in `imprt` between the two `cond` groups multiplied by `b1`, the coefficient of `import` predicting `reaction`, is equal to the `a1b1` indirect effect. He did that with simple algebra using the group means and the point estimates, following the formula 
 

@@ -81,7 +81,7 @@ Let's load our primary statistical package, **brms**.
 library(brms)
 ```
 
-Before we begin, I should acknowledge that I greatly benefited by [this great blog post on path analysis in brms](http://www.imachordata.com/bayesian-sem-with-brms/) by [Jarrett Byrnes](https://twitter.com/jebyrnes). With **brms**, we handle mediation models using the [multivariate syntax](https://CRAN.R-project.org/package=brms/vignettes/brms_multivariate.html) [@Bürkner2021Multivariate]. There are a few ways to do this. Let's start simple.
+Before we begin, I should acknowledge that I greatly benefited by [this great blog post on path analysis in brms](https://www.imachordata.com/2017/12/21/bayesian-sem-with-brms/) by [Jarrett Byrnes](https://www.imachordata.com/about/). With **brms**, we handle mediation models using the [multivariate syntax](https://CRAN.R-project.org/package=brms/vignettes/brms_multivariate.html) [@Bürkner2022Multivariate]. There are a few ways to do this. Let's start simple.
 
 If you look at the path model in Figure 3.3, you'll note that `reaction` is predicted by `pmi` and `cond`. `pmi`, in turn, is predicted solely by `cond`. So we have two regression models, which is just the kind of thing the **brms** multivariate syntax is for. So first let's specify both models, which we'll nest in `bf()` functions and save as objects.
 
@@ -307,7 +307,7 @@ This is not our approach.
 
 However, Markov chain Monte Carlo (MCMC) methods are iterative and share some characteristics with boostrapping. On page 98, Hayes outlined 6 steps for constructing the $ab$ bootstrap confidence interval. Here are our responses to those steps w/r/t Bayes with MCMC--or in our case HMC (i.e., Hamiltonian Monte Carlo).
 
-If HMC or MCMC, in general, are new to you, you might check out [this lecture](https://www.youtube.com/watch?v=BWEtS3HuU5A&t=7s) or the [*Stan Reference Manual*](https://mc-stan.org/docs/2_21/reference-manual/index.html) if you're more technically oriented.
+If HMC or MCMC, in general, are new to you, you might check out [this lecture](https://youtu.be/BWEtS3HuU5A) or the [*Stan Reference Manual*](https://mc-stan.org/docs/reference-manual/index.html) if you're more technically oriented.
 
 Anyway, Hayes's 6 steps:
 

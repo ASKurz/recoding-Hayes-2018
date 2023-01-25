@@ -5,26 +5,25 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Recoding Introduction to Mediation, Moderation, and Conditional Process Analysis</title>
-  <meta name="description" content="This project is an effort to connect Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="description" content="This ebook is an effort to connect Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
+  <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Recoding Introduction to Mediation, Moderation, and Conditional Process Analysis" />
   <meta property="og:type" content="book" />
   
-  
-  <meta property="og:description" content="This project is an effort to connect Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
+  <meta property="og:description" content="This ebook is an effort to connect Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
   <meta name="github-repo" content="ASKurz/recoding-Hayes-2018" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Recoding Introduction to Mediation, Moderation, and Conditional Process Analysis" />
   <meta name="twitter:site" content="@SolomonKurz" />
-  <meta name="twitter:description" content="This project is an effort to connect Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
+  <meta name="twitter:description" content="This ebook is an effort to connect Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
   
 
 <meta name="author" content="A Solomon Kurz" />
 
 
-<meta name="date" content="2021-08-02" />
+<meta name="date" content="2023-01-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +32,8 @@
   
 
 <link rel="next" href="introduction.html"/>
-<script src="libs/header-attrs-2.8/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -50,10 +49,10 @@
 
 
 
-
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
-<link href="libs/vembedr-0.1.4/css/vembedr.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/vembedr-0.1.5/css/vembedr.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -94,7 +93,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -107,7 +106,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -160,12 +159,14 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#why-this"><i class="fa fa-check"></i>Why this?</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#my-assumptions-about-you"><i class="fa fa-check"></i>My assumptions about you</a></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html#how-to-use-and-understand-this-project"><i class="fa fa-check"></i>How to use and understand this project</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#how-to-use-and-understand-this-ebook"><i class="fa fa-check"></i>How to use and understand this ebook</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#r-setup"><i class="fa fa-check"></i><strong>R</strong> setup</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#times-change-and-so-do-we"><i class="fa fa-check"></i>Times change and so do we</a>
 <ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#section"><i class="fa fa-check"></i>1.0.0.</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#section-1"><i class="fa fa-check"></i>1.1.0.</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#section-2"><i class="fa fa-check"></i>1.2.0.</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#section-3"><i class="fa fa-check"></i>1.3.0.</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#whats-next"><i class="fa fa-check"></i>What’s next?</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#thank-yous-are-in-order"><i class="fa fa-check"></i>Thank-you’s are in order</a></li>
@@ -207,7 +208,6 @@ div.csl-indent {
 <li class="chapter" data-level="2.8.4" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#independence."><i class="fa fa-check"></i><b>2.8.4</b> Independence.</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#session-info-1"><i class="fa fa-check"></i>Session info</a></li>
-<li class="chapter" data-level="" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#footnote"><i class="fa fa-check"></i>Footnote</a></li>
 </ul></li>
 <li class="part"><span><b>II MEDIATION ANALYSIS</b></span></li>
 <li class="chapter" data-level="3" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html"><i class="fa fa-check"></i><b>3</b> The Simple Mediation Model</a>
@@ -312,7 +312,6 @@ div.csl-indent {
 <li class="chapter" data-level="7.5" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#the-difference-between-testing-for-moderation-and-probing-it"><i class="fa fa-check"></i><b>7.5</b> The difference between testing for moderation and probing it</a></li>
 <li class="chapter" data-level="7.6" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#artificial-categorization-and-subgroups"><i class="fa fa-check"></i><b>7.6</b> Artificial categorization and subgroups</a></li>
 <li class="chapter" data-level="" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#session-info-6"><i class="fa fa-check"></i>Session info</a></li>
-<li class="chapter" data-level="" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#footnote-1"><i class="fa fa-check"></i>Footnote</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html"><i class="fa fa-check"></i><b>8</b> Extending the Fundamental Principles of Moderation Analysis</a>
 <ul>
@@ -338,7 +337,7 @@ div.csl-indent {
 <li class="chapter" data-level="9.1" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#truths-and-myths-about-mean-centering"><i class="fa fa-check"></i><b>9.1</b> Truths and myths about mean-centering</a>
 <ul>
 <li class="chapter" data-level="9.1.1" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-effect-of-mean-centering-on-multicollinearity-and-the-standard-error-of-b_3."><i class="fa fa-check"></i><b>9.1.1</b> The effect of mean-centering on multicollinearity and the standard error of <span class="math inline">\(b_3\)</span>.</a></li>
-<li class="chapter" data-level="9.1.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-effect-of-mean-centering-on-b_1-b_2-and-their-standard-errors-posterior-sds."><i class="fa fa-check"></i><b>9.1.2</b> The effect of mean-centering on <span class="math inline">\(b_1\)</span>, <span class="math inline">\(b_2\)</span>, and their <del>standard errors</del> posterior <span class="math inline">\(SD\)</span>s.</a></li>
+<li class="chapter" data-level="9.1.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-effect-of-mean-centering-on-b_1-b_2-and-their-standard-errors-posterior-textitsds."><i class="fa fa-check"></i><b>9.1.2</b> The effect of mean-centering on <span class="math inline">\(b_1\)</span>, <span class="math inline">\(b_2\)</span>, and their <del>standard errors</del> posterior <span class="math inline">\(\textit{SD}\)</span>’s.</a></li>
 <li class="chapter" data-level="9.1.3" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-centering-option-in-process."><i class="fa fa-check"></i><b>9.1.3</b> The <del>centering option in PROCESS</del>.</a></li>
 </ul></li>
 <li class="chapter" data-level="9.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-estimation-and-interpretation-of-standardized-regression-coefficients-in-a-moderation-analysis"><i class="fa fa-check"></i><b>9.2</b> The estimation and interpretation of standardized regression coefficients in a moderation analysis</a>
@@ -483,30 +482,30 @@ div.csl-indent {
             <section class="normal" id="section-">
 <div id="header">
 <h1 class="title">Recoding <em>Introduction to Mediation, Moderation, and Conditional Process Analysis</em></h1>
-<h2 class="subtitle"><em>version 1.2.0</em></h2>
+<h2 class="subtitle"><em>version 1.3.0</em></h2>
 <p class="author"><em>A Solomon Kurz</em></p>
-<p class="date" style="margin-top: 1.5em;"><em>2021-08-02</em></p>
+<p class="date"><em>2023-01-25</em></p>
 </div>
-<div id="welcome" class="section level1 unnumbered">
-<h1>Welcome</h1>
-<p>Andrew Hayes’s <span class="citation">(<a href="#ref-hayesIntroductionMediationModeration2018" role="doc-biblioref">2018</a>)</span> text, <a href="https://afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html"><em>Introduction to mediation, moderation, and conditional process analysis: A regression-based approach</em></a>, has become a staple in social science graduate education. Hayes’s work has been from a frequentist OLS perspective. This book is an effort to connect his work with the Bayesian paradigm. Herein I refit his models with my favorite <a href="https://www.r-bloggers.com/why-use-r-five-reasons/"><strong>R</strong></a> <span class="citation">(<a href="#ref-R-base" role="doc-biblioref">R Core Team, 2020</a>)</span> package for Bayesian regression, <a href="https://twitter.com/paulbuerkner">Paul Bürkner</a>’s <a href="https://github.com/paul-buerkner/brms"><strong>brms</strong></a> <span class="citation">(<a href="#ref-burknerBrmsPackageBayesian2017" role="doc-biblioref">Bürkner, 2017</a>, <a href="#ref-burknerAdvancedBayesianMultilevel2018" role="doc-biblioref">2018</a>, <a href="#ref-R-brms" role="doc-biblioref">2020</a>)</span>. I also prefer data wrangling and plotting using the <a href="http://style.tidyverse.org"><strong>tidyverse</strong></a> <span class="citation">(<a href="#ref-R-tidyverse" role="doc-biblioref">Wickham, 2019</a>; <a href="#ref-wickhamWelcomeTidyverse2019" role="doc-biblioref">Wickham et al., 2019</a>)</span>. But to be clear, this project is not meant to stand alone. It’s a supplement to the textbook.</p>
-<p>The source code of the project is available <a href="https://github.com/ASKurz/recoding_Introduction_to_Mediation_Moderation_and_Conditional_Process_Analysis">here</a>. This project is powered by the great <a href="https://twitter.com/xieyihui">Yihui Xie</a>’s <a href="https://bookdown.org"><strong>bookdown</strong> package</a> <span class="citation">(<a href="#ref-xieBookdownAuthoringBooks2016" role="doc-biblioref">Xie, 2016</a>, <a href="#ref-R-bookdown" role="doc-biblioref">2020</a>)</span>, which makes it easy to turn <strong>R</strong> markdown files into HTML, PDF, and EPUB. You might also check out Xie, Allaire, and Grolemund’s <span class="citation">(<a href="#ref-xieMarkdownDefinitiveGuide2020" role="doc-biblioref">2020</a>)</span> <a href="https://bookdown.org/yihui/rmarkdown/"><em>R markdown: The definitive guide</em></a>.</p>
-<div id="why-this" class="section level2 unnumbered">
-<h2>Why this?</h2>
+<div id="welcome" class="section level1 unnumbered hasAnchor">
+<h1>Welcome<a href="index.html#welcome" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Andrew Hayes’s <span class="citation">(<a href="#ref-hayesIntroductionMediationModeration2018" role="doc-biblioref">2018</a>)</span> text, <a href="https://afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html"><em>Introduction to mediation, moderation, and conditional process analysis: A regression-based approach</em></a>, has become a staple in social science graduate education. Hayes’s work has been from a frequentist OLS perspective. This book is an effort to connect his work with the Bayesian paradigm. Herein I refit his models with my favorite <a href="https://www.r-bloggers.com/why-use-r-five-reasons/"><strong>R</strong></a> <span class="citation">(<a href="#ref-R-base" role="doc-biblioref">R Core Team, 2022</a>)</span> package for Bayesian regression, <a href="https://twitter.com/paulbuerkner">Paul Bürkner</a>’s <a href="https://github.com/paul-buerkner/brms"><strong>brms</strong></a> <span class="citation">(<a href="#ref-burknerBrmsPackageBayesian2017" role="doc-biblioref">Bürkner, 2017</a>, <a href="#ref-burknerAdvancedBayesianMultilevel2018" role="doc-biblioref">2018</a>, <a href="#ref-R-brms" role="doc-biblioref">2022f</a>)</span>. I also prefer data wrangling and plotting using the <a href="http://style.tidyverse.org"><strong>tidyverse</strong></a> <span class="citation">(<a href="#ref-wickhamWelcomeTidyverse2019" role="doc-biblioref">Wickham et al., 2019</a>; <a href="#ref-R-tidyverse" role="doc-biblioref">Wickham, 2022</a>)</span>. But to be clear, this ebook is not meant to stand alone. It’s a supplement to the original textbook.</p>
+<p>The source code of the ebook is available <a href="https://github.com/ASKurz/recoding_Introduction_to_Mediation_Moderation_and_Conditional_Process_Analysis">here</a>. This ebook is powered by the great <a href="https://twitter.com/xieyihui">Yihui Xie</a>’s <a href="https://bookdown.org"><strong>bookdown</strong> package</a> <span class="citation">(<a href="#ref-xieBookdownAuthoringBooks2016" role="doc-biblioref">Xie, 2016</a>, <a href="#ref-R-bookdown" role="doc-biblioref">2022</a>)</span>, which makes it easy to turn <strong>R</strong> markdown files into HTML, PDF, and EPUB. You might also check out Xie, Allaire, and Grolemund’s <span class="citation">(<a href="#ref-xieMarkdownDefinitiveGuide2020" role="doc-biblioref">2020</a>)</span> <a href="https://bookdown.org/yihui/rmarkdown/"><em>R markdown: The definitive guide</em></a>.</p>
+<div id="why-this" class="section level2 unnumbered hasAnchor">
+<h2>Why this?<a href="index.html#why-this" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>I’m not a statistician and I have no formal background in computer science. But I met a great <a href="https://pharmacy.olemiss.edu/blog/team/dr-john-p-bentley/">statistics mentor</a> in grad school who was enthusiastic, knowledgeable, and very generous with his time. In one of his stats electives, we used Hayes’s first edition text and I learned a lot in that semester.</p>
-<p>Yet a large portion of my training has been out of the classroom, working with messy real-world data, and looking online for help. One of the great resources I happened on was <a href="https://stats.idre.ucla.edu">idre, the UCLA Institute for Digital Education</a>. They perform a variety of services, but I benefited the most from was their portfolio of <a href="https://stats.idre.ucla.edu/other/examples/">richly annotated textbook examples</a>. Their online tutorials are among the earliest inspirations for this project. More so than my old statistics seminar lecture notes, high-quality and freely-available resources like this are where most of my day-to-day data analysis skills come from. We need more resources like this.</p>
-<p>Hayes’s work has become influential in many corners of the academy, including my own–psychology. His PROCESS macro <span class="citation">(<a href="#ref-hayesIntroductionMediationModeration2018" role="doc-biblioref">2018</a>)</span> has been aimed at SPSS <span class="citation">(<a href="#ref-ibmcorporationIBMSPSSStatistics2020" role="doc-biblioref">IBM Corporation, 2020</a>)</span> and SAS <span class="citation">(<a href="#ref-SASIMLSoftware2020" role="doc-biblioref"><em><span>SAS</span>/<span>IML</span> Software</em>, 2020</a>)</span> users, which is understandable given their popularity in the social sciences. Over the past few years, I’ve moved away from proprietary programs like SPSS to <strong>R</strong>. <strong>R</strong> free, open source, and I find it a more flexible and useful tool for data analysis. In fairness, Hayes expanded his second edition to include <strong>R</strong> code, which is a great move forward. But his work is done from a frequentist OLS perspective and there have been a lot of exciting developments in the world of applied Bayesian statistics. If you’re an <strong>R</strong> user and want to learn about Bayesian data analysis, I think Bürkner’s <a href="https://github.com/paul-buerkner/brms"><strong>brms</strong></a> is the best package around. It’s flexible, uses reasonably-approachable syntax, has sensible defaults, and offers a wide array of post-processing convenience functions. In addition, the <strong>R</strong> code in Hayes’s second edition does not leverage the power of the <a href="https://www.tidyverse.org"><strong>tidyverse</strong></a>. The purpose of this project is to connect Hayes’s insights into regression with the Bayesian paradigm. We’ll do so within the free and open-source <strong>R</strong> ecosystem, highlighting the Bayesian <strong>brms</strong> package, and using functions from the <strong>tidyverse</strong> and friends <span class="citation">(e.g., <a href="https://mjskay.github.io/tidybayes/index.html" role="doc-biblioref"><strong>tidybayes</strong></a>, <a href="#ref-R-tidybayes" role="doc-biblioref">Kay, 2020b</a>)</span> to streamline our code.</p>
+<p>Yet a large portion of my training has been out of the classroom, working with messy real-world data, and looking online for help. One of the great resources I happened on was <a href="https://stats.idre.ucla.edu">idre, the UCLA Institute for Digital Education</a>. They perform a variety of services, but I benefited the most from was their portfolio of <a href="https://stats.idre.ucla.edu/other/examples/">richly annotated textbook examples</a>. Their online tutorials are among the earliest inspirations for this ebook. More so than my old statistics seminar lecture notes, high-quality and freely-available resources like this are where most of my day-to-day data analysis skills come from. We need more resources like this.</p>
+<p>Hayes’s work has become influential in many corners of the academy, including my own–psychology. His PROCESS macro <span class="citation">(<a href="#ref-hayesIntroductionMediationModeration2018" role="doc-biblioref">2018</a>)</span> has been aimed at SPSS <span class="citation">(<a href="#ref-ibmcorporationIBMSPSSStatistics2020" role="doc-biblioref">IBM Corporation, 2020</a>)</span> and SAS <span class="citation">(<a href="#ref-SASIMLSoftware2020" role="doc-biblioref"><em><span>SAS</span>/<span>IML</span> Software</em>, 2020</a>)</span> users, which is understandable given their popularity in the social sciences. Over the past few years, I’ve moved away from proprietary programs like SPSS to <strong>R</strong>. <strong>R</strong> free, open source, and I find it a more flexible and useful tool for data analysis. In fairness, Hayes expanded his second edition to include <strong>R</strong> code, which is a great move forward. But his work is done from a frequentist OLS perspective and there have been a lot of exciting developments in the world of applied Bayesian statistics. If you’re an <strong>R</strong> user and want to learn about Bayesian data analysis, I think Bürkner’s <a href="https://github.com/paul-buerkner/brms"><strong>brms</strong></a> is the best package around. It’s flexible, uses reasonably-approachable syntax, has sensible defaults, and offers a wide array of post-processing convenience functions. In addition, the <strong>R</strong> code in Hayes’s second edition does not leverage the power of the <a href="https://www.tidyverse.org"><strong>tidyverse</strong></a>. The purpose of this ebook is to connect Hayes’s insights into regression with the Bayesian paradigm. We’ll do so within the free and open-source <strong>R</strong> ecosystem, highlighting the Bayesian <strong>brms</strong> package, and using functions from the <strong>tidyverse</strong> and friends <span class="citation">(e.g., <a href="https://mjskay.github.io/tidybayes/index.html" role="doc-biblioref"><strong>tidybayes</strong></a>, <a href="#ref-R-tidybayes" role="doc-biblioref">Kay, 2022</a>)</span> to streamline our code.</p>
 </div>
-<div id="my-assumptions-about-you" class="section level2 unnumbered">
-<h2>My assumptions about you</h2>
-<p>If you’re looking at this project, I’m guessing you’re either a graduate student or a post-graduate academic or researcher of some sort, which comes with the presumption you have at least a 101-level foundation in statistics. If you’re rusty, check out Legler and Roback’s free <span class="citation">(<a href="#ref-leglerBroadeningYourStatistical2019" role="doc-biblioref">2019</a>)</span> text, <a href="https://bookdown.org/roback/bookdown-bysh/">Broadening your statistical horizons: Generalized linear models and multilevel models*</a> or Navarro’s free <span class="citation">(<a href="#ref-navarroLearningStatistics2019" role="doc-biblioref">2019</a>)</span> text, <a href="https://learningstatisticswithr.com/"><em>Learning statistics with R</em></a>. I’m also presuming you are at least vaguely familiar with Bayesian statistics. For those totally new to Bayesian regression and HMC estimation, look at Bürkner’s <span class="citation">(<a href="#ref-burknerBrmsPackageBayesian2017" role="doc-biblioref">2017</a>)</span> <a href="https://cran.r-project.org/web/packages/brms/vignettes/brms_overview.pdf">paper</a>, watch a few of <a href="https://www.youtube.com/channel/UCNJK6_DZvcMqNSzQdEkzvzA/playlists">these engaging lectures</a>, or even start with either of my <span class="citation">(<a href="#ref-kurzStatisticalRethinkingSecondEd2021" role="doc-biblioref">2021</a>, <a href="#ref-kurzStatisticalRethinkingBrms2020" role="doc-biblioref">2020b</a>)</span> books based on the two <span class="citation">(<a href="#ref-mcelreathStatisticalRethinkingBayesian2020" role="doc-biblioref">2020</a>, <a href="#ref-mcelreathStatisticalRethinkingBayesian2015" role="doc-biblioref">2015</a>)</span> editions of McElreath’s <a href="https://xcelab.net/rm/statistical-rethinking/"><em>Statistical rethinking</em></a>. I’m also presuming a basic working fluency in <strong>R</strong> and a vague idea about what the <strong>tidyverse</strong> is. If you’re totally new to <strong>R</strong>, consider starting with Peng’s <span class="citation">(<a href="#ref-pengProgrammingDataScience2019" role="doc-biblioref">2019</a>)</span> <a href="https://bookdown.org/rdpeng/rprogdatascience/"><em>R programming for data science</em></a>. And the best introduction to the <strong>tidyvese</strong>-style of data analysis I’ve found is Grolemund and Wickham’s <span class="citation">(<a href="#ref-grolemundDataScience2017" role="doc-biblioref">2017</a>)</span> <a href="https://r4ds.had.co.nz"><em>R for data science</em></a>.</p>
-<p>That said, you do not need to be totally fluent in statistics or <strong>R</strong>. Otherwise why would you need this project, anyway? IMO, the most important things are curiosity, a willingness to try, and persistent tinkering. I love this stuff. Hopefully you will, too.</p>
+<div id="my-assumptions-about-you" class="section level2 unnumbered hasAnchor">
+<h2>My assumptions about you<a href="index.html#my-assumptions-about-you" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>If you’re looking at this ebook, I’m guessing you’re either a graduate student or a post-graduate academic or researcher of some sort, which comes with the presumption you have at least a 101-level foundation in statistics. If you’re rusty, check out Roback and Legler’s free <span class="citation">(<a href="#ref-roback2021beyond" role="doc-biblioref">2021</a>)</span> text, <a href="https://bookdown.org/roback/bookdown-BeyondMLR/"><em>Beyond multiple linear regression: Applied generalized linear models and multilevel models in R</em></a> or Navarro’s free <span class="citation">(<a href="#ref-navarroLearningStatistics2019" role="doc-biblioref">2019</a>)</span> text, <a href="https://learningstatisticswithr.com/"><em>Learning statistics with R</em></a>. I’m also presuming you are at least vaguely familiar with Bayesian statistics. For those totally new to Bayesian regression and HMC estimation, look at Bürkner’s <span class="citation">(<a href="#ref-burknerBrmsPackageBayesian2017" role="doc-biblioref">2017</a>)</span> <a href="https://cran.r-project.org/web/packages/brms/vignettes/brms_overview.pdf">paper</a>, watch a few of <a href="https://www.youtube.com/channel/UCNJK6_DZvcMqNSzQdEkzvzA/playlists">these engaging lectures</a>, or even start with either of my <span class="citation">(<a href="#ref-kurzStatisticalRethinkingBrms2023" role="doc-biblioref">2023b</a>, <a href="#ref-kurzStatisticalRethinkingSecondEd2023" role="doc-biblioref">2023c</a>)</span> books based on the two <span class="citation">(<a href="#ref-mcelreathStatisticalRethinkingBayesian2020" role="doc-biblioref">2020</a>, <a href="#ref-mcelreathStatisticalRethinkingBayesian2015" role="doc-biblioref">2015</a>)</span> editions of McElreath’s <a href="https://xcelab.net/rm/statistical-rethinking/"><em>Statistical rethinking</em></a>. I’m also presuming a basic working fluency in <strong>R</strong> and a vague idea about what the <strong>tidyverse</strong> is. If you’re totally new to <strong>R</strong>, consider starting with Peng’s <span class="citation">(<a href="#ref-pengProgrammingDataScience2022" role="doc-biblioref">2022</a>)</span> <a href="https://bookdown.org/rdpeng/rprogdatascience/"><em>R programming for data science</em></a>. And the best introduction to the <strong>tidyvese</strong>-style of data analysis I’ve found is Grolemund and Wickham’s <span class="citation">(<a href="#ref-grolemundDataScience2017" role="doc-biblioref">2017</a>)</span> <a href="https://r4ds.had.co.nz"><em>R for data science</em></a>.</p>
+<p>That said, you do not need to be totally fluent in statistics or <strong>R</strong>. Otherwise why would you need this ebook, anyway? IMO, the most important things are curiosity, a willingness to try, and persistent tinkering. I love this stuff. Hopefully you will, too.</p>
 </div>
-<div id="how-to-use-and-understand-this-project" class="section level2 unnumbered">
-<h2>How to use and understand this project</h2>
-<p>This project is not meant to stand alone. It’s a supplement to the second edition of <a href="http://afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html">Hayes’s text</a>. I follow the structure of his text, chapter by chapter, translating his analyses into <strong>brms</strong> and <strong>tidyverse</strong> code. However, many of the sections in the text are composed entirely of equations and prose, leaving us nothing to translate. When we run into those sections, the corresponding sections in this project will be sparse or blank. I imagine students might reference this project as they progress through Hayes’s text. I also imagine working data analysts might use this project in conjunction with Hayes’s text as they flip to the specific sections that seem relevant to solving their data challenges.</p>
-<p>I reproduce the bulk of the figures in the text, too. The plots in the first few chapters are the closest to those in the text. However, I’m passionate about data visualization and like to play around with <a href="https://github.com/EmilHvitfeldt/r-color-palettes">color palettes</a>, formatting templates, and other conventions quite a bit. As a result, the plots in each chapter have their own look and feel. I also like to highlight some of the unique strengths Bayesian analyses brings to the table, such as the ease with which you can depict uncertainty with density plots, interval ribbons around regression lines, and spaghetti plots. For more on some of these topics, chapters <a href="http://r4ds.had.co.nz/data-visualisation.html">3</a>, <a href="http://r4ds.had.co.nz/exploratory-data-analysis.html">7</a>, and <a href="http://r4ds.had.co.nz/graphics-for-communication.html">28</a> in <em>R4DS</em>, Healy’s <span class="citation">(<a href="#ref-healyDataVisualization2018" role="doc-biblioref">2018</a>)</span> <a href="https://socviz.co"><em>Data visualization: A practical introduction</em></a>, or Wickham’s <span class="citation">(<a href="#ref-wickhamGgplot2ElegantGraphics2016" role="doc-biblioref">2016</a>)</span> <a href="https://ggplot2-book.org/"><em>ggplot2: Elegant graphics for data analysis</em></a>.</p>
-<p>In this project, I use a handful of formatting conventions gleaned from <a href="http://r4ds.had.co.nz/introduction.html#running-r-code"><em>R4DS</em></a> and <a href="https://bookdown.org/yihui/rmarkdown/software-info.html"><em>R markdown: The definitive guide</em></a>.</p>
+<div id="how-to-use-and-understand-this-ebook" class="section level2 unnumbered hasAnchor">
+<h2>How to use and understand this ebook<a href="index.html#how-to-use-and-understand-this-ebook" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>This ebook is not meant to stand alone. It’s a supplement to the second edition of <a href="http://afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html">Hayes’s text</a>. I follow the structure of his text, chapter by chapter, translating his analyses into <strong>brms</strong> and <strong>tidyverse</strong> code. However, many of the sections in the text are composed entirely of equations and prose, leaving us nothing to translate. When we run into those sections, the corresponding sections in this ebook will be sparse or blank. I imagine students might reference this ebook as they progress through Hayes’s text. I also imagine working data analysts might use this ebook in conjunction with Hayes’s text as they flip to the specific sections that seem relevant to solving their data challenges.</p>
+<p>I reproduce the bulk of the figures in the text, too. The plots in the first few chapters are the closest to those in the text. However, I’m passionate about data visualization and like to play around with <a href="https://github.com/EmilHvitfeldt/r-color-palettes">color palettes</a>, formatting templates, and other conventions quite a bit. As a result, the plots in each chapter have their own look and feel. I also like to highlight some of the unique strengths Bayesian analyses brings to the table, such as the ease with which you can depict uncertainty with density plots, interval ribbons around regression lines, and spaghetti plots. For more on some of these topics, chapters <a href="https://r4ds.had.co.nz/data-visualisation.html">3</a>, <a href="https://r4ds.had.co.nz/exploratory-data-analysis.html">7</a>, and <a href="https://r4ds.had.co.nz/graphics-for-communication.html">28</a> in <em>R4DS</em>, Healy’s <span class="citation">(<a href="#ref-healyDataVisualization2018" role="doc-biblioref">2018</a>)</span> <a href="https://socviz.co"><em>Data visualization: A practical introduction</em></a>, or Wickham’s <span class="citation">(<a href="#ref-wickhamGgplot2ElegantGraphics2016" role="doc-biblioref">2016</a>)</span> <a href="https://ggplot2-book.org/"><em>ggplot2: Elegant graphics for data analysis</em></a>.</p>
+<p>In this ebook, I use a handful of formatting conventions gleaned from <a href="https://r4ds.had.co.nz/introduction.html#running-r-code"><em>R4DS</em></a> and <a href="https://bookdown.org/yihui/rmarkdown/software-info.html"><em>R markdown: The definitive guide</em></a>.</p>
 <ul>
 <li>I put <strong>R</strong> and <strong>R</strong> packages (e.g., <strong>tidybayes</strong>) in <strong>boldface</strong>.</li>
 <li><strong>R</strong> code blocks and their output appear in a gray background. E.g.,</li>
@@ -520,15 +519,33 @@ div.csl-indent {
 <li>Hyperlinks are denoted by their typical <a href="https://www.afhayes.com/introduction-to-mediation-moderation-and-conditional-process-analysis.html">blue-colored font</a>.</li>
 </ul>
 </div>
-<div id="times-change-and-so-do-we" class="section level2 unnumbered">
-<h2>Times change and so do we</h2>
+<div id="r-setup" class="section level2 unnumbered hasAnchor">
+<h2><strong>R</strong> setup<a href="index.html#r-setup" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>To get the full benefit from this ebook, you’ll need some software. Happily, everything will be free (provided you have access to a decent personal computer and an good internet connection).</p>
+<p>First, you’ll need to install <strong>R</strong>, which you can learn about at <a href="https://cran.r-project.org/">https://cran.r-project.org/</a>.</p>
+<p>Though not necessary, your <strong>R</strong> experience might be more enjoyable if done through the free RStudio interface, which you can learn about at <a href="https://rstudio.com/products/rstudio/">https://rstudio.com/products/rstudio/</a>.</p>
+<p>Once you have installed <strong>R</strong>, execute the following to install the bulk of the add-on packages. This will probably take a few minutes to finish. Go make yourself a coffee.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="index.html#cb3-1" aria-hidden="true" tabindex="-1"></a>packages <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;tidyverse&quot;</span>, <span class="st">&quot;rstan&quot;</span>, <span class="st">&quot;brms&quot;</span>, <span class="st">&quot;bayesplot&quot;</span>, <span class="st">&quot;broom&quot;</span>, <span class="st">&quot;cowplot&quot;</span>, <span class="st">&quot;directlabels&quot;</span>, <span class="st">&quot;GGally&quot;</span>, <span class="st">&quot;ggdark&quot;</span>, <span class="st">&quot;ggdist&quot;</span>, <span class="st">&quot;ggthemes&quot;</span>, <span class="st">&quot;HDInterval&quot;</span>, <span class="st">&quot;MASS&quot;</span>, <span class="st">&quot;palettetown&quot;</span>, <span class="st">&quot;psych&quot;</span>)</span>
+<span id="cb3-2"><a href="index.html#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="index.html#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(packages, <span class="at">dependencies =</span> T)</span></code></pre></div>
+<p>A couple of the other packages are not officially available via the Comprehensive R Archive Network (CRAN; <a href="https://cran.r-project.org/" class="uri">https://cran.r-project.org/</a>). You can download them directly from GitHub by executing the following.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="index.html#cb4-1" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;EdwinTh/dutchmasters&quot;</span>)</span>
+<span id="cb4-2"><a href="index.html#cb4-2" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;ropenscilabs/ochRe&quot;</span>)</span></code></pre></div>
+<p>It’s possible you’ll have problems installing some of these packages. Here are the likely suspects and where you can find help:</p>
+<ul>
+<li>for difficulties installing <strong>brms</strong>, go to <a href="https://github.com/paul-buerkner/brms#how-do-i-install-brms">https://github.com/paul-buerkner/brms#how-do-i-install-brms</a> or search around in the <a href="https://discourse.mc-stan.org/c/interfaces/brms/36"><strong>brms</strong> section of the Stan forums</a>; and</li>
+<li>for difficulties installing <strong>rstan</strong>, go to <a href="https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started">https://github.com/stan-dev/rstan/wiki/RStan-Getting-Started</a>.</li>
+</ul>
+</div>
+<div id="times-change-and-so-do-we" class="section level2 unnumbered hasAnchor">
+<h2>Times change and so do we<a href="index.html#times-change-and-so-do-we" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>For a brief rundown of the version history, we have:</p>
-<div id="section" class="section level3 unnumbered">
-<h3>1.0.0.</h3>
+<div id="section" class="section level3 unnumbered hasAnchor">
+<h3>1.0.0.<a href="index.html#section" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>I released the 1.0.0 version of this book in July of 2018. It was a complete first draft.</p>
 </div>
-<div id="section-1" class="section level3 unnumbered">
-<h3>1.1.0.</h3>
+<div id="section-1" class="section level3 unnumbered hasAnchor">
+<h3>1.1.0.<a href="index.html#section-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>In December 21, 2019, came the 1.1.0 update. It included a lot of changes, the most notable of which were that,</p>
 <ul>
 <li>all models were refit with <strong>brms</strong> 2.10.3,</li>
@@ -543,18 +560,28 @@ div.csl-indent {
 <li>the various <strong>R</strong> objects were assigned simpler and more standardized names.</li>
 </ul>
 </div>
-<div id="section-2" class="section level3 unnumbered">
-<h3>1.2.0.</h3>
-<p>Welcome to version 1.2.0! Noteworthy changes are that</p>
+<div id="section-2" class="section level3 unnumbered hasAnchor">
+<h3>1.2.0.<a href="index.html#section-2" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>In August 8, 2021, came the 1.2.0 update, with the following noteworthy changes:</p>
 <ul>
-<li>all models have been refit with <strong>brms</strong> 2.15.0;</li>
-<li>we have updated the in-text citations and reference sections using <a href="http://www.bibtex.org/">BibTex</a> <span class="citation">(<a href="#ref-BibTeX2020" role="doc-biblioref"><em><span>BibTeX</span></em>, 2020</a>)</span>, <a href="https://github.com/retorquere/zotero-better-bibtex">Better BibTeX</a> <span class="citation">(<a href="#ref-heynsBetterBibTeXZotero2020" role="doc-biblioref">Heyns, 2020</a>)</span>, and <a href="https://www.zotero.org/">zotero</a> <span class="citation">(<a href="#ref-ZoteroYourPersonal2020" role="doc-biblioref">Roy Rosenzweig Center for History and New Media, 2020</a>)</span>;</li>
-<li>I fixed code breaks due to various updates in the <strong>tidyverse</strong> packages; and</li>
-<li>I fixed a handful of typos and other small gaffes.</li>
+<li>improving the in-text citations and reference sections with <a href="http://www.bibtex.org/">BibTex</a> <span class="citation">(<a href="#ref-BibTeX2020" role="doc-biblioref"><em><span>BibTeX</span></em>, 2020</a>)</span>, <a href="https://github.com/retorquere/zotero-better-bibtex">Better BibTeX</a> <span class="citation">(<a href="#ref-BetterBibTeXZotero2020" role="doc-biblioref">Heyns, 2020</a>)</span>, and <a href="https://www.zotero.org/">zotero</a> <span class="citation">(<a href="#ref-ZoteroYourPersonal2020" role="doc-biblioref">Roy Rosenzweig Center for History and New Media, 2020</a>)</span>;</li>
+<li>refitting all models with <strong>brms</strong> 2.15.0; and</li>
+<li>fixing code breaks due to various updates in the <strong>tidyverse</strong> packages.</li>
 </ul>
 </div>
-<div id="whats-next" class="section level3 unnumbered">
-<h3>What’s next?</h3>
+<div id="section-3" class="section level3 unnumbered hasAnchor">
+<h3>1.3.0.<a href="index.html#section-3" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Welcome to version 1.3.0! Noteworthy changes include:</p>
+<ul>
+<li>replacing the depreciated <code>posterior_samples()</code> function with the new <code>posterior::as_draws_df()</code>-based workflow;</li>
+<li>replacing my incorrect use of <code>tidyr::expand()</code> with a more appropriate <code>tidyr::expand_grid()</code> workflow, thanks to insights from <a href="https://github.com/dipetkov">Desislava Petkova</a>;</li>
+<li>adopting the new <code>linewidth</code> argument for several <strong>ggplot2</strong> geoms (see <a href="https://www.tidyverse.org/blog/2022/08/ggplot2-3-4-0-size-to-linewidth/">here</a>);</li>
+<li>refitting all models with <strong>brms</strong> 2.18.0; and</li>
+<li>cleaning up references, hyperlinks, and typos along the way.</li>
+</ul>
+</div>
+<div id="whats-next" class="section level3 unnumbered hasAnchor">
+<h3>What’s next?<a href="index.html#whats-next" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>It’s unclear what future versions of this book may hold. Candidates include</p>
 <ul>
 <li>more talk about model priors,</li>
@@ -565,32 +592,34 @@ div.csl-indent {
 <p>We’ll see. In the meantime, feel free to make suggestions or report typos and coding goofs at <a href="https://github.com/ASKurz/recoding-Hayes-2018/issues">https://github.com/ASKurz/recoding-Hayes-2018/issues</a>.</p>
 </div>
 </div>
-<div id="thank-yous-are-in-order" class="section level2 unnumbered">
-<h2>Thank-you’s are in order</h2>
+<div id="thank-yous-are-in-order" class="section level2 unnumbered hasAnchor">
+<h2>Thank-you’s are in order<a href="index.html#thank-yous-are-in-order" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>Before we move on, I’d like to thank the following for their helpful contributions:</p>
 <ul>
+<li>Eric Green (<a href="https://github.com/ericpgreen">@ericpgreen</a>)</li>
+<li>Desislava Petkova (<a href="https://github.com/dipetkov">@dipetkov</a>)</li>
 <li>Jose Storopoli (<a href="https://github.com/storopoli">@storopoli</a>)</li>
 </ul>
 <p>For information on how you might help improve this ebook, go to <a href="https://github.com/ASKurz/recoding-Hayes-2018/blob/master/CONTRIBUTING.md">https://github.com/ASKurz/recoding-Hayes-2018/blob/master/CONTRIBUTING.md</a>.</p>
 </div>
-<div id="license-and-citation" class="section level2 unnumbered">
-<h2>License and citation</h2>
+<div id="license-and-citation" class="section level2 unnumbered hasAnchor">
+<h2>License and citation<a href="index.html#license-and-citation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>This book is licensed under the Creative Commons Zero v1.0 Universal license. You can learn the details, <a href="https://github.com/ASKurz/recoding-Hayes-2018/blob/master/LICENSE">here</a>. In short, you can use my work. Just make sure you give me the appropriate credit the same way you would for any other scholarly resource. Here’s the citation information:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="index.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="sc">@</span>book{kurzRecodingIntroduction2021,</span>
-<span id="cb3-2"><a href="index.html#cb3-2" aria-hidden="true" tabindex="-1"></a>  title <span class="ot">=</span> {Recoding {{Introduction to Mediation, Moderation, and Conditional Process Analysis}}},</span>
-<span id="cb3-3"><a href="index.html#cb3-3" aria-hidden="true" tabindex="-1"></a>  author <span class="ot">=</span> {Kurz, A. Solomon},</span>
-<span id="cb3-4"><a href="index.html#cb3-4" aria-hidden="true" tabindex="-1"></a>  year <span class="ot">=</span> {<span class="dv">2021</span>},</span>
-<span id="cb3-5"><a href="index.html#cb3-5" aria-hidden="true" tabindex="-1"></a>  month <span class="ot">=</span> {aug},</span>
-<span id="cb3-6"><a href="index.html#cb3-6" aria-hidden="true" tabindex="-1"></a>  edition <span class="ot">=</span> {version <span class="dv">1</span>.<span class="fl">2.0</span>},</span>
-<span id="cb3-7"><a href="index.html#cb3-7" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">=</span> {https<span class="sc">:</span><span class="er">//</span>bookdown.org<span class="sc">/</span>content<span class="sc">/</span>b472c7b3<span class="sc">-</span>ede5<span class="sc">-</span>40f0<span class="dv">-9677</span><span class="sc">-</span>75c3704c7e5c}</span>
-<span id="cb3-8"><a href="index.html#cb3-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="index.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="sc">@</span>book{kurzRecodingIntroduction2023,</span>
+<span id="cb5-2"><a href="index.html#cb5-2" aria-hidden="true" tabindex="-1"></a>  title <span class="ot">=</span> {Recoding {{Introduction to Mediation, Moderation, and Conditional Process Analysis}}},</span>
+<span id="cb5-3"><a href="index.html#cb5-3" aria-hidden="true" tabindex="-1"></a>  author <span class="ot">=</span> {Kurz, A. Solomon},</span>
+<span id="cb5-4"><a href="index.html#cb5-4" aria-hidden="true" tabindex="-1"></a>  year <span class="ot">=</span> {<span class="dv">2021</span>},</span>
+<span id="cb5-5"><a href="index.html#cb5-5" aria-hidden="true" tabindex="-1"></a>  month <span class="ot">=</span> {jan},</span>
+<span id="cb5-6"><a href="index.html#cb5-6" aria-hidden="true" tabindex="-1"></a>  edition <span class="ot">=</span> {version <span class="dv">1</span>.<span class="fl">3.0</span>},</span>
+<span id="cb5-7"><a href="index.html#cb5-7" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">=</span> {https<span class="sc">:</span><span class="er">//</span>bookdown.org<span class="sc">/</span>content<span class="sc">/</span>b472c7b3<span class="sc">-</span>ede5<span class="sc">-</span>40f0<span class="dv">-9677</span><span class="sc">-</span>75c3704c7e5c}</span>
+<span id="cb5-8"><a href="index.html#cb5-8" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 
 </div>
 </div>
 
 
 
-<h3>References</h3>
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
 <div id="ref-BibTeX2020" class="csl-entry">
 <em><span>BibTeX</span></em>. (2020). <a href="http://www.bibtex.org/">http://www.bibtex.org/</a>
@@ -602,7 +631,7 @@ Bürkner, P.-C. (2017). <span class="nocase">brms</span>: <span>An R</span> pack
 Bürkner, P.-C. (2018). Advanced <span>Bayesian</span> multilevel modeling with the <span>R</span> package brms. <em>The R Journal</em>, <em>10</em>(1), 395–411. <a href="https://doi.org/10.32614/RJ-2018-017">https://doi.org/10.32614/RJ-2018-017</a>
 </div>
 <div id="ref-R-brms" class="csl-entry">
-Bürkner, P.-C. (2020). <em><span class="nocase">brms</span>: <span>Bayesian</span> regression models using ’<span>Stan</span>’</em>. <a href="https://CRAN.R-project.org/package=brms">https://CRAN.R-project.org/package=brms</a>
+Bürkner, P.-C. (2022f). <em><span class="nocase">brms</span>: <span>Bayesian</span> regression models using ’<span>Stan</span>’</em>. <a href="https://CRAN.R-project.org/package=brms">https://CRAN.R-project.org/package=brms</a>
 </div>
 <div id="ref-grolemundDataScience2017" class="csl-entry">
 Grolemund, G., &amp; Wickham, H. (2017). <em>R for data science</em>. <span>O’Reilly</span>. <a href="https://r4ds.had.co.nz">https://r4ds.had.co.nz</a>
@@ -613,23 +642,20 @@ Hayes, Andrew F. (2018). <em>Introduction to mediation, moderation, and conditio
 <div id="ref-healyDataVisualization2018" class="csl-entry">
 Healy, K. (2018). <em>Data visualization: <span>A</span> practical introduction</em>. <span>Princeton University Press</span>. <a href="https://socviz.co/">https://socviz.co/</a>
 </div>
-<div id="ref-heynsBetterBibTeXZotero2020" class="csl-entry">
+<div id="ref-BetterBibTeXZotero2020" class="csl-entry">
 Heyns, E. (2020). <em>Better <span>BibTeX</span> for zotero</em>. <a href="https://retorque.re/zotero-better-bibtex/">https://retorque.re/zotero-better-bibtex/</a>
 </div>
 <div id="ref-ibmcorporationIBMSPSSStatistics2020" class="csl-entry">
-IBM Corporation. (2020). <em><span>IBM SPSS Statistics</span> for <span>Windows</span></em>. <a href="https://www.ibm.com/products/spss-statistics">https://www.ibm.com/products/spss-statistics</a>
+IBM Corporation. (2020). <em><span>IBM SPSS Statistics</span> for <span>Windows</span></em> (Version 27.0) [Computer software]. <a href="https://www.ibm.com/products/spss-statistics">https://www.ibm.com/products/spss-statistics</a>
 </div>
 <div id="ref-R-tidybayes" class="csl-entry">
-Kay, M. (2020b). <em><span class="nocase">tidybayes</span>: <span>Tidy</span> data and ’geoms’ for <span>Bayesian</span> models</em>. <a href="https://mjskay.github.io/tidybayes/">https://mjskay.github.io/tidybayes/</a>
+Kay, M. (2022). <em><span class="nocase">tidybayes</span>: <span>Tidy</span> data and ’geoms’ for <span>Bayesian</span> models</em>. <a href="https://CRAN.R-project.org/package=tidybayes">https://CRAN.R-project.org/package=tidybayes</a>
 </div>
-<div id="ref-kurzStatisticalRethinkingSecondEd2021" class="csl-entry">
-Kurz, A. S. (2021). <em>Statistical rethinking with brms, <span class="nocase">ggplot2</span>, and the tidyverse: <span>Second Edition</span></em> (version 0.2.0). <a href="https://bookdown.org/content/4857/">https://bookdown.org/content/4857/</a>
+<div id="ref-kurzStatisticalRethinkingBrms2023" class="csl-entry">
+Kurz, A. S. (2023b). <em>Statistical <span>Rethinking</span> with <span class="nocase">brms</span>, <span class="nocase">ggplot2</span>, and the <span class="nocase">tidyverse</span></em> (version 1.3.0). <a href="https://bookdown.org/content/3890/">https://bookdown.org/content/3890/</a>
 </div>
-<div id="ref-kurzStatisticalRethinkingBrms2020" class="csl-entry">
-Kurz, A. S. (2020b). <em>Statistical rethinking with brms, <span class="nocase">ggplot2</span>, and the tidyverse</em> (version 1.2.0). <a href="https://doi.org/10.5281/zenodo.3693202">https://doi.org/10.5281/zenodo.3693202</a>
-</div>
-<div id="ref-leglerBroadeningYourStatistical2019" class="csl-entry">
-Legler, J., &amp; Roback, P. (2019). <em>Broadening your statistical horizons: <span>Generalized</span> linear models and multilevel models</em>. <a href="https://bookdown.org/roback/bookdown-bysh/">https://bookdown.org/roback/bookdown-bysh/</a>
+<div id="ref-kurzStatisticalRethinkingSecondEd2023" class="csl-entry">
+Kurz, A. S. (2023c). <em>Statistical <span>Rethinking</span> with brms, <span class="nocase">ggplot2</span>, and the tidyverse: <span>Second Edition</span></em> (version 0.4.0). <a href="https://bookdown.org/content/4857/">https://bookdown.org/content/4857/</a>
 </div>
 <div id="ref-mcelreathStatisticalRethinkingBayesian2020" class="csl-entry">
 McElreath, R. (2020). <em>Statistical rethinking: <span>A Bayesian</span> course with examples in <span>R</span> and <span>Stan</span></em> (Second Edition). <span>CRC Press</span>. <a href="https://xcelab.net/rm/statistical-rethinking/">https://xcelab.net/rm/statistical-rethinking/</a>
@@ -640,23 +666,26 @@ McElreath, R. (2015). <em>Statistical rethinking: <span>A Bayesian</span> course
 <div id="ref-navarroLearningStatistics2019" class="csl-entry">
 Navarro, D. (2019). <em>Learning statistics with <span>R</span></em>. <a href="https://learningstatisticswithr.com">https://learningstatisticswithr.com</a>
 </div>
-<div id="ref-pengProgrammingDataScience2019" class="csl-entry">
-Peng, R. D. (2019). <em>R programming for data science</em>. <a href="https://bookdown.org/rdpeng/rprogdatascience/">https://bookdown.org/rdpeng/rprogdatascience/</a>
+<div id="ref-pengProgrammingDataScience2022" class="csl-entry">
+Peng, R. D. (2022). <em>R programming for data science</em>. <a href="https://bookdown.org/rdpeng/rprogdatascience/">https://bookdown.org/rdpeng/rprogdatascience/</a>
 </div>
 <div id="ref-R-base" class="csl-entry">
-R Core Team. (2020). <em>R: <span>A</span> language and environment for statistical computing</em>. <span>R Foundation for Statistical Computing</span>. <a href="https://www.R-project.org/">https://www.R-project.org/</a>
+R Core Team. (2022). <em>R: <span>A</span> language and environment for statistical computing</em>. <span>R Foundation for Statistical Computing</span>. <a href="https://www.R-project.org/">https://www.R-project.org/</a>
+</div>
+<div id="ref-roback2021beyond" class="csl-entry">
+Roback, P., &amp; Legler, J. (2021). <em>Beyond multiple linear regression: <span>Applied</span> generalized linear models and multilevel models in <span>R</span></em>. <span>CRC Press</span>. <a href="https://bookdown.org/roback/bookdown-BeyondMLR/">https://bookdown.org/roback/bookdown-BeyondMLR/</a>
 </div>
 <div id="ref-ZoteroYourPersonal2020" class="csl-entry">
 Roy Rosenzweig Center for History and New Media. (2020). <em>Zotero</em>. <a href="https://www.zotero.org/">https://www.zotero.org/</a>
 </div>
 <div id="ref-SASIMLSoftware2020" class="csl-entry">
-<em><span>SAS</span>/<span>IML</span> software</em>. (2020). <a href="https://www.sas.com/">https://www.sas.com/</a>
+<em><span>SAS</span>/<span>IML</span> software</em>. (2020). [Computer software]. <a href="https://www.sas.com/">https://www.sas.com/</a>
 </div>
 <div id="ref-wickhamGgplot2ElegantGraphics2016" class="csl-entry">
 Wickham, H. (2016). <em><span class="nocase">ggplot2</span>: <span>Elegant</span> graphics for data analysis</em>. <span>Springer-Verlag New York</span>. <a href="https://ggplot2-book.org/">https://ggplot2-book.org/</a>
 </div>
 <div id="ref-R-tidyverse" class="csl-entry">
-Wickham, H. (2019). <em><span class="nocase">tidyverse</span>: <span>Easily</span> install and load the ’tidyverse’</em>. <a href="https://CRAN.R-project.org/package=tidyverse">https://CRAN.R-project.org/package=tidyverse</a>
+Wickham, H. (2022). <em><span class="nocase">tidyverse</span>: <span>Easily</span> install and load the ’tidyverse’</em>. <a href="https://CRAN.R-project.org/package=tidyverse">https://CRAN.R-project.org/package=tidyverse</a>
 </div>
 <div id="ref-wickhamWelcomeTidyverse2019" class="csl-entry">
 Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L. D., François, R., Grolemund, G., Hayes, A., Henry, L., Hester, J., Kuhn, M., Pedersen, T. L., Miller, E., Bache, S. M., Müller, K., Ooms, J., Robinson, D., Seidel, D. P., Spinu, V., … Yutani, H. (2019). Welcome to the tidyverse. <em>Journal of Open Source Software</em>, <em>4</em>(43), 1686. <a href="https://doi.org/10.21105/joss.01686">https://doi.org/10.21105/joss.01686</a>
@@ -665,7 +694,7 @@ Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L. D., François, R., G
 Xie, Y. (2016). <em><span class="nocase">bookdown</span>: <span>Authoring</span> books and technical documents with <span>R</span> markdown</em>. <span>Chapman and Hall/CRC</span>. <a href="https://bookdown.org/yihui/bookdown/">https://bookdown.org/yihui/bookdown/</a>
 </div>
 <div id="ref-R-bookdown" class="csl-entry">
-Xie, Y. (2020). <em><span class="nocase">bookdown</span>: <span>Authoring</span> books and technical documents with <span>R Markdown</span></em>. <a href="https://CRAN.R-project.org/package=bookdown">https://CRAN.R-project.org/package=bookdown</a>
+Xie, Y. (2022). <em><span class="nocase">bookdown</span>: <span>Authoring</span> books and technical documents with <span>R Markdown</span></em>. <a href="https://CRAN.R-project.org/package=bookdown">https://CRAN.R-project.org/package=bookdown</a>
 </div>
 <div id="ref-xieMarkdownDefinitiveGuide2020" class="csl-entry">
 Xie, Y., Allaire, J. J., &amp; Grolemund, G. (2020). <em>R markdown: <span>The</span> definitive guide</em>. <span>Chapman and Hall/CRC</span>. <a href="https://bookdown.org/yihui/rmarkdown/">https://bookdown.org/yihui/rmarkdown/</a>
@@ -681,7 +710,6 @@ Xie, Y., Allaire, J. J., &amp; Grolemund, G. (2020). <em>R markdown: <span>The</
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -721,6 +749,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }
@@ -734,7 +766,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

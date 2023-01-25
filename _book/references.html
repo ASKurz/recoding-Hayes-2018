@@ -5,26 +5,25 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>References | Recoding Introduction to Mediation, Moderation, and Conditional Process Analysis</title>
-  <meta name="description" content="This project is an effort to connect Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="description" content="This ebook is an effort to connect Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
+  <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
 
   <meta property="og:title" content="References | Recoding Introduction to Mediation, Moderation, and Conditional Process Analysis" />
   <meta property="og:type" content="book" />
   
-  
-  <meta property="og:description" content="This project is an effort to connect Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
+  <meta property="og:description" content="This ebook is an effort to connect Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
   <meta name="github-repo" content="ASKurz/recoding-Hayes-2018" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="References | Recoding Introduction to Mediation, Moderation, and Conditional Process Analysis" />
   <meta name="twitter:site" content="@SolomonKurz" />
-  <meta name="twitter:description" content="This project is an effort to connect Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
+  <meta name="twitter:description" content="This ebook is an effort to connect Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
   
 
 <meta name="author" content="A Solomon Kurz" />
 
 
-<meta name="date" content="2021-08-02" />
+<meta name="date" content="2023-01-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +32,8 @@
   
 <link rel="prev" href="miscellaneous-topics-and-some-frequently-asked-questions.html"/>
 
-<script src="libs/header-attrs-2.8/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -50,10 +49,10 @@
 
 
 
-
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
-<link href="libs/vembedr-0.1.4/css/vembedr.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/vembedr-0.1.5/css/vembedr.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -94,7 +93,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -107,7 +106,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -160,12 +159,14 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#why-this"><i class="fa fa-check"></i>Why this?</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#my-assumptions-about-you"><i class="fa fa-check"></i>My assumptions about you</a></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html#how-to-use-and-understand-this-project"><i class="fa fa-check"></i>How to use and understand this project</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#how-to-use-and-understand-this-ebook"><i class="fa fa-check"></i>How to use and understand this ebook</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#r-setup"><i class="fa fa-check"></i><strong>R</strong> setup</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#times-change-and-so-do-we"><i class="fa fa-check"></i>Times change and so do we</a>
 <ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#section"><i class="fa fa-check"></i>1.0.0.</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#section-1"><i class="fa fa-check"></i>1.1.0.</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#section-2"><i class="fa fa-check"></i>1.2.0.</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#section-3"><i class="fa fa-check"></i>1.3.0.</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#whats-next"><i class="fa fa-check"></i>What’s next?</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#thank-yous-are-in-order"><i class="fa fa-check"></i>Thank-you’s are in order</a></li>
@@ -207,7 +208,6 @@ div.csl-indent {
 <li class="chapter" data-level="2.8.4" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#independence."><i class="fa fa-check"></i><b>2.8.4</b> Independence.</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#session-info-1"><i class="fa fa-check"></i>Session info</a></li>
-<li class="chapter" data-level="" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#footnote"><i class="fa fa-check"></i>Footnote</a></li>
 </ul></li>
 <li class="part"><span><b>II MEDIATION ANALYSIS</b></span></li>
 <li class="chapter" data-level="3" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html"><i class="fa fa-check"></i><b>3</b> The Simple Mediation Model</a>
@@ -312,7 +312,6 @@ div.csl-indent {
 <li class="chapter" data-level="7.5" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#the-difference-between-testing-for-moderation-and-probing-it"><i class="fa fa-check"></i><b>7.5</b> The difference between testing for moderation and probing it</a></li>
 <li class="chapter" data-level="7.6" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#artificial-categorization-and-subgroups"><i class="fa fa-check"></i><b>7.6</b> Artificial categorization and subgroups</a></li>
 <li class="chapter" data-level="" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#session-info-6"><i class="fa fa-check"></i>Session info</a></li>
-<li class="chapter" data-level="" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#footnote-1"><i class="fa fa-check"></i>Footnote</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html"><i class="fa fa-check"></i><b>8</b> Extending the Fundamental Principles of Moderation Analysis</a>
 <ul>
@@ -338,7 +337,7 @@ div.csl-indent {
 <li class="chapter" data-level="9.1" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#truths-and-myths-about-mean-centering"><i class="fa fa-check"></i><b>9.1</b> Truths and myths about mean-centering</a>
 <ul>
 <li class="chapter" data-level="9.1.1" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-effect-of-mean-centering-on-multicollinearity-and-the-standard-error-of-b_3."><i class="fa fa-check"></i><b>9.1.1</b> The effect of mean-centering on multicollinearity and the standard error of <span class="math inline">\(b_3\)</span>.</a></li>
-<li class="chapter" data-level="9.1.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-effect-of-mean-centering-on-b_1-b_2-and-their-standard-errors-posterior-sds."><i class="fa fa-check"></i><b>9.1.2</b> The effect of mean-centering on <span class="math inline">\(b_1\)</span>, <span class="math inline">\(b_2\)</span>, and their <del>standard errors</del> posterior <span class="math inline">\(SD\)</span>s.</a></li>
+<li class="chapter" data-level="9.1.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-effect-of-mean-centering-on-b_1-b_2-and-their-standard-errors-posterior-textitsds."><i class="fa fa-check"></i><b>9.1.2</b> The effect of mean-centering on <span class="math inline">\(b_1\)</span>, <span class="math inline">\(b_2\)</span>, and their <del>standard errors</del> posterior <span class="math inline">\(\textit{SD}\)</span>’s.</a></li>
 <li class="chapter" data-level="9.1.3" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-centering-option-in-process."><i class="fa fa-check"></i><b>9.1.3</b> The <del>centering option in PROCESS</del>.</a></li>
 </ul></li>
 <li class="chapter" data-level="9.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-estimation-and-interpretation-of-standardized-regression-coefficients-in-a-moderation-analysis"><i class="fa fa-check"></i><b>9.2</b> The estimation and interpretation of standardized regression coefficients in a moderation analysis</a>
@@ -481,21 +480,21 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="references" class="section level1 unnumbered">
-<h1>References</h1>
+<div id="references" class="section level1 unnumbered hasAnchor">
+<h1>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 
 <div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
 <div class="csl-entry">
-Aiken, L. S., &amp; West, S. G. (1991). <em>Multiple regression: <span>Testing</span> and interpreting interactions</em>. <span>SAGE</span>.
+Aiken, L. S., &amp; West, S. G. (1991). <em>Multiple regression: <span>Testing</span> and interpreting interactions</em>. <span>SAGE</span>. <a href="https://books.google.com?id=LcWLUyXcmnkC">https://books.google.com?id=LcWLUyXcmnkC</a>
 </div>
 <div class="csl-entry">
-Allan, A., Cook, D., Gayler, R., Kirk, H., Peng, R., &amp; Saber, E. (2017). <em><span class="nocase">ochRe</span>: <span>Australia</span>-themed colour palettes</em> [Manual]. <a href="https://github.com/ropenscilabs/ochRe">https://github.com/ropenscilabs/ochRe</a>
+Allan, A., Cook, D., Gayler, R., Kirk, H., Peng, R., &amp; Saber, E. (2021). <em><span class="nocase">ochRe</span>: <span class="nocase">Australia-themed</span> colour palettes</em> [Manual]. <a href="https://github.com/ropenscilabs/ochRe">https://github.com/ropenscilabs/ochRe</a>
 </div>
 <div class="csl-entry">
 Arnold, J. B. (2021). <em><span class="nocase">ggthemes</span>: <span>Extra</span> themes, scales and geoms for <span class="nocase">’ggplot2’</span></em>. <a href="https://CRAN.R-project.org/package=ggthemes">https://CRAN.R-project.org/package=ggthemes</a>
 </div>
 <div class="csl-entry">
-Baron, R. M., &amp; Kenny, D. A. (1986). The moderator<span></span>mediator variable distinction in social psychological research: <span>Conceptual</span>, strategic, and statistical considerations. <em>Journal of Personality and Social Psychology</em>, <em>51</em>(6), 1173–1182. <a href="https://doi.org/10.1037/0022-3514.51.6.1173">https://doi.org/10.1037/0022-3514.51.6.1173</a>
+Baron, R. M., &amp; Kenny, D. A. (1986). The moderatormediator variable distinction in social psychological research: <span>Conceptual</span>, strategic, and statistical considerations. <em>Journal of Personality and Social Psychology</em>, <em>51</em>(6), 1173–1182. <a href="https://doi.org/10.1037/0022-3514.51.6.1173">https://doi.org/10.1037/0022-3514.51.6.1173</a>
 </div>
 <div class="csl-entry">
 Bauer, D. J., &amp; Curran, P. J. (2005). Probing interactions in fixed and multilevel regression: Inferential and graphical techniques. <em>Multivariate Behavioral Research</em>, <em>40</em>(3), 373–400. <a href="https://doi.org/10.1207/s15327906mbr4003_5">https://doi.org/10.1207/s15327906mbr4003_5</a>
@@ -513,16 +512,16 @@ Bolger, N., Zee, K. S., Rossignac-Milon, M., &amp; Hassin, R. R. (2019). Causal 
 Brilleman, S., Crowther, M., Moreno-Betancur, M., Buros Novik, J., &amp; Wolfe, R. (2018). <em>Joint longitudinal and time-to-event models via <span>Stan</span>.</em> <a href="https://github.com/stan-dev/stancon_talks/">https://github.com/stan-dev/stancon_talks/</a>
 </div>
 <div class="csl-entry">
-Bürkner, P.-C. (2021a). <em>Estimating distributional models with brms</em>. <a href="https://CRAN.R-project.org/package=brms/vignettes/brms_distreg.html">https://CRAN.R-project.org/package=brms/vignettes/brms_distreg.html</a>
+Bürkner, P.-C. (2022a). <em>Estimating distributional models with brms</em>. <a href="https://CRAN.R-project.org/package=brms/vignettes/brms_distreg.html">https://CRAN.R-project.org/package=brms/vignettes/brms_distreg.html</a>
 </div>
 <div class="csl-entry">
-Bürkner, P.-C. (2021b). <em>Estimating multivariate models with brms</em>. <a href="https://CRAN.R-project.org/package=brms/vignettes/brms_multivariate.html">https://CRAN.R-project.org/package=brms/vignettes/brms_multivariate.html</a>
+Bürkner, P.-C. (2022b). <em>Estimating multivariate models with brms</em>. <a href="https://CRAN.R-project.org/package=brms/vignettes/brms_multivariate.html">https://CRAN.R-project.org/package=brms/vignettes/brms_multivariate.html</a>
 </div>
 <div class="csl-entry">
-Bürkner, P.-C. (2021c). <em>Handle missing values with brms</em>. <a href="https://CRAN.R-project.org/package=brms/vignettes/brms_missings.html">https://CRAN.R-project.org/package=brms/vignettes/brms_missings.html</a>
+Bürkner, P.-C. (2022c). <em>Handle missing values with brms</em>. <a href="https://CRAN.R-project.org/package=brms/vignettes/brms_missings.html">https://CRAN.R-project.org/package=brms/vignettes/brms_missings.html</a>
 </div>
 <div class="csl-entry">
-Bürkner, P.-C. (2021d). <em>Parameterization of response distributions in brms</em>. <a href="https://CRAN.R-project.org/package=brms/vignettes/brms_families.html">https://CRAN.R-project.org/package=brms/vignettes/brms_families.html</a>
+Bürkner, P.-C. (2022d). <em>Parameterization of response distributions in brms</em>. <a href="https://CRAN.R-project.org/package=brms/vignettes/brms_families.html">https://CRAN.R-project.org/package=brms/vignettes/brms_families.html</a>
 </div>
 <div class="csl-entry">
 Bürkner, P.-C. (2017). <span class="nocase">brms</span>: <span>An R</span> package for <span>Bayesian</span> multilevel models using <span>Stan</span>. <em>Journal of Statistical Software</em>, <em>80</em>(1), 1–28. <a href="https://doi.org/10.18637/jss.v080.i01">https://doi.org/10.18637/jss.v080.i01</a>
@@ -531,13 +530,10 @@ Bürkner, P.-C. (2017). <span class="nocase">brms</span>: <span>An R</span> pack
 Bürkner, P.-C. (2018). Advanced <span>Bayesian</span> multilevel modeling with the <span>R</span> package brms. <em>The R Journal</em>, <em>10</em>(1), 395–411. <a href="https://doi.org/10.32614/RJ-2018-017">https://doi.org/10.32614/RJ-2018-017</a>
 </div>
 <div class="csl-entry">
-Bürkner, P.-C. (2020). <em><span class="nocase">brms</span>: <span>Bayesian</span> regression models using ’<span>Stan</span>’</em>. <a href="https://CRAN.R-project.org/package=brms">https://CRAN.R-project.org/package=brms</a>
+Bürkner, P.-C. (2022e). <em><span class="nocase">brms</span> reference manual, <span>Version</span> 2.18.0</em>. <a href="https://CRAN.R-project.org/package=brms/brms.pdf">https://CRAN.R-project.org/package=brms/brms.pdf</a>
 </div>
 <div class="csl-entry">
-Bürkner, P.-C. (2021e). <em><span class="nocase">brms</span> reference manual, <span>Version</span> 2.15.0</em>. <a href="https://CRAN.R-project.org/package=brms/brms.pdf">https://CRAN.R-project.org/package=brms/brms.pdf</a>
-</div>
-<div class="csl-entry">
-Chang, W. (2014). <em>Extrafont: <span>Tools</span> for using fonts</em>. <a href="https://cran.r-project.org/package=extrafont/">https://cran.r-project.org/package=extrafont/</a>
+Bürkner, P.-C. (2022f). <em><span class="nocase">brms</span>: <span>Bayesian</span> regression models using ’<span>Stan</span>’</em>. <a href="https://CRAN.R-project.org/package=brms">https://CRAN.R-project.org/package=brms</a>
 </div>
 <div class="csl-entry">
 Chapman, D. A., &amp; Lickel, B. (2016). Climate change and disasters: <span>How</span> framing affects justifications for giving or withholding aid to disaster victims. <em>Social Psychological and Personality Science</em>, <em>7</em>(1), 13–20. <a href="https://doi.org/10.1177/1948550615590448">https://doi.org/10.1177/1948550615590448</a>
@@ -546,7 +542,7 @@ Chapman, D. A., &amp; Lickel, B. (2016). Climate change and disasters: <span>How
 Cheong, J., MacKinnon, D. P., &amp; Khoo, S. T. (2003). Investigation of mediational processes using parallel process latent growth curve modeling. <em>Structural Equation Modeling : A Multidisciplinary Journal</em>, <em>10</em>(2), 238. <a href="https://doi.org/10.1207/S15328007SEM1002_5">https://doi.org/10.1207/S15328007SEM1002_5</a>
 </div>
 <div class="csl-entry">
-Cohen, J. (1968). Multiple regression as a general data-analytic system. <em>Psychological Bulletin</em>, <em>70</em>(6, Pt.1), 426–443. <a href="https://doi.org/10.1037/h0026714">https://doi.org/10.1037/h0026714</a>
+Cohen, J. (1968). Multiple regression as a general data-analytic system. <em>Psychological Bulletin</em>, <em>70</em>, 426–443. <a href="https://doi.org/10.1037/h0026714">https://doi.org/10.1037/h0026714</a>
 </div>
 <div class="csl-entry">
 Cohen, J., Cohen, P., West, S. G., &amp; Aiken, L. S. (2003). <em>Applied multiple regression/correlation analysis for the behavioral sciences</em> (3rd edition). <span>Lawrence Erlbaum Associates</span>. <a href="https://doi.org/10.4324/9780203774441">https://doi.org/10.4324/9780203774441</a>
@@ -570,22 +566,22 @@ Dawson, J. F., &amp; Richter, A. W. (2006). Probing three-way interactions in mo
 Earp, B. D., &amp; Trafimow, D. (2015). Replication, falsification, and the crisis of confidence in social psychology. <em>Frontiers in Psychology</em>, <em>6</em>. <a href="https://doi.org/10.3389/fpsyg.2015.00621">https://doi.org/10.3389/fpsyg.2015.00621</a>
 </div>
 <div class="csl-entry">
-Enders, C. K. (2010). <em>Applied missing data analysis</em>. <span>Guilford press</span>. <a href="http://www.appliedmissingdata.com/">http://www.appliedmissingdata.com/</a>
+Enders, C. K. (2022). <em>Applied missing data analysis</em> (Second Edition). <span>Guilford Press</span>. <a href="http://www.appliedmissingdata.com/">http://www.appliedmissingdata.com/</a>
 </div>
 <div class="csl-entry">
-Gabry, J. (2019). <em>Graphical posterior predictive checks using the bayesplot package</em>. <a href="https://CRAN.R-project.org/package=bayesplot/vignettes/graphical-ppcs.html">https://CRAN.R-project.org/package=bayesplot/vignettes/graphical-ppcs.html</a>
+Gabry, J. (2022). <em><span class="nocase">loo</span> reference manual, <span>Version</span> 2.5.1</em>. <a href="https://CRAN.R-project.org/package=loo/loo.pdf">https://CRAN.R-project.org/package=loo/loo.pdf</a>
 </div>
 <div class="csl-entry">
-Gabry, J. (2020). <em><span class="nocase">loo</span> reference manual, <span>Version</span> 2.4.1</em>. <a href="https://CRAN.R-project.org/package=loo/loo.pdf">https://CRAN.R-project.org/package=loo/loo.pdf</a>
+Gabry, J. (2019, November 29). <em>Graphical posterior predictive checks using the bayesplot package</em>. <a href="https://CRAN.R-project.org/package=bayesplot/vignettes/graphical-ppcs.html">https://CRAN.R-project.org/package=bayesplot/vignettes/graphical-ppcs.html</a>
 </div>
 <div class="csl-entry">
-Gabry, J., &amp; Goodrich, B. (2020). <em><span class="nocase">rstanarm</span>: <span>Bayesian</span> applied regression modeling via stan</em> [Manual]. <a href="https://CRAN.R-project.org/package=rstanarm">https://CRAN.R-project.org/package=rstanarm</a>
+Gabry, J., &amp; Goodrich, B. (2022). <em><span class="nocase">rstanarm</span>: <span>Bayesian</span> applied regression modeling via stan</em> [Manual]. <a href="https://CRAN.R-project.org/package=rstanarm">https://CRAN.R-project.org/package=rstanarm</a>
 </div>
 <div class="csl-entry">
-Gabry, J., &amp; Mahr, T. (2021). <em><span class="nocase">bayesplot</span>: <span>Plotting</span> for <span>Bayesian</span> models</em>. <a href="https://CRAN.R-project.org/package=bayesplot">https://CRAN.R-project.org/package=bayesplot</a>
+Gabry, J., &amp; Mahr, T. (2022). <em><span class="nocase">bayesplot</span>: <span>Plotting</span> for <span>Bayesian</span> models</em>. <a href="https://CRAN.R-project.org/package=bayesplot">https://CRAN.R-project.org/package=bayesplot</a>
 </div>
 <div class="csl-entry">
-Gabry, J., &amp; Modrák, M. (2020). <em>Visual <span>MCMC</span> diagnostics using the bayesplot package</em>. <a href="https://CRAN.R-project.org/package=bayesplot/vignettes/visual-mcmc-diagnostics.html">https://CRAN.R-project.org/package=bayesplot/vignettes/visual-mcmc-diagnostics.html</a>
+Gabry, J., &amp; Modrák, M. (2022). <em>Visual <span>MCMC</span> diagnostics using the <span class="nocase">bayesplot</span> package</em>. <a href="https://cran.r-project.org/web/packages/bayesplot/vignettes/visual-mcmc-diagnostics.html">https://cran.r-project.org/web/packages/bayesplot/vignettes/visual-mcmc-diagnostics.html</a>
 </div>
 <div class="csl-entry">
 Gabry, J., Simpson, D., Vehtari, A., Betancourt, M., &amp; Gelman, A. (2019). Visualization in <span>Bayesian</span> workflow. <em>Journal of the Royal Statistical Society: Series A (Statistics in Society)</em>, <em>182</em>(2), 389–402. <a href="https://doi.org/10.1111/rssa.12378">https://doi.org/10.1111/rssa.12378</a>
@@ -642,7 +638,7 @@ Heyns, E. (2020). <em>Better <span>BibTeX</span> for zotero</em>. <a href="https
 Hocking, T. D. (2021). <em>Directlabels: <span>Direct</span> labels for multicolor plots</em> [Manual]. <a href="https://CRAN.R-project.org/package=directlabels">https://CRAN.R-project.org/package=directlabels</a>
 </div>
 <div class="csl-entry">
-IBM Corporation. (2020). <em><span>IBM SPSS Statistics</span> for <span>Windows</span></em>. <a href="https://www.ibm.com/products/spss-statistics">https://www.ibm.com/products/spss-statistics</a>
+IBM Corporation. (2020). <em><span>IBM SPSS Statistics</span> for <span>Windows</span></em> (Version 27.0) [Computer software]. <a href="https://www.ibm.com/products/spss-statistics">https://www.ibm.com/products/spss-statistics</a>
 </div>
 <div class="csl-entry">
 Imai, K., Keele, L., &amp; Tingley, D. (2010). A general approach to causal mediation analysis. <em>Psychological Methods</em>, <em>15</em>(4), 309–334. <a href="https://doi.org/10.1037/a0020761">https://doi.org/10.1037/a0020761</a>
@@ -651,10 +647,16 @@ Imai, K., Keele, L., &amp; Tingley, D. (2010). A general approach to causal medi
 Jaccard, J., &amp; Turrisi, R. (2003). <em>Interaction effects in multiple regression</em> (2nd edition). <span>Sage Publications</span>. <a href="https://dx.doi.org/10.4135/9781412984522">https://dx.doi.org/10.4135/9781412984522</a>
 </div>
 <div class="csl-entry">
-Kay, M. (2020a). <em>Extracting and visualizing tidy draws from brms models</em>. <a href="https://mjskay.github.io/tidybayes/articles/tidy-brms.html">https://mjskay.github.io/tidybayes/articles/tidy-brms.html</a>
+Kallioinen, N., Bürkner, P.-C., Paananen, T., &amp; Vehtari, A. (2022). <em><span class="nocase">priorsense</span>: <span>Prior</span> diagnostics and sensitivity analysis</em> [Manual].
 </div>
 <div class="csl-entry">
-Kay, M. (2020b). <em><span class="nocase">tidybayes</span>: <span>Tidy</span> data and ’geoms’ for <span>Bayesian</span> models</em>. <a href="https://mjskay.github.io/tidybayes/">https://mjskay.github.io/tidybayes/</a>
+Kallioinen, N., Paananen, T., Bürkner, P.-C., &amp; Vehtari, A. (2021). <em>Detecting and diagnosing prior and likelihood sensitivity with power-scaling</em>. <span>arXiv</span>. <a href="https://doi.org/10.48550/ARXIV.2107.14054">https://doi.org/10.48550/ARXIV.2107.14054</a>
+</div>
+<div class="csl-entry">
+Kay, M. (2021). <em>Extracting and visualizing tidy draws from brms models</em>. <a href="https://mjskay.github.io/tidybayes/articles/tidy-brms.html">https://mjskay.github.io/tidybayes/articles/tidy-brms.html</a>
+</div>
+<div class="csl-entry">
+Kay, M. (2022). <em><span class="nocase">tidybayes</span>: <span>Tidy</span> data and ’geoms’ for <span>Bayesian</span> models</em>. <a href="https://CRAN.R-project.org/package=tidybayes">https://CRAN.R-project.org/package=tidybayes</a>
 </div>
 <div class="csl-entry">
 Kelley, K., &amp; Preacher, K. J. (2012). On effect size. <em>Psychological Methods</em>, <em>17</em>(2), 137. <a href="https://doi.org/10.1037/a0028086">https://doi.org/10.1037/a0028086</a>
@@ -669,16 +671,13 @@ Kruschke, J. K. (2015). <em>Doing <span>Bayesian</span> data analysis: <span>A</
 Kruschke, J. K., &amp; Liddell, T. M. (2018). <span>The Bayesian New Statistics</span>: <span>Hypothesis</span> testing, estimation, meta-analysis, and power analysis from a <span>Bayesian</span> perspective. <em>Psychonomic Bulletin &amp; Review</em>, <em>25</em>(1), 178–206. <a href="https://doi.org/10.3758/s13423-016-1221-4">https://doi.org/10.3758/s13423-016-1221-4</a>
 </div>
 <div class="csl-entry">
-Kurz, A. S. (2021). <em>Statistical rethinking with brms, <span class="nocase">ggplot2</span>, and the tidyverse: <span>Second Edition</span></em> (version 0.2.0). <a href="https://bookdown.org/content/4857/">https://bookdown.org/content/4857/</a>
+Kurz, A. S. (2023a). <em>Doing <span>Bayesian</span> data analysis in brms and the tidyverse</em> (Version 1.1.0). <a href="https://bookdown.org/content/3686/">https://bookdown.org/content/3686/</a>
 </div>
 <div class="csl-entry">
-Kurz, A. S. (2020a). <em>Doing <span>Bayesian</span> data analysis in brms and the tidyverse</em> (version 0.4.0). <a href="https://bookdown.org/content/3686/">https://bookdown.org/content/3686/</a>
+Kurz, A. S. (2023b). <em>Statistical <span>Rethinking</span> with <span class="nocase">brms</span>, <span class="nocase">ggplot2</span>, and the <span class="nocase">tidyverse</span></em> (version 1.3.0). <a href="https://bookdown.org/content/3890/">https://bookdown.org/content/3890/</a>
 </div>
 <div class="csl-entry">
-Kurz, A. S. (2020b). <em>Statistical rethinking with brms, <span class="nocase">ggplot2</span>, and the tidyverse</em> (version 1.2.0). <a href="https://doi.org/10.5281/zenodo.3693202">https://doi.org/10.5281/zenodo.3693202</a>
-</div>
-<div class="csl-entry">
-Legler, J., &amp; Roback, P. (2019). <em>Broadening your statistical horizons: <span>Generalized</span> linear models and multilevel models</em>. <a href="https://bookdown.org/roback/bookdown-bysh/">https://bookdown.org/roback/bookdown-bysh/</a>
+Kurz, A. S. (2023c). <em>Statistical <span>Rethinking</span> with brms, <span class="nocase">ggplot2</span>, and the tidyverse: <span>Second Edition</span></em> (version 0.4.0). <a href="https://bookdown.org/content/4857/">https://bookdown.org/content/4857/</a>
 </div>
 <div class="csl-entry">
 Little, T. D., Preacher, K. J., Selig, J. P., &amp; Card, N. A. (2007). New developments in latent variable panel analyses of longitudinal data. <em>International Journal of Behavioral Development</em>, <em>31</em>(4), 357–365. <a href="https://doi.org/10.1177/0165025407077757">https://doi.org/10.1177/0165025407077757</a>
@@ -705,10 +704,13 @@ McElreath, R. (2015). <em>Statistical rethinking: <span>A Bayesian</span> course
 Meredith, M., &amp; Kruschke, J. (2018). <em><span>HDInterval</span>: <span>Highest</span> (posterior) density intervals</em> [Manual]. <a href="https://CRAN.R-project.org/package=HDInterval">https://CRAN.R-project.org/package=HDInterval</a>
 </div>
 <div class="csl-entry">
+Merkle, E. C., Fitzsimmons, E., Uanhoro, J., &amp; Goodrich, B. (2021). Efficient <span>Bayesian</span> structural equation modeling in <span>Stan</span>. <em>Journal of Statistical Software</em>, <em>100</em>(6), 1–22. <a href="https://doi.org/10.18637/jss.v100.i06">https://doi.org/10.18637/jss.v100.i06</a>
+</div>
+<div class="csl-entry">
 Merkle, E. C., &amp; Rosseel, Y. (2018). <span class="nocase">blavaan</span>: <span>Bayesian</span> structural equation models via parameter expansion. <em>Journal of Statistical Software</em>, <em>85</em>(4), 1–30. <a href="https://doi.org/10.18637/jss.v085.i04">https://doi.org/10.18637/jss.v085.i04</a>
 </div>
 <div class="csl-entry">
-Merkle, E. C., Rosseel, Y., &amp; Goodrich, B. (2020). <em><span class="nocase">blavaan</span>: <span>Bayesian</span> latent variable analysis</em>. <a href="https://CRAN.R-project.org/package=blavaan">https://CRAN.R-project.org/package=blavaan</a>
+Merkle, E. C., Rosseel, Y., &amp; Goodrich, B. (2022). <em><span class="nocase">blavaan</span>: <span>Bayesian</span> latent variable analysis</em>. <a href="https://CRAN.R-project.org/package=blavaan">https://CRAN.R-project.org/package=blavaan</a>
 </div>
 <div class="csl-entry">
 Miočević, M., MacKinnon, D. P., &amp; Levy, R. (2017). Power in <span>Bayesian</span> mediation analysis for small sample research. <em>Structural Equation Modeling: A Multidisciplinary Journal</em>, <em>24</em>(5), 666–683. <a href="https://doi.org/10.1080/10705511.2017.1312407">https://doi.org/10.1080/10705511.2017.1312407</a>
@@ -720,6 +722,9 @@ Mitchell, M. A., &amp; Maxwell, S. E. (2013). A comparison of the cross-sectiona
 Muthén, B., &amp; Asparouhov, T. (2015). Causal effects in mediation modeling: <span>An</span> introduction with applications to latent variables. <em>Structural Equation Modeling: A Multidisciplinary Journal</em>, <em>22</em>(1), 12–23. <a href="https://doi.org/10.1080/10705511.2014.935843">https://doi.org/10.1080/10705511.2014.935843</a>
 </div>
 <div class="csl-entry">
+Navarro, D. (2020). <em>Paths in strange spaces: <span>A</span> comment on preregistration</em>. <a href="https://doi.org/10.31234/osf.io/wxn58">https://doi.org/10.31234/osf.io/wxn58</a>
+</div>
+<div class="csl-entry">
 Navarro, D. (2019). <em>Learning statistics with <span>R</span></em>. <a href="https://learningstatisticswithr.com">https://learningstatisticswithr.com</a>
 </div>
 <div class="csl-entry">
@@ -729,10 +734,10 @@ Nelson, L. D., Simmons, J., &amp; Simonsohn, U. (2018). Psychology’s renaissan
 Pashler, H., &amp; Wagenmakers, E. (2012). Editors’ introduction to the special section on replicability in psychological science: <span>A</span> crisis of confidence? <em>Perspectives on Psychological Science</em>, <em>7</em>(6), 528–530. <a href="https://doi.org/10.1177/1745691612465253">https://doi.org/10.1177/1745691612465253</a>
 </div>
 <div class="csl-entry">
-Peng, R. D. (2019). <em>R programming for data science</em>. <a href="https://bookdown.org/rdpeng/rprogdatascience/">https://bookdown.org/rdpeng/rprogdatascience/</a>
+Peng, R. D. (2022). <em>R programming for data science</em>. <a href="https://bookdown.org/rdpeng/rprogdatascience/">https://bookdown.org/rdpeng/rprogdatascience/</a>
 </div>
 <div class="csl-entry">
-Peng, R. D., Kross, S., &amp; Anderson, B. (2017). <em>Mastering software development in {<span></span>}<span>R</span><span></span>{}</em>. <a href="https://github.com/rdpeng/RProgDA">https://github.com/rdpeng/RProgDA</a>
+Peng, R. D., Kross, S., &amp; Anderson, B. (2020). <em>Mastering software development in <span>R</span></em>. <a href="https://github.com/rdpeng/RProgDA">https://github.com/rdpeng/RProgDA</a>
 </div>
 <div class="csl-entry">
 Preacher, K. J., &amp; Kelley, K. (2011). Effect size measures for mediation models: <span>Quantitative</span> strategies for communicating indirect effects. <em>Psychological Methods</em>, <em>16</em>(2), 93–115. <a href="https://doi.org/10.1037/a0022658">https://doi.org/10.1037/a0022658</a>
@@ -741,13 +746,16 @@ Preacher, K. J., &amp; Kelley, K. (2011). Effect size measures for mediation mod
 Preacher, K. J., Rucker, D. D., &amp; Hayes, A. F. (2007). Addressing moderated mediation hypotheses: <span>Theory</span>, methods, and prescriptions. <em>Multivariate Behavioral Research</em>, <em>42</em>(1), 185–227. <a href="https://doi.org/10.1080/00273170701341316">https://doi.org/10.1080/00273170701341316</a>
 </div>
 <div class="csl-entry">
-R Core Team. (2020). <em>R: <span>A</span> language and environment for statistical computing</em>. <span>R Foundation for Statistical Computing</span>. <a href="https://www.R-project.org/">https://www.R-project.org/</a>
+R Core Team. (2022). <em>R: <span>A</span> language and environment for statistical computing</em>. <span>R Foundation for Statistical Computing</span>. <a href="https://www.R-project.org/">https://www.R-project.org/</a>
 </div>
 <div class="csl-entry">
-Revelle, W. (2021). <em><span class="nocase">psych</span>: <span>Procedures</span> for psychological, psychometric, and personality research</em>. <a href="https://CRAN.R-project.org/package=psych">https://CRAN.R-project.org/package=psych</a>
+Revelle, W. (2022). <em><span class="nocase">psych</span>: <span>Procedures</span> for psychological, psychometric, and personality research</em>. <a href="https://CRAN.R-project.org/package=psych">https://CRAN.R-project.org/package=psych</a>
 </div>
 <div class="csl-entry">
-Ripley, B. (2019). <em><span>MASS</span>: <span>Support</span> functions and datasets for venables and ripley’s <span>MASS</span></em>. <a href="https://CRAN.R-project.org/package=MASS">https://CRAN.R-project.org/package=MASS</a>
+Ripley, B. (2022). <em><span>MASS</span>: <span>Support</span> functions and datasets for venables and <span>Ripley</span>’s <span>MASS</span></em>. <a href="https://CRAN.R-project.org/package=MASS">https://CRAN.R-project.org/package=MASS</a>
+</div>
+<div class="csl-entry">
+Roback, P., &amp; Legler, J. (2021). <em>Beyond multiple linear regression: <span>Applied</span> generalized linear models and multilevel models in <span>R</span></em>. <span>CRC Press</span>. <a href="https://bookdown.org/roback/bookdown-BeyondMLR/">https://bookdown.org/roback/bookdown-BeyondMLR/</a>
 </div>
 <div class="csl-entry">
 Rogosa, D. (1980). Comparing nonparallel regression lines. <em>Psychological Bulletin</em>, <em>88</em>(2), 307–321. <a href="https://doi.org/10.1037/0033-2909.88.2.307">https://doi.org/10.1037/0033-2909.88.2.307</a>
@@ -759,7 +767,10 @@ Rosseel, Y., &amp; Jorgensen, T. D. (2019). <em><span class="nocase">lavaan</spa
 Roy Rosenzweig Center for History and New Media. (2020). <em>Zotero</em>. <a href="https://www.zotero.org/">https://www.zotero.org/</a>
 </div>
 <div class="csl-entry">
-<em><span>SAS</span>/<span>IML</span> software</em>. (2020). <a href="https://www.sas.com/">https://www.sas.com/</a>
+<em><span>SAS</span>/<span>IML</span> software</em>. (2020). [Computer software]. <a href="https://www.sas.com/">https://www.sas.com/</a>
+</div>
+<div class="csl-entry">
+Schloerke, B., Crowley, J., Di Cook, Briatte, F., Marbach, M., Thoen, E., Elberg, A., &amp; Larmarange, J. (2021). <em><span>GGally</span>: <span>Extension</span> to <span class="nocase">’ggplot2’</span></em>. <a href="https://CRAN.R-project.org/package=GGally">https://CRAN.R-project.org/package=GGally</a>
 </div>
 <div class="csl-entry">
 Selig, J. P., &amp; Preacher, K. J. (2009). Mediation models for longitudinal data in developmental research. <em>Research in Human Development</em>, <em>6</em>(2-3), 144–164. <a href="https://doi.org/10.1080/15427600902911247">https://doi.org/10.1080/15427600902911247</a>
@@ -768,19 +779,13 @@ Selig, J. P., &amp; Preacher, K. J. (2009). Mediation models for longitudinal da
 Spiller, S. A., Fitzsimons, G. J., Lynch, J. G., &amp; Mcclelland, G. H. (2013). Spotlights, floodlights, and the magic number zero: <span>Simple</span> effects tests in moderated regression. <em>Journal of Marketing Research</em>, <em>50</em>(2), 277–288. <a href="https://doi.org/10.1509/jmr.12.0420">https://doi.org/10.1509/jmr.12.0420</a>
 </div>
 <div class="csl-entry">
-Stan Development Team. (2020). <em><span>RStan</span>: The <span>R</span> interface to <span>Stan</span></em>. <a href="https://cran.r-project.org/web/packages/rstan/vignettes/rstan.html">https://cran.r-project.org/web/packages/rstan/vignettes/rstan.html</a>
+Stan Development Team. (2023). <em><span>RStan</span>: <span>The R Interface</span> to <span>Stan</span></em>. <a href="https://CRAN.R-project.org/package=rstan/vignettes/rstan.html">https://CRAN.R-project.org/package=rstan/vignettes/rstan.html</a>
 </div>
 <div class="csl-entry">
-Stan Development Team. (2021). <em>Stan user’s guide, <span>Version</span> 2.26</em>. <a href="https://mc-stan.org/docs/2_26/stan-users-guide/index.html">https://mc-stan.org/docs/2_26/stan-users-guide/index.html</a>
+Stan Development Team. (2022). <em>Stan user’s guide, <span>Version</span> 2.31</em>. <a href="https://mc-stan.org/docs/stan-users-guide/index.html">https://mc-stan.org/docs/stan-users-guide/index.html</a>
 </div>
 <div class="csl-entry">
-Thoen, E. (2019). <em><span class="nocase">dutchmasters</span></em> [Manual]. <a href="https://github.com/EdwinTh/dutchmasters">https://github.com/EdwinTh/dutchmasters</a>
-</div>
-<div class="csl-entry">
-Torres-Manzanera, E. (n.d.). Xkcd: <span>Plotting XKCD</span> graphs. <em>Journal of Statistical Software</em>, 12. <a href="https://cran.r-project.org/package=xkcd/vignettes/xkcd-intro.pdf">https://cran.r-project.org/package=xkcd/vignettes/xkcd-intro.pdf</a>
-</div>
-<div class="csl-entry">
-Torres-Manzanera, E. (2018). <em>Xkcd: <span>Plotting</span> <span class="nocase">ggplot2</span> graphics in an <span>XKCD</span> style</em>. <a href="https://CRAN.R-project.org/package=xkcd">https://CRAN.R-project.org/package=xkcd</a>
+Thoen, E. (2022). <em><span class="nocase">dutchmasters</span></em> [Manual]. <a href="https://github.com/EdwinTh/dutchmasters">https://github.com/EdwinTh/dutchmasters</a>
 </div>
 <div class="csl-entry">
 Tufte, E. R. (2001). <em>The visual display of quantitative information</em> (Second Edition). <span>Graphics Press</span>. <a href="https://www.edwardtufte.com/tufte/books_vdqi">https://www.edwardtufte.com/tufte/books_vdqi</a>
@@ -789,7 +794,7 @@ Tufte, E. R. (2001). <em>The visual display of quantitative information</em> (Se
 Valente, M. J., &amp; MacKinnon, D. P. (2017). Comparing models of change to estimate the mediated effect in the pretest-posttest control group design. <em>Structural Equation Modeling : A Multidisciplinary Journal</em>, <em>24</em>(3), 428–450. <a href="https://doi.org/10.1080/10705511.2016.1274657">https://doi.org/10.1080/10705511.2016.1274657</a>
 </div>
 <div class="csl-entry">
-Valeri, L., &amp; VanderWeele, T. J. (2013). Mediation analysis allowing for exposure<span></span>mediator interactions and causal interpretation: Theoretical assumptions and implementation with <span>SAS</span> and <span>SPSS</span> macros. <em>Psychological Methods</em>, <em>18</em>(2), 137. <a href="https://doi.org/10.1037/a0031034">https://doi.org/10.1037/a0031034</a>
+Valeri, L., &amp; VanderWeele, T. J. (2013). Mediation analysis allowing for exposuremediator interactions and causal interpretation: Theoretical assumptions and implementation with <span>SAS</span> and <span>SPSS</span> macros. <em>Psychological Methods</em>, <em>18</em>(2), 137. <a href="https://doi.org/10.1037/a0031034">https://doi.org/10.1037/a0031034</a>
 </div>
 <div class="csl-entry">
 van Buuren, S. (2018). <em>Flexible imputation of missing data</em> (Second Edition). <span>CRC Press</span>. <a href="https://stefvanbuuren.name/fimd/">https://stefvanbuuren.name/fimd/</a>
@@ -798,28 +803,28 @@ van Buuren, S. (2018). <em>Flexible imputation of missing data</em> (Second Edit
 VanderWeele, T. (2015). <em>Explanation in causal inference: <span>Methods</span> for mediation and interaction</em> (1st edition). <span>Oxford University Press</span>.
 </div>
 <div class="csl-entry">
-Vehtari, A., &amp; Gabry, J. (2020). <em>Using the loo package (version <span><span class="math inline">\(&gt;\)</span></span>= 2.0.0)</em>. <a href="https://CRAN.R-project.org/package=loo/vignettes/loo2-example.html">https://CRAN.R-project.org/package=loo/vignettes/loo2-example.html</a>
+Vehtari, A., &amp; Gabry, J. (2022, March 23). <em>Bayesian stacking and pseudo-<span>BMA</span> weights using the loo package</em>. <a href="https://CRAN.R-project.org/package=loo/vignettes/loo2-weights.html">https://CRAN.R-project.org/package=loo/vignettes/loo2-weights.html</a>
 </div>
 <div class="csl-entry">
-Vehtari, A., &amp; Gabry, J. (2019). <em>Bayesian stacking and pseudo-<span>BMA</span> weights using the loo package</em>. <a href="https://CRAN.R-project.org/package=loo/vignettes/loo2-weights.html">https://CRAN.R-project.org/package=loo/vignettes/loo2-weights.html</a>
+Vehtari, A., &amp; Gabry, J. (2020, July 14). <em>Using the loo package (version <span><span class="math inline">\(&gt;\)</span></span>= 2.0.0)</em>. <a href="https://CRAN.R-project.org/package=loo/vignettes/loo2-example.html">https://CRAN.R-project.org/package=loo/vignettes/loo2-example.html</a>
 </div>
 <div class="csl-entry">
-Vehtari, A., Gabry, J., Magnusson, M., Yao, Y., &amp; Gelman, A. (2019). <em><span class="nocase">loo</span>: <span>Efficient</span> leave-one-out cross-validation and <span>WAIC</span> for bayesian models</em>. <a href="https://CRAN.R-project.org/package=loo/">https://CRAN.R-project.org/package=loo/</a>
+Vehtari, A., Gabry, J., Magnusson, M., Yao, Y., &amp; Gelman, A. (2022). <em><span class="nocase">loo</span>: <span>Efficient</span> leave-one-out cross-validation and <span>WAIC</span> for bayesian models</em>. <a href="https://CRAN.R-project.org/package=loo/">https://CRAN.R-project.org/package=loo/</a>
 </div>
 <div class="csl-entry">
 Vehtari, A., Gelman, A., &amp; Gabry, J. (2017). Practical <span>Bayesian</span> model evaluation using leave-one-out cross-validation and <span>WAIC</span>. <em>Statistics and Computing</em>, <em>27</em>(5), 1413–1432. <a href="https://doi.org/10.1007/s11222-016-9696-4">https://doi.org/10.1007/s11222-016-9696-4</a>
 </div>
 <div class="csl-entry">
-Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., &amp; Bürkner, P.-C. (2019). Rank-normalization, folding, and localization: <span>An</span> improved <span class="math inline">\(\widehat R\)</span> for assessing convergence of <span>MCMC</span>. <em>arXiv Preprint arXiv:1903.08008</em>. <a href="https://arxiv.org/abs/1903.08008?">https://arxiv.org/abs/1903.08008?</a>
+Vehtari, A., Gelman, A., Simpson, D., Carpenter, B., &amp; Bürkner, P.-C. (2019). <em>Rank-normalization, folding, and localization: <span>An</span> improved <span><span class="math inline">\(\widehat{R}\)</span></span> for assessing convergence of <span>MCMC</span></em>. <a href="https://arxiv.org/abs/1903.08008?">https://arxiv.org/abs/1903.08008?</a>
 </div>
 <div class="csl-entry">
-Vermeer, J. (1657). <em>The little street</em>.
+Vermeer, J. (1657–1658). <em>The little street</em>.
 </div>
 <div class="csl-entry">
 Vuorre, M. (2017). <em><span class="nocase">bmlm</span>: <span>Bayesian</span> multilevel mediation</em> [Manual]. <a href="https://cran.r-project.org/package=bmlm">https://cran.r-project.org/package=bmlm</a>
 </div>
 <div class="csl-entry">
-Vuorre, M. (2019). <em><span class="nocase">bmlm</span>: <span>Bayesian</span> multilevel mediation</em> [Manual]. <a href="https://github.com/mvuorre/bmlm/">https://github.com/mvuorre/bmlm/</a>
+Vuorre, M. (2021). <em><span class="nocase">bmlm</span>: <span>Bayesian</span> multilevel mediation</em> [Manual]. <a href="https://github.com/mvuorre/bmlm/">https://github.com/mvuorre/bmlm/</a>
 </div>
 <div class="csl-entry">
 Vuorre, M., &amp; Bolger, N. (2018). Within-subject mediation analysis for experimental data in cognitive psychology and neuroscience. <em>Behavior Research Methods</em>, <em>50</em>(5), 2125–2143. <a href="https://doi.org/10.3758/s13428-017-0980-9">https://doi.org/10.3758/s13428-017-0980-9</a>
@@ -828,7 +833,7 @@ Vuorre, M., &amp; Bolger, N. (2018). Within-subject mediation analysis for exper
 Wickham, H. (2016). <em><span class="nocase">ggplot2</span>: <span>Elegant</span> graphics for data analysis</em>. <span>Springer-Verlag New York</span>. <a href="https://ggplot2-book.org/">https://ggplot2-book.org/</a>
 </div>
 <div class="csl-entry">
-Wickham, H. (2019). <em><span class="nocase">tidyverse</span>: <span>Easily</span> install and load the ’tidyverse’</em>. <a href="https://CRAN.R-project.org/package=tidyverse">https://CRAN.R-project.org/package=tidyverse</a>
+Wickham, H. (2022). <em><span class="nocase">tidyverse</span>: <span>Easily</span> install and load the ’tidyverse’</em>. <a href="https://CRAN.R-project.org/package=tidyverse">https://CRAN.R-project.org/package=tidyverse</a>
 </div>
 <div class="csl-entry">
 Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L. D., François, R., Grolemund, G., Hayes, A., Henry, L., Hester, J., Kuhn, M., Pedersen, T. L., Miller, E., Bache, S. M., Müller, K., Ooms, J., Robinson, D., Seidel, D. P., Spinu, V., … Yutani, H. (2019). Welcome to the tidyverse. <em>Journal of Open Source Software</em>, <em>4</em>(43), 1686. <a href="https://doi.org/10.21105/joss.01686">https://doi.org/10.21105/joss.01686</a>
@@ -837,7 +842,7 @@ Wickham, H., Averick, M., Bryan, J., Chang, W., McGowan, L. D., François, R., G
 Xie, Y. (2016). <em><span class="nocase">bookdown</span>: <span>Authoring</span> books and technical documents with <span>R</span> markdown</em>. <span>Chapman and Hall/CRC</span>. <a href="https://bookdown.org/yihui/bookdown/">https://bookdown.org/yihui/bookdown/</a>
 </div>
 <div class="csl-entry">
-Xie, Y. (2020). <em><span class="nocase">bookdown</span>: <span>Authoring</span> books and technical documents with <span>R Markdown</span></em>. <a href="https://CRAN.R-project.org/package=bookdown">https://CRAN.R-project.org/package=bookdown</a>
+Xie, Y. (2022). <em><span class="nocase">bookdown</span>: <span>Authoring</span> books and technical documents with <span>R Markdown</span></em>. <a href="https://CRAN.R-project.org/package=bookdown">https://CRAN.R-project.org/package=bookdown</a>
 </div>
 <div class="csl-entry">
 Xie, Y., Allaire, J. J., &amp; Grolemund, G. (2020). <em>R markdown: <span>The</span> definitive guide</em>. <span>Chapman and Hall/CRC</span>. <a href="https://bookdown.org/yihui/rmarkdown/">https://bookdown.org/yihui/rmarkdown/</a>
@@ -871,7 +876,6 @@ Yuan, Y., &amp; MacKinnon, D. P. (2009). Bayesian mediation analysis. <em>Psycho
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -911,6 +915,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }
@@ -924,7 +932,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

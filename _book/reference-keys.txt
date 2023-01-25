@@ -108,7 +108,7 @@ conducting-a-2-times-2-between-participants-factorial-anova-using-process-anothe
 some-myths-and-additional-extensions-of-moderation-analysis
 truths-and-myths-about-mean-centering
 the-effect-of-mean-centering-on-multicollinearity-and-the-standard-error-of-b_3.
-the-effect-of-mean-centering-on-b_1-b_2-and-their-standard-errors-posterior-sds.
+the-effect-of-mean-centering-on-b_1-b_2-and-their-standard-errors-posterior-textitsds.
 the-centering-option-in-process.
 the-estimation-and-interpretation-of-standardized-regression-coefficients-in-a-moderation-analysis
 variant-1.

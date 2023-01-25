@@ -5,26 +5,25 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>4 Causal Steps, Confounding, and Causal Order | Recoding Introduction to Mediation, Moderation, and Conditional Process Analysis</title>
-  <meta name="description" content="This project is an effort to connect Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
-  <meta name="generator" content="bookdown 0.22 and GitBook 2.6.7" />
+  <meta name="description" content="This ebook is an effort to connect Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
+  <meta name="generator" content="bookdown 0.28 and GitBook 2.6.7" />
 
   <meta property="og:title" content="4 Causal Steps, Confounding, and Causal Order | Recoding Introduction to Mediation, Moderation, and Conditional Process Analysis" />
   <meta property="og:type" content="book" />
   
-  
-  <meta property="og:description" content="This project is an effort to connect Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
+  <meta property="og:description" content="This ebook is an effort to connect Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
   <meta name="github-repo" content="ASKurz/recoding-Hayes-2018" />
 
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="4 Causal Steps, Confounding, and Causal Order | Recoding Introduction to Mediation, Moderation, and Conditional Process Analysis" />
   <meta name="twitter:site" content="@SolomonKurz" />
-  <meta name="twitter:description" content="This project is an effort to connect Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
+  <meta name="twitter:description" content="This ebook is an effort to connect Hayes’s conditional process analysis work with the Bayesian paradigm. Herein I refit his models with my favorite R package for Bayesian regression, Bürkner’s brms, and use the tidyverse for data manipulation and plotting." />
   
 
 <meta name="author" content="A Solomon Kurz" />
 
 
-<meta name="date" content="2021-08-02" />
+<meta name="date" content="2023-01-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -33,8 +32,8 @@
   
 <link rel="prev" href="the-simple-mediation-model.html"/>
 <link rel="next" href="more-than-one-mediator.html"/>
-<script src="libs/header-attrs-2.8/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
@@ -50,10 +49,10 @@
 
 
 
-
-<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
-<link href="libs/vembedr-0.1.4/css/vembedr.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<link href="libs/vembedr-0.1.5/css/vembedr.css" rel="stylesheet" />
 
 
 <style type="text/css">
@@ -94,7 +93,7 @@ code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
 code span.at { color: #7d9029; } /* Attribute */
 code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
+code span.bu { color: #008000; } /* BuiltIn */
 code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
 code span.ch { color: #4070a0; } /* Char */
 code span.cn { color: #880000; } /* Constant */
@@ -107,7 +106,7 @@ code span.er { color: #ff0000; font-weight: bold; } /* Error */
 code span.ex { } /* Extension */
 code span.fl { color: #40a070; } /* Float */
 code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
+code span.im { color: #008000; font-weight: bold; } /* Import */
 code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 code span.kw { color: #007020; font-weight: bold; } /* Keyword */
 code span.op { color: #666666; } /* Operator */
@@ -160,12 +159,14 @@ div.csl-indent {
 <ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#why-this"><i class="fa fa-check"></i>Why this?</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#my-assumptions-about-you"><i class="fa fa-check"></i>My assumptions about you</a></li>
-<li class="chapter" data-level="" data-path="index.html"><a href="index.html#how-to-use-and-understand-this-project"><i class="fa fa-check"></i>How to use and understand this project</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#how-to-use-and-understand-this-ebook"><i class="fa fa-check"></i>How to use and understand this ebook</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#r-setup"><i class="fa fa-check"></i><strong>R</strong> setup</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#times-change-and-so-do-we"><i class="fa fa-check"></i>Times change and so do we</a>
 <ul>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#section"><i class="fa fa-check"></i>1.0.0.</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#section-1"><i class="fa fa-check"></i>1.1.0.</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#section-2"><i class="fa fa-check"></i>1.2.0.</a></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html#section-3"><i class="fa fa-check"></i>1.3.0.</a></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#whats-next"><i class="fa fa-check"></i>What’s next?</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html#thank-yous-are-in-order"><i class="fa fa-check"></i>Thank-you’s are in order</a></li>
@@ -207,7 +208,6 @@ div.csl-indent {
 <li class="chapter" data-level="2.8.4" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#independence."><i class="fa fa-check"></i><b>2.8.4</b> Independence.</a></li>
 </ul></li>
 <li class="chapter" data-level="" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#session-info-1"><i class="fa fa-check"></i>Session info</a></li>
-<li class="chapter" data-level="" data-path="fundamentals-of-linear-regression.html"><a href="fundamentals-of-linear-regression.html#footnote"><i class="fa fa-check"></i>Footnote</a></li>
 </ul></li>
 <li class="part"><span><b>II MEDIATION ANALYSIS</b></span></li>
 <li class="chapter" data-level="3" data-path="the-simple-mediation-model.html"><a href="the-simple-mediation-model.html"><i class="fa fa-check"></i><b>3</b> The Simple Mediation Model</a>
@@ -312,7 +312,6 @@ div.csl-indent {
 <li class="chapter" data-level="7.5" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#the-difference-between-testing-for-moderation-and-probing-it"><i class="fa fa-check"></i><b>7.5</b> The difference between testing for moderation and probing it</a></li>
 <li class="chapter" data-level="7.6" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#artificial-categorization-and-subgroups"><i class="fa fa-check"></i><b>7.6</b> Artificial categorization and subgroups</a></li>
 <li class="chapter" data-level="" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#session-info-6"><i class="fa fa-check"></i>Session info</a></li>
-<li class="chapter" data-level="" data-path="fundamentals-of-moderation-analysis.html"><a href="fundamentals-of-moderation-analysis.html#footnote-1"><i class="fa fa-check"></i>Footnote</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="extending-the-fundamental-principles-of-moderation-analysis.html"><a href="extending-the-fundamental-principles-of-moderation-analysis.html"><i class="fa fa-check"></i><b>8</b> Extending the Fundamental Principles of Moderation Analysis</a>
 <ul>
@@ -338,7 +337,7 @@ div.csl-indent {
 <li class="chapter" data-level="9.1" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#truths-and-myths-about-mean-centering"><i class="fa fa-check"></i><b>9.1</b> Truths and myths about mean-centering</a>
 <ul>
 <li class="chapter" data-level="9.1.1" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-effect-of-mean-centering-on-multicollinearity-and-the-standard-error-of-b_3."><i class="fa fa-check"></i><b>9.1.1</b> The effect of mean-centering on multicollinearity and the standard error of <span class="math inline">\(b_3\)</span>.</a></li>
-<li class="chapter" data-level="9.1.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-effect-of-mean-centering-on-b_1-b_2-and-their-standard-errors-posterior-sds."><i class="fa fa-check"></i><b>9.1.2</b> The effect of mean-centering on <span class="math inline">\(b_1\)</span>, <span class="math inline">\(b_2\)</span>, and their <del>standard errors</del> posterior <span class="math inline">\(SD\)</span>s.</a></li>
+<li class="chapter" data-level="9.1.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-effect-of-mean-centering-on-b_1-b_2-and-their-standard-errors-posterior-textitsds."><i class="fa fa-check"></i><b>9.1.2</b> The effect of mean-centering on <span class="math inline">\(b_1\)</span>, <span class="math inline">\(b_2\)</span>, and their <del>standard errors</del> posterior <span class="math inline">\(\textit{SD}\)</span>’s.</a></li>
 <li class="chapter" data-level="9.1.3" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-centering-option-in-process."><i class="fa fa-check"></i><b>9.1.3</b> The <del>centering option in PROCESS</del>.</a></li>
 </ul></li>
 <li class="chapter" data-level="9.2" data-path="some-myths-and-additional-extensions-of-moderation-analysis.html"><a href="some-myths-and-additional-extensions-of-moderation-analysis.html#the-estimation-and-interpretation-of-standardized-regression-coefficients-in-a-moderation-analysis"><i class="fa fa-check"></i><b>9.2</b> The estimation and interpretation of standardized regression coefficients in a moderation analysis</a>
@@ -481,32 +480,32 @@ div.csl-indent {
           <div class="page-inner">
 
             <section class="normal" id="section-">
-<div id="causal-steps-confounding-and-causal-order" class="section level1" number="4">
-<h1><span class="header-section-number">4</span> Causal Steps, Confounding, and Causal Order</h1>
+<div id="causal-steps-confounding-and-causal-order" class="section level1 hasAnchor" number="4">
+<h1><span class="header-section-number">4</span> Causal Steps, Confounding, and Causal Order<a href="causal-steps-confounding-and-causal-order.html#causal-steps-confounding-and-causal-order" class="anchor-section" aria-label="Anchor link to header"></a></h1>
 <blockquote>
 <p>Comfort with [the principles of the basic mediation model] allows you to conduct mediation analysis and use it to shed light on your research questions and hypotheses about causal processes. In this chapter, [we] take up a variety of complications, including testing and ruling out various alternative explanations for associations observed in a mediation analysis, effect size, and models with multiple causal agents and outcomes. <span class="citation">(<a href="#ref-hayesIntroductionMediationModeration2018" role="doc-biblioref">Andrew F. Hayes, 2018, p. 113</a>)</span></p>
 </blockquote>
-<div id="what-about-barron-and-kenny" class="section level2" number="4.1">
-<h2><span class="header-section-number">4.1</span> What about Barron and Kenny?</h2>
+<div id="what-about-barron-and-kenny" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> What about Barron and Kenny?<a href="causal-steps-confounding-and-causal-order.html#what-about-barron-and-kenny" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <blockquote>
 <p>Complete and partial mediation are concepts that are deeply ingrained in the thinking of social and behavioral scientists. But I just don’t see what they offer our understanding of a phenomenon. They are too sample-size-dependent and the distinction between them has no substantive or theoretical meaning or value of any consequence. I recommend avoiding expressing hypotheses about mediation or results of a mediation analysis using these terms. (p. 121)</p>
 </blockquote>
 <p>Agreed.</p>
 </div>
-<div id="confounding-and-causal-order" class="section level2" number="4.2">
-<h2><span class="header-section-number">4.2</span> Confounding and causal order</h2>
+<div id="confounding-and-causal-order" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Confounding and causal order<a href="causal-steps-confounding-and-causal-order.html#confounding-and-causal-order" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <blockquote>
 <p>One of the beautiful features of experiments is the causal interpretations they afford about differences between groups. Good experimentation is tough and requires lots of careful planning and strict control over experimental procedures, construction of stimuli, treatment of participants, and so forth. But when done well, no research design gives a researcher more confidence in the claim that differences between groups defined by <span class="math inline">\(X\)</span> on some variable of interest is due to <span class="math inline">\(X\)</span> rather than something else. Given that a mediation model is a causal model, the ability to make unequivocal causal claims about the effect of <span class="math inline">\(X\)</span> on <span class="math inline">\(M\)</span> and the direct and total effects of <span class="math inline">\(X\)</span> on <span class="math inline">\(Y\)</span> gives experiments tremendous appeal.</p>
 <p>Absent random assignment to values of <span class="math inline">\(X\)</span>, <em>all</em> of the associations in a mediation model are susceptible to confounding and epiphenomenal association, not just the association between <span class="math inline">\(M\)</span> and <span class="math inline">\(Y\)</span>. Whether one’s design includes manipulation and random assignment of <span class="math inline">\(X\)</span> or not, it behooves the researcher to seriously ponder these potential threats to causal inference and, if possible, do something to reduce their plausibility as alternative explanations for associations observed. (pp. 121–122, <em>emphasis</em> in the original)</p>
 </blockquote>
-<div id="accounting-for-confounding-and-epiphenomenal-association." class="section level3" number="4.2.1">
-<h3><span class="header-section-number">4.2.1</span> Accounting for confounding and epiphenomenal association.</h3>
+<div id="accounting-for-confounding-and-epiphenomenal-association." class="section level3 hasAnchor" number="4.2.1">
+<h3><span class="header-section-number">4.2.1</span> Accounting for confounding and epiphenomenal association.<a href="causal-steps-confounding-and-causal-order.html#accounting-for-confounding-and-epiphenomenal-association." class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Here we load a couple necessary packages, load the data, and take a peek at them.</p>
-<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb221-1"><a href="causal-steps-confounding-and-causal-order.html#cb221-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb221-2"><a href="causal-steps-confounding-and-causal-order.html#cb221-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb221-3"><a href="causal-steps-confounding-and-causal-order.html#cb221-3" aria-hidden="true" tabindex="-1"></a>estress <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/estress/estress.csv&quot;</span>)</span>
-<span id="cb221-4"><a href="causal-steps-confounding-and-causal-order.html#cb221-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb221-5"><a href="causal-steps-confounding-and-causal-order.html#cb221-5" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(estress)</span></code></pre></div>
+<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb224-1"><a href="causal-steps-confounding-and-causal-order.html#cb224-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb224-2"><a href="causal-steps-confounding-and-causal-order.html#cb224-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb224-3"><a href="causal-steps-confounding-and-causal-order.html#cb224-3" aria-hidden="true" tabindex="-1"></a>estress <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/estress/estress.csv&quot;</span>)</span>
+<span id="cb224-4"><a href="causal-steps-confounding-and-causal-order.html#cb224-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb224-5"><a href="causal-steps-confounding-and-causal-order.html#cb224-5" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(estress)</span></code></pre></div>
 <pre><code>## Rows: 262
 ## Columns: 7
 ## $ tenure   &lt;dbl&gt; 1.67, 0.58, 0.58, 2.00, 5.00, 9.00, 0.00, 2.50, 0.50, 0.58, 9.00, 1.92, 2.00, 1.42, 0.92, 2…
@@ -517,7 +516,7 @@ div.csl-indent {
 ## $ age      &lt;dbl&gt; 51, 45, 42, 50, 48, 48, 51, 47, 40, 43, 57, 36, 33, 29, 33, 48, 40, 45, 37, 42, 54, 57, 37,…
 ## $ ese      &lt;dbl&gt; 5.33, 6.05, 5.26, 4.35, 4.86, 5.05, 3.66, 6.13, 5.26, 4.00, 2.53, 6.60, 5.20, 5.66, 5.66, 5…</code></pre>
 <p>As we learned in <a href="fundamentals-of-linear-regression.html#alternative-explanations-for-association">Section 2.3</a>, the <code>psych::lowerCor()</code> function makes it easy to estimate the lower triangle of a correlation matrix.</p>
-<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb223-1"><a href="causal-steps-confounding-and-causal-order.html#cb223-1" aria-hidden="true" tabindex="-1"></a>psych<span class="sc">::</span><span class="fu">lowerCor</span>(estress, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="causal-steps-confounding-and-causal-order.html#cb226-1" aria-hidden="true" tabindex="-1"></a>psych<span class="sc">::</span><span class="fu">lowerCor</span>(estress, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##          tenur  estrs  affct  wthdr  sex    age    ese   
 ## tenure    1.000                                          
 ## estress   0.068  1.000                                   
@@ -527,16 +526,17 @@ div.csl-indent {
 ## age       0.266  0.066 -0.018 -0.035  0.083  1.000       
 ## ese      -0.060 -0.158 -0.246 -0.243  0.028 -0.083  1.000</code></pre>
 <p>Let’s open <strong>brms</strong>.</p>
-<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb225-1"><a href="causal-steps-confounding-and-causal-order.html#cb225-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(brms)</span></code></pre></div>
+<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb228-1"><a href="causal-steps-confounding-and-causal-order.html#cb228-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(brms)</span></code></pre></div>
 <p>Recall that if you want the correlations with Bayesian estimation and those sweet Bayesian credible intervals, you set up an intercept-only multivariate model.</p>
-<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb226-1"><a href="causal-steps-confounding-and-causal-order.html#cb226-1" aria-hidden="true" tabindex="-1"></a>model4<span class="fl">.1</span> <span class="ot">&lt;-</span> </span>
-<span id="cb226-2"><a href="causal-steps-confounding-and-causal-order.html#cb226-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">brm</span>(<span class="at">data =</span> estress, </span>
-<span id="cb226-3"><a href="causal-steps-confounding-and-causal-order.html#cb226-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">family =</span> gaussian,</span>
-<span id="cb226-4"><a href="causal-steps-confounding-and-causal-order.html#cb226-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">mvbind</span>(ese, estress, affect, withdraw) <span class="sc">~</span> <span class="dv">1</span>,</span>
-<span id="cb226-5"><a href="causal-steps-confounding-and-causal-order.html#cb226-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">cores =</span> <span class="dv">4</span>,</span>
-<span id="cb226-6"><a href="causal-steps-confounding-and-causal-order.html#cb226-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">file =</span> <span class="st">&quot;fits/model04.01&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="causal-steps-confounding-and-causal-order.html#cb229-1" aria-hidden="true" tabindex="-1"></a>model4<span class="fl">.1</span> <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb229-2"><a href="causal-steps-confounding-and-causal-order.html#cb229-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> estress, </span>
+<span id="cb229-3"><a href="causal-steps-confounding-and-causal-order.html#cb229-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> gaussian,</span>
+<span id="cb229-4"><a href="causal-steps-confounding-and-causal-order.html#cb229-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bf</span>(<span class="fu">mvbind</span>(ese, estress, affect, withdraw) <span class="sc">~</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb229-5"><a href="causal-steps-confounding-and-causal-order.html#cb229-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_rescor</span>(<span class="cn">TRUE</span>),</span>
+<span id="cb229-6"><a href="causal-steps-confounding-and-causal-order.html#cb229-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">cores =</span> <span class="dv">4</span>,</span>
+<span id="cb229-7"><a href="causal-steps-confounding-and-causal-order.html#cb229-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> <span class="st">&quot;fits/model04.01&quot;</span>)</span></code></pre></div>
 <p>Behold the summary.</p>
-<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb227-1"><a href="causal-steps-confounding-and-causal-order.html#cb227-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(model4<span class="fl">.1</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="causal-steps-confounding-and-causal-order.html#cb230-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(model4<span class="fl">.1</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##  Family: MV(gaussian, gaussian, gaussian, gaussian) 
 ##   Links: mu = identity; sigma = identity
 ##          mu = identity; sigma = identity
@@ -547,385 +547,385 @@ div.csl-indent {
 ##          affect ~ 1 
 ##          withdraw ~ 1 
 ##    Data: estress (Number of observations: 262) 
-## Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
-##          total post-warmup samples = 4000
+##   Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup draws = 4000
 ## 
 ## Population-Level Effects: 
 ##                    Estimate Est.Error l-95% CI u-95% CI  Rhat Bulk_ESS Tail_ESS
-## ese_Intercept         5.606     0.059    5.489    5.721 1.000     6087     3218
-## estress_Intercept     4.620     0.088    4.444    4.796 1.001     5433     2679
-## affect_Intercept      1.599     0.044    1.513    1.683 1.000     4489     3143
-## withdraw_Intercept    2.321     0.077    2.167    2.469 1.000     5598     3390
+## ese_Intercept         5.607     0.060    5.490    5.726 1.002     6844     3153
+## estress_Intercept     4.620     0.088    4.448    4.793 1.000     7567     3492
+## affect_Intercept      1.598     0.045    1.508    1.683 1.001     5188     3369
+## withdraw_Intercept    2.321     0.078    2.168    2.479 1.001     6357     3483
 ## 
 ## Family Specific Parameters: 
 ##                Estimate Est.Error l-95% CI u-95% CI  Rhat Bulk_ESS Tail_ESS
-## sigma_ese         0.954     0.042    0.876    1.040 1.001     5494     3044
-## sigma_estress     1.435     0.063    1.318    1.564 1.001     6330     3316
-## sigma_affect      0.728     0.033    0.669    0.793 1.001     4932     2960
-## sigma_withdraw    1.256     0.055    1.155    1.371 1.001     6103     3199
+## sigma_ese         0.954     0.042    0.876    1.039 1.000     7737     3384
+## sigma_estress     1.436     0.063    1.318    1.563 1.002     6770     2998
+## sigma_affect      0.729     0.032    0.670    0.793 1.001     5697     3159
+## sigma_withdraw    1.256     0.055    1.153    1.368 1.003     7687     3445
 ## 
 ## Residual Correlations: 
 ##                          Estimate Est.Error l-95% CI u-95% CI  Rhat Bulk_ESS Tail_ESS
-## rescor(ese,estress)        -0.152     0.061   -0.267   -0.031 1.000     5891     2960
-## rescor(ese,affect)         -0.238     0.058   -0.347   -0.120 1.001     4517     3361
-## rescor(estress,affect)      0.334     0.055    0.221    0.439 1.000     4933     3637
-## rescor(ese,withdraw)       -0.235     0.058   -0.346   -0.121 1.000     4695     2900
-## rescor(estress,withdraw)    0.060     0.061   -0.060    0.179 1.000     5299     3310
-## rescor(affect,withdraw)     0.410     0.050    0.307    0.503 1.002     4271     3132
+## rescor(ese,estress)        -0.155     0.061   -0.273   -0.037 1.000     6196     3193
+## rescor(ese,affect)         -0.239     0.059   -0.356   -0.123 1.000     5193     3223
+## rescor(estress,affect)      0.335     0.054    0.229    0.436 1.000     5240     2807
+## rescor(ese,withdraw)       -0.237     0.059   -0.348   -0.122 1.000     4931     3133
+## rescor(estress,withdraw)    0.062     0.061   -0.060    0.180 1.000     5211     3289
+## rescor(affect,withdraw)     0.410     0.051    0.305    0.507 1.001     6309     3292
 ## 
-## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
+## Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
 ## and Tail_ESS are effective sample size measures, and Rhat is the potential
 ## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <p>Since we have posteriors for the correlations, why not plot them? Here we take our base theme from the <a href="https://CRAN.R-project.org/package=ggdark"><strong>ggdark</strong> package</a> <span class="citation">(<a href="#ref-R-ggdark" role="doc-biblioref">Grantham, 2019</a>)</span> and our color scheme from the <a href="https://CRAN.R-project.org/package=viridis"><strong>viridis</strong> package</a> <span class="citation">(<a href="#ref-R-viridis" role="doc-biblioref">Garnier, 2021</a>)</span>.</p>
-<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb229-1"><a href="causal-steps-confounding-and-causal-order.html#cb229-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggdark)</span>
-<span id="cb229-2"><a href="causal-steps-confounding-and-causal-order.html#cb229-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb229-3"><a href="causal-steps-confounding-and-causal-order.html#cb229-3" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_samples</span>(model4<span class="fl">.1</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb229-4"><a href="causal-steps-confounding-and-causal-order.html#cb229-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(rescor__ese__estress, rescor__ese__affect, rescor__estress__withdraw)) <span class="sc">%&gt;%</span> </span>
-<span id="cb229-5"><a href="causal-steps-confounding-and-causal-order.html#cb229-5" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb229-6"><a href="causal-steps-confounding-and-causal-order.html#cb229-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">fill =</span> name)) <span class="sc">+</span></span>
-<span id="cb229-7"><a href="causal-steps-confounding-and-causal-order.html#cb229-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> .<span class="dv">85</span>, <span class="at">color =</span> <span class="st">&quot;transparent&quot;</span>) <span class="sc">+</span></span>
-<span id="cb229-8"><a href="causal-steps-confounding-and-causal-order.html#cb229-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">option =</span> <span class="st">&quot;D&quot;</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>,</span>
-<span id="cb229-9"><a href="causal-steps-confounding-and-causal-order.html#cb229-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="fu">expression</span>(rho[<span class="st">&quot;ese, affect&quot;</span>]),</span>
-<span id="cb229-10"><a href="causal-steps-confounding-and-causal-order.html#cb229-10" aria-hidden="true" tabindex="-1"></a>                                  <span class="fu">expression</span>(rho[<span class="st">&quot;ese, estress&quot;</span>]),</span>
-<span id="cb229-11"><a href="causal-steps-confounding-and-causal-order.html#cb229-11" aria-hidden="true" tabindex="-1"></a>                                  <span class="fu">expression</span>(rho[<span class="st">&quot;estress, withdraw&quot;</span>])),</span>
-<span id="cb229-12"><a href="causal-steps-confounding-and-causal-order.html#cb229-12" aria-hidden="true" tabindex="-1"></a>                       <span class="at">guide =</span> <span class="fu">guide_legend</span>(<span class="at">label.hjust =</span> <span class="dv">0</span>,</span>
-<span id="cb229-13"><a href="causal-steps-confounding-and-causal-order.html#cb229-13" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">label.theme =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">angle =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">&quot;white&quot;</span>),</span>
-<span id="cb229-14"><a href="causal-steps-confounding-and-causal-order.html#cb229-14" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">title.theme =</span> <span class="fu">element_blank</span>())) <span class="sc">+</span></span>
-<span id="cb229-15"><a href="causal-steps-confounding-and-causal-order.html#cb229-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="cn">NULL</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
-<span id="cb229-16"><a href="causal-steps-confounding-and-causal-order.html#cb229-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="cn">NULL</span>, <span class="at">breaks =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb229-17"><a href="causal-steps-confounding-and-causal-order.html#cb229-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Our correlation density plot&quot;</span>) <span class="sc">+</span></span>
-<span id="cb229-18"><a href="causal-steps-confounding-and-causal-order.html#cb229-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dark_theme_gray</span>() <span class="sc">+</span></span>
-<span id="cb229-19"><a href="causal-steps-confounding-and-causal-order.html#cb229-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb232-1"><a href="causal-steps-confounding-and-causal-order.html#cb232-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggdark)</span>
+<span id="cb232-2"><a href="causal-steps-confounding-and-causal-order.html#cb232-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb232-3"><a href="causal-steps-confounding-and-causal-order.html#cb232-3" aria-hidden="true" tabindex="-1"></a><span class="fu">as_draws_df</span>(model4<span class="fl">.1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb232-4"><a href="causal-steps-confounding-and-causal-order.html#cb232-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(rescor__ese__estress, rescor__ese__affect, rescor__estress__withdraw)) <span class="sc">%&gt;%</span> </span>
+<span id="cb232-5"><a href="causal-steps-confounding-and-causal-order.html#cb232-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb232-6"><a href="causal-steps-confounding-and-causal-order.html#cb232-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">fill =</span> name)) <span class="sc">+</span></span>
+<span id="cb232-7"><a href="causal-steps-confounding-and-causal-order.html#cb232-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> .<span class="dv">85</span>, <span class="at">color =</span> <span class="st">&quot;transparent&quot;</span>) <span class="sc">+</span></span>
+<span id="cb232-8"><a href="causal-steps-confounding-and-causal-order.html#cb232-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">option =</span> <span class="st">&quot;D&quot;</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb232-9"><a href="causal-steps-confounding-and-causal-order.html#cb232-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="fu">expression</span>(rho[<span class="st">&quot;ese, affect&quot;</span>]),</span>
+<span id="cb232-10"><a href="causal-steps-confounding-and-causal-order.html#cb232-10" aria-hidden="true" tabindex="-1"></a>                                  <span class="fu">expression</span>(rho[<span class="st">&quot;ese, estress&quot;</span>]),</span>
+<span id="cb232-11"><a href="causal-steps-confounding-and-causal-order.html#cb232-11" aria-hidden="true" tabindex="-1"></a>                                  <span class="fu">expression</span>(rho[<span class="st">&quot;estress, withdraw&quot;</span>])),</span>
+<span id="cb232-12"><a href="causal-steps-confounding-and-causal-order.html#cb232-12" aria-hidden="true" tabindex="-1"></a>                       <span class="at">guide =</span> <span class="fu">guide_legend</span>(<span class="at">label.hjust =</span> <span class="dv">0</span>,</span>
+<span id="cb232-13"><a href="causal-steps-confounding-and-causal-order.html#cb232-13" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">label.theme =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">15</span>, <span class="at">angle =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">&quot;white&quot;</span>),</span>
+<span id="cb232-14"><a href="causal-steps-confounding-and-causal-order.html#cb232-14" aria-hidden="true" tabindex="-1"></a>                                            <span class="at">title.theme =</span> <span class="fu">element_blank</span>())) <span class="sc">+</span></span>
+<span id="cb232-15"><a href="causal-steps-confounding-and-causal-order.html#cb232-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="cn">NULL</span>, <span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span>, <span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb232-16"><a href="causal-steps-confounding-and-causal-order.html#cb232-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="cn">NULL</span>, <span class="at">breaks =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb232-17"><a href="causal-steps-confounding-and-causal-order.html#cb232-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">&quot;Our correlation density plot&quot;</span>) <span class="sc">+</span></span>
+<span id="cb232-18"><a href="causal-steps-confounding-and-causal-order.html#cb232-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dark_theme_gray</span>() <span class="sc">+</span></span>
+<span id="cb232-19"><a href="causal-steps-confounding-and-causal-order.html#cb232-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>())</span></code></pre></div>
 <p><img src="04_files/figure-html/unnamed-chunk-6-1.png" width="960" /></p>
 <p>In the last chapter, we said there were multiple ways to set up a multivariate model in <strong>brms</strong>. Our first approach was to externally define the submodels using the <code>bf()</code> function, save them as objects, and then include those objects within the <code>brm()</code> function. Another approach is to just define the separate <code>bf()</code> submodels directly in the <code>brm()</code> function, combining them with the <code>+</code> operator. That’s the approach we will practice in this chapter. Here’s what it looks like for our first mediation model.</p>
-<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb230-1"><a href="causal-steps-confounding-and-causal-order.html#cb230-1" aria-hidden="true" tabindex="-1"></a>model4<span class="fl">.2</span> <span class="ot">&lt;-</span></span>
-<span id="cb230-2"><a href="causal-steps-confounding-and-causal-order.html#cb230-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">brm</span>(<span class="at">data =</span> estress, </span>
-<span id="cb230-3"><a href="causal-steps-confounding-and-causal-order.html#cb230-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">family =</span> gaussian,</span>
-<span id="cb230-4"><a href="causal-steps-confounding-and-causal-order.html#cb230-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">bf</span>(withdraw <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> estress <span class="sc">+</span> affect <span class="sc">+</span> ese <span class="sc">+</span> sex <span class="sc">+</span> tenure) <span class="sc">+</span></span>
-<span id="cb230-5"><a href="causal-steps-confounding-and-causal-order.html#cb230-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">bf</span>(affect <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> estress <span class="sc">+</span> ese <span class="sc">+</span> sex <span class="sc">+</span> tenure) <span class="sc">+</span></span>
-<span id="cb230-6"><a href="causal-steps-confounding-and-causal-order.html#cb230-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">set_rescor</span>(<span class="cn">FALSE</span>),</span>
-<span id="cb230-7"><a href="causal-steps-confounding-and-causal-order.html#cb230-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">cores =</span> <span class="dv">4</span>,</span>
-<span id="cb230-8"><a href="causal-steps-confounding-and-causal-order.html#cb230-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">file =</span> <span class="st">&quot;fits/model04.02&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb233-1"><a href="causal-steps-confounding-and-causal-order.html#cb233-1" aria-hidden="true" tabindex="-1"></a>model4<span class="fl">.2</span> <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb233-2"><a href="causal-steps-confounding-and-causal-order.html#cb233-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> estress, </span>
+<span id="cb233-3"><a href="causal-steps-confounding-and-causal-order.html#cb233-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> gaussian,</span>
+<span id="cb233-4"><a href="causal-steps-confounding-and-causal-order.html#cb233-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bf</span>(withdraw <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> estress <span class="sc">+</span> affect <span class="sc">+</span> ese <span class="sc">+</span> sex <span class="sc">+</span> tenure) <span class="sc">+</span></span>
+<span id="cb233-5"><a href="causal-steps-confounding-and-causal-order.html#cb233-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bf</span>(affect <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> estress <span class="sc">+</span> ese <span class="sc">+</span> sex <span class="sc">+</span> tenure) <span class="sc">+</span></span>
+<span id="cb233-6"><a href="causal-steps-confounding-and-causal-order.html#cb233-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_rescor</span>(<span class="cn">FALSE</span>),</span>
+<span id="cb233-7"><a href="causal-steps-confounding-and-causal-order.html#cb233-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">cores =</span> <span class="dv">4</span>,</span>
+<span id="cb233-8"><a href="causal-steps-confounding-and-causal-order.html#cb233-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> <span class="st">&quot;fits/model04.02&quot;</span>)</span></code></pre></div>
 <p>Worked like a charm. Here’s the summary.</p>
-<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb231-1"><a href="causal-steps-confounding-and-causal-order.html#cb231-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(model4<span class="fl">.2</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb234-1"><a href="causal-steps-confounding-and-causal-order.html#cb234-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(model4<span class="fl">.2</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##  Family: MV(gaussian, gaussian) 
 ##   Links: mu = identity; sigma = identity
 ##          mu = identity; sigma = identity 
 ## Formula: withdraw ~ 1 + estress + affect + ese + sex + tenure 
 ##          affect ~ 1 + estress + ese + sex + tenure 
 ##    Data: estress (Number of observations: 262) 
-## Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
-##          total post-warmup samples = 4000
+##   Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup draws = 4000
 ## 
 ## Population-Level Effects: 
 ##                    Estimate Est.Error l-95% CI u-95% CI  Rhat Bulk_ESS Tail_ESS
-## withdraw_Intercept    2.751     0.555    1.682    3.827 1.000     8821     3075
-## affect_Intercept      1.787     0.307    1.184    2.405 1.001     8408     3091
-## withdraw_estress     -0.094     0.052   -0.195    0.007 1.000     6796     3021
-## withdraw_affect       0.706     0.105    0.497    0.905 1.002     8023     3389
-## withdraw_ese         -0.212     0.076   -0.362   -0.067 1.000     8207     2875
-## withdraw_sex          0.124     0.143   -0.151    0.407 1.002     7817     3372
-## withdraw_tenure      -0.002     0.011   -0.023    0.019 1.002     8503     2670
-## affect_estress        0.159     0.029    0.101    0.215 1.001     7860     2735
-## affect_ese           -0.155     0.044   -0.242   -0.068 1.001     8602     3044
-## affect_sex            0.014     0.087   -0.152    0.184 1.002     9100     2881
-## affect_tenure        -0.011     0.006   -0.023    0.002 1.005     9255     2900
+## withdraw_Intercept    2.746     0.537    1.692    3.788 1.000     8484     2880
+## affect_Intercept      1.792     0.312    1.200    2.390 1.001     6922     3042
+## withdraw_estress     -0.094     0.052   -0.199    0.008 1.001     8111     3252
+## withdraw_affect       0.708     0.103    0.506    0.911 1.001     6522     3303
+## withdraw_ese         -0.212     0.075   -0.356   -0.060 1.000     8511     3246
+## withdraw_sex          0.129     0.152   -0.170    0.433 1.000     8121     2849
+## withdraw_tenure      -0.002     0.011   -0.023    0.019 1.000     8308     3019
+## affect_estress        0.159     0.029    0.102    0.217 1.000     6570     2920
+## affect_ese           -0.156     0.045   -0.244   -0.069 1.000     7921     3350
+## affect_sex            0.015     0.085   -0.150    0.183 1.003     9020     2953
+## affect_tenure        -0.011     0.006   -0.023    0.001 1.001    10504     3067
 ## 
 ## Family Specific Parameters: 
 ##                Estimate Est.Error l-95% CI u-95% CI  Rhat Bulk_ESS Tail_ESS
-## sigma_withdraw    1.126     0.049    1.038    1.224 1.002     8534     3015
-## sigma_affect      0.670     0.029    0.616    0.732 1.001     7602     3108
+## sigma_withdraw    1.128     0.051    1.033    1.236 1.002     9179     3244
+## sigma_affect      0.670     0.030    0.615    0.734 1.000     8540     3145
 ## 
-## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
+## Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
 ## and Tail_ESS are effective sample size measures, and Rhat is the potential
 ## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <p>In the printout, notice how first within intercepts and then with covariates and sigma, the coefficients are presented as for <code>withdraw</code> first and then <code>affect</code>. Also notice how the coefficients for the covariates are presented in the same order for each criterion variable. Hopefully that’ll make it easier to sift through the printout. Happily, our coefficients are quite similar to those in Table 4.1.</p>
 <p>Here are the <span class="math inline">\(R^2\)</span> summaries.</p>
-<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb233-1"><a href="causal-steps-confounding-and-causal-order.html#cb233-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bayes_R2</span>(model4<span class="fl">.2</span>) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb236-1"><a href="causal-steps-confounding-and-causal-order.html#cb236-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bayes_R2</span>(model4<span class="fl">.2</span>) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##            Estimate Est.Error  Q2.5 Q97.5
-## R2withdraw    0.212     0.038 0.137 0.286
-## R2affect      0.170     0.036 0.100 0.240</code></pre>
+## R2withdraw    0.213     0.039 0.137 0.291
+## R2affect      0.170     0.036 0.100 0.244</code></pre>
 <p>These are also in the same ballpark, but a little higher. Why not glance at their densities?</p>
-<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb235-1"><a href="causal-steps-confounding-and-causal-order.html#cb235-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bayes_R2</span>(model4<span class="fl">.2</span>, <span class="at">summary =</span> F) <span class="sc">%&gt;%</span> </span>
-<span id="cb235-2"><a href="causal-steps-confounding-and-causal-order.html#cb235-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>() <span class="sc">%&gt;%</span> </span>
-<span id="cb235-3"><a href="causal-steps-confounding-and-causal-order.html#cb235-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>()) <span class="sc">%&gt;%</span> </span>
-<span id="cb235-4"><a href="causal-steps-confounding-and-causal-order.html#cb235-4" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb235-5"><a href="causal-steps-confounding-and-causal-order.html#cb235-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">fill =</span> name)) <span class="sc">+</span></span>
-<span id="cb235-6"><a href="causal-steps-confounding-and-causal-order.html#cb235-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">color =</span> <span class="st">&quot;transparent&quot;</span>, <span class="at">alpha =</span> .<span class="dv">85</span>) <span class="sc">+</span></span>
-<span id="cb235-7"><a href="causal-steps-confounding-and-causal-order.html#cb235-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">option =</span> <span class="st">&quot;A&quot;</span>, <span class="at">begin =</span> .<span class="dv">33</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>,</span>
-<span id="cb235-8"><a href="causal-steps-confounding-and-causal-order.html#cb235-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;affect&quot;</span>, <span class="st">&quot;withdaw&quot;</span>),</span>
-<span id="cb235-9"><a href="causal-steps-confounding-and-causal-order.html#cb235-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">guide  =</span> <span class="fu">guide_legend</span>(<span class="at">title.theme =</span> <span class="fu">element_blank</span>())) <span class="sc">+</span></span>
-<span id="cb235-10"><a href="causal-steps-confounding-and-causal-order.html#cb235-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="cn">NULL</span>, <span class="at">limits =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb235-11"><a href="causal-steps-confounding-and-causal-order.html#cb235-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="cn">NULL</span>, <span class="at">breaks =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb235-12"><a href="causal-steps-confounding-and-causal-order.html#cb235-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="fu">expression</span>(The<span class="sc">~</span><span class="fu">italic</span>(R)<span class="sc">^</span><span class="dv">2</span><span class="sc">~</span>distributions<span class="sc">~</span><span class="st">&quot;for&quot;</span><span class="sc">~</span>model<span class="sc">~</span><span class="fl">4.2</span>)) <span class="sc">+</span></span>
-<span id="cb235-13"><a href="causal-steps-confounding-and-causal-order.html#cb235-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dark_theme_gray</span>() <span class="sc">+</span></span>
-<span id="cb235-14"><a href="causal-steps-confounding-and-causal-order.html#cb235-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="causal-steps-confounding-and-causal-order.html#cb238-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bayes_R2</span>(model4<span class="fl">.2</span>, <span class="at">summary =</span> F) <span class="sc">%&gt;%</span> </span>
+<span id="cb238-2"><a href="causal-steps-confounding-and-causal-order.html#cb238-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb238-3"><a href="causal-steps-confounding-and-causal-order.html#cb238-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>()) <span class="sc">%&gt;%</span> </span>
+<span id="cb238-4"><a href="causal-steps-confounding-and-causal-order.html#cb238-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb238-5"><a href="causal-steps-confounding-and-causal-order.html#cb238-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">fill =</span> name)) <span class="sc">+</span></span>
+<span id="cb238-6"><a href="causal-steps-confounding-and-causal-order.html#cb238-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">color =</span> <span class="st">&quot;transparent&quot;</span>, <span class="at">alpha =</span> .<span class="dv">85</span>) <span class="sc">+</span></span>
+<span id="cb238-7"><a href="causal-steps-confounding-and-causal-order.html#cb238-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">option =</span> <span class="st">&quot;A&quot;</span>, <span class="at">begin =</span> .<span class="dv">33</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>,</span>
+<span id="cb238-8"><a href="causal-steps-confounding-and-causal-order.html#cb238-8" aria-hidden="true" tabindex="-1"></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;affect&quot;</span>, <span class="st">&quot;withdaw&quot;</span>),</span>
+<span id="cb238-9"><a href="causal-steps-confounding-and-causal-order.html#cb238-9" aria-hidden="true" tabindex="-1"></a>                       <span class="at">guide  =</span> <span class="fu">guide_legend</span>(<span class="at">title.theme =</span> <span class="fu">element_blank</span>())) <span class="sc">+</span></span>
+<span id="cb238-10"><a href="causal-steps-confounding-and-causal-order.html#cb238-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="cn">NULL</span>, <span class="at">limits =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb238-11"><a href="causal-steps-confounding-and-causal-order.html#cb238-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="cn">NULL</span>, <span class="at">breaks =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb238-12"><a href="causal-steps-confounding-and-causal-order.html#cb238-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="fu">expression</span>(The<span class="sc">~</span><span class="fu">italic</span>(R)<span class="sc">^</span><span class="dv">2</span><span class="sc">~</span>distributions<span class="sc">~</span><span class="st">&quot;for&quot;</span><span class="sc">~</span>model<span class="sc">~</span><span class="fl">4.2</span>)) <span class="sc">+</span></span>
+<span id="cb238-13"><a href="causal-steps-confounding-and-causal-order.html#cb238-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dark_theme_gray</span>() <span class="sc">+</span></span>
+<span id="cb238-14"><a href="causal-steps-confounding-and-causal-order.html#cb238-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>())</span></code></pre></div>
 <p><img src="04_files/figure-html/unnamed-chunk-9-1.png" width="576" /></p>
 <p>Here we retrieve the posterior samples, compute the indirect effect, and summarize the indirect effect with <code>quantile()</code>.</p>
-<div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb236-1"><a href="causal-steps-confounding-and-causal-order.html#cb236-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span></span>
-<span id="cb236-2"><a href="causal-steps-confounding-and-causal-order.html#cb236-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">posterior_samples</span>(model4<span class="fl">.2</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb236-3"><a href="causal-steps-confounding-and-causal-order.html#cb236-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ab =</span> b_affect_estress <span class="sc">*</span> b_withdraw_affect)</span>
-<span id="cb236-4"><a href="causal-steps-confounding-and-causal-order.html#cb236-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb236-5"><a href="causal-steps-confounding-and-causal-order.html#cb236-5" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(post<span class="sc">$</span>ab, <span class="at">probs =</span> <span class="fu">c</span>(.<span class="dv">5</span>, .<span class="dv">025</span>, .<span class="dv">975</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb236-6"><a href="causal-steps-confounding-and-causal-order.html#cb236-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb239-1"><a href="causal-steps-confounding-and-causal-order.html#cb239-1" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">&lt;-</span> <span class="fu">as_draws_df</span>(model4<span class="fl">.2</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb239-2"><a href="causal-steps-confounding-and-causal-order.html#cb239-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ab =</span> b_affect_estress <span class="sc">*</span> b_withdraw_affect)</span>
+<span id="cb239-3"><a href="causal-steps-confounding-and-causal-order.html#cb239-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb239-4"><a href="causal-steps-confounding-and-causal-order.html#cb239-4" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(draws<span class="sc">$</span>ab, <span class="at">probs =</span> <span class="fu">c</span>(.<span class="dv">5</span>, .<span class="dv">025</span>, .<span class="dv">975</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb239-5"><a href="causal-steps-confounding-and-causal-order.html#cb239-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##   50%  2.5% 97.5% 
-## 0.111 0.065 0.168</code></pre>
+## 0.111 0.063 0.169</code></pre>
 <p>The results are similar to those in the text (p. 127). Here’s what it looks like.</p>
-<div class="sourceCode" id="cb238"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb238-1"><a href="causal-steps-confounding-and-causal-order.html#cb238-1" aria-hidden="true" tabindex="-1"></a>post <span class="sc">%&gt;%</span> </span>
-<span id="cb238-2"><a href="causal-steps-confounding-and-causal-order.html#cb238-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> ab)) <span class="sc">+</span></span>
-<span id="cb238-3"><a href="causal-steps-confounding-and-causal-order.html#cb238-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">fill =</span> <span class="fu">factor</span>(<span class="dv">0</span>)),</span>
-<span id="cb238-4"><a href="causal-steps-confounding-and-causal-order.html#cb238-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">color =</span> <span class="st">&quot;transparent&quot;</span>, <span class="at">show.legend =</span> F) <span class="sc">+</span></span>
-<span id="cb238-5"><a href="causal-steps-confounding-and-causal-order.html#cb238-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">quantile</span>(post<span class="sc">$</span>ab, <span class="at">probs =</span> <span class="fu">c</span>(.<span class="dv">5</span>, .<span class="dv">025</span>, .<span class="dv">975</span>)),</span>
-<span id="cb238-6"><a href="causal-steps-confounding-and-causal-order.html#cb238-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">linetype =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">3</span>)) <span class="sc">+</span></span>
-<span id="cb238-7"><a href="causal-steps-confounding-and-causal-order.html#cb238-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">option =</span> <span class="st">&quot;A&quot;</span>, <span class="at">begin =</span> .<span class="dv">6</span>) <span class="sc">+</span></span>
-<span id="cb238-8"><a href="causal-steps-confounding-and-causal-order.html#cb238-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="cn">NULL</span>, <span class="at">breaks =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb238-9"><a href="causal-steps-confounding-and-causal-order.html#cb238-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="fu">expression</span>(<span class="fu">italic</span>(ab))) <span class="sc">+</span></span>
-<span id="cb238-10"><a href="causal-steps-confounding-and-causal-order.html#cb238-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dark_theme_gray</span>() <span class="sc">+</span></span>
-<span id="cb238-11"><a href="causal-steps-confounding-and-causal-order.html#cb238-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="causal-steps-confounding-and-causal-order.html#cb241-1" aria-hidden="true" tabindex="-1"></a>draws <span class="sc">%&gt;%</span> </span>
+<span id="cb241-2"><a href="causal-steps-confounding-and-causal-order.html#cb241-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> ab)) <span class="sc">+</span></span>
+<span id="cb241-3"><a href="causal-steps-confounding-and-causal-order.html#cb241-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="fu">aes</span>(<span class="at">fill =</span> <span class="fu">factor</span>(<span class="dv">0</span>)),</span>
+<span id="cb241-4"><a href="causal-steps-confounding-and-causal-order.html#cb241-4" aria-hidden="true" tabindex="-1"></a>               <span class="at">color =</span> <span class="st">&quot;transparent&quot;</span>, <span class="at">show.legend =</span> F) <span class="sc">+</span></span>
+<span id="cb241-5"><a href="causal-steps-confounding-and-causal-order.html#cb241-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="fu">quantile</span>(draws<span class="sc">$</span>ab, <span class="at">probs =</span> <span class="fu">c</span>(.<span class="dv">5</span>, .<span class="dv">025</span>, .<span class="dv">975</span>)),</span>
+<span id="cb241-6"><a href="causal-steps-confounding-and-causal-order.html#cb241-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> <span class="st">&quot;black&quot;</span>, <span class="at">linetype =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">3</span>)) <span class="sc">+</span></span>
+<span id="cb241-7"><a href="causal-steps-confounding-and-causal-order.html#cb241-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">option =</span> <span class="st">&quot;A&quot;</span>, <span class="at">begin =</span> .<span class="dv">6</span>) <span class="sc">+</span></span>
+<span id="cb241-8"><a href="causal-steps-confounding-and-causal-order.html#cb241-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="cn">NULL</span>, <span class="at">breaks =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb241-9"><a href="causal-steps-confounding-and-causal-order.html#cb241-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="fu">expression</span>(<span class="fu">italic</span>(ab))) <span class="sc">+</span></span>
+<span id="cb241-10"><a href="causal-steps-confounding-and-causal-order.html#cb241-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dark_theme_gray</span>() <span class="sc">+</span></span>
+<span id="cb241-11"><a href="causal-steps-confounding-and-causal-order.html#cb241-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>())</span></code></pre></div>
 <p><img src="04_files/figure-html/unnamed-chunk-11-1.png" width="384" /></p>
 <p>Once again, those sweet Bayesian credible intervals get the job done.</p>
 <p>Here’s a way to get both the direct effect, <span class="math inline">\(c&#39;\)</span> (i.e., <code>b_withdraw_estress</code>), and the total effect, <span class="math inline">\(c\)</span> (i.e., <span class="math inline">\(c&#39;\)</span> + <span class="math inline">\(ab\)</span>) of <code>estress</code> on <code>withdraw</code>.</p>
-<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb239-1"><a href="causal-steps-confounding-and-causal-order.html#cb239-1" aria-hidden="true" tabindex="-1"></a>post <span class="sc">%&gt;%</span> </span>
-<span id="cb239-2"><a href="causal-steps-confounding-and-causal-order.html#cb239-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">c       =</span> b_withdraw_estress <span class="sc">+</span> ab,</span>
-<span id="cb239-3"><a href="causal-steps-confounding-and-causal-order.html#cb239-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">c_prime =</span> b_withdraw_estress) <span class="sc">%&gt;%</span> </span>
-<span id="cb239-4"><a href="causal-steps-confounding-and-causal-order.html#cb239-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(c_prime, c)) <span class="sc">%&gt;%</span> </span>
-<span id="cb239-5"><a href="causal-steps-confounding-and-causal-order.html#cb239-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb239-6"><a href="causal-steps-confounding-and-causal-order.html#cb239-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(value), </span>
-<span id="cb239-7"><a href="causal-steps-confounding-and-causal-order.html#cb239-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">ll   =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> .<span class="dv">025</span>),</span>
-<span id="cb239-8"><a href="causal-steps-confounding-and-causal-order.html#cb239-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">ul   =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> .<span class="dv">975</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb239-9"><a href="causal-steps-confounding-and-causal-order.html#cb239-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(is_double, round, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 2 x 4
+<div class="sourceCode" id="cb242"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb242-1"><a href="causal-steps-confounding-and-causal-order.html#cb242-1" aria-hidden="true" tabindex="-1"></a>draws <span class="sc">%&gt;%</span> </span>
+<span id="cb242-2"><a href="causal-steps-confounding-and-causal-order.html#cb242-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">c       =</span> b_withdraw_estress <span class="sc">+</span> ab,</span>
+<span id="cb242-3"><a href="causal-steps-confounding-and-causal-order.html#cb242-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">c_prime =</span> b_withdraw_estress) <span class="sc">%&gt;%</span> </span>
+<span id="cb242-4"><a href="causal-steps-confounding-and-causal-order.html#cb242-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(c_prime, c)) <span class="sc">%&gt;%</span> </span>
+<span id="cb242-5"><a href="causal-steps-confounding-and-causal-order.html#cb242-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb242-6"><a href="causal-steps-confounding-and-causal-order.html#cb242-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(value), </span>
+<span id="cb242-7"><a href="causal-steps-confounding-and-causal-order.html#cb242-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">ll   =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> .<span class="dv">025</span>),</span>
+<span id="cb242-8"><a href="causal-steps-confounding-and-causal-order.html#cb242-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">ul   =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> .<span class="dv">975</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb242-9"><a href="causal-steps-confounding-and-causal-order.html#cb242-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(is_double, round, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 4
 ##   name      mean     ll    ul
 ##   &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
-## 1 c        0.018 -0.084 0.121
-## 2 c_prime -0.094 -0.195 0.007</code></pre>
+## 1 c        0.019 -0.09  0.127
+## 2 c_prime -0.094 -0.199 0.008</code></pre>
 <p>Both appear pretty small. Which leads us to the next section…</p>
 </div>
 </div>
-<div id="effect-size" class="section level2" number="4.3">
-<h2><span class="header-section-number">4.3</span> Effect size</h2>
+<div id="effect-size" class="section level2 hasAnchor" number="4.3">
+<h2><span class="header-section-number">4.3</span> Effect size<a href="causal-steps-confounding-and-causal-order.html#effect-size" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <blockquote>
 <p>The quantification of effect size in mediation analysis is an evolving area of thought and research. [Hayes described] two measures of effect size that apply to the direct, indirect, and total effects in a mediation model…. For an excellent discussion of measures of effect size in mediation analysis, see Preacher and Kelley <span class="citation">(<a href="#ref-preacherEffectSizeMeasures2011" role="doc-biblioref">2011</a>)</span>. [We will] use their notation below. (p. 133)</p>
 </blockquote>
-<div id="the-partially-standardized-effect." class="section level3" number="4.3.1">
-<h3><span class="header-section-number">4.3.1</span> The partially standardized effect.</h3>
-<p>We get <span class="math inline">\(SD\)</span>s using the <code>sd()</code> function. Here’s the <span class="math inline">\(SD\)</span> for our <span class="math inline">\(Y\)</span> variable, <code>withdraw</code>.</p>
-<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb241-1"><a href="causal-steps-confounding-and-causal-order.html#cb241-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(estress<span class="sc">$</span>withdraw)</span></code></pre></div>
+<div id="the-partially-standardized-effect." class="section level3 hasAnchor" number="4.3.1">
+<h3><span class="header-section-number">4.3.1</span> The partially standardized effect.<a href="causal-steps-confounding-and-causal-order.html#the-partially-standardized-effect." class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>We get <span class="math inline">\(\textit{SD}\)</span>’s using the <code>sd()</code> function. Here’s the <span class="math inline">\(\textit{SD}\)</span> for our <span class="math inline">\(Y\)</span> variable, <code>withdraw</code>.</p>
+<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="causal-steps-confounding-and-causal-order.html#cb244-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(estress<span class="sc">$</span>withdraw)</span></code></pre></div>
 <pre><code>## [1] 1.24687</code></pre>
 <p>Here we compute the partially standardized effect sizes for <span class="math inline">\(c&#39;\)</span> and <span class="math inline">\(ab\)</span> by dividing those vectors in our <code>post</code> object by <code>sd(estress$withdraw)</code>, which we saved as <code>sd_y</code>.</p>
-<div class="sourceCode" id="cb243"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb243-1"><a href="causal-steps-confounding-and-causal-order.html#cb243-1" aria-hidden="true" tabindex="-1"></a>sd_y <span class="ot">&lt;-</span> <span class="fu">sd</span>(estress<span class="sc">$</span>withdraw)</span>
-<span id="cb243-2"><a href="causal-steps-confounding-and-causal-order.html#cb243-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb243-3"><a href="causal-steps-confounding-and-causal-order.html#cb243-3" aria-hidden="true" tabindex="-1"></a>post <span class="sc">%&gt;%</span> </span>
-<span id="cb243-4"><a href="causal-steps-confounding-and-causal-order.html#cb243-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">c_prime_ps =</span> b_withdraw_estress <span class="sc">/</span> sd_y,</span>
-<span id="cb243-5"><a href="causal-steps-confounding-and-causal-order.html#cb243-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">ab_ps      =</span> ab <span class="sc">/</span> sd_y) <span class="sc">%&gt;%</span> </span>
-<span id="cb243-6"><a href="causal-steps-confounding-and-causal-order.html#cb243-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">c_ps =</span> c_prime_ps <span class="sc">+</span> ab_ps) <span class="sc">%&gt;%</span> </span>
-<span id="cb243-7"><a href="causal-steps-confounding-and-causal-order.html#cb243-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(c_prime_ps, ab_ps, c_ps)) <span class="sc">%&gt;%</span> </span>
-<span id="cb243-8"><a href="causal-steps-confounding-and-causal-order.html#cb243-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb243-9"><a href="causal-steps-confounding-and-causal-order.html#cb243-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean   =</span> <span class="fu">mean</span>(value), </span>
-<span id="cb243-10"><a href="causal-steps-confounding-and-causal-order.html#cb243-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">median =</span> <span class="fu">median</span>(value),</span>
-<span id="cb243-11"><a href="causal-steps-confounding-and-causal-order.html#cb243-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">ll     =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> .<span class="dv">025</span>),</span>
-<span id="cb243-12"><a href="causal-steps-confounding-and-causal-order.html#cb243-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">ul     =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> .<span class="dv">975</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb243-13"><a href="causal-steps-confounding-and-causal-order.html#cb243-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(is_double, round, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 3 x 5
+<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb246-1"><a href="causal-steps-confounding-and-causal-order.html#cb246-1" aria-hidden="true" tabindex="-1"></a>sd_y <span class="ot">&lt;-</span> <span class="fu">sd</span>(estress<span class="sc">$</span>withdraw)</span>
+<span id="cb246-2"><a href="causal-steps-confounding-and-causal-order.html#cb246-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb246-3"><a href="causal-steps-confounding-and-causal-order.html#cb246-3" aria-hidden="true" tabindex="-1"></a>draws <span class="sc">%&gt;%</span> </span>
+<span id="cb246-4"><a href="causal-steps-confounding-and-causal-order.html#cb246-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">c_prime_ps =</span> b_withdraw_estress <span class="sc">/</span> sd_y,</span>
+<span id="cb246-5"><a href="causal-steps-confounding-and-causal-order.html#cb246-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">ab_ps      =</span> ab <span class="sc">/</span> sd_y) <span class="sc">%&gt;%</span> </span>
+<span id="cb246-6"><a href="causal-steps-confounding-and-causal-order.html#cb246-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">c_ps =</span> c_prime_ps <span class="sc">+</span> ab_ps) <span class="sc">%&gt;%</span> </span>
+<span id="cb246-7"><a href="causal-steps-confounding-and-causal-order.html#cb246-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(c_prime_ps, ab_ps, c_ps)) <span class="sc">%&gt;%</span> </span>
+<span id="cb246-8"><a href="causal-steps-confounding-and-causal-order.html#cb246-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb246-9"><a href="causal-steps-confounding-and-causal-order.html#cb246-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean   =</span> <span class="fu">mean</span>(value), </span>
+<span id="cb246-10"><a href="causal-steps-confounding-and-causal-order.html#cb246-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">median =</span> <span class="fu">median</span>(value),</span>
+<span id="cb246-11"><a href="causal-steps-confounding-and-causal-order.html#cb246-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">ll     =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> .<span class="dv">025</span>),</span>
+<span id="cb246-12"><a href="causal-steps-confounding-and-causal-order.html#cb246-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">ul     =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> .<span class="dv">975</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb246-13"><a href="causal-steps-confounding-and-causal-order.html#cb246-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(is_double, round, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 5
 ##   name         mean median     ll    ul
 ##   &lt;chr&gt;       &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
-## 1 ab_ps       0.09   0.089  0.052 0.135
-## 2 c_prime_ps -0.075 -0.075 -0.156 0.005
-## 3 c_ps        0.015  0.015 -0.067 0.097</code></pre>
+## 1 ab_ps       0.09   0.089  0.05  0.136
+## 2 c_prime_ps -0.075 -0.075 -0.16  0.006
+## 3 c_ps        0.015  0.016 -0.072 0.102</code></pre>
 <p>The results are similar, though not identical, to those in the text. Here we have both rounding error and estimation differences at play. The plots:</p>
-<div class="sourceCode" id="cb245"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb245-1"><a href="causal-steps-confounding-and-causal-order.html#cb245-1" aria-hidden="true" tabindex="-1"></a>post <span class="sc">%&gt;%</span> </span>
-<span id="cb245-2"><a href="causal-steps-confounding-and-causal-order.html#cb245-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">c_prime_ps =</span> b_withdraw_estress <span class="sc">/</span> sd_y,</span>
-<span id="cb245-3"><a href="causal-steps-confounding-and-causal-order.html#cb245-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">ab_ps      =</span> ab <span class="sc">/</span> sd_y) <span class="sc">%&gt;%</span> </span>
-<span id="cb245-4"><a href="causal-steps-confounding-and-causal-order.html#cb245-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">c_ps =</span> c_prime_ps <span class="sc">+</span> ab_ps) <span class="sc">%&gt;%</span> </span>
-<span id="cb245-5"><a href="causal-steps-confounding-and-causal-order.html#cb245-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(c_prime_ps, ab_ps, c_ps)) <span class="sc">%&gt;%</span> </span>
-<span id="cb245-6"><a href="causal-steps-confounding-and-causal-order.html#cb245-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb245-7"><a href="causal-steps-confounding-and-causal-order.html#cb245-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">fill =</span> name)) <span class="sc">+</span></span>
-<span id="cb245-8"><a href="causal-steps-confounding-and-causal-order.html#cb245-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> .<span class="dv">85</span>, <span class="at">color =</span> <span class="st">&quot;transparent&quot;</span>) <span class="sc">+</span></span>
-<span id="cb245-9"><a href="causal-steps-confounding-and-causal-order.html#cb245-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">option =</span> <span class="st">&quot;D&quot;</span>, <span class="at">breaks =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb245-10"><a href="causal-steps-confounding-and-causal-order.html#cb245-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="cn">NULL</span>, <span class="at">breaks =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb245-11"><a href="causal-steps-confounding-and-causal-order.html#cb245-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Partially-standardized coefficients&quot;</span>,</span>
-<span id="cb245-12"><a href="causal-steps-confounding-and-causal-order.html#cb245-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb245-13"><a href="causal-steps-confounding-and-causal-order.html#cb245-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dark_theme_gray</span>() <span class="sc">+</span></span>
-<span id="cb245-14"><a href="causal-steps-confounding-and-causal-order.html#cb245-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
-<span id="cb245-15"><a href="causal-steps-confounding-and-causal-order.html#cb245-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> name, <span class="at">ncol =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb248"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb248-1"><a href="causal-steps-confounding-and-causal-order.html#cb248-1" aria-hidden="true" tabindex="-1"></a> draws <span class="sc">%&gt;%</span> </span>
+<span id="cb248-2"><a href="causal-steps-confounding-and-causal-order.html#cb248-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">c_prime_ps =</span> b_withdraw_estress <span class="sc">/</span> sd_y,</span>
+<span id="cb248-3"><a href="causal-steps-confounding-and-causal-order.html#cb248-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">ab_ps      =</span> ab <span class="sc">/</span> sd_y) <span class="sc">%&gt;%</span> </span>
+<span id="cb248-4"><a href="causal-steps-confounding-and-causal-order.html#cb248-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">c_ps =</span> c_prime_ps <span class="sc">+</span> ab_ps) <span class="sc">%&gt;%</span> </span>
+<span id="cb248-5"><a href="causal-steps-confounding-and-causal-order.html#cb248-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(c_prime_ps, ab_ps, c_ps)) <span class="sc">%&gt;%</span> </span>
+<span id="cb248-6"><a href="causal-steps-confounding-and-causal-order.html#cb248-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb248-7"><a href="causal-steps-confounding-and-causal-order.html#cb248-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">fill =</span> name)) <span class="sc">+</span></span>
+<span id="cb248-8"><a href="causal-steps-confounding-and-causal-order.html#cb248-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> .<span class="dv">85</span>, <span class="at">color =</span> <span class="st">&quot;transparent&quot;</span>) <span class="sc">+</span></span>
+<span id="cb248-9"><a href="causal-steps-confounding-and-causal-order.html#cb248-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">option =</span> <span class="st">&quot;D&quot;</span>, <span class="at">breaks =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb248-10"><a href="causal-steps-confounding-and-causal-order.html#cb248-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="cn">NULL</span>, <span class="at">breaks =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb248-11"><a href="causal-steps-confounding-and-causal-order.html#cb248-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Partially-standardized coefficients&quot;</span>,</span>
+<span id="cb248-12"><a href="causal-steps-confounding-and-causal-order.html#cb248-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb248-13"><a href="causal-steps-confounding-and-causal-order.html#cb248-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dark_theme_gray</span>() <span class="sc">+</span></span>
+<span id="cb248-14"><a href="causal-steps-confounding-and-causal-order.html#cb248-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb248-15"><a href="causal-steps-confounding-and-causal-order.html#cb248-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> name, <span class="at">ncol =</span> <span class="dv">3</span>)</span></code></pre></div>
 <p><img src="04_files/figure-html/unnamed-chunk-15-1.png" width="960" /></p>
 <p>On page 135, Hayes revisited the model from <a href="the-simple-mediation-model.html#example-with-dichotomous-x-the-influence-of-presumed-media-influence">Section 3.3</a>. We’ll have to reload the data and refit that model to follow along. First, load the data.</p>
-<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb246-1"><a href="causal-steps-confounding-and-causal-order.html#cb246-1" aria-hidden="true" tabindex="-1"></a>pmi <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/pmi/pmi.csv&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb249"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb249-1"><a href="causal-steps-confounding-and-causal-order.html#cb249-1" aria-hidden="true" tabindex="-1"></a>pmi <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&quot;data/pmi/pmi.csv&quot;</span>)</span></code></pre></div>
 <p>Refit the model, this time with the <code>bf()</code> statements defined right within <code>brm()</code>.</p>
-<div class="sourceCode" id="cb247"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb247-1"><a href="causal-steps-confounding-and-causal-order.html#cb247-1" aria-hidden="true" tabindex="-1"></a>model4<span class="fl">.3</span> <span class="ot">&lt;-</span></span>
-<span id="cb247-2"><a href="causal-steps-confounding-and-causal-order.html#cb247-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">brm</span>(<span class="at">data =</span> pmi, </span>
-<span id="cb247-3"><a href="causal-steps-confounding-and-causal-order.html#cb247-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">family =</span> gaussian,</span>
-<span id="cb247-4"><a href="causal-steps-confounding-and-causal-order.html#cb247-4" aria-hidden="true" tabindex="-1"></a>       <span class="fu">bf</span>(reaction <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> pmi <span class="sc">+</span> cond) <span class="sc">+</span> </span>
-<span id="cb247-5"><a href="causal-steps-confounding-and-causal-order.html#cb247-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">bf</span>(pmi <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> cond) <span class="sc">+</span> </span>
-<span id="cb247-6"><a href="causal-steps-confounding-and-causal-order.html#cb247-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">set_rescor</span>(<span class="cn">FALSE</span>),</span>
-<span id="cb247-7"><a href="causal-steps-confounding-and-causal-order.html#cb247-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">cores =</span> <span class="dv">4</span>,</span>
-<span id="cb247-8"><a href="causal-steps-confounding-and-causal-order.html#cb247-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">file =</span> <span class="st">&quot;fits/model04.03&quot;</span>)</span></code></pre></div>
-<p>The partially-standardized parameters require some <code>posterior_samples()</code> wrangling.</p>
-<div class="sourceCode" id="cb248"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb248-1"><a href="causal-steps-confounding-and-causal-order.html#cb248-1" aria-hidden="true" tabindex="-1"></a>post <span class="ot">&lt;-</span> <span class="fu">posterior_samples</span>(model4<span class="fl">.3</span>)</span>
-<span id="cb248-2"><a href="causal-steps-confounding-and-causal-order.html#cb248-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb248-3"><a href="causal-steps-confounding-and-causal-order.html#cb248-3" aria-hidden="true" tabindex="-1"></a>sd_y <span class="ot">&lt;-</span> <span class="fu">sd</span>(pmi<span class="sc">$</span>reaction)</span>
-<span id="cb248-4"><a href="causal-steps-confounding-and-causal-order.html#cb248-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb248-5"><a href="causal-steps-confounding-and-causal-order.html#cb248-5" aria-hidden="true" tabindex="-1"></a>post <span class="sc">%&gt;%</span> </span>
-<span id="cb248-6"><a href="causal-steps-confounding-and-causal-order.html#cb248-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ab      =</span> b_pmi_cond <span class="sc">*</span> b_reaction_pmi,</span>
-<span id="cb248-7"><a href="causal-steps-confounding-and-causal-order.html#cb248-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">c_prime =</span> b_reaction_cond) <span class="sc">%&gt;%</span> </span>
-<span id="cb248-8"><a href="causal-steps-confounding-and-causal-order.html#cb248-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ab_ps      =</span> ab <span class="sc">/</span> sd_y,</span>
-<span id="cb248-9"><a href="causal-steps-confounding-and-causal-order.html#cb248-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">c_prime_ps =</span> c_prime <span class="sc">/</span> sd_y) <span class="sc">%&gt;%</span> </span>
-<span id="cb248-10"><a href="causal-steps-confounding-and-causal-order.html#cb248-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">c_ps =</span> c_prime_ps <span class="sc">+</span> ab_ps) <span class="sc">%&gt;%</span> </span>
-<span id="cb248-11"><a href="causal-steps-confounding-and-causal-order.html#cb248-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(c_prime_ps, ab_ps, c_ps)) <span class="sc">%&gt;%</span></span>
-<span id="cb248-12"><a href="causal-steps-confounding-and-causal-order.html#cb248-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb248-13"><a href="causal-steps-confounding-and-causal-order.html#cb248-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean   =</span> <span class="fu">mean</span>(value), </span>
-<span id="cb248-14"><a href="causal-steps-confounding-and-causal-order.html#cb248-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">median =</span> <span class="fu">median</span>(value),</span>
-<span id="cb248-15"><a href="causal-steps-confounding-and-causal-order.html#cb248-15" aria-hidden="true" tabindex="-1"></a>            <span class="at">ll     =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> .<span class="dv">025</span>),</span>
-<span id="cb248-16"><a href="causal-steps-confounding-and-causal-order.html#cb248-16" aria-hidden="true" tabindex="-1"></a>            <span class="at">ul     =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> .<span class="dv">975</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb248-17"><a href="causal-steps-confounding-and-causal-order.html#cb248-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(is_double, round, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 3 x 5
+<div class="sourceCode" id="cb250"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb250-1"><a href="causal-steps-confounding-and-causal-order.html#cb250-1" aria-hidden="true" tabindex="-1"></a>model4<span class="fl">.3</span> <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb250-2"><a href="causal-steps-confounding-and-causal-order.html#cb250-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> pmi, </span>
+<span id="cb250-3"><a href="causal-steps-confounding-and-causal-order.html#cb250-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> gaussian,</span>
+<span id="cb250-4"><a href="causal-steps-confounding-and-causal-order.html#cb250-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bf</span>(reaction <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> pmi <span class="sc">+</span> cond) <span class="sc">+</span> </span>
+<span id="cb250-5"><a href="causal-steps-confounding-and-causal-order.html#cb250-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bf</span>(pmi <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> cond) <span class="sc">+</span> </span>
+<span id="cb250-6"><a href="causal-steps-confounding-and-causal-order.html#cb250-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_rescor</span>(<span class="cn">FALSE</span>),</span>
+<span id="cb250-7"><a href="causal-steps-confounding-and-causal-order.html#cb250-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">cores =</span> <span class="dv">4</span>,</span>
+<span id="cb250-8"><a href="causal-steps-confounding-and-causal-order.html#cb250-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> <span class="st">&quot;fits/model04.03&quot;</span>)</span></code></pre></div>
+<p>The partially-standardized parameters require some <code>as_draws_df()</code> wrangling.</p>
+<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb251-1"><a href="causal-steps-confounding-and-causal-order.html#cb251-1" aria-hidden="true" tabindex="-1"></a>draws <span class="ot">&lt;-</span> <span class="fu">as_draws_df</span>(model4<span class="fl">.3</span>)</span>
+<span id="cb251-2"><a href="causal-steps-confounding-and-causal-order.html#cb251-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb251-3"><a href="causal-steps-confounding-and-causal-order.html#cb251-3" aria-hidden="true" tabindex="-1"></a>sd_y <span class="ot">&lt;-</span> <span class="fu">sd</span>(pmi<span class="sc">$</span>reaction)</span>
+<span id="cb251-4"><a href="causal-steps-confounding-and-causal-order.html#cb251-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb251-5"><a href="causal-steps-confounding-and-causal-order.html#cb251-5" aria-hidden="true" tabindex="-1"></a>draws <span class="sc">%&gt;%</span> </span>
+<span id="cb251-6"><a href="causal-steps-confounding-and-causal-order.html#cb251-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ab      =</span> b_pmi_cond <span class="sc">*</span> b_reaction_pmi,</span>
+<span id="cb251-7"><a href="causal-steps-confounding-and-causal-order.html#cb251-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">c_prime =</span> b_reaction_cond) <span class="sc">%&gt;%</span> </span>
+<span id="cb251-8"><a href="causal-steps-confounding-and-causal-order.html#cb251-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ab_ps      =</span> ab <span class="sc">/</span> sd_y,</span>
+<span id="cb251-9"><a href="causal-steps-confounding-and-causal-order.html#cb251-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">c_prime_ps =</span> c_prime <span class="sc">/</span> sd_y) <span class="sc">%&gt;%</span> </span>
+<span id="cb251-10"><a href="causal-steps-confounding-and-causal-order.html#cb251-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">c_ps =</span> c_prime_ps <span class="sc">+</span> ab_ps) <span class="sc">%&gt;%</span> </span>
+<span id="cb251-11"><a href="causal-steps-confounding-and-causal-order.html#cb251-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(c_prime_ps, ab_ps, c_ps)) <span class="sc">%&gt;%</span></span>
+<span id="cb251-12"><a href="causal-steps-confounding-and-causal-order.html#cb251-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb251-13"><a href="causal-steps-confounding-and-causal-order.html#cb251-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean   =</span> <span class="fu">mean</span>(value), </span>
+<span id="cb251-14"><a href="causal-steps-confounding-and-causal-order.html#cb251-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">median =</span> <span class="fu">median</span>(value),</span>
+<span id="cb251-15"><a href="causal-steps-confounding-and-causal-order.html#cb251-15" aria-hidden="true" tabindex="-1"></a>            <span class="at">ll     =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> .<span class="dv">025</span>),</span>
+<span id="cb251-16"><a href="causal-steps-confounding-and-causal-order.html#cb251-16" aria-hidden="true" tabindex="-1"></a>            <span class="at">ul     =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> .<span class="dv">975</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb251-17"><a href="causal-steps-confounding-and-causal-order.html#cb251-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(is_double, round, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 5
 ##   name        mean median     ll    ul
 ##   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
-## 1 ab_ps      0.154  0.148  0.007 0.331
-## 2 c_prime_ps 0.161  0.16  -0.164 0.493
-## 3 c_ps       0.315  0.317 -0.042 0.657</code></pre>
+## 1 ab_ps      0.156  0.151  0.004 0.339
+## 2 c_prime_ps 0.165  0.168 -0.174 0.505
+## 3 c_ps       0.321  0.322 -0.057 0.681</code></pre>
 <p>Happily, these results are closer to those in the text than with the previous example.</p>
 </div>
-<div id="the-completely-standardized-effect." class="section level3" number="4.3.2">
-<h3><span class="header-section-number">4.3.2</span> The completely standardized effect.</h3>
+<div id="the-completely-standardized-effect." class="section level3 hasAnchor" number="4.3.2">
+<h3><span class="header-section-number">4.3.2</span> The completely standardized effect.<a href="causal-steps-confounding-and-causal-order.html#the-completely-standardized-effect." class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p><strong>Note</strong>. Hayes could have made this clearer in the text, but the <code>estress</code> model he referred to in this section was the one from way back in <a href="the-simple-mediation-model.html#an-example-with-continuous-x-economic-stress-among-small-business-owners">Section 3.5</a>, <em>not</em> the one from earlier in this chapter.</p>
 <p>One way to get a standardized solution is to standardize the variables in the data and then fit the model with those standardized variables. To do so, we’ll revisit our custom <code>standardize()</code>, put it to work, and fit the standardized version of the model from Section 3.5, which we’ll call <code>model4.4</code>.</p>
-<div class="sourceCode" id="cb250"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb250-1"><a href="causal-steps-confounding-and-causal-order.html#cb250-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make the function</span></span>
-<span id="cb250-2"><a href="causal-steps-confounding-and-causal-order.html#cb250-2" aria-hidden="true" tabindex="-1"></a>sandardize <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb250-3"><a href="causal-steps-confounding-and-causal-order.html#cb250-3" aria-hidden="true" tabindex="-1"></a>  (x <span class="sc">-</span> <span class="fu">mean</span>(x)) <span class="sc">/</span> <span class="fu">sd</span>(x)</span>
-<span id="cb250-4"><a href="causal-steps-confounding-and-causal-order.html#cb250-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb250-5"><a href="causal-steps-confounding-and-causal-order.html#cb250-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb250-6"><a href="causal-steps-confounding-and-causal-order.html#cb250-6" aria-hidden="true" tabindex="-1"></a><span class="co"># use the function</span></span>
-<span id="cb250-7"><a href="causal-steps-confounding-and-causal-order.html#cb250-7" aria-hidden="true" tabindex="-1"></a>estress <span class="ot">&lt;-</span></span>
-<span id="cb250-8"><a href="causal-steps-confounding-and-causal-order.html#cb250-8" aria-hidden="true" tabindex="-1"></a>  estress <span class="sc">%&gt;%</span> </span>
-<span id="cb250-9"><a href="causal-steps-confounding-and-causal-order.html#cb250-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">withdraw_z =</span> <span class="fu">sandardize</span>(withdraw), </span>
-<span id="cb250-10"><a href="causal-steps-confounding-and-causal-order.html#cb250-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">estress_z  =</span> <span class="fu">sandardize</span>(estress), </span>
-<span id="cb250-11"><a href="causal-steps-confounding-and-causal-order.html#cb250-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">affect_z   =</span> <span class="fu">sandardize</span>(affect))</span></code></pre></div>
+<div class="sourceCode" id="cb253"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb253-1"><a href="causal-steps-confounding-and-causal-order.html#cb253-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make the function</span></span>
+<span id="cb253-2"><a href="causal-steps-confounding-and-causal-order.html#cb253-2" aria-hidden="true" tabindex="-1"></a>standardize <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb253-3"><a href="causal-steps-confounding-and-causal-order.html#cb253-3" aria-hidden="true" tabindex="-1"></a>  (x <span class="sc">-</span> <span class="fu">mean</span>(x)) <span class="sc">/</span> <span class="fu">sd</span>(x)</span>
+<span id="cb253-4"><a href="causal-steps-confounding-and-causal-order.html#cb253-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb253-5"><a href="causal-steps-confounding-and-causal-order.html#cb253-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb253-6"><a href="causal-steps-confounding-and-causal-order.html#cb253-6" aria-hidden="true" tabindex="-1"></a><span class="co"># use the function</span></span>
+<span id="cb253-7"><a href="causal-steps-confounding-and-causal-order.html#cb253-7" aria-hidden="true" tabindex="-1"></a>estress <span class="ot">&lt;-</span> estress <span class="sc">%&gt;%</span> </span>
+<span id="cb253-8"><a href="causal-steps-confounding-and-causal-order.html#cb253-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">withdraw_z =</span> <span class="fu">standardize</span>(withdraw), </span>
+<span id="cb253-9"><a href="causal-steps-confounding-and-causal-order.html#cb253-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">estress_z  =</span> <span class="fu">standardize</span>(estress), </span>
+<span id="cb253-10"><a href="causal-steps-confounding-and-causal-order.html#cb253-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">affect_z   =</span> <span class="fu">standardize</span>(affect))</span></code></pre></div>
 <p>Fit the model.</p>
-<div class="sourceCode" id="cb251"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb251-1"><a href="causal-steps-confounding-and-causal-order.html#cb251-1" aria-hidden="true" tabindex="-1"></a>model4<span class="fl">.4</span> <span class="ot">&lt;-</span></span>
-<span id="cb251-2"><a href="causal-steps-confounding-and-causal-order.html#cb251-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">brm</span>(<span class="at">data =</span> estress, </span>
-<span id="cb251-3"><a href="causal-steps-confounding-and-causal-order.html#cb251-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">family =</span> gaussian,</span>
-<span id="cb251-4"><a href="causal-steps-confounding-and-causal-order.html#cb251-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">bf</span>(withdraw_z <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> estress_z <span class="sc">+</span> affect_z) <span class="sc">+</span> </span>
-<span id="cb251-5"><a href="causal-steps-confounding-and-causal-order.html#cb251-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">bf</span>(affect_z <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> estress_z) <span class="sc">+</span> </span>
-<span id="cb251-6"><a href="causal-steps-confounding-and-causal-order.html#cb251-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">set_rescor</span>(<span class="cn">FALSE</span>),</span>
-<span id="cb251-7"><a href="causal-steps-confounding-and-causal-order.html#cb251-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">cores =</span> <span class="dv">4</span>,</span>
-<span id="cb251-8"><a href="causal-steps-confounding-and-causal-order.html#cb251-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">file =</span> <span class="st">&quot;fits/model04.04&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb254"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb254-1"><a href="causal-steps-confounding-and-causal-order.html#cb254-1" aria-hidden="true" tabindex="-1"></a>model4<span class="fl">.4</span> <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb254-2"><a href="causal-steps-confounding-and-causal-order.html#cb254-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> estress, </span>
+<span id="cb254-3"><a href="causal-steps-confounding-and-causal-order.html#cb254-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> gaussian,</span>
+<span id="cb254-4"><a href="causal-steps-confounding-and-causal-order.html#cb254-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bf</span>(withdraw_z <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> estress_z <span class="sc">+</span> affect_z) <span class="sc">+</span> </span>
+<span id="cb254-5"><a href="causal-steps-confounding-and-causal-order.html#cb254-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bf</span>(affect_z <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> estress_z) <span class="sc">+</span> </span>
+<span id="cb254-6"><a href="causal-steps-confounding-and-causal-order.html#cb254-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_rescor</span>(<span class="cn">FALSE</span>),</span>
+<span id="cb254-7"><a href="causal-steps-confounding-and-causal-order.html#cb254-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">cores =</span> <span class="dv">4</span>,</span>
+<span id="cb254-8"><a href="causal-steps-confounding-and-causal-order.html#cb254-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> <span class="st">&quot;fits/model04.04&quot;</span>)</span></code></pre></div>
 <p>Here they are, our newly standardized coefficients.</p>
-<div class="sourceCode" id="cb252"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb252-1"><a href="causal-steps-confounding-and-causal-order.html#cb252-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(model4<span class="fl">.4</span>) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb255"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb255-1"><a href="causal-steps-confounding-and-causal-order.html#cb255-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(model4<span class="fl">.4</span>) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##                     Estimate Est.Error   Q2.5 Q97.5
-## withdrawz_Intercept    0.000     0.057 -0.115 0.117
-## affectz_Intercept      0.000     0.059 -0.113 0.118
-## withdrawz_estress_z   -0.088     0.059 -0.206 0.027
-## withdrawz_affect_z     0.445     0.059  0.329 0.560
-## affectz_estress_z      0.339     0.059  0.224 0.454</code></pre>
+## withdrawz_Intercept   -0.001     0.055 -0.110 0.107
+## affectz_Intercept      0.000     0.060 -0.118 0.116
+## withdrawz_estress_z   -0.087     0.058 -0.205 0.027
+## withdrawz_affect_z     0.445     0.061  0.326 0.568
+## affectz_estress_z      0.342     0.059  0.228 0.459</code></pre>
 <p>Here we do the wrangling necessary to spell out the standardized effects for <span class="math inline">\(ab\)</span>, <span class="math inline">\(c&#39;\)</span>, and <span class="math inline">\(c\)</span>.</p>
-<div class="sourceCode" id="cb254"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb254-1"><a href="causal-steps-confounding-and-causal-order.html#cb254-1" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_samples</span>(model4<span class="fl">.4</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb254-2"><a href="causal-steps-confounding-and-causal-order.html#cb254-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ab_s      =</span> b_affectz_estress_z <span class="sc">*</span> b_withdrawz_affect_z,</span>
-<span id="cb254-3"><a href="causal-steps-confounding-and-causal-order.html#cb254-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">c_prime_s =</span> b_withdrawz_estress_z) <span class="sc">%&gt;%</span></span>
-<span id="cb254-4"><a href="causal-steps-confounding-and-causal-order.html#cb254-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">c_s =</span> ab_s <span class="sc">+</span> c_prime_s) <span class="sc">%&gt;%</span> </span>
-<span id="cb254-5"><a href="causal-steps-confounding-and-causal-order.html#cb254-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(c_prime_s, ab_s, c_s)) <span class="sc">%&gt;%</span></span>
-<span id="cb254-6"><a href="causal-steps-confounding-and-causal-order.html#cb254-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb254-7"><a href="causal-steps-confounding-and-causal-order.html#cb254-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean   =</span> <span class="fu">mean</span>(value), </span>
-<span id="cb254-8"><a href="causal-steps-confounding-and-causal-order.html#cb254-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">median =</span> <span class="fu">median</span>(value),</span>
-<span id="cb254-9"><a href="causal-steps-confounding-and-causal-order.html#cb254-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">ll     =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> .<span class="dv">025</span>),</span>
-<span id="cb254-10"><a href="causal-steps-confounding-and-causal-order.html#cb254-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">ul     =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> .<span class="dv">975</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb254-11"><a href="causal-steps-confounding-and-causal-order.html#cb254-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(is_double, round, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 3 x 5
+<div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb257-1"><a href="causal-steps-confounding-and-causal-order.html#cb257-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as_draws_df</span>(model4<span class="fl">.4</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb257-2"><a href="causal-steps-confounding-and-causal-order.html#cb257-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ab_s      =</span> b_affectz_estress_z <span class="sc">*</span> b_withdrawz_affect_z,</span>
+<span id="cb257-3"><a href="causal-steps-confounding-and-causal-order.html#cb257-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">c_prime_s =</span> b_withdrawz_estress_z) <span class="sc">%&gt;%</span></span>
+<span id="cb257-4"><a href="causal-steps-confounding-and-causal-order.html#cb257-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">c_s =</span> ab_s <span class="sc">+</span> c_prime_s) <span class="sc">%&gt;%</span> </span>
+<span id="cb257-5"><a href="causal-steps-confounding-and-causal-order.html#cb257-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(c_prime_s, ab_s, c_s)) <span class="sc">%&gt;%</span></span>
+<span id="cb257-6"><a href="causal-steps-confounding-and-causal-order.html#cb257-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb257-7"><a href="causal-steps-confounding-and-causal-order.html#cb257-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean   =</span> <span class="fu">mean</span>(value), </span>
+<span id="cb257-8"><a href="causal-steps-confounding-and-causal-order.html#cb257-8" aria-hidden="true" tabindex="-1"></a>            <span class="at">median =</span> <span class="fu">median</span>(value),</span>
+<span id="cb257-9"><a href="causal-steps-confounding-and-causal-order.html#cb257-9" aria-hidden="true" tabindex="-1"></a>            <span class="at">ll     =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> .<span class="dv">025</span>),</span>
+<span id="cb257-10"><a href="causal-steps-confounding-and-causal-order.html#cb257-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">ul     =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> .<span class="dv">975</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb257-11"><a href="causal-steps-confounding-and-causal-order.html#cb257-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(is_double, round, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 5
 ##   name        mean median     ll    ul
 ##   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
-## 1 ab_s       0.151  0.149  0.091 0.22 
-## 2 c_prime_s -0.088 -0.087 -0.206 0.027
-## 3 c_s        0.063  0.063 -0.057 0.183</code></pre>
+## 1 ab_s       0.152  0.151  0.09  0.222
+## 2 c_prime_s -0.087 -0.085 -0.205 0.027
+## 3 c_s        0.065  0.067 -0.056 0.185</code></pre>
 <p>Let’s confirm that we can recover these values by applying the formulas on page 135 to the unstandardized model, which we’ll call <code>model4.5</code>. First, we’ll have to fit that model since we haven’t fit that one since Chapter 3.</p>
-<div class="sourceCode" id="cb256"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb256-1"><a href="causal-steps-confounding-and-causal-order.html#cb256-1" aria-hidden="true" tabindex="-1"></a>model4<span class="fl">.5</span> <span class="ot">&lt;-</span></span>
-<span id="cb256-2"><a href="causal-steps-confounding-and-causal-order.html#cb256-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">brm</span>(<span class="at">data =</span> estress, </span>
-<span id="cb256-3"><a href="causal-steps-confounding-and-causal-order.html#cb256-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">family =</span> gaussian,</span>
-<span id="cb256-4"><a href="causal-steps-confounding-and-causal-order.html#cb256-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">bf</span>(withdraw <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> estress <span class="sc">+</span> affect) <span class="sc">+</span> </span>
-<span id="cb256-5"><a href="causal-steps-confounding-and-causal-order.html#cb256-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">bf</span>(affect <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> estress) <span class="sc">+</span> </span>
-<span id="cb256-6"><a href="causal-steps-confounding-and-causal-order.html#cb256-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">set_rescor</span>(<span class="cn">FALSE</span>),</span>
-<span id="cb256-7"><a href="causal-steps-confounding-and-causal-order.html#cb256-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">cores =</span> <span class="dv">4</span>,</span>
-<span id="cb256-8"><a href="causal-steps-confounding-and-causal-order.html#cb256-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">file =</span> <span class="st">&quot;fits/model04.05&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb259"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb259-1"><a href="causal-steps-confounding-and-causal-order.html#cb259-1" aria-hidden="true" tabindex="-1"></a>model4<span class="fl">.5</span> <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb259-2"><a href="causal-steps-confounding-and-causal-order.html#cb259-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> estress, </span>
+<span id="cb259-3"><a href="causal-steps-confounding-and-causal-order.html#cb259-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> gaussian,</span>
+<span id="cb259-4"><a href="causal-steps-confounding-and-causal-order.html#cb259-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bf</span>(withdraw <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> estress <span class="sc">+</span> affect) <span class="sc">+</span> </span>
+<span id="cb259-5"><a href="causal-steps-confounding-and-causal-order.html#cb259-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bf</span>(affect <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> estress) <span class="sc">+</span> </span>
+<span id="cb259-6"><a href="causal-steps-confounding-and-causal-order.html#cb259-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_rescor</span>(<span class="cn">FALSE</span>),</span>
+<span id="cb259-7"><a href="causal-steps-confounding-and-causal-order.html#cb259-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">cores =</span> <span class="dv">4</span>,</span>
+<span id="cb259-8"><a href="causal-steps-confounding-and-causal-order.html#cb259-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> <span class="st">&quot;fits/model04.05&quot;</span>)</span></code></pre></div>
 <p>Check the unstandardized coefficient summaries.</p>
-<div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb257-1"><a href="causal-steps-confounding-and-causal-order.html#cb257-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(model4<span class="fl">.5</span>) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb260"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb260-1"><a href="causal-steps-confounding-and-causal-order.html#cb260-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fixef</span>(model4<span class="fl">.5</span>) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
 <pre><code>##                    Estimate Est.Error   Q2.5 Q97.5
-## withdraw_Intercept    1.449     0.251  0.953 1.938
-## affect_Intercept      0.800     0.146  0.511 1.080
-## withdraw_estress     -0.077     0.054 -0.181 0.029
-## withdraw_affect       0.770     0.103  0.572 0.969
-## affect_estress        0.173     0.030  0.116 0.232</code></pre>
+## withdraw_Intercept    1.446     0.249  0.963 1.942
+## affect_Intercept      0.798     0.146  0.507 1.081
+## withdraw_estress     -0.076     0.053 -0.182 0.025
+## withdraw_affect       0.768     0.103  0.565 0.976
+## affect_estress        0.173     0.030  0.113 0.234</code></pre>
 <p>On pages 135–136, Hayes provided the formulas to compute the standardized effects, which are</p>
-<p><span class="math display">\[\begin{align*}
-c&#39;_{cs} &amp; = \frac{SD_X(c&#39;)}{SD_{Y}} = SD_{X}(c&#39;_{ps}), \\
-ab_{cs} &amp; = \frac{SD_X(ab)}{SD_{Y}} = SD_{X}(ab_{ps}), \text{and} \\
-c_{cs}  &amp; = \frac{SD_X(c)}{SD_{Y}} = c&#39;_{cs} + ab_{ps},
-\end{align*}\]</span></p>
-<p>where the <span class="math inline">\(ps\)</span> subscript indicates <em>partially standardized</em>. Here we put them in action to standardize the unstandardized results.</p>
-<div class="sourceCode" id="cb259"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb259-1"><a href="causal-steps-confounding-and-causal-order.html#cb259-1" aria-hidden="true" tabindex="-1"></a>sd_x <span class="ot">&lt;-</span> <span class="fu">sd</span>(estress<span class="sc">$</span>estress)</span>
-<span id="cb259-2"><a href="causal-steps-confounding-and-causal-order.html#cb259-2" aria-hidden="true" tabindex="-1"></a>sd_y <span class="ot">&lt;-</span> <span class="fu">sd</span>(estress<span class="sc">$</span>withdraw)</span>
-<span id="cb259-3"><a href="causal-steps-confounding-and-causal-order.html#cb259-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb259-4"><a href="causal-steps-confounding-and-causal-order.html#cb259-4" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior_samples</span>(model4<span class="fl">.5</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb259-5"><a href="causal-steps-confounding-and-causal-order.html#cb259-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ab      =</span> b_affect_estress <span class="sc">*</span> b_withdraw_affect,</span>
-<span id="cb259-6"><a href="causal-steps-confounding-and-causal-order.html#cb259-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">c_prime =</span> b_withdraw_estress) <span class="sc">%&gt;%</span> </span>
-<span id="cb259-7"><a href="causal-steps-confounding-and-causal-order.html#cb259-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ab_s      =</span> (sd_x <span class="sc">*</span> ab) <span class="sc">/</span> sd_y,</span>
-<span id="cb259-8"><a href="causal-steps-confounding-and-causal-order.html#cb259-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">c_prime_s =</span> (sd_x <span class="sc">*</span> c_prime) <span class="sc">/</span> sd_y) <span class="sc">%&gt;%</span> </span>
-<span id="cb259-9"><a href="causal-steps-confounding-and-causal-order.html#cb259-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">c_s =</span> ab_s <span class="sc">+</span> c_prime_s) <span class="sc">%&gt;%</span> </span>
-<span id="cb259-10"><a href="causal-steps-confounding-and-causal-order.html#cb259-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(c_prime_s, ab_s, c_s)) <span class="sc">%&gt;%</span></span>
-<span id="cb259-11"><a href="causal-steps-confounding-and-causal-order.html#cb259-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
-<span id="cb259-12"><a href="causal-steps-confounding-and-causal-order.html#cb259-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean   =</span> <span class="fu">mean</span>(value), </span>
-<span id="cb259-13"><a href="causal-steps-confounding-and-causal-order.html#cb259-13" aria-hidden="true" tabindex="-1"></a>            <span class="at">median =</span> <span class="fu">median</span>(value),</span>
-<span id="cb259-14"><a href="causal-steps-confounding-and-causal-order.html#cb259-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">ll     =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> .<span class="dv">025</span>),</span>
-<span id="cb259-15"><a href="causal-steps-confounding-and-causal-order.html#cb259-15" aria-hidden="true" tabindex="-1"></a>            <span class="at">ul     =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> .<span class="dv">975</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb259-16"><a href="causal-steps-confounding-and-causal-order.html#cb259-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(is_double, round, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
-<pre><code>## # A tibble: 3 x 5
+<p><span class="math display">\[
+\begin{align*}
+c&#39;_{cs} &amp; = \frac{\textit{SD}_X(c&#39;)}{\textit{SD}_{Y}} = \textit{SD}_{X}(c&#39;_{ps}), \\
+ab_{cs} &amp; = \frac{\textit{SD}_X(ab)}{\textit{SD}_{Y}} = \textit{SD}_{X}(ab_{ps}), \text{and} \\
+c_{cs}  &amp; = \frac{\textit{SD}_X(c)}{\textit{SD}_{Y}} = c&#39;_{cs} + ab_{ps},
+\end{align*}
+\]</span>
+where the <span class="math inline">\(ps\)</span> subscript indicates <em>partially standardized</em>. Here we put them in action to standardize the unstandardized results.</p>
+<div class="sourceCode" id="cb262"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb262-1"><a href="causal-steps-confounding-and-causal-order.html#cb262-1" aria-hidden="true" tabindex="-1"></a>sd_x <span class="ot">&lt;-</span> <span class="fu">sd</span>(estress<span class="sc">$</span>estress)</span>
+<span id="cb262-2"><a href="causal-steps-confounding-and-causal-order.html#cb262-2" aria-hidden="true" tabindex="-1"></a>sd_y <span class="ot">&lt;-</span> <span class="fu">sd</span>(estress<span class="sc">$</span>withdraw)</span>
+<span id="cb262-3"><a href="causal-steps-confounding-and-causal-order.html#cb262-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb262-4"><a href="causal-steps-confounding-and-causal-order.html#cb262-4" aria-hidden="true" tabindex="-1"></a><span class="fu">as_draws_df</span>(model4<span class="fl">.5</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb262-5"><a href="causal-steps-confounding-and-causal-order.html#cb262-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ab      =</span> b_affect_estress <span class="sc">*</span> b_withdraw_affect,</span>
+<span id="cb262-6"><a href="causal-steps-confounding-and-causal-order.html#cb262-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">c_prime =</span> b_withdraw_estress) <span class="sc">%&gt;%</span> </span>
+<span id="cb262-7"><a href="causal-steps-confounding-and-causal-order.html#cb262-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ab_s      =</span> (sd_x <span class="sc">*</span> ab) <span class="sc">/</span> sd_y,</span>
+<span id="cb262-8"><a href="causal-steps-confounding-and-causal-order.html#cb262-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">c_prime_s =</span> (sd_x <span class="sc">*</span> c_prime) <span class="sc">/</span> sd_y) <span class="sc">%&gt;%</span> </span>
+<span id="cb262-9"><a href="causal-steps-confounding-and-causal-order.html#cb262-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">c_s =</span> ab_s <span class="sc">+</span> c_prime_s) <span class="sc">%&gt;%</span> </span>
+<span id="cb262-10"><a href="causal-steps-confounding-and-causal-order.html#cb262-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(c_prime_s, ab_s, c_s)) <span class="sc">%&gt;%</span></span>
+<span id="cb262-11"><a href="causal-steps-confounding-and-causal-order.html#cb262-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(name) <span class="sc">%&gt;%</span> </span>
+<span id="cb262-12"><a href="causal-steps-confounding-and-causal-order.html#cb262-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean   =</span> <span class="fu">mean</span>(value), </span>
+<span id="cb262-13"><a href="causal-steps-confounding-and-causal-order.html#cb262-13" aria-hidden="true" tabindex="-1"></a>            <span class="at">median =</span> <span class="fu">median</span>(value),</span>
+<span id="cb262-14"><a href="causal-steps-confounding-and-causal-order.html#cb262-14" aria-hidden="true" tabindex="-1"></a>            <span class="at">ll     =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> .<span class="dv">025</span>),</span>
+<span id="cb262-15"><a href="causal-steps-confounding-and-causal-order.html#cb262-15" aria-hidden="true" tabindex="-1"></a>            <span class="at">ul     =</span> <span class="fu">quantile</span>(value, <span class="at">probs =</span> .<span class="dv">975</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb262-16"><a href="causal-steps-confounding-and-causal-order.html#cb262-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(is_double, round, <span class="at">digits =</span> <span class="dv">3</span>)</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 5
 ##   name        mean median     ll    ul
 ##   &lt;chr&gt;      &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
 ## 1 ab_s       0.152  0.15   0.092 0.224
-## 2 c_prime_s -0.088 -0.089 -0.206 0.033
-## 3 c_s        0.064  0.064 -0.063 0.189</code></pre>
+## 2 c_prime_s -0.087 -0.087 -0.207 0.029
+## 3 c_s        0.064  0.065 -0.057 0.183</code></pre>
 <p>Success!</p>
 </div>
-<div id="some-problematic-measures-only-for-indirect-effects." class="section level3" number="4.3.3">
-<h3><span class="header-section-number">4.3.3</span> Some (problematic) measures only for indirect effects.</h3>
+<div id="some-problematic-measures-only-for-indirect-effects." class="section level3 hasAnchor" number="4.3.3">
+<h3><span class="header-section-number">4.3.3</span> Some (problematic) measures only for indirect effects.<a href="causal-steps-confounding-and-causal-order.html#some-problematic-measures-only-for-indirect-effects." class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Hayes recommended against these, so I’m not going to bother working any examples.</p>
 </div>
 </div>
-<div id="statistical-power" class="section level2" number="4.4">
-<h2><span class="header-section-number">4.4</span> Statistical power</h2>
-<p>As Hayes discussed, power is an important but thorny issue within the frequentist paradigm. Given that we’re not particularly interested in rejecting the point-null hypothesis as Bayesians and that we bring in priors (which we’ve largely avoided explicitly mentioning in his project but have been quietly using all along), the issue is even more difficult for Bayesians. To learn more on the topic, check out Chapter 13 in Kruschke’s <span class="citation">(<a href="#ref-kruschkeDoingBayesianData2015" role="doc-biblioref">2015</a>)</span> <a href="https://sites.google.com/site/doingbayesiandataanalysis/">text</a>; Miočević, MacKinnon, and Levy’s <span class="citation">(<a href="#ref-miocevicPowerBayesianMediation2017" role="doc-biblioref">2017</a>)</span> <a href="https://www.tandfonline.com/doi/abs/10.1080/10705511.2017.1312407?src=recsys&amp;journalCode=hsem20">paper</a> on power in small-sample Bayesian analyses; or Gelman and Carlin’s <span class="citation">(<a href="#ref-gelmanPowerCalculationsAssessing2014" role="doc-biblioref">2014</a>)</span> <a href="http://journals.sagepub.com/doi/pdf/10.1177/1745691614551642">paper</a> offering an alternative to the power paradigm. You might look at Matti Vuorre’s <a href="https://gitlab.com/vuorre/bayesplan">Sample size planning with brms</a> project. And finally, I have a series of blog posts on Bayesian power analyses. You can find the first post <a href="https://solomonkurz.netlify.com/post/bayesian-power-analysis-part-i/">here</a>.</p>
+<div id="statistical-power" class="section level2 hasAnchor" number="4.4">
+<h2><span class="header-section-number">4.4</span> Statistical power<a href="causal-steps-confounding-and-causal-order.html#statistical-power" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>As Hayes discussed, power is an important but thorny issue within the frequentist paradigm. Given that we’re not particularly interested in rejecting the point-null hypothesis as Bayesians and that we bring in priors (which we’ve largely avoided explicitly mentioning in his project but have been quietly using all along), the issue is even more difficult for Bayesians. To learn more on the topic, check out Chapter 13 in Kruschke’s <span class="citation">(<a href="#ref-kruschkeDoingBayesianData2015" role="doc-biblioref">2015</a>)</span> <a href="https://sites.google.com/site/doingbayesiandataanalysis/">text</a>; Miočević, MacKinnon, and Levy’s <span class="citation">(<a href="#ref-miocevicPowerBayesianMediation2017" role="doc-biblioref">2017</a>)</span> <a href="https://doi.org/10.1080/10705511.2017.1312407">paper</a> on power in small-sample Bayesian analyses; or Gelman and Carlin’s <span class="citation">(<a href="#ref-gelmanPowerCalculationsAssessing2014" role="doc-biblioref">2014</a>)</span> <a href="https://journals.sagepub.com/doi/pdf/10.1177/1745691614551642">paper</a> offering an alternative to the power paradigm. You might look at Matti Vuorre’s <a href="https://gitlab.com/vuorre/bayesplan">Sample size planning with brms</a> project. And finally, I have a series of blog posts on Bayesian power analyses. You can find the first post <a href="https://solomonkurz.netlify.app/blog/bayesian-power-analysis-part-i/">here</a>.</p>
 </div>
-<div id="multiple-xs-or-ys-analyze-separately-or-simultaneously" class="section level2" number="4.5">
-<h2><span class="header-section-number">4.5</span> Multiple <span class="math inline">\(X\)</span>s or <span class="math inline">\(Y\)</span>s: Analyze separately or simultaneously?</h2>
+<div id="multiple-xs-or-ys-analyze-separately-or-simultaneously" class="section level2 hasAnchor" number="4.5">
+<h2><span class="header-section-number">4.5</span> Multiple <span class="math inline">\(X\)</span>s or <span class="math inline">\(Y\)</span>s: Analyze separately or simultaneously?<a href="causal-steps-confounding-and-causal-order.html#multiple-xs-or-ys-analyze-separately-or-simultaneously" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>“Researchers sometimes propose that several causal agents (<span class="math inline">\(X\)</span> variables simultaneously transmit their effects on the same outcome through the same mediator(s)” (p. 141).</p>
-<div id="multiple-x-variables." class="section level3" number="4.5.1">
-<h3><span class="header-section-number">4.5.1</span> Multiple <span class="math inline">\(X\)</span> variables.</h3>
+<div id="multiple-x-variables." class="section level3 hasAnchor" number="4.5.1">
+<h3><span class="header-section-number">4.5.1</span> Multiple <span class="math inline">\(X\)</span> variables.<a href="causal-steps-confounding-and-causal-order.html#multiple-x-variables." class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <blockquote>
 <p>The danger in including multiple <span class="math inline">\(X\)</span>’s in a mediation model, as when including statistical controls, is the possibility that highly correlated <span class="math inline">\(X\)</span>s will cancel out each other’s effects. This is a standard concern in linear models involving correlated predictors. Two <span class="math inline">\(X\)</span> variables (or an <span class="math inline">\(X\)</span> variable and a control variable) highly correlated with each other may also both be correlated with <span class="math inline">\(M\)</span> or <span class="math inline">\(Y\)</span>, so when they are both included as predictors of <span class="math inline">\(M\)</span> or <span class="math inline">\(Y\)</span> in a mediation model, they compete against each other in their attempt to explain variation in <span class="math inline">\(M\)</span> and <span class="math inline">\(Y\)</span>. Their regression coefficients quantify their unique association with the model’s mediator and outcome variable(s). at the extreme, the two variables end up performing like two boxers in the ring simultaneously throwing a winning blow at the other at precisely the same time. Both get knocked out and neither goes away appearing worthy of a prize. The stronger the associations between the variables in the model, the greater the potential of such a problem. (pp. 143–144)</p>
 </blockquote>
 <p>The same basic problems with multicollinearity applies to the Bayesian paradigm, too.</p>
 </div>
-<div id="estimation-of-a-model-with-multiple-x-variables-in-process-brms." class="section level3" number="4.5.2">
-<h3><span class="header-section-number">4.5.2</span> Estimation of a model with multiple <span class="math inline">\(X\)</span> variables in <del>PROCESS</del> brms.</h3>
-<p>Hayes discussed the limitation that his PROCESS program may only handle a single <span class="math inline">\(X\)</span> variable in the <code>x=</code> part of the command line, for which he displayed a workaround. We don’t have such a limitation in <strong>brms</strong>. Using Hayes’s hypothetical data syntax for a model with three <span class="math inline">\(X\)</span>s, the <strong>brms</strong> code would be like this.</p>
-<div class="sourceCode" id="cb261"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb261-1"><a href="causal-steps-confounding-and-causal-order.html#cb261-1" aria-hidden="true" tabindex="-1"></a>model4<span class="fl">.6</span> <span class="ot">&lt;-</span></span>
-<span id="cb261-2"><a href="causal-steps-confounding-and-causal-order.html#cb261-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">brm</span>(<span class="at">data =</span> data, </span>
-<span id="cb261-3"><a href="causal-steps-confounding-and-causal-order.html#cb261-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">family =</span> gaussian,</span>
-<span id="cb261-4"><a href="causal-steps-confounding-and-causal-order.html#cb261-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">bf</span>(dv <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> iv1 <span class="sc">+</span> iv2 <span class="sc">+</span> iv3 <span class="sc">+</span> med) <span class="sc">+</span> </span>
-<span id="cb261-5"><a href="causal-steps-confounding-and-causal-order.html#cb261-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">bf</span>(med <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> iv1 <span class="sc">+</span> iv2 <span class="sc">+</span> iv3) <span class="sc">+</span> </span>
-<span id="cb261-6"><a href="causal-steps-confounding-and-causal-order.html#cb261-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">set_rescor</span>(<span class="cn">FALSE</span>),</span>
-<span id="cb261-7"><a href="causal-steps-confounding-and-causal-order.html#cb261-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">cores =</span> <span class="dv">4</span>)</span></code></pre></div>
+<div id="estimation-of-a-model-with-multiple-x-variables-in-process-brms." class="section level3 hasAnchor" number="4.5.2">
+<h3><span class="header-section-number">4.5.2</span> Estimation of a model with multiple <span class="math inline">\(X\)</span> variables in <del>PROCESS</del> brms.<a href="causal-steps-confounding-and-causal-order.html#estimation-of-a-model-with-multiple-x-variables-in-process-brms." class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Hayes discussed the limitation that his PROCESS program may only handle a single <span class="math inline">\(X\)</span> variable in the <code>x=</code> part of the command line, for which he displayed a workaround. We don’t have such a limitation in <strong>brms</strong>. Using Hayes’s hypothetical data syntax for a model with three <span class="math inline">\(X\)</span>’s, the <strong>brms</strong> code would look like this.</p>
+<div class="sourceCode" id="cb264"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb264-1"><a href="causal-steps-confounding-and-causal-order.html#cb264-1" aria-hidden="true" tabindex="-1"></a>model4<span class="fl">.6</span> <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb264-2"><a href="causal-steps-confounding-and-causal-order.html#cb264-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> data, </span>
+<span id="cb264-3"><a href="causal-steps-confounding-and-causal-order.html#cb264-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> gaussian,</span>
+<span id="cb264-4"><a href="causal-steps-confounding-and-causal-order.html#cb264-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bf</span>(dv <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> iv1 <span class="sc">+</span> iv2 <span class="sc">+</span> iv3 <span class="sc">+</span> med) <span class="sc">+</span> </span>
+<span id="cb264-5"><a href="causal-steps-confounding-and-causal-order.html#cb264-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bf</span>(med <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> iv1 <span class="sc">+</span> iv2 <span class="sc">+</span> iv3) <span class="sc">+</span> </span>
+<span id="cb264-6"><a href="causal-steps-confounding-and-causal-order.html#cb264-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_rescor</span>(<span class="cn">FALSE</span>),</span>
+<span id="cb264-7"><a href="causal-steps-confounding-and-causal-order.html#cb264-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">cores =</span> <span class="dv">4</span>)</span></code></pre></div>
 <p>To show it in action, let’s simulate some data.</p>
-<div class="sourceCode" id="cb262"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb262-1"><a href="causal-steps-confounding-and-causal-order.html#cb262-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fl">1e3</span></span>
-<span id="cb262-2"><a href="causal-steps-confounding-and-causal-order.html#cb262-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb262-3"><a href="causal-steps-confounding-and-causal-order.html#cb262-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="fl">4.5</span>)</span>
-<span id="cb262-4"><a href="causal-steps-confounding-and-causal-order.html#cb262-4" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span></span>
-<span id="cb262-5"><a href="causal-steps-confounding-and-causal-order.html#cb262-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">iv1 =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>),</span>
-<span id="cb262-6"><a href="causal-steps-confounding-and-causal-order.html#cb262-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">iv2 =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>),</span>
-<span id="cb262-7"><a href="causal-steps-confounding-and-causal-order.html#cb262-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">iv3 =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb262-8"><a href="causal-steps-confounding-and-causal-order.html#cb262-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">med =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span> <span class="sc">+</span> iv1 <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> iv2 <span class="sc">*</span> <span class="dv">0</span> <span class="sc">+</span> iv3 <span class="sc">*</span> <span class="dv">1</span>, <span class="at">sd =</span> <span class="dv">1</span>),</span>
-<span id="cb262-9"><a href="causal-steps-confounding-and-causal-order.html#cb262-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">dv  =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span> <span class="sc">+</span> iv1 <span class="sc">*</span> <span class="dv">0</span> <span class="sc">+</span> iv2 <span class="sc">*</span> .<span class="dv">5</span> <span class="sc">+</span> iv3 <span class="sc">*</span> <span class="dv">1</span> <span class="sc">+</span> med <span class="sc">*</span> .<span class="dv">5</span>, <span class="at">sd =</span> <span class="dv">1</span>))</span>
-<span id="cb262-10"><a href="causal-steps-confounding-and-causal-order.html#cb262-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb262-11"><a href="causal-steps-confounding-and-causal-order.html#cb262-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(d)</span></code></pre></div>
-<pre><code>## # A tibble: 6 x 5
+<div class="sourceCode" id="cb265"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb265-1"><a href="causal-steps-confounding-and-causal-order.html#cb265-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fl">1e3</span></span>
+<span id="cb265-2"><a href="causal-steps-confounding-and-causal-order.html#cb265-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb265-3"><a href="causal-steps-confounding-and-causal-order.html#cb265-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="fl">4.5</span>)</span>
+<span id="cb265-4"><a href="causal-steps-confounding-and-causal-order.html#cb265-4" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span></span>
+<span id="cb265-5"><a href="causal-steps-confounding-and-causal-order.html#cb265-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">iv1 =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>),</span>
+<span id="cb265-6"><a href="causal-steps-confounding-and-causal-order.html#cb265-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">iv2 =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>),</span>
+<span id="cb265-7"><a href="causal-steps-confounding-and-causal-order.html#cb265-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">iv3 =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb265-8"><a href="causal-steps-confounding-and-causal-order.html#cb265-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">med =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span> <span class="sc">+</span> iv1 <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> iv2 <span class="sc">*</span> <span class="dv">0</span> <span class="sc">+</span> iv3 <span class="sc">*</span> <span class="dv">1</span>, <span class="at">sd =</span> <span class="dv">1</span>),</span>
+<span id="cb265-9"><a href="causal-steps-confounding-and-causal-order.html#cb265-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">dv  =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span> <span class="sc">+</span> iv1 <span class="sc">*</span> <span class="dv">0</span> <span class="sc">+</span> iv2 <span class="sc">*</span> .<span class="dv">5</span> <span class="sc">+</span> iv3 <span class="sc">*</span> <span class="dv">1</span> <span class="sc">+</span> med <span class="sc">*</span> .<span class="dv">5</span>, <span class="at">sd =</span> <span class="dv">1</span>))</span>
+<span id="cb265-10"><a href="causal-steps-confounding-and-causal-order.html#cb265-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb265-11"><a href="causal-steps-confounding-and-causal-order.html#cb265-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(d)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 5
 ##      iv1    iv2     iv3    med     dv
 ##    &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
 ## 1  0.217  0.177 -1.39   -0.755 -1.77 
@@ -934,64 +934,64 @@ c_{cs}  &amp; = \frac{SD_X(c)}{SD_{Y}} = c&#39;_{cs} + ab_{ps},
 ## 4  0.596  1.08  -0.203  -0.955  1.02 
 ## 5  1.64  -0.456 -0.428  -2.89  -3.26 
 ## 6  0.689 -0.681 -0.429  -0.462 -2.38</code></pre>
-<p>Before we proceed, if data simulation is new to you, you might check out <a href="https://twitter.com/rdpeng">Roger Peng</a>’s <a href="https://www.youtube.com/watch?v=tvv4IA8PEzw">helpful tutorial</a> or <a href="https://aosmith.rbind.io/2018/08/29/getting-started-simulating-data/">this great post</a> by <a href="https://twitter.com/aosmith16">Ariel Muldoon</a>.</p>
+<p>Before we proceed, if data simulation is new to you, you might check out <a href="https://rdpeng.org/">Roger Peng</a>’s <a href="https://youtu.be/tvv4IA8PEzw">helpful tutorial</a> or <a href="https://aosmith.rbind.io/2018/08/29/getting-started-simulating-data/">this great post</a> by <a href="https://aosmith.rbind.io/">Ariel Muldoon</a>.</p>
 <p>Here we fit the model.</p>
-<div class="sourceCode" id="cb264"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb264-1"><a href="causal-steps-confounding-and-causal-order.html#cb264-1" aria-hidden="true" tabindex="-1"></a>model4<span class="fl">.6</span> <span class="ot">&lt;-</span></span>
-<span id="cb264-2"><a href="causal-steps-confounding-and-causal-order.html#cb264-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">brm</span>(<span class="at">data =</span> d, </span>
-<span id="cb264-3"><a href="causal-steps-confounding-and-causal-order.html#cb264-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">family =</span> gaussian,</span>
-<span id="cb264-4"><a href="causal-steps-confounding-and-causal-order.html#cb264-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">bf</span>(dv <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> iv1 <span class="sc">+</span> iv2 <span class="sc">+</span> iv3 <span class="sc">+</span> med) <span class="sc">+</span> </span>
-<span id="cb264-5"><a href="causal-steps-confounding-and-causal-order.html#cb264-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">bf</span>(med <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> iv1 <span class="sc">+</span> iv2 <span class="sc">+</span> iv3) <span class="sc">+</span> </span>
-<span id="cb264-6"><a href="causal-steps-confounding-and-causal-order.html#cb264-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">set_rescor</span>(<span class="cn">FALSE</span>),</span>
-<span id="cb264-7"><a href="causal-steps-confounding-and-causal-order.html#cb264-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">cores =</span> <span class="dv">4</span>,</span>
-<span id="cb264-8"><a href="causal-steps-confounding-and-causal-order.html#cb264-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">file =</span> <span class="st">&quot;fits/model04.06&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb267"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb267-1"><a href="causal-steps-confounding-and-causal-order.html#cb267-1" aria-hidden="true" tabindex="-1"></a>model4<span class="fl">.6</span> <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb267-2"><a href="causal-steps-confounding-and-causal-order.html#cb267-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> d, </span>
+<span id="cb267-3"><a href="causal-steps-confounding-and-causal-order.html#cb267-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> gaussian,</span>
+<span id="cb267-4"><a href="causal-steps-confounding-and-causal-order.html#cb267-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bf</span>(dv <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> iv1 <span class="sc">+</span> iv2 <span class="sc">+</span> iv3 <span class="sc">+</span> med) <span class="sc">+</span> </span>
+<span id="cb267-5"><a href="causal-steps-confounding-and-causal-order.html#cb267-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bf</span>(med <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> iv1 <span class="sc">+</span> iv2 <span class="sc">+</span> iv3) <span class="sc">+</span> </span>
+<span id="cb267-6"><a href="causal-steps-confounding-and-causal-order.html#cb267-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_rescor</span>(<span class="cn">FALSE</span>),</span>
+<span id="cb267-7"><a href="causal-steps-confounding-and-causal-order.html#cb267-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">cores =</span> <span class="dv">4</span>,</span>
+<span id="cb267-8"><a href="causal-steps-confounding-and-causal-order.html#cb267-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> <span class="st">&quot;fits/model04.06&quot;</span>)</span></code></pre></div>
 <p>Behold the results.</p>
-<div class="sourceCode" id="cb265"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb265-1"><a href="causal-steps-confounding-and-causal-order.html#cb265-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(model4<span class="fl">.6</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb268"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb268-1"><a href="causal-steps-confounding-and-causal-order.html#cb268-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(model4<span class="fl">.6</span>)</span></code></pre></div>
 <pre><code>##  Family: MV(gaussian, gaussian) 
 ##   Links: mu = identity; sigma = identity
 ##          mu = identity; sigma = identity 
 ## Formula: dv ~ 1 + iv1 + iv2 + iv3 + med 
 ##          med ~ 1 + iv1 + iv2 + iv3 
 ##    Data: d (Number of observations: 1000) 
-## Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
-##          total post-warmup samples = 4000
+##   Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup draws = 4000
 ## 
 ## Population-Level Effects: 
 ##               Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## dv_Intercept     -0.01      0.03    -0.07     0.05 1.00     5563     2948
-## med_Intercept     0.00      0.03    -0.06     0.06 1.01     5932     2990
-## dv_iv1            0.02      0.04    -0.06     0.11 1.00     2936     3181
-## dv_iv2            0.56      0.03     0.50     0.62 1.00     5294     3120
-## dv_iv3            1.01      0.05     0.92     1.10 1.00     2647     2918
-## dv_med            0.46      0.03     0.40     0.53 1.00     2276     3057
-## med_iv1          -0.93      0.03    -0.99    -0.87 1.00     5722     2991
-## med_iv2           0.03      0.03    -0.03     0.09 1.00     6016     3358
-## med_iv3           0.98      0.03     0.92     1.04 1.00     5080     3188
+## dv_Intercept     -0.01      0.03    -0.07     0.05 1.00     5201     2912
+## med_Intercept     0.00      0.03    -0.06     0.06 1.00     5392     2869
+## dv_iv1            0.02      0.05    -0.06     0.11 1.00     2521     2877
+## dv_iv2            0.56      0.03     0.50     0.62 1.00     4700     2935
+## dv_iv3            1.01      0.05     0.92     1.10 1.00     2539     3067
+## dv_med            0.46      0.03     0.40     0.53 1.00     2186     2811
+## med_iv1          -0.93      0.03    -0.99    -0.87 1.00     5090     2637
+## med_iv2           0.03      0.03    -0.03     0.09 1.00     4803     2431
+## med_iv3           0.98      0.03     0.92     1.04 1.00     5122     3158
 ## 
 ## Family Specific Parameters: 
 ##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## sigma_dv      1.00      0.02     0.96     1.05 1.00     6096     3420
-## sigma_med     0.97      0.02     0.93     1.02 1.00     6141     2674
+## sigma_dv      1.00      0.02     0.96     1.05 1.00     5304     3178
+## sigma_med     0.97      0.02     0.93     1.02 1.00     5411     3308
 ## 
-## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
+## Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
 ## and Tail_ESS are effective sample size measures, and Rhat is the potential
 ## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
-<p>Good old <code>brms::brm()</code> came through just fine. If you wanted to simulate data with a particular correlation structure for the <code>iv</code> variables, you might use the <code>mvnorm()</code> function from the <a href="https://CRAN.R-project.org/package=MASS"><strong>MASS</strong> package</a> <span class="citation">(<a href="#ref-R-MASS" role="doc-biblioref">Ripley, 2019</a>)</span>, about which you might learn more <a href="http://blog.revolutionanalytics.com/2016/02/multivariate_data_with_r.html">here</a>.</p>
+<p>Good old <code>brms::brm()</code> came through just fine. If you wanted to simulate data with a particular correlation structure for the <code>iv</code> variables, you might use the <code>mvnorm()</code> function from the <a href="https://CRAN.R-project.org/package=MASS"><strong>MASS</strong> package</a> <span class="citation">(<a href="#ref-R-MASS" role="doc-biblioref">Ripley, 2022</a>)</span>, about which you might learn more <a href="https://blog.revolutionanalytics.com/2016/02/multivariate_data_with_r.html">here</a>.</p>
 </div>
-<div id="multiple-y-variables." class="section level3" number="4.5.3">
-<h3><span class="header-section-number">4.5.3</span> Multiple <span class="math inline">\(Y\)</span> variables.</h3>
+<div id="multiple-y-variables." class="section level3 hasAnchor" number="4.5.3">
+<h3><span class="header-section-number">4.5.3</span> Multiple <span class="math inline">\(Y\)</span> variables.<a href="causal-steps-confounding-and-causal-order.html#multiple-y-variables." class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>We’ve already been using the multivariate syntax in <strong>brms</strong> for our simple mediation models. Fitting a mediation model with multiple <span class="math inline">\(Y\)</span> variables is a minor extension. To see, let’s simulate more data.</p>
-<div class="sourceCode" id="cb267"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb267-1"><a href="causal-steps-confounding-and-causal-order.html#cb267-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fl">1e3</span></span>
-<span id="cb267-2"><a href="causal-steps-confounding-and-causal-order.html#cb267-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb267-3"><a href="causal-steps-confounding-and-causal-order.html#cb267-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="fl">4.5</span>)</span>
-<span id="cb267-4"><a href="causal-steps-confounding-and-causal-order.html#cb267-4" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span></span>
-<span id="cb267-5"><a href="causal-steps-confounding-and-causal-order.html#cb267-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">iv =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb267-6"><a href="causal-steps-confounding-and-causal-order.html#cb267-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">med =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span> <span class="sc">+</span> iv <span class="sc">*</span> .<span class="dv">5</span>, <span class="at">sd =</span> <span class="dv">1</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb267-7"><a href="causal-steps-confounding-and-causal-order.html#cb267-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dv1 =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span> <span class="sc">+</span> iv <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> med <span class="sc">*</span> <span class="dv">0</span>,  <span class="at">sd =</span> <span class="dv">1</span>),</span>
-<span id="cb267-8"><a href="causal-steps-confounding-and-causal-order.html#cb267-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">dv2 =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span> <span class="sc">+</span> iv <span class="sc">*</span> <span class="dv">0</span>  <span class="sc">+</span> med <span class="sc">*</span> .<span class="dv">5</span>, <span class="at">sd =</span> <span class="dv">1</span>),</span>
-<span id="cb267-9"><a href="causal-steps-confounding-and-causal-order.html#cb267-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">dv3 =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span> <span class="sc">+</span> iv <span class="sc">*</span> <span class="dv">1</span>  <span class="sc">+</span> med <span class="sc">*</span> <span class="dv">1</span>,  <span class="at">sd =</span> <span class="dv">1</span>))</span>
-<span id="cb267-10"><a href="causal-steps-confounding-and-causal-order.html#cb267-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb267-11"><a href="causal-steps-confounding-and-causal-order.html#cb267-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(d)</span></code></pre></div>
-<pre><code>## # A tibble: 6 x 5
+<div class="sourceCode" id="cb270"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb270-1"><a href="causal-steps-confounding-and-causal-order.html#cb270-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fl">1e3</span></span>
+<span id="cb270-2"><a href="causal-steps-confounding-and-causal-order.html#cb270-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb270-3"><a href="causal-steps-confounding-and-causal-order.html#cb270-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="fl">4.5</span>)</span>
+<span id="cb270-4"><a href="causal-steps-confounding-and-causal-order.html#cb270-4" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span></span>
+<span id="cb270-5"><a href="causal-steps-confounding-and-causal-order.html#cb270-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(<span class="at">iv =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="dv">1</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb270-6"><a href="causal-steps-confounding-and-causal-order.html#cb270-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">med =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span> <span class="sc">+</span> iv <span class="sc">*</span> .<span class="dv">5</span>, <span class="at">sd =</span> <span class="dv">1</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb270-7"><a href="causal-steps-confounding-and-causal-order.html#cb270-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dv1 =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span> <span class="sc">+</span> iv <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">+</span> med <span class="sc">*</span> <span class="dv">0</span>,  <span class="at">sd =</span> <span class="dv">1</span>),</span>
+<span id="cb270-8"><a href="causal-steps-confounding-and-causal-order.html#cb270-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">dv2 =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span> <span class="sc">+</span> iv <span class="sc">*</span> <span class="dv">0</span>  <span class="sc">+</span> med <span class="sc">*</span> .<span class="dv">5</span>, <span class="at">sd =</span> <span class="dv">1</span>),</span>
+<span id="cb270-9"><a href="causal-steps-confounding-and-causal-order.html#cb270-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">dv3 =</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span> <span class="sc">+</span> iv <span class="sc">*</span> <span class="dv">1</span>  <span class="sc">+</span> med <span class="sc">*</span> <span class="dv">1</span>,  <span class="at">sd =</span> <span class="dv">1</span>))</span>
+<span id="cb270-10"><a href="causal-steps-confounding-and-causal-order.html#cb270-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb270-11"><a href="causal-steps-confounding-and-causal-order.html#cb270-11" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(d)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 5
 ##       iv    med    dv1    dv2     dv3
 ##    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
 ## 1  0.217  0.285 -1.61   0.999  0.420 
@@ -1001,17 +1001,17 @@ c_{cs}  &amp; = \frac{SD_X(c)}{SD_{Y}} = c&#39;_{cs} + ab_{ps},
 ## 5  1.64   0.362 -2.06  -0.643  0.840 
 ## 6  0.689 -0.337 -1.12   0.487 -1.03</code></pre>
 <p>Fitting this model requires a slew of <code>bf()</code> statements.</p>
-<div class="sourceCode" id="cb269"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb269-1"><a href="causal-steps-confounding-and-causal-order.html#cb269-1" aria-hidden="true" tabindex="-1"></a>model4<span class="fl">.7</span> <span class="ot">&lt;-</span></span>
-<span id="cb269-2"><a href="causal-steps-confounding-and-causal-order.html#cb269-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">brm</span>(<span class="at">data =</span> d, </span>
-<span id="cb269-3"><a href="causal-steps-confounding-and-causal-order.html#cb269-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">family =</span> gaussian,</span>
-<span id="cb269-4"><a href="causal-steps-confounding-and-causal-order.html#cb269-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">bf</span>(dv1 <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> iv <span class="sc">+</span> med) <span class="sc">+</span> </span>
-<span id="cb269-5"><a href="causal-steps-confounding-and-causal-order.html#cb269-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">bf</span>(dv2 <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> iv <span class="sc">+</span> med) <span class="sc">+</span> </span>
-<span id="cb269-6"><a href="causal-steps-confounding-and-causal-order.html#cb269-6" aria-hidden="true" tabindex="-1"></a>        <span class="fu">bf</span>(dv3 <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> iv <span class="sc">+</span> med) <span class="sc">+</span> </span>
-<span id="cb269-7"><a href="causal-steps-confounding-and-causal-order.html#cb269-7" aria-hidden="true" tabindex="-1"></a>        <span class="fu">bf</span>(med <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> iv) <span class="sc">+</span> </span>
-<span id="cb269-8"><a href="causal-steps-confounding-and-causal-order.html#cb269-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">set_rescor</span>(<span class="cn">FALSE</span>),</span>
-<span id="cb269-9"><a href="causal-steps-confounding-and-causal-order.html#cb269-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">cores =</span> <span class="dv">4</span>,</span>
-<span id="cb269-10"><a href="causal-steps-confounding-and-causal-order.html#cb269-10" aria-hidden="true" tabindex="-1"></a>      <span class="at">file =</span> <span class="st">&quot;fits/model04.07&quot;</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb270"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb270-1"><a href="causal-steps-confounding-and-causal-order.html#cb270-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(model4<span class="fl">.7</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb272"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb272-1"><a href="causal-steps-confounding-and-causal-order.html#cb272-1" aria-hidden="true" tabindex="-1"></a>model4<span class="fl">.7</span> <span class="ot">&lt;-</span> <span class="fu">brm</span>(</span>
+<span id="cb272-2"><a href="causal-steps-confounding-and-causal-order.html#cb272-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> d, </span>
+<span id="cb272-3"><a href="causal-steps-confounding-and-causal-order.html#cb272-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> gaussian,</span>
+<span id="cb272-4"><a href="causal-steps-confounding-and-causal-order.html#cb272-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bf</span>(dv1 <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> iv <span class="sc">+</span> med) <span class="sc">+</span> </span>
+<span id="cb272-5"><a href="causal-steps-confounding-and-causal-order.html#cb272-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bf</span>(dv2 <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> iv <span class="sc">+</span> med) <span class="sc">+</span> </span>
+<span id="cb272-6"><a href="causal-steps-confounding-and-causal-order.html#cb272-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bf</span>(dv3 <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> iv <span class="sc">+</span> med) <span class="sc">+</span> </span>
+<span id="cb272-7"><a href="causal-steps-confounding-and-causal-order.html#cb272-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bf</span>(med <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> iv) <span class="sc">+</span> </span>
+<span id="cb272-8"><a href="causal-steps-confounding-and-causal-order.html#cb272-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_rescor</span>(<span class="cn">FALSE</span>),</span>
+<span id="cb272-9"><a href="causal-steps-confounding-and-causal-order.html#cb272-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">cores =</span> <span class="dv">4</span>,</span>
+<span id="cb272-10"><a href="causal-steps-confounding-and-causal-order.html#cb272-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">file =</span> <span class="st">&quot;fits/model04.07&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb273"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb273-1"><a href="causal-steps-confounding-and-causal-order.html#cb273-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(model4<span class="fl">.7</span>)</span></code></pre></div>
 <pre><code>##  Family: MV(gaussian, gaussian, gaussian, gaussian) 
 ##   Links: mu = identity; sigma = identity
 ##          mu = identity; sigma = identity
@@ -1022,53 +1022,53 @@ c_{cs}  &amp; = \frac{SD_X(c)}{SD_{Y}} = c&#39;_{cs} + ab_{ps},
 ##          dv3 ~ 1 + iv + med 
 ##          med ~ 1 + iv 
 ##    Data: d (Number of observations: 1000) 
-## Samples: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
-##          total post-warmup samples = 4000
+##   Draws: 4 chains, each with iter = 2000; warmup = 1000; thin = 1;
+##          total post-warmup draws = 4000
 ## 
 ## Population-Level Effects: 
 ##               Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## dv1_Intercept     0.01      0.03    -0.05     0.07 1.00     7782     2950
-## dv2_Intercept     0.00      0.03    -0.06     0.06 1.00     9468     2665
-## dv3_Intercept    -0.01      0.03    -0.07     0.05 1.00     8215     3088
-## med_Intercept     0.03      0.03    -0.04     0.09 1.00     8338     2614
-## dv1_iv           -1.05      0.04    -1.12    -0.98 1.00     7263     3775
-## dv1_med           0.05      0.03    -0.01     0.11 1.00     6496     3123
-## dv2_iv            0.05      0.04    -0.01     0.12 1.00     7273     3579
-## dv2_med           0.53      0.03     0.47     0.59 1.00     7052     3400
-## dv3_iv            1.03      0.04     0.96     1.10 1.00     6657     3425
-## dv3_med           1.06      0.03     1.00     1.12 1.00     7032     3216
-## med_iv            0.53      0.03     0.46     0.59 1.00     9368     3051
+## dv1_Intercept     0.01      0.03    -0.05     0.08 1.00    10727     2602
+## dv2_Intercept     0.00      0.03    -0.06     0.06 1.00    10343     2660
+## dv3_Intercept    -0.01      0.03    -0.07     0.05 1.00     8180     2780
+## med_Intercept     0.03      0.03    -0.03     0.09 1.00     8397     2886
+## dv1_iv           -1.05      0.04    -1.12    -0.98 1.00     6427     3052
+## dv1_med           0.05      0.03    -0.01     0.11 1.00     7328     3513
+## dv2_iv            0.05      0.04    -0.02     0.12 1.00     6106     3353
+## dv2_med           0.53      0.03     0.47     0.59 1.00     6592     3134
+## dv3_iv            1.03      0.04     0.96     1.10 1.00     6730     3181
+## dv3_med           1.06      0.03     1.00     1.12 1.00     6964     3348
+## med_iv            0.53      0.03     0.46     0.59 1.00     9108     2934
 ## 
 ## Family Specific Parameters: 
 ##           Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
-## sigma_dv1     0.98      0.02     0.93     1.02 1.00     9337     2811
-## sigma_dv2     0.97      0.02     0.93     1.02 1.00     8831     2717
-## sigma_dv3     1.00      0.02     0.96     1.05 1.00     9864     3125
-## sigma_med     1.00      0.02     0.96     1.04 1.00     9883     2936
+## sigma_dv1     0.98      0.02     0.93     1.02 1.00    10045     3029
+## sigma_dv2     0.97      0.02     0.93     1.02 1.00     9816     2870
+## sigma_dv3     1.00      0.02     0.96     1.05 1.00     9076     2675
+## sigma_med     1.00      0.02     0.96     1.04 1.00     9688     2626
 ## 
-## Samples were drawn using sampling(NUTS). For each parameter, Bulk_ESS
+## Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
 ## and Tail_ESS are effective sample size measures, and Rhat is the potential
 ## scale reduction factor on split chains (at convergence, Rhat = 1).</code></pre>
 <p>Once again, <strong>brms</strong> to the rescue!</p>
 </div>
 </div>
-<div id="chapter-summary" class="section level2" number="4.6">
-<h2><span class="header-section-number">4.6</span> Chapter summary</h2>
+<div id="chapter-summary" class="section level2 hasAnchor" number="4.6">
+<h2><span class="header-section-number">4.6</span> Chapter summary<a href="causal-steps-confounding-and-causal-order.html#chapter-summary" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <blockquote>
 <p>Statistical mediation analysis has changed since the publication of Baron and Kenny <span class="citation">(<a href="#ref-baronModeratorMediatorVariable1986" role="doc-biblioref">1986</a>)</span>. The heyday of the causal steps “criteria to establish mediation” approach is over. Also disappearing in the 21 century is a concern about whether a process can be labeled as complete or partial mediation. Modern mediation analysis emphasizes an explicit estimation of the indirect effect, inferential tests of the indirect effect that don’t make unnecessary assumptions, and an acknowledgement that evidence of a statistically significant association between <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> is not necessary to talk about a model intervening variable process (in which case the concepts of complete and partial mediation simply don’t make sense). (p. 146)</p>
 </blockquote>
 <p>To this, I’ll just point out Hayes is speaking from a frequentist hypothesis-testing orientation. If you would like to dwell on significance tests, you certainty can. But particularly from within the Bayesian paradigm, you just don’t need to.</p>
 </div>
-<div id="session-info-3" class="section level2 unnumbered">
-<h2>Session info</h2>
-<div class="sourceCode" id="cb272"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb272-1"><a href="causal-steps-confounding-and-causal-order.html#cb272-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
-<pre><code>## R version 4.0.4 (2021-02-15)
+<div id="session-info-3" class="section level2 unnumbered hasAnchor">
+<h2>Session info<a href="causal-steps-confounding-and-causal-order.html#session-info-3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb275"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb275-1"><a href="causal-steps-confounding-and-causal-order.html#cb275-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div>
+<pre><code>## R version 4.2.2 (2022-10-31)
 ## Platform: x86_64-apple-darwin17.0 (64-bit)
-## Running under: macOS Catalina 10.15.7
+## Running under: macOS Big Sur ... 10.16
 ## 
 ## Matrix products: default
-## BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib
-## LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
 ## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
@@ -1077,43 +1077,44 @@ c_{cs}  &amp; = \frac{SD_X(c)}{SD_{Y}} = c&#39;_{cs} + ab_{ps},
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] ggdark_0.2.1    brms_2.15.0     Rcpp_1.0.6      forcats_0.5.1   stringr_1.4.0   dplyr_1.0.6    
-##  [7] purrr_0.3.4     readr_1.4.0     tidyr_1.1.3     tibble_3.1.2    ggplot2_3.3.5   tidyverse_1.3.1
+##  [1] ggdark_0.2.1    brms_2.18.0     Rcpp_1.0.9      forcats_0.5.1   stringr_1.4.1   dplyr_1.0.10   
+##  [7] purrr_1.0.1     readr_2.1.2     tidyr_1.2.1     tibble_3.1.8    ggplot2_3.4.0   tidyverse_1.3.2
 ## 
 ## loaded via a namespace (and not attached):
-##   [1] readxl_1.3.1         backports_1.2.1      plyr_1.8.6           igraph_1.2.6         splines_4.0.4       
-##   [6] crosstalk_1.1.0.1    TH.data_1.0-10       rstantools_2.1.1     inline_0.3.17        digest_0.6.27       
-##  [11] htmltools_0.5.1.1    rsconnect_0.8.16     fansi_0.4.2          magrittr_2.0.1       modelr_0.1.8        
-##  [16] RcppParallel_5.0.2   matrixStats_0.57.0   xts_0.12.1           sandwich_3.0-0       prettyunits_1.1.1   
-##  [21] colorspace_2.0-0     rvest_1.0.1          haven_2.3.1          xfun_0.23            callr_3.7.0         
-##  [26] crayon_1.4.1         jsonlite_1.7.2       lme4_1.1-25          survival_3.2-10      zoo_1.8-8           
-##  [31] glue_1.4.2           gtable_0.3.0         emmeans_1.5.2-1      V8_3.4.0             pkgbuild_1.2.0      
-##  [36] rstan_2.21.2         abind_1.4-5          scales_1.1.1         mvtnorm_1.1-1        DBI_1.1.0           
-##  [41] miniUI_0.1.1.1       viridisLite_0.4.0    xtable_1.8-4         tmvnsim_1.0-2        stats4_4.0.4        
-##  [46] StanHeaders_2.21.0-7 DT_0.16              htmlwidgets_1.5.3    httr_1.4.2           threejs_0.3.3       
-##  [51] ellipsis_0.3.2       farver_2.1.0         pkgconfig_2.0.3      loo_2.4.1            sass_0.3.1          
-##  [56] dbplyr_2.1.1         utf8_1.2.1           labeling_0.4.2       tidyselect_1.1.1     rlang_0.4.11        
-##  [61] reshape2_1.4.4       later_1.2.0          munsell_0.5.0        cellranger_1.1.0     tools_4.0.4         
-##  [66] cli_3.0.1            generics_0.1.0       broom_0.7.6          ggridges_0.5.3       evaluate_0.14       
-##  [71] fastmap_1.1.0        processx_3.5.2       knitr_1.33           fs_1.5.0             nlme_3.1-152        
-##  [76] mime_0.10            projpred_2.0.2       xml2_1.3.2           compiler_4.0.4       bayesplot_1.8.0     
-##  [81] shinythemes_1.1.2    rstudioapi_0.13      gamm4_0.2-6          curl_4.3             reprex_2.0.0        
-##  [86] statmod_1.4.35       bslib_0.2.4          stringi_1.6.2        highr_0.9            ps_1.6.0            
-##  [91] Brobdingnag_1.2-6    lattice_0.20-41      Matrix_1.3-2         psych_2.1.3          nloptr_1.2.2.2      
-##  [96] markdown_1.1         shinyjs_2.0.0        vctrs_0.3.8          pillar_1.6.1         lifecycle_1.0.0     
-## [101] jquerylib_0.1.4      bridgesampling_1.0-0 estimability_1.3     httpuv_1.6.0         R6_2.5.0            
-## [106] bookdown_0.22        promises_1.2.0.1     gridExtra_2.3        codetools_0.2-18     boot_1.3-26         
-## [111] colourpicker_1.1.0   MASS_7.3-53          gtools_3.8.2         assertthat_0.2.1     withr_2.4.2         
-## [116] shinystan_2.5.0      mnormt_2.0.2         multcomp_1.4-16      mgcv_1.8-33          parallel_4.0.4      
-## [121] hms_1.1.0            grid_4.0.4           coda_0.19-4          minqa_1.2.4          rmarkdown_2.8       
-## [126] shiny_1.6.0          lubridate_1.7.10     base64enc_0.1-3      dygraphs_1.1.1.6</code></pre>
+##   [1] readxl_1.4.1         backports_1.4.1      plyr_1.8.7           igraph_1.3.4         splines_4.2.2       
+##   [6] crosstalk_1.2.0      TH.data_1.1-1        rstantools_2.2.0     inline_0.3.19        digest_0.6.31       
+##  [11] htmltools_0.5.3      fansi_1.0.3          magrittr_2.0.3       checkmate_2.1.0      googlesheets4_1.0.1 
+##  [16] tzdb_0.3.0           modelr_0.1.8         RcppParallel_5.1.5   matrixStats_0.63.0   vroom_1.5.7         
+##  [21] xts_0.12.1           sandwich_3.0-2       prettyunits_1.1.1    colorspace_2.0-3     rvest_1.0.2         
+##  [26] haven_2.5.1          xfun_0.35            callr_3.7.3          crayon_1.5.2         jsonlite_1.8.4      
+##  [31] lme4_1.1-31          survival_3.4-0       zoo_1.8-10           glue_1.6.2           gtable_0.3.1        
+##  [36] gargle_1.2.0         emmeans_1.8.0        distributional_0.3.1 pkgbuild_1.3.1       rstan_2.21.8        
+##  [41] abind_1.4-5          scales_1.2.1         mvtnorm_1.1-3        DBI_1.1.3            miniUI_0.1.1.1      
+##  [46] viridisLite_0.4.1    xtable_1.8-4         bit_4.0.4            stats4_4.2.2         StanHeaders_2.21.0-7
+##  [51] DT_0.24              htmlwidgets_1.5.4    httr_1.4.4           threejs_0.3.3        posterior_1.3.1     
+##  [56] ellipsis_0.3.2       pkgconfig_2.0.3      loo_2.5.1            farver_2.1.1         sass_0.4.2          
+##  [61] dbplyr_2.2.1         utf8_1.2.2           labeling_0.4.2       tidyselect_1.2.0     rlang_1.0.6         
+##  [66] reshape2_1.4.4       later_1.3.0          munsell_0.5.0        cellranger_1.1.0     tools_4.2.2         
+##  [71] cachem_1.0.6         cli_3.6.0            generics_0.1.3       broom_1.0.2          evaluate_0.18       
+##  [76] fastmap_1.1.0        processx_3.8.0       knitr_1.40           bit64_4.0.5          fs_1.5.2            
+##  [81] nlme_3.1-160         projpred_2.2.1       mime_0.12            xml2_1.3.3           compiler_4.2.2      
+##  [86] bayesplot_1.10.0     shinythemes_1.2.0    rstudioapi_0.13      gamm4_0.2-6          reprex_2.0.2        
+##  [91] bslib_0.4.0          stringi_1.7.8        highr_0.9            ps_1.7.2             Brobdingnag_1.2-8   
+##  [96] lattice_0.20-45      Matrix_1.5-1         nloptr_2.0.3         psych_2.2.9          markdown_1.1        
+## [101] shinyjs_2.1.0        tensorA_0.36.2       vctrs_0.5.1          pillar_1.8.1         lifecycle_1.0.3     
+## [106] jquerylib_0.1.4      bridgesampling_1.1-2 estimability_1.4.1   httpuv_1.6.5         R6_2.5.1            
+## [111] bookdown_0.28        promises_1.2.0.1     gridExtra_2.3        codetools_0.2-18     boot_1.3-28         
+## [116] colourpicker_1.1.1   MASS_7.3-58.1        gtools_3.9.4         assertthat_0.2.1     withr_2.5.0         
+## [121] shinystan_2.6.0      mnormt_2.1.0         multcomp_1.4-20      mgcv_1.8-41          parallel_4.2.2      
+## [126] hms_1.1.1            grid_4.2.2           minqa_1.2.5          coda_0.19-4          rmarkdown_2.16      
+## [131] googledrive_2.0.0    shiny_1.7.2          lubridate_1.8.0      base64enc_0.1-3      dygraphs_1.1.1.6</code></pre>
 
 </div>
 </div>
-<h3>References</h3>
+<h3>References<a href="references.html#references" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
 <div id="ref-baronModeratorMediatorVariable1986" class="csl-entry">
-Baron, R. M., &amp; Kenny, D. A. (1986). The moderator<span></span>mediator variable distinction in social psychological research: <span>Conceptual</span>, strategic, and statistical considerations. <em>Journal of Personality and Social Psychology</em>, <em>51</em>(6), 1173–1182. <a href="https://doi.org/10.1037/0022-3514.51.6.1173">https://doi.org/10.1037/0022-3514.51.6.1173</a>
+Baron, R. M., &amp; Kenny, D. A. (1986). The moderatormediator variable distinction in social psychological research: <span>Conceptual</span>, strategic, and statistical considerations. <em>Journal of Personality and Social Psychology</em>, <em>51</em>(6), 1173–1182. <a href="https://doi.org/10.1037/0022-3514.51.6.1173">https://doi.org/10.1037/0022-3514.51.6.1173</a>
 </div>
 <div id="ref-R-viridis" class="csl-entry">
 Garnier, S. (2021). <em><span class="nocase">viridis</span>: <span>Default</span> color maps from ’matplotlib’</em> [Manual]. <a href="https://CRAN.R-project.org/package=viridis">https://CRAN.R-project.org/package=viridis</a>
@@ -1137,7 +1138,7 @@ Miočević, M., MacKinnon, D. P., &amp; Levy, R. (2017). Power in <span>Bayesian
 Preacher, K. J., &amp; Kelley, K. (2011). Effect size measures for mediation models: <span>Quantitative</span> strategies for communicating indirect effects. <em>Psychological Methods</em>, <em>16</em>(2), 93–115. <a href="https://doi.org/10.1037/a0022658">https://doi.org/10.1037/a0022658</a>
 </div>
 <div id="ref-R-MASS" class="csl-entry">
-Ripley, B. (2019). <em><span>MASS</span>: <span>Support</span> functions and datasets for venables and ripley’s <span>MASS</span></em>. <a href="https://CRAN.R-project.org/package=MASS">https://CRAN.R-project.org/package=MASS</a>
+Ripley, B. (2022). <em><span>MASS</span>: <span>Support</span> functions and datasets for venables and <span>Ripley</span>’s <span>MASS</span></em>. <a href="https://CRAN.R-project.org/package=MASS">https://CRAN.R-project.org/package=MASS</a>
 </div>
 </div>
             </section>
@@ -1150,7 +1151,6 @@ Ripley, B. (2019). <em><span>MASS</span>: <span>Support</span> functions and dat
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
 <script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
@@ -1190,6 +1190,10 @@ gitbook.start({
 "text": null
 },
 "download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
 "toc": {
 "collapse": "subsection"
 }
@@ -1203,7 +1207,7 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
     if (location.protocol !== "file:")
       if (/^https?:/.test(src))
         src = src.replace(/^https?:/, '');

@@ -1,4 +1,10 @@
 base
+methods
+datasets
+utils
+grDevices
+graphics
+stats
 tidyverse
 ggplot2
 tibble
@@ -10,5 +16,3 @@ stringr
 forcats
 Rcpp
 brms
-bindrcpp
-HDInterval

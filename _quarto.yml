@@ -1,0 +1,78 @@
+project:
+  type: book
+
+book:
+  title: "Recoding *Introduction to Mediation, Moderation, and Conditional Process Analysis*"
+  subtitle: "version 1.4.0"
+  author: "A. Solomon Kurz"
+  date: now
+  search: true
+  open-graph: true
+  site-url: https://solomon.quarto.pub/immcpa2/
+  repo-url: https://github.com/ASKurz/recoding-Hayes-2018
+  repo-actions: issue
+  chapters:
+    - index.qmd
+    - part: part_01.qmd
+      chapters:
+        - 01.qmd
+        - 02.qmd
+    - part: part_02.qmd
+      chapters:
+        - 03.qmd
+        - 04.qmd
+        - 05.qmd
+        - 06.qmd
+    - part: part_03.qmd
+      chapters:
+        - 07.qmd
+        - 08.qmd
+        - 09.qmd
+        - 10.qmd
+    - part: part_04.qmd
+      chapters:
+        - 11.qmd
+        - 12.qmd
+        - 13.qmd
+    - part: part_05.qmd
+      chapters:
+        - 14.qmd
+    - references.qmd
+
+toc: true
+toc-depth: 5
+
+bibliography: references_immcpa.bib  # bib.bib
+biblio-style: apalike
+csl: apa.csl
+link-citations: true
+
+format:
+  html:
+    theme: cosmo
+    code-copy: true
+    reference-location: margin # or block, section, document # footnotes to the margin, rather than default bottom ("document")
+    html-math-method: mathjax
+
+engine: knitr
+knitr:
+  opts_chunk:
+    R.options:
+      width: 130  # https://github.com/quarto-dev/quarto-cli/discussions/3934
+
+editor: source
+
+number-sections: true
+
+comments:
+  giscus:
+    repo: ASKurz/recoding-Hayes-2018
+
+highlight-style: github
+
+
+
+
+
+
+

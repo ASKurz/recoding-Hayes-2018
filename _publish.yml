@@ -1,0 +1,4 @@
+- source: project
+  quarto-pub:
+    - id: 3b3e93a5-2898-4255-a2b0-0c297b783539
+      url: https://solomon.quarto.pub/immcpa2

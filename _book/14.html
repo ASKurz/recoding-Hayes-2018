@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>14&nbsp; Miscellaneous Topics and Some Frequently Asked Questions – Recoding *Introduction to Mediation, Moderation, and Conditional Process Analysis*</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./references.html" rel="next">
+<link href="./part_05.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-234273d1456647dabc34a594ac50e507.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-7d082c015fa132ca880f975003d7bf2f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<meta property="og:title" content="14&nbsp; Miscellaneous Topics and Some Frequently Asked Questions – Recoding Introduction to Mediation, Moderation, and Conditional Process Analysis">
+<meta property="og:description" content="">
+<meta property="og:site_name" content="Recoding *Introduction to Mediation, Moderation, and Conditional Process Analysis*">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./part_05.html">PART V: MISCELLANEA</a></li><li class="breadcrumb-item"><a href="./14.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Miscellaneous Topics and Some Frequently Asked Questions</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Recoding <em>Introduction to Mediation, Moderation, and Conditional Process Analysis</em></a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/ASKurz/recoding-Hayes-2018" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./part_01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">PART I: FUNDAMENTALS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Fundamentals of Linear Regression</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./part_02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">PART II: MEDIATION ANALYSIS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">The Simple Mediation Model</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Causal Steps, Confounding, and Causal Order</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">More Than One Mediator</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Mediation Analysis with a Multicategorical Antecedent</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./part_03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">PART III: MODERATION ANALYSIS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Fundamentals of Moderation Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Extending the Fundamental Principles of Moderation Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Some Myths and Additional Extensions of Moderation Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Multicategorical Focal Antecedents and Moderators</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./part_04.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">PART IV: CONDITIONAL PROCESS ANALYSIS</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Fundamentals of Conditional Process Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Further Examples of Conditional Process Analysis</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Conditional Process Analysis with a Multicategorical Antecedent</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a href="./part_05.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">PART V: MISCELLANEA</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./14.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Miscellaneous Topics and Some Frequently Asked Questions</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#a-strategy-for-approaching-a-conditional-process-analysis" id="toc-a-strategy-for-approaching-a-conditional-process-analysis" class="nav-link active" data-scroll-target="#a-strategy-for-approaching-a-conditional-process-analysis"><span class="header-section-number">14.1</span> A strategy for approaching a conditional process analysis</a>
+  <ul>
+  <li><a href="#step-1-construct-your-conceptual-diagram-of-the-process" id="toc-step-1-construct-your-conceptual-diagram-of-the-process" class="nav-link" data-scroll-target="#step-1-construct-your-conceptual-diagram-of-the-process"><span class="header-section-number">14.1.1</span> Step 1: Construct your conceptual diagram of the process</a></li>
+  <li><a href="#step-2-translate-the-conceptual-model-into-a-statistical-model" id="toc-step-2-translate-the-conceptual-model-into-a-statistical-model" class="nav-link" data-scroll-target="#step-2-translate-the-conceptual-model-into-a-statistical-model"><span class="header-section-number">14.1.2</span> Step 2: Translate the conceptual model into a statistical model</a></li>
+  <li><a href="#step-3-estimate-the-statistical-model" id="toc-step-3-estimate-the-statistical-model" class="nav-link" data-scroll-target="#step-3-estimate-the-statistical-model"><span class="header-section-number">14.1.3</span> Step 3: Estimate the statistical model</a></li>
+  <li><a href="#step-4-determine-whether-expected-moderation-exists" id="toc-step-4-determine-whether-expected-moderation-exists" class="nav-link" data-scroll-target="#step-4-determine-whether-expected-moderation-exists"><span class="header-section-number">14.1.4</span> Step 4: Determine whether expected moderation exists</a>
+  <ul>
+  <li><a href="#step-4a" id="toc-step-4a" class="nav-link" data-scroll-target="#step-4a"><span class="header-section-number">14.1.4.1</span> Step 4A</a></li>
+  </ul></li>
+  <li><a href="#step-5-probe-and-interpret-interactions-involving-components-of-the-indirect-effect" id="toc-step-5-probe-and-interpret-interactions-involving-components-of-the-indirect-effect" class="nav-link" data-scroll-target="#step-5-probe-and-interpret-interactions-involving-components-of-the-indirect-effect"><span class="header-section-number">14.1.5</span> Step 5: Probe and interpret interactions involving components of the indirect effect</a></li>
+  <li><a href="#step-6-quantify-and-test-conditional-indirect-effects-if-relevant" id="toc-step-6-quantify-and-test-conditional-indirect-effects-if-relevant" class="nav-link" data-scroll-target="#step-6-quantify-and-test-conditional-indirect-effects-if-relevant"><span class="header-section-number">14.1.6</span> Step 6: Quantify and test conditional indirect effects (if relevant)</a></li>
+  <li><a href="#step-7-quantify-and-test-conditional-direct-effects-if-relevant" id="toc-step-7-quantify-and-test-conditional-direct-effects-if-relevant" class="nav-link" data-scroll-target="#step-7-quantify-and-test-conditional-direct-effects-if-relevant"><span class="header-section-number">14.1.7</span> Step 7: Quantify and test conditional direct effects (if relevant)</a></li>
+  <li><a href="#step-8-tell-your-story" id="toc-step-8-tell-your-story" class="nav-link" data-scroll-target="#step-8-tell-your-story"><span class="header-section-number">14.1.8</span> Step 8: Tell your story</a></li>
+  </ul></li>
+  <li><a href="#how-do-i-write-about-this" id="toc-how-do-i-write-about-this" class="nav-link" data-scroll-target="#how-do-i-write-about-this"><span class="header-section-number">14.2</span> How do I write about this?</a>
+  <ul>
+  <li><a href="#reporting-a-mediation-analysis" id="toc-reporting-a-mediation-analysis" class="nav-link" data-scroll-target="#reporting-a-mediation-analysis"><span class="header-section-number">14.2.1</span> Reporting a mediation analysis</a></li>
+  <li><a href="#reporting-a-moderation-analysis" id="toc-reporting-a-moderation-analysis" class="nav-link" data-scroll-target="#reporting-a-moderation-analysis"><span class="header-section-number">14.2.2</span> Reporting a moderation analysis</a></li>
+  <li><a href="#reporting-a-conditional-process-analysis" id="toc-reporting-a-conditional-process-analysis" class="nav-link" data-scroll-target="#reporting-a-conditional-process-analysis"><span class="header-section-number">14.2.3</span> Reporting a conditional process analysis</a></li>
+  </ul></li>
+  <li><a href="#should-i-use-structural-equation-modeling-instead-of-regression-analysis" id="toc-should-i-use-structural-equation-modeling-instead-of-regression-analysis" class="nav-link" data-scroll-target="#should-i-use-structural-equation-modeling-instead-of-regression-analysis"><span class="header-section-number">14.3</span> Should I use structural equation modeling instead of regression analysis?</a></li>
+  <li><a href="#the-pitfalls-of-subgroups-analysis" id="toc-the-pitfalls-of-subgroups-analysis" class="nav-link" data-scroll-target="#the-pitfalls-of-subgroups-analysis"><span class="header-section-number">14.4</span> The pitfalls of subgroups analysis</a></li>
+  <li><a href="#can-a-variable-simultaneously-mediate-and-moderate-another-variables-effect" id="toc-can-a-variable-simultaneously-mediate-and-moderate-another-variables-effect" class="nav-link" data-scroll-target="#can-a-variable-simultaneously-mediate-and-moderate-another-variables-effect"><span class="header-section-number">14.5</span> Can a variable simultaneously mediate and moderate another variable’s effect?</a></li>
+  <li><a href="#interaction-between-x-and-m-in-mediation-analysis" id="toc-interaction-between-x-and-m-in-mediation-analysis" class="nav-link" data-scroll-target="#interaction-between-x-and-m-in-mediation-analysis"><span class="header-section-number">14.6</span> Interaction between <span class="math inline">\(X\)</span> and <span class="math inline">\(M\)</span> in mediation analysis?</a></li>
+  <li><a href="#repeated-measures-designs" id="toc-repeated-measures-designs" class="nav-link" data-scroll-target="#repeated-measures-designs"><span class="header-section-number">14.7</span> Repeated measures designs</a></li>
+  <li><a href="#dichotomous-ordinal-count-and-survival-outcomes" id="toc-dichotomous-ordinal-count-and-survival-outcomes" class="nav-link" data-scroll-target="#dichotomous-ordinal-count-and-survival-outcomes"><span class="header-section-number">14.8</span> Dichotomous, ordinal, count, and survival outcomes</a></li>
+  <li><a href="#session-info" id="toc-session-info" class="nav-link" data-scroll-target="#session-info">Session info</a></li>
+  <li><a href="#comments" id="toc-comments" class="nav-link" data-scroll-target="#comments">Comments</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/ASKurz/recoding-Hayes-2018/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./part_05.html">PART V: MISCELLANEA</a></li><li class="breadcrumb-item"><a href="./14.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Miscellaneous Topics and Some Frequently Asked Questions</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Miscellaneous Topics and Some Frequently Asked Questions</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<blockquote class="blockquote">
+<p>The vast majority of scientists would probably argue that when push comes to shove, the theoretical horse should pull the statistical cart. Statistical methods are mathematical tools, some of them quite amazing in what they do, which can help us to discern order amid the apparent chaos in a batch of data. But ultimately, the stories that statistical methods help us tell are told by our brains, not by the mathematics, and our brains are good at making sense of things–of coming up with stories to explain what we perceive. The problem is that the same pattern of results can be interpreted in many different ways, especially if the pattern is found after an extensive round of exploratory data analysis. Without a theoretical orientation to guide our attempts at making sense of our data or, better still, to guide our research design and data collection efforts, our awesome storytelling ability can lead us astray by invoking explanations for findings that may sound good but that are mere conjecture even if we can find a theoretical hook on which to hang them post hoc.</p>
+<p>I won’t argue against this perspective, as I believe it is for the most part right on the money. But I also believe that statistical methods can play an important role in theory development as well–that the statistical cart need not always, should not always, and often does not follow the theoretical horse. When we learn something new analytically, this can change the way we think of things theoretically and how we then go about testing the ideas that our newfound awareness of an analytical method inspired <span class="citation" data-cites="hayesSAGESourcebookAdvanced2008">(cf. <a href="references.html#ref-hayesSAGESourcebookAdvanced2008" role="doc-biblioref">Andrew F. Hayes et al., 2008, p. 2</a>)</span>. <span class="citation" data-cites="hayesIntroductionMediationModeration2018">(<a href="references.html#ref-hayesIntroductionMediationModeration2018" role="doc-biblioref">Andrew F. Hayes, 2018, pp. 507–508</a>)</span></p>
+</blockquote>
+<section id="a-strategy-for-approaching-a-conditional-process-analysis" class="level2" data-number="14.1">
+<h2 data-number="14.1" class="anchored" data-anchor-id="a-strategy-for-approaching-a-conditional-process-analysis"><span class="header-section-number">14.1</span> A strategy for approaching a conditional process analysis</h2>
+<blockquote class="blockquote">
+<p>Things don’t always turn out as we expected and articulated in hypotheses 1, 2, and 3. And sometimes after looking at the data, our thinking about the process at work changes and new hypotheses come to mind that are worth testing. Scientists routinely switch back and forth between the context of justification and the context of discovery, testing hypotheses conceived before the data were analyzed while also exploring one’s data to see what else can be learned from patterns observed but not anticipated.</p>
+</blockquote>
+<p>In the next paragraph, we see Hayes anticipated criticism at this paragraph and some of the subsections to follow. My two cents are that problems arise when we approach statistics from a <span class="math inline">\(p\)</span>-value-based hypothesis-testing perspective, when we pose exploratory research as confirmatory, when we engage in closed science practices, and when we only present the analyses that “worked.” For some engaging thoughts on iterative Bayesian workflows, you might check out Navarro’s <span class="citation" data-cites="navarroPaths2020">(<a href="references.html#ref-navarroPaths2020" role="doc-biblioref">2020</a>)</span> paper, <a href="https://psyarxiv.com/wxn58/"><em>Paths in strange spaces</em></a>.</p>
+<section id="step-1-construct-your-conceptual-diagram-of-the-process" class="level3" data-number="14.1.1">
+<h3 data-number="14.1.1" class="anchored" data-anchor-id="step-1-construct-your-conceptual-diagram-of-the-process"><span class="header-section-number">14.1.1</span> Step 1: Construct your conceptual diagram of the process</h3>
+<p>Build up your model slowly and with the aid of visuals.</p>
+</section>
+<section id="step-2-translate-the-conceptual-model-into-a-statistical-model" class="level3" data-number="14.1.2">
+<h3 data-number="14.1.2" class="anchored" data-anchor-id="step-2-translate-the-conceptual-model-into-a-statistical-model"><span class="header-section-number">14.1.2</span> Step 2: Translate the conceptual model into a statistical model</h3>
+<blockquote class="blockquote">
+<p>We don’t estimate the conceptual model. [Presuming mediation,] a conceptual model must be translated into a statistical model in the form of at least two equations, depending on the number of proposed mediators in the model. With an understanding of the principles of moderation and mediation analysis described in this book, you should be able to do this without too much difficulty. (p.&nbsp;510)</p>
+</blockquote>
+</section>
+<section id="step-3-estimate-the-statistical-model" class="level3" data-number="14.1.3">
+<h3 data-number="14.1.3" class="anchored" data-anchor-id="step-3-estimate-the-statistical-model"><span class="header-section-number">14.1.3</span> Step 3: Estimate the statistical model</h3>
+<p>Hayes used OLS-based procedures throughout the text. We have been using Bayesian software. Though I prefer <strong>brms</strong>, you might also check out <a href="https://ecmerkle.github.io/blavaan/"><strong>blavaan</strong></a> or <a href="https://mc-stan.org/users/interfaces/rstanarm"><strong>rstanarm</strong></a>. As a group, these will allow you to fit many more kinds of regression models than available through the OLS paradigm.</p>
+</section>
+<section id="step-4-determine-whether-expected-moderation-exists" class="level3" data-number="14.1.4">
+<h3 data-number="14.1.4" class="anchored" data-anchor-id="step-4-determine-whether-expected-moderation-exists"><span class="header-section-number">14.1.4</span> Step 4: Determine whether expected moderation exists</h3>
+<p>I’m not a fan of this “whether [x] exists” talk. First, it seems way to black and white. For more thoughts along those lines, check out Gelman’s <span class="citation" data-cites="gelmanConnectionVaryingTreatment2015">(<a href="references.html#ref-gelmanConnectionVaryingTreatment2015" role="doc-biblioref">2015</a>)</span> paper, <a href="http://www.stat.columbia.edu/~gelman/research/published/bayes_management.pdf"><em>The connection between varying treatment effects and the crisis of unreplicable research: A Bayesian perspective</em></a>. Second, it places too much faith in the analysis of a single data set. For more on those lines, consider what Hayes wrote in the middle of this subsection:</p>
+<blockquote class="blockquote">
+<p>Just because an interaction is not significant, that doesn’t mean your proposed moderator does not moderate the path you proposed it moderates. Parsimony might dictate that your model should be cleansed of this interaction, but null hypotheses tests are fallible, and sometimes real effects are so weak that we don’t have the power to detect them given the limitations of our resources or other things out of our control. (p.&nbsp;511)</p>
+</blockquote>
+<p>This is all posed in the language of NHST, but the basic points still hold for other paradigms. If you have a theory-informed model, I recommend showing the results for that model regardless of the sizes of the parameters.</p>
+<p>I have concerns about the next subsection.</p>
+<section id="step-4a" class="level4" data-number="14.1.4.1">
+<h4 data-number="14.1.4.1" class="anchored" data-anchor-id="step-4a"><span class="header-section-number">14.1.4.1</span> Step 4A</h4>
+<blockquote class="blockquote">
+<p>If you have decided to prune your model of nonsignificant interactions, then go back to step 1 and start fresh by redrawing your conceptual diagram in light of the evidence you now have and proceed through these steps again. A certain moral or ethical logic might dictate that you not pretend when describing your analysis that this is where you started in the first place. Yet Bem <span class="citation" data-cites="bemWritingEmpiricalJournal1987">(<a href="references.html#ref-bemWritingEmpiricalJournal1987" role="doc-biblioref">1987</a>)</span> makes the argument that spending lots of time talking about ideas that turned out to be “wrongheaded” isn’t going to produce a particularly interesting paper. You’ll have to sort out for yourself where you stand on this continuum of scientific ethics. (p.&nbsp;512)</p>
+</blockquote>
+<p>Hayes is quite right: “<em>You’ll have to sort out for yourself where you stand on this continuum of scientific ethics</em>.” At this point in the social-psychology replication crisis–a crisis of which Bem’s shoddy work has played no small part <span class="citation" data-cites="nelsonPsychologyRenaissance2018 yongReplicationStudiesBad2012 earpReplicationFalsificationCrisis2015 pashlerEditorsIntroductionSpecial2012 galakCorrectingFailuresReplicate2012">(<a href="references.html#ref-earpReplicationFalsificationCrisis2015" role="doc-biblioref">Earp &amp; Trafimow, 2015</a>; <a href="references.html#ref-galakCorrectingFailuresReplicate2012" role="doc-biblioref">Galak et al., 2012</a>; see <a href="references.html#ref-nelsonPsychologyRenaissance2018" role="doc-biblioref">Nelson et al., 2018</a>; <a href="references.html#ref-pashlerEditorsIntroductionSpecial2012" role="doc-biblioref">Pashler &amp; Wagenmakers, 2012</a>; <a href="references.html#ref-yongReplicationStudiesBad2012" role="doc-biblioref">Yong, 2012</a>)</span>–, it’s shocking to read Hayes endorsing this advice.</p>
+<p>At a bare minimum, I recommend presenting your failed theory-based models in supplemental materials. You can upload them to the Open Science Framework at <a href="https://osf.io/">https://osf.io/</a> for free.</p>
+</section>
+</section>
+<section id="step-5-probe-and-interpret-interactions-involving-components-of-the-indirect-effect" class="level3" data-number="14.1.5">
+<h3 data-number="14.1.5" class="anchored" data-anchor-id="step-5-probe-and-interpret-interactions-involving-components-of-the-indirect-effect"><span class="header-section-number">14.1.5</span> Step 5: Probe and interpret interactions involving components of the indirect effect</h3>
+<blockquote class="blockquote">
+<p>At this stage, probe any interactions involving components of the indirect effect of <span class="math inline">\(X\)</span> so that you will have some understanding of the contingencies of the various effects that are the components of the larger conditional process model you are estimating. This exercise will help inform and clarify your interpretation of the conditional indirect effect(s) of <span class="math inline">\(X\)</span> later on. (p.&nbsp;512)</p>
+</blockquote>
+</section>
+<section id="step-6-quantify-and-test-conditional-indirect-effects-if-relevant" class="level3" data-number="14.1.6">
+<h3 data-number="14.1.6" class="anchored" data-anchor-id="step-6-quantify-and-test-conditional-indirect-effects-if-relevant"><span class="header-section-number">14.1.6</span> Step 6: Quantify and test conditional indirect effects (if relevant)</h3>
+<p>Within the paradigm I have introduces throughout this text, “testing” effects is never relevant. However, one can and should think in terms of the magnitudes of the parameters in the model. Think in terms of effect sizes. For a frequentist introduction to effect-size thinking, Geoff Cumming’s work is a fine place to start, such as his <span class="citation" data-cites="cummingNewStatisticsWhy2014">(<a href="references.html#ref-cummingNewStatisticsWhy2014" role="doc-biblioref">2014</a>)</span> article, <a href="https://journals.sagepub.com/doi/pdf/10.1177/0956797613504966"><em>The new statistics: Why and how</em></a>. For a Bayesian alternative, check out Kruschke and Liddell’s <span class="citation" data-cites="kruschkeBayesianNewStatistics2018">(<a href="references.html#ref-kruschkeBayesianNewStatistics2018" role="doc-biblioref">2018</a>)</span> article, <a href="https://doi.org/10.3758/s13423-016-1221-4"><em>The Bayesian New Statistics: Hypothesis testing, estimation, meta-analysis, and power analysis from a Bayesian perspective</em></a>.</p>
+</section>
+<section id="step-7-quantify-and-test-conditional-direct-effects-if-relevant" class="level3" data-number="14.1.7">
+<h3 data-number="14.1.7" class="anchored" data-anchor-id="step-7-quantify-and-test-conditional-direct-effects-if-relevant"><span class="header-section-number">14.1.7</span> Step 7: Quantify and test conditional direct effects (if relevant)</h3>
+<p>“If your model includes moderation of the direct effect of <span class="math inline">\(X\)</span>, you will want to probe this interaction by estimating the conditional direct effects” (p.&nbsp;513).</p>
+</section>
+<section id="step-8-tell-your-story" class="level3" data-number="14.1.8">
+<h3 data-number="14.1.8" class="anchored" data-anchor-id="step-8-tell-your-story"><span class="header-section-number">14.1.8</span> Step 8: Tell your story</h3>
+<blockquote class="blockquote">
+<p>Real science does not proceed in the manner described in re- search methods and statistics textbooks. Rather, we routinely straddle the fence between the hypothetico-deductive approach and a more discovery-oriented or inquisitive mindset that is open to any story the data may inform. Sometimes the story we originally conceived prior to data analysis is simply wrong and we know it after analyzing the data. No one wants to read (as Daryl Bem once put it rather bluntly) “a personal history about your stillborn thoughts” (Bem, 1987, p.&nbsp;173). Sometimes our data speak to us in ways that change the story we thought we were going to tell into something much more interesting, and hopefully more accurate. (p.&nbsp;514)</p>
+</blockquote>
+<p>I largely agree, though I still recommend against following Bem’s recommendations. Yes, we need to present out work compellingly. But do resist the urge to un-transparently reinvent your research hypotheses for the sake of flashy rhetoric. If you have evidence against one of the theoretical models in your field, let them know! For an example of scientists embracing the failure of theory, check out Klein and colleagues’ <span class="citation" data-cites="kleinManyLabsFailure2019">(<a href="references.html#ref-kleinManyLabsFailure2019" role="doc-biblioref">2019</a>)</span> <a href="https://psyarxiv.com/vef2c"><em>Many Labs 4: Failure to replicate mortality salience effect with and without original author involvement</em></a>.</p>
+<blockquote class="blockquote">
+<p>Of course, there is always the danger of capitalizing on chance when you let your explorations of the data influence the story you tell. We are great at explaining patterns we see. Our brains are wired to do it. So replication is important, and it may be the only way of establishing the generality of our findings and claims in the end. (p.&nbsp;514)</p>
+</blockquote>
+<p>Yes indeed. So please stop following the poor examples of Bem and others. Present your research honestly and transparently.</p>
+</section>
+</section>
+<section id="how-do-i-write-about-this" class="level2" data-number="14.2">
+<h2 data-number="14.2" class="anchored" data-anchor-id="how-do-i-write-about-this"><span class="header-section-number">14.2</span> How do I write about this?</h2>
+<blockquote class="blockquote">
+<p>I have become convinced that the ability to communicate in writing is at least as if not more important than the ability to manipulate numbers and think in abstractions. You don’t have to be a good data analyst to be a good scientist, but your future on the front lines of science is limited if you can’t write effectively. (p.&nbsp;515)</p>
+</blockquote>
+<p>Agreed.</p>
+<p>On page 518, Hayes gave an example of how to write up the results of a mediation analysis in a narrative style. Here’s a more Bayesian version:</p>
+<blockquote class="blockquote">
+<p>From a simple [Bayesian] mediation analysis conducted using [Hamiltonian Monte Carlo], article location indirectly influenced intentions to buy sugar through its effect on beliefs about how others would be influenced. As can be seen in Figure 3.3 and Table 3.2, participants told that the article would be published on the front page believed others would be more influenced to buy sugar than those told that the article would appear in an economic supplement (<span class="math inline">\(a\)</span> = 0.477[, 95% CI [0.277, 0.677]]), and participants who believed others would be more influenced by the story expressed a stronger intention to go buy sugar themselves (<span class="math inline">\(b\)</span> = 0.506[, 95% CI [0.306, 0.706]]). [The credible interval] for the indirect effect (<span class="math inline">\(ab\)</span> = 0.241) <del>based on 5,000 bootstrap samples</del> was entirely above zero (0.007 to 0.526). [The evidence suggested] that article location [had little influence on] intention to buy sugar independent of its effect on presumed media influence (<span class="math inline">\(c'\)</span> = 0.254[, 95% CI [-0.154, 0.554]]).</p>
+</blockquote>
+<p>In addition to throwing in talk about Bayes, I added 95% credible interval information for all point estimates (i.e., posterior means or medians) and shifted the language away from a dichotomous NHST style to emphasize the magnitude and uncertainty of the conditional direct effect (<span class="math inline">\(c'\)</span>). A little further down we read:</p>
+<blockquote class="blockquote">
+<p>Third, throughout this book, I emphasize estimation and interpretation of effects in their unstandardized metric, and I report unstandardized effects when I report the results in my own research. There is a widespread belief that standardized effects are best reported, because the measurement scales used in most sciences are arbitrary and not inherently meaningful, or that standardized effects are more comparable across studies or investigators using different methods. But standardization simply changes one arbitrary measurement scale into another arbitrary scale, and because standardized effects are scaled in terms of variability in the sample, they are not comparable across studies conducted by different investigators regardless of whether the same measurement scales are used. (p.&nbsp;519)</p>
+</blockquote>
+<p>To my mind, this leads directly to thoughts about effect sizes. I recommend you ponder long and hard on how to interpret your results in terms of effect sizes. If your research is anything like mine, it’s not always clear what the best approach might be. To get your juices flowing, you might check out Kelley and Preacher’s <span class="citation" data-cites="kelley2012effect">(<a href="references.html#ref-kelley2012effect" role="doc-biblioref">2012</a>)</span> <a href="https://www.researchgate.net/profile/Ken_Kelley/publication/270757972_On_Effect_Size/links/0046351b0cd48217ce000000/On-Effect-Size.pdf"><em>On effect size</em></a>.</p>
+<section id="reporting-a-mediation-analysis" class="level3" data-number="14.2.1">
+<h3 data-number="14.2.1" class="anchored" data-anchor-id="reporting-a-mediation-analysis"><span class="header-section-number">14.2.1</span> Reporting a mediation analysis</h3>
+<blockquote class="blockquote">
+<p>Mediation is a causal phenomenon. You will find some people skeptical of the use of mediation analysis in studies based on data that are purely correlational in nature and involve no experimental manipulation or measurement over time. Some people are quite fanatical about this, and if you are unlucky enough to get such an extreme reviewer when trying to publish your work, there may not be much you can to do to convince him or her otherwise. (p.&nbsp;520)</p>
+</blockquote>
+<p>In recent years, I’ve shifted more and more in the direction of the ‘fanatics.’ That might seem odd given I’ve poured all this time and effort into translating a book highlighting and endorsing cross-sectional mediation. I think cross-sectional mediation is a fine teaching tool; it’s a good place for budding data analysts to start. But please do not stop there. Do not stop with this book. Mediation is causal process and causal processes are necessarily longitudinal. A fine place to dip your toes into those waters are the works of Maxwell, Cole, and Mitchell <span class="citation" data-cites="maxwellBiasCrosssectionalAnalyses2007 maxwellBiasCrosssectionalAnalyses2011 mitchellComparisonCrosssectionalSequential2013">(<a href="references.html#ref-maxwellBiasCrosssectionalAnalyses2011" role="doc-biblioref">Maxwell et al., 2011</a>; e.g., <a href="references.html#ref-maxwellBiasCrosssectionalAnalyses2007" role="doc-biblioref">Maxwell &amp; Cole, 2007</a>; <a href="references.html#ref-mitchellComparisonCrosssectionalSequential2013" role="doc-biblioref">Mitchell &amp; Maxwell, 2013</a>)</span>.</p>
+</section>
+<section id="reporting-a-moderation-analysis" class="level3" data-number="14.2.2">
+<h3 data-number="14.2.2" class="anchored" data-anchor-id="reporting-a-moderation-analysis"><span class="header-section-number">14.2.2</span> Reporting a moderation analysis</h3>
+<blockquote class="blockquote">
+<p>Some of the more interesting studies you will find show that what is commonly assumed turns out to be true only sometimes, or that a well-known manipulation only works for some types of people. When writing about moderation, you have the opportunity to tell the scientific world that things aren’t as simple as perhaps they have seemed or been assumed to be, and that there are conditions that must be placed on our understanding of the world. (p.&nbsp;522)</p>
+</blockquote>
+<p>I don’t care for the NHST framing in many of the paragraphs to follow. If you find it a struggle to move beyond this way of thinking, I recommend soaking in Gelman’s <span class="citation" data-cites="gelmanConnectionVaryingTreatment2015">(<a href="references.html#ref-gelmanConnectionVaryingTreatment2015" role="doc-biblioref">2015</a>)</span> editorial commentary, <a href="https://doi.org/10.1177/0149206314525208"><em>The connection between varying treatment effects and the crisis of unreplicable research: A Bayesian perspective</em></a>. Later we read:</p>
+<blockquote class="blockquote">
+<p>The interpretation of the regression coefficients for <span class="math inline">\(X\)</span> and <span class="math inline">\(W\)</span> in a model that includes <span class="math inline">\(XW\)</span> are highly dependent on the scaling of <span class="math inline">\(X\)</span> and <span class="math inline">\(W\)</span>. If you have centered a variable, say so. If one or both of these variables is dichotomous, tell the reader what numerical codes were used to represent the two groups. Preferably, choose codes for the two groups that differ by one unit. The more information you give to the reader about how your variables are scaled or coded, the more the reader will be able to look at your results in the text, tables, or figures, discern their meaning, and interpret them correctly. (0. 524)</p>
+</blockquote>
+<p>Agreed. And if you’re working under tight word-limit constraints, just give all these details–and others such as centering, standardizing, priors, formal model formulas, HMC chain diagnostic checks, posterior-predictive checks–in supplemental material posted to a stable online repository, such as the <a href="https://osf.io/">Open Science Framework</a>.</p>
+<p>Other than that, <em>please consider plotting your interactions</em>. Hayes gave some examples of that in the text, but I think his approach was inadequate. Include measures of uncertainty (e.g., 95% credible intervals) in your visualizations. For examples of this beyond those I reported in this text, check out this nice <span class="citation" data-cites="mccabe2018improving">(<a href="references.html#ref-mccabe2018improving" role="doc-biblioref">2018</a>)</span> <a href="https://www.researchgate.net/profile/Kevin_King3/publication/324067902_Improving_Present_Practices_in_the_Visual_Display_of_Interactions/links/5abbd8f30f7e9bfc045595d8/Improving-Present-Practices-in-the-Visual-Display-of-Interactions.pdf">tutorial</a> by McCabe, Kim, and King. For visualization ideas specific to the <strong>brms</strong>-<strong>tidybayes</strong> framework, check out Kay’s <span class="citation" data-cites="kayExtractingVisualizingTidy2021">(<a href="references.html#ref-kayExtractingVisualizingTidy2021" role="doc-biblioref">2021</a>)</span> <a href="https://mjskay.github.io/tidybayes/articles/tidy-brms.html"><em>Extracting and visualizing tidy draws from brms models</em></a>.</p>
+</section>
+<section id="reporting-a-conditional-process-analysis" class="level3" data-number="14.2.3">
+<h3 data-number="14.2.3" class="anchored" data-anchor-id="reporting-a-conditional-process-analysis"><span class="header-section-number">14.2.3</span> Reporting a conditional process analysis</h3>
+<blockquote class="blockquote">
+<p>One of the challenges you are likely to face when writing about a conditional process analysis is staying within the page allowance that most journal editors provide. A well-written analysis will usually contain multiple tables, perhaps a figure or two to depict the conceptual model and perhaps an interaction or two, and enough text to describe what was found in substantive terms while also providing sufficient detail about the analysis for the reader to understand what was done. Many reviewers, editors, and readers will not be familiar with this approach and may need to be educated within the text, further lengthening the manuscript. Yet I am also amazed how much I am able to cut from my own writing with sufficient editing, so don’t be wedded to every word you write, and don’t be afraid to delete that sentence or two you spent much time pondering, crafting, and fine-tuning but that upon third or fourth reading really isn’t necessary to convey what needs to be conveyed.</p>
+<p>That said, I would err on the side of presenting more information rather than less whenever space allows it. (p.&nbsp;526)</p>
+</blockquote>
+<p>As recommended just above, you can also cover all this with online supplemental material posted to a stable online repository, such as the <a href="https://osf.io/">Open Science Framework</a>. I can’t recommend this enough.</p>
+</section>
+</section>
+<section id="should-i-use-structural-equation-modeling-instead-of-regression-analysis" class="level2" data-number="14.3">
+<h2 data-number="14.3" class="anchored" data-anchor-id="should-i-use-structural-equation-modeling-instead-of-regression-analysis"><span class="header-section-number">14.3</span> Should I use structural equation modeling instead of regression analysis?</h2>
+<p>First to clarify, one can do structural equation modeling (SEM) as a Bayesian. At the time of this writing, <strong>brms</strong> is only capable of limited forms of SEM. In fact, all the multivariate models we have fit this far can be thought of as special cases of Bayesian SEM (see <a href="https://www.imachordata.com/2017/12/21/bayesian-sem-with-brms/">here</a>). However, it appears <strong>brms</strong> will offer expanded SEM capabilities sometime in the future. To keep up with the Bürkner’s progress, you might intermittently check in to <a href="https://github.com/paul-buerkner/brms/issues/303">issue #303</a> on the <strong>brms</strong> GitHub page. And of course, you can always check out the <a href="https://ecmerkle.github.io/blavaan/"><strong>blavaan</strong> package</a>.</p>
+</section>
+<section id="the-pitfalls-of-subgroups-analysis" class="level2" data-number="14.4">
+<h2 data-number="14.4" class="anchored" data-anchor-id="the-pitfalls-of-subgroups-analysis"><span class="header-section-number">14.4</span> The pitfalls of subgroups analysis</h2>
+<p>If at all possible, just don’t do this. Hayes covered the following reasons why:</p>
+<ul>
+<li>“First, the subgroups approach may not accurately reflect the process purportedly at work” (p.&nbsp;531).</li>
+<li>“Second, a direct or indirect effect may be descriptively different in the two groups but may not actually be different when subjected to a formal statistical test of differences” (pp.&nbsp;531–532). For more on this point, check out Gelman and Stern’s <span class="citation" data-cites="gelman2006difference">(<a href="references.html#ref-gelman2006difference" role="doc-biblioref">2006</a>)</span> <a href="https://doi.org/10.1198/000313006X152649"><em>The difference between “significant” and “not significant” is not itself statistically significant</em></a>.</li>
+<li>“Third, the subgroups approach conflates statistical significance with sample size” (p.&nbsp;532).</li>
+<li>“Finally, this approach requires that the proposed moderator be categorical” (p.&nbsp;532).</li>
+</ul>
+</section>
+<section id="can-a-variable-simultaneously-mediate-and-moderate-another-variables-effect" class="level2" data-number="14.5">
+<h2 data-number="14.5" class="anchored" data-anchor-id="can-a-variable-simultaneously-mediate-and-moderate-another-variables-effect"><span class="header-section-number">14.5</span> Can a variable simultaneously mediate and moderate another variable’s effect?</h2>
+<p>“Just because something is mathematically possible doesn’t mean that it is sensible theoretically or substantively interpretable when it happens” (p.&nbsp;540).</p>
+<p>I suspect part of this issue has to do with confusion around the longitudinal nature of mediation al processes and a confounding of state versus trait (i.e., within- and between-case variation). See the Cole, Maxwell and Mitchell papers referenced, above, to start thinking about mediation within the context of longitudinal data. The issue of within- versus between-case variation is huge and IMO under-appreciated in the mediation literature. If you’re ready to blow your mind a little, I can think of no better place to start learning about this than Ellen Hamaker’s engaging <span class="citation" data-cites="hamakerWhyResearchersShould2012">(<a href="references.html#ref-hamakerWhyResearchersShould2012" role="doc-biblioref">2012</a>)</span> chapter, <a href="https://www.researchgate.net/publication/266896375_Why_researchers_should_think_within-person_A_paradigmatic_rationale"><em>Why researchers should think “within-person”: A paradigmatic rationale</em></a>.</p>
+</section>
+<section id="interaction-between-x-and-m-in-mediation-analysis" class="level2" data-number="14.6">
+<h2 data-number="14.6" class="anchored" data-anchor-id="interaction-between-x-and-m-in-mediation-analysis"><span class="header-section-number">14.6</span> Interaction between <span class="math inline">\(X\)</span> and <span class="math inline">\(M\)</span> in mediation analysis?</h2>
+<blockquote class="blockquote">
+<p>The mathematics of this approach relies on the counterfactual or potential outcomes approach to causal analysis that is popular in statistics, less widely known in the social science research community, and, to many, a little harder to digest. For discussions of this approach, see Imai, Keele, and Tingley <span class="citation" data-cites="imaiGeneralApproachCausal2010">(<a href="references.html#ref-imaiGeneralApproachCausal2010" role="doc-biblioref">2010</a>)</span>, Muthé́n and Asparouhov <span class="citation" data-cites="muthenCausalEffectsMediation2015">(<a href="references.html#ref-muthenCausalEffectsMediation2015" role="doc-biblioref">2015</a>)</span>, Valeri and VanderWeele <span class="citation" data-cites="valeri2013mediation">(<a href="references.html#ref-valeri2013mediation" role="doc-biblioref">2013</a>)</span>, and VanderWeele <span class="citation" data-cites="vanderweeleExplanationCausalInference2015">(<a href="references.html#ref-vanderweeleExplanationCausalInference2015" role="doc-biblioref">2015</a>)</span>.</p>
+</blockquote>
+</section>
+<section id="repeated-measures-designs" class="level2" data-number="14.7">
+<h2 data-number="14.7" class="anchored" data-anchor-id="repeated-measures-designs"><span class="header-section-number">14.7</span> Repeated measures designs</h2>
+<blockquote class="blockquote">
+<p>In all examples throughout this book, cases were measured on mediator(s) <span class="math inline">\(M\)</span> and outcome <span class="math inline">\(Y\)</span> only once. In nonexperimental studies, they were measured once on the causal antecedent <span class="math inline">\(X\)</span>, whereas in experimental studies they were assigned to one of two or three experimental conditions used as <span class="math inline">\(X\)</span> in the model. Although such research designs are common, also common are “repeated measures” designs that involve measuring cases more than once on the variables in a mediation model. There are several forms such designs take, and there are approaches to mediation and conditional process analysis that can be used depending on the form of the design. (p.&nbsp;541)</p>
+</blockquote>
+<p>On the next page, Hayes introduced the multilevel approach to mediation. For more on this topic, check out the great <span class="citation" data-cites="vuorreWithinsubjectMediationAnalysis2018">(<a href="references.html#ref-vuorreWithinsubjectMediationAnalysis2018" role="doc-biblioref">2018</a>)</span> paper from <a href="https://vuorre.netlify.app/">Vuorre</a> and <a href="https://presidentialscholars.columbia.edu/directory/niall-bolger">Bolger</a>, <a href="https://doi.org/10.3758/s13428-017-0980-9"><em>Within-subject mediation analysis for experimental data in cognitive psychology and neuroscience</em></a> which introduced a package for Bayesian multilevel mediation models called <a href="https://cran.r-project.org/web/packages/bmlm/index.html"><strong>bmlm</strong></a> <span class="citation" data-cites="R-bmlm bmlm2017">(<a href="references.html#ref-bmlm2017" role="doc-biblioref">Vuorre, 2017</a>, <a href="references.html#ref-R-bmlm" role="doc-biblioref">2021</a>)</span>. Yes, you can do this in <strong>brms</strong>.</p>
+<p>Hayes also discussed the cross-lag panel model for longitudinal mediation <span class="citation" data-cites="valenteComparingModelsChange2017">(e.g., <a href="references.html#ref-valenteComparingModelsChange2017" role="doc-biblioref">Valente &amp; MacKinnon, 2017</a>)</span>. I have not tried it, but I believe you could do this with current versions of <strong>brms</strong>. Here’s a <a href="https://discourse.mc-stan.org/t/cross-lagged-multilevel-panel-model/3992">thread on the Stan forums</a> discussing how from a multilevel perspective.</p>
+<blockquote class="blockquote">
+<p>For a more detailed discussion of mediation in panel designs like this, see Cole and Maxwell <span class="citation" data-cites="coleTestingMediationalModels2003">(<a href="references.html#ref-coleTestingMediationalModels2003" role="doc-biblioref">2003</a>)</span>, Little, Preacher, Selig, and Card <span class="citation" data-cites="little2007new">(<a href="references.html#ref-little2007new" role="doc-biblioref">2007</a>)</span>, and Selig and Preacher <span class="citation" data-cites="seligMediationModelsLongitudinal2009">(<a href="references.html#ref-seligMediationModelsLongitudinal2009" role="doc-biblioref">2009</a>)</span>.</p>
+<p>Another analytical option is available when <span class="math inline">\(M\)</span> and <span class="math inline">\(Y\)</span> are measured at least three times, regardless of the number of measurements of <span class="math inline">\(X\)</span>. <em>Parallel process latent growth modeling</em> allows for <span class="math inline">\(X\)</span> (either in a single measurement or manipulation, or its change over time) to influence the trajectory in change in the mediator, which in turn can influence the trajectory in the change in <span class="math inline">\(Y\)</span> over time. [Yes, <strong>brms</strong> can do this]. See Cheong et al. <span class="citation" data-cites="cheongInvestigationMediationalProcesses2003">Cheong et al. (<a href="references.html#ref-cheongInvestigationMediationalProcesses2003" role="doc-biblioref">2003</a>)</span> and Selig and Preacher (2009) for discussions of the mathematics of mediation analysis in a latent growth context. (p.&nbsp;545, <em>emphasis</em> in the original)</p>
+</blockquote>
+</section>
+<section id="dichotomous-ordinal-count-and-survival-outcomes" class="level2" data-number="14.8">
+<h2 data-number="14.8" class="anchored" data-anchor-id="dichotomous-ordinal-count-and-survival-outcomes"><span class="header-section-number">14.8</span> Dichotomous, ordinal, count, and survival outcomes</h2>
+<blockquote class="blockquote">
+<p>[Our version of] this book is focused squarely and exclusively on linear regression analysis using the [single-level Gaussian likelihood] as the computational backbone of mediation, moderation, and conditional process analysis. In all examples that included a mediation component, all mediator(s) <span class="math inline">\(M\)</span> and final consequent variable <span class="math inline">\(Y\)</span> were always treated as continuous dimensions with at least interval level measurement properties. But no doubt you will find yourself in a situation where <span class="math inline">\(M\)</span> and/or <span class="math inline">\(Y\)</span> is dichotomous, or an ordinal scale with only a few scale points, or perhaps a count variable. Although such variables can be modeled with [the Gaussian likelihood], doing so is controversial because there are better methods that respect the special statistical considerations that come up when such variables are on the left sides of equations. (p.&nbsp;545)</p>
+</blockquote>
+<p>Going beyond the Gaussian likelihood is often framed in terms of the generalized linear model (GLM). To wade into the GLM from within a Bayesian framework, I recommend Kruschke’s <span class="citation" data-cites="kruschkeDoingBayesianData2015">(<a href="references.html#ref-kruschkeDoingBayesianData2015" role="doc-biblioref">2015</a>)</span> text, <a href="https://sites.google.com/site/doingbayesiandataanalysis/"><em>Doing Bayesian data analysis, Second Edition: A tutorial with R, JAGS, and Stan</em></a>, or either edition of McElreath’s text, <a href="https://xcelab.net/rm/statistical-rethinking/"><em>Statistical rethinking: A Bayesian course with examples in R and Stan</em></a> <span class="citation" data-cites="mcelreathStatisticalRethinkingBayesian2015 mcelreathStatisticalRethinkingBayesian2020">(<a href="references.html#ref-mcelreathStatisticalRethinkingBayesian2015" role="doc-biblioref">2015</a>, <a href="references.html#ref-mcelreathStatisticalRethinkingBayesian2020" role="doc-biblioref">2020</a>)</span>. I have free ebooks of all three wherein I have translated their code into a <strong>tidyverse</strong> and <strong>brms</strong> framework <span class="citation" data-cites="kurzDoingBayesianDataAnalysis2026 kurzStatisticalRethinking2026 kurzStatisticalRethinkingSecondEd2026">(<a href="references.html#ref-kurzDoingBayesianDataAnalysis2026" role="doc-biblioref">Kurz, 2026a</a>, <a href="references.html#ref-kurzStatisticalRethinking2026" role="doc-biblioref">2026c</a>, <a href="references.html#ref-kurzStatisticalRethinkingSecondEd2026" role="doc-biblioref">2026b</a>)</span>. Liberate yourself from the tyranny of the Gauss. Embrace the GLM.</p>
+</section>
+<section id="session-info" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="session-info">Session info</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.5.1 (2025-06-13)
+Platform: aarch64-apple-darwin20
+Running under: macOS Ventura 13.4
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.5-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.1
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+time zone: America/Chicago
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+loaded via a namespace (and not attached):
+ [1] htmlwidgets_1.6.4 compiler_4.5.1    fastmap_1.2.0     cli_3.6.5         tools_4.5.1       htmltools_0.5.9   rstudioapi_0.17.1
+ [8] rmarkdown_2.30    knitr_1.51        jsonlite_2.0.0    xfun_0.55         digest_0.6.39     rlang_1.1.7       evaluate_1.0.5   </code></pre>
+</div>
+</div>
+</section>
+<section id="comments" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="comments">Comments</h2>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
+<div id="ref-bemWritingEmpiricalJournal1987" class="csl-entry" role="listitem">
+Bem, D. J. (1987). Writing the empirical journal article. In M. P. Zanna &amp; J. M. Darley (Eds.), <em>The complete academic: <span>A</span> practical guide for the beginning social scientist</em> (pp. 171–201). Lawrence Erlbaum Associates.
+</div>
+<div id="ref-cheongInvestigationMediationalProcesses2003" class="csl-entry" role="listitem">
+Cheong, J., MacKinnon, D. P., &amp; Khoo, S. T. (2003). Investigation of mediational processes using parallel process latent growth curve modeling. <em>Structural Equation Modeling : A Multidisciplinary Journal</em>, <em>10</em>(2), 238. <a href="https://doi.org/10.1207/S15328007SEM1002_5">https://doi.org/10.1207/S15328007SEM1002_5</a>
+</div>
+<div id="ref-coleTestingMediationalModels2003" class="csl-entry" role="listitem">
+Cole, D. A., &amp; Maxwell, S. E. (2003). Testing mediational models with longitudinal data: <span>Questions</span> and tips in the use of structural equation modeling. <em>Journal of Abnormal Psychology</em>, <em>112</em>(4), 558–577. <a href="https://doi.org/10.1037/0021-843X.112.4.558">https://doi.org/10.1037/0021-843X.112.4.558</a>
+</div>
+<div id="ref-cummingNewStatisticsWhy2014" class="csl-entry" role="listitem">
+Cumming, G. (2014). The new statistics: <span>Why</span> and how. <em>Psychological Science</em>, <em>25</em>(1), 7–29. <a href="https://doi.org/10.1177/0956797613504966">https://doi.org/10.1177/0956797613504966</a>
+</div>
+<div id="ref-earpReplicationFalsificationCrisis2015" class="csl-entry" role="listitem">
+Earp, B. D., &amp; Trafimow, D. (2015). Replication, falsification, and the crisis of confidence in social psychology. <em>Frontiers in Psychology</em>, <em>6</em>. <a href="https://doi.org/10.3389/fpsyg.2015.00621">https://doi.org/10.3389/fpsyg.2015.00621</a>
+</div>
+<div id="ref-galakCorrectingFailuresReplicate2012" class="csl-entry" role="listitem">
+Galak, J., LeBoeuf, R. A., Nelson, L. D., &amp; Simmons, J. P. (2012). Correcting the past: <span>Failures</span> to replicate psi. <em>Journal of Personality and Social Psychology</em>, <em>103</em>(6), 933–948. <a href="https://doi.org/10.1037/a0029709">https://doi.org/10.1037/a0029709</a>
+</div>
+<div id="ref-gelmanConnectionVaryingTreatment2015" class="csl-entry" role="listitem">
+Gelman, A. (2015). The connection between varying treatment effects and the crisis of unreplicable research: <span>A Bayesian</span> perspective. <em>Journal of Management</em>, <em>41</em>(2), 632–643. <a href="https://doi.org/10.1177/0149206314525208">https://doi.org/10.1177/0149206314525208</a>
+</div>
+<div id="ref-gelman2006difference" class="csl-entry" role="listitem">
+Gelman, A., &amp; Stern, H. (2006). The difference between <span>“significant”</span> and <span>“not significant”</span> is not itself statistically significant. <em>The American Statistician</em>, <em>60</em>(4), 328–331. <a href="https://doi.org/10.1198/000313006X152649">https://doi.org/10.1198/000313006X152649</a>
+</div>
+<div id="ref-hamakerWhyResearchersShould2012" class="csl-entry" role="listitem">
+Hamaker, E. L. (2012). Why researchers should think "within-<span>Person</span>": <span>A</span> paradigmatic rationale. In <em>Handbook of research methods for studying daily life</em> (pp. 43–61). The Guilford Press. <a href="https://www.guilford.com/books/Handbook-of-Research-Methods-for-Studying-Daily-Life/Mehl-Conner/9781462513055">https://www.guilford.com/books/Handbook-of-Research-Methods-for-Studying-Daily-Life/Mehl-Conner/9781462513055</a>
+</div>
+<div id="ref-hayesIntroductionMediationModeration2018" class="csl-entry" role="listitem">
+Hayes, Andrew F. (2018). <em>Introduction to mediation, moderation, and conditional process analysis: <span>A</span> regression-based approach</em> (Second edition). The Guilford Press. <a href="https://www.guilford.com/books/Introduction-to-Mediation-Moderation-and-Conditional-Process-Analysis/Andrew-Hayes/9781462534654">https://www.guilford.com/books/Introduction-to-Mediation-Moderation-and-Conditional-Process-Analysis/Andrew-Hayes/9781462534654</a>
+</div>
+<div id="ref-hayesSAGESourcebookAdvanced2008" class="csl-entry" role="listitem">
+Hayes, Andrew F., Slater, M. D., &amp; Snyder, L. B. (2008). <em>The <span>SAGE</span> sourcebook of advanced data analysis methods for communication research</em>. <a href="https://us.sagepub.com/en-us/nam/the-sage-sourcebook-of-advanced-data-analysis-methods-for-communication-research/book228339">https://us.sagepub.com/en-us/nam/the-sage-sourcebook-of-advanced-data-analysis-methods-for-communication-research/book228339</a>
+</div>
+<div id="ref-imaiGeneralApproachCausal2010" class="csl-entry" role="listitem">
+Imai, K., Keele, L., &amp; Tingley, D. (2010). A general approach to causal mediation analysis. <em>Psychological Methods</em>, <em>15</em>(4), 309–334. <a href="https://doi.org/10.1037/a0020761">https://doi.org/10.1037/a0020761</a>
+</div>
+<div id="ref-kayExtractingVisualizingTidy2021" class="csl-entry" role="listitem">
+Kay, M. (2021). <em>Extracting and visualizing tidy draws from brms models</em>. <a href="https://mjskay.github.io/tidybayes/articles/tidy-brms.html">https://mjskay.github.io/tidybayes/articles/tidy-brms.html</a>
+</div>
+<div id="ref-kelley2012effect" class="csl-entry" role="listitem">
+Kelley, K., &amp; Preacher, K. J. (2012). On effect size. <em>Psychological Methods</em>, <em>17</em>(2), 137. <a href="https://doi.org/10.1037/a0028086">https://doi.org/10.1037/a0028086</a>
+</div>
+<div id="ref-kleinManyLabsFailure2019" class="csl-entry" role="listitem">
+Klein, R. A., Cook, C. L., Ebersole, C. R., Vitiello, C., Nosek, B. A., Chartier, C. R., Christopherson, C. D., Clay, S., Collisson, B., Crawford, J., Cromar, R., Vidamuerte, D., Gardiner, G., Gosnell, C., Grahe, J., Hall, C., Joy-Gaba, J., Legg, A. M., Levitan, C., … Ratliff, K. (2019). <em>Many <span>Labs</span> 4: <span>Failure</span> to replicate mortality salience effect with and without original author involvement</em>. PsyArXiv. <a href="https://doi.org/10.31234/osf.io/vef2c">https://doi.org/10.31234/osf.io/vef2c</a>
+</div>
+<div id="ref-kruschkeDoingBayesianData2015" class="csl-entry" role="listitem">
+Kruschke, J. K. (2015). <em>Doing <span>Bayesian</span> data analysis: <span>A</span> tutorial with <span>R</span>, <span>JAGS</span>, and <span>Stan</span></em>. Academic Press. <a href="https://sites.google.com/site/doingbayesiandataanalysis/">https://sites.google.com/site/doingbayesiandataanalysis/</a>
+</div>
+<div id="ref-kruschkeBayesianNewStatistics2018" class="csl-entry" role="listitem">
+Kruschke, J. K., &amp; Liddell, T. M. (2018). The <span>Bayesian New Statistics</span>: <span>Hypothesis</span> testing, estimation, meta-analysis, and power analysis from a <span>Bayesian</span> perspective. <em>Psychonomic Bulletin &amp; Review</em>, <em>25</em>(1), 178–206. <a href="https://doi.org/10.3758/s13423-016-1221-4">https://doi.org/10.3758/s13423-016-1221-4</a>
+</div>
+<div id="ref-kurzDoingBayesianDataAnalysis2026" class="csl-entry" role="listitem">
+Kurz, A. S. (2026a). <em>Doing <span>Bayesian</span> data analysis in brms and the tidyverse</em> (Version 1.3.0). <a href="https://solomon.quarto.pub/dbda2/">https://solomon.quarto.pub/dbda2/</a>
+</div>
+<div id="ref-kurzStatisticalRethinkingSecondEd2026" class="csl-entry" role="listitem">
+Kurz, A. S. (2026b). <em>Statistical rethinking 2 with brms and the tidyverse</em> (version 0.5.0). <a href="https://solomon.quarto.pub/sr2/">https://solomon.quarto.pub/sr2/</a>
+</div>
+<div id="ref-kurzStatisticalRethinking2026" class="csl-entry" role="listitem">
+Kurz, A. S. (2026c). <em>Statistical rethinking with brms, <span class="nocase">ggplot2</span>, and the tidyverse</em> (version 1.4.0). <a href="https://solomon.quarto.pub/sr/">https://solomon.quarto.pub/sr/</a>
+</div>
+<div id="ref-little2007new" class="csl-entry" role="listitem">
+Little, T. D., Preacher, K. J., Selig, J. P., &amp; Card, N. A. (2007). New developments in latent variable panel analyses of longitudinal data. <em>International Journal of Behavioral Development</em>, <em>31</em>(4), 357–365. <a href="https://doi.org/10.1177/0165025407077757">https://doi.org/10.1177/0165025407077757</a>
+</div>
+<div id="ref-maxwellBiasCrosssectionalAnalyses2007" class="csl-entry" role="listitem">
+Maxwell, S. E., &amp; Cole, D. A. (2007). Bias in cross-sectional analyses of longitudinal mediation. <em>Psychological Methods</em>, <em>12</em>(1), 23–44. <a href="https://doi.org/10.1037/1082-989X.12.1.23">https://doi.org/10.1037/1082-989X.12.1.23</a>
+</div>
+<div id="ref-maxwellBiasCrosssectionalAnalyses2011" class="csl-entry" role="listitem">
+Maxwell, S. E., Cole, D. A., &amp; Mitchell, M. A. (2011). Bias in cross-sectional analyses of longitudinal mediation: <span>Partial</span> and complete mediation under an autoregressive model. <em>Multivariate Behavioral Research</em>, <em>46</em>(5), 816–841. <a href="https://doi.org/10.1080/00273171.2011.606716">https://doi.org/10.1080/00273171.2011.606716</a>
+</div>
+<div id="ref-mccabe2018improving" class="csl-entry" role="listitem">
+McCabe, C. J., Kim, D. S., &amp; King, K. M. (2018). Improving present practices in the visual display of interactions. <em>Advances in Methods and Practices in Psychological Science</em>, <em>1</em>(2), 147–165. <a href="https://doi.org/10.1177/2515245917746792">https://doi.org/10.1177/2515245917746792</a>
+</div>
+<div id="ref-mcelreathStatisticalRethinkingBayesian2015" class="csl-entry" role="listitem">
+McElreath, R. (2015). <em>Statistical rethinking: <span>A Bayesian</span> course with examples in <span>R</span> and <span>Stan</span></em>. CRC press. <a href="https://xcelab.net/rm/statistical-rethinking/">https://xcelab.net/rm/statistical-rethinking/</a>
+</div>
+<div id="ref-mcelreathStatisticalRethinkingBayesian2020" class="csl-entry" role="listitem">
+McElreath, R. (2020). <em>Statistical rethinking: <span>A Bayesian</span> course with examples in <span>R</span> and <span>Stan</span></em> (Second Edition). CRC Press. <a href="https://xcelab.net/rm/statistical-rethinking/">https://xcelab.net/rm/statistical-rethinking/</a>
+</div>
+<div id="ref-mitchellComparisonCrosssectionalSequential2013" class="csl-entry" role="listitem">
+Mitchell, M. A., &amp; Maxwell, S. E. (2013). A comparison of the cross-sectional and sequential designs when assessing longitudinal mediation. <em>Multivariate Behavioral Research</em>, <em>48</em>(3), 301–339. <a href="https://doi.org/10.1080/00273171.2013.784696">https://doi.org/10.1080/00273171.2013.784696</a>
+</div>
+<div id="ref-muthenCausalEffectsMediation2015" class="csl-entry" role="listitem">
+Muthén, B., &amp; Asparouhov, T. (2015). Causal effects in mediation modeling: <span>An</span> introduction with applications to latent variables. <em>Structural Equation Modeling: A Multidisciplinary Journal</em>, <em>22</em>(1), 12–23. <a href="https://doi.org/10.1080/10705511.2014.935843">https://doi.org/10.1080/10705511.2014.935843</a>
+</div>
+<div id="ref-navarroPaths2020" class="csl-entry" role="listitem">
+Navarro, D. (2020). <em>Paths in strange spaces: <span>A</span> comment on preregistration</em>. <a href="https://doi.org/10.31234/osf.io/wxn58">https://doi.org/10.31234/osf.io/wxn58</a>
+</div>
+<div id="ref-nelsonPsychologyRenaissance2018" class="csl-entry" role="listitem">
+Nelson, L. D., Simmons, J., &amp; Simonsohn, U. (2018). Psychology’s renaissance. <em>Annual Review of Psychology</em>, <em>69</em>(1), 511–534. <a href="https://doi.org/10.1146/annurev-psych-122216-011836">https://doi.org/10.1146/annurev-psych-122216-011836</a>
+</div>
+<div id="ref-pashlerEditorsIntroductionSpecial2012" class="csl-entry" role="listitem">
+Pashler, H., &amp; Wagenmakers, E. (2012). Editors’ introduction to the special section on replicability in psychological science: <span>A</span> crisis of confidence? <em>Perspectives on Psychological Science</em>, <em>7</em>(6), 528–530. <a href="https://doi.org/10.1177/1745691612465253">https://doi.org/10.1177/1745691612465253</a>
+</div>
+<div id="ref-seligMediationModelsLongitudinal2009" class="csl-entry" role="listitem">
+Selig, J. P., &amp; Preacher, K. J. (2009). Mediation models for longitudinal data in developmental research. <em>Research in Human Development</em>, <em>6</em>(2–3), 144–164. <a href="https://doi.org/10.1080/15427600902911247">https://doi.org/10.1080/15427600902911247</a>
+</div>
+<div id="ref-valenteComparingModelsChange2017" class="csl-entry" role="listitem">
+Valente, M. J., &amp; MacKinnon, D. P. (2017). Comparing models of change to estimate the mediated effect in the pretest-posttest control group design. <em>Structural Equation Modeling : A Multidisciplinary Journal</em>, <em>24</em>(3), 428–450. <a href="https://doi.org/10.1080/10705511.2016.1274657">https://doi.org/10.1080/10705511.2016.1274657</a>
+</div>
+<div id="ref-valeri2013mediation" class="csl-entry" role="listitem">
+Valeri, L., &amp; VanderWeele, T. J. (2013). Mediation analysis allowing for exposure–mediator interactions and causal interpretation: <span>Theoretical</span> assumptions and implementation with <span>SAS</span> and <span>SPSS</span> macros. <em>Psychological Methods</em>, <em>18</em>(2), 137. <a href="https://doi.org/10.1037/a0031034">https://doi.org/10.1037/a0031034</a>
+</div>
+<div id="ref-vanderweeleExplanationCausalInference2015" class="csl-entry" role="listitem">
+VanderWeele, T. (2015). <em>Explanation in causal inference: <span>Methods</span> for mediation and interaction</em> (1st edition). Oxford University Press.
+</div>
+<div id="ref-bmlm2017" class="csl-entry" role="listitem">
+Vuorre, M. (2017). <em><span class="nocase">bmlm</span>: <span>Bayesian</span> multilevel mediation</em> [Manual]. <a href="https://cran.r-project.org/package=bmlm">https://cran.r-project.org/package=bmlm</a>
+</div>
+<div id="ref-R-bmlm" class="csl-entry" role="listitem">
+Vuorre, M. (2021). <em><span class="nocase">bmlm</span>: <span>Bayesian</span> multilevel mediation</em> [Manual]. <a href="https://github.com/mvuorre/bmlm/">https://github.com/mvuorre/bmlm/</a>
+</div>
+<div id="ref-vuorreWithinsubjectMediationAnalysis2018" class="csl-entry" role="listitem">
+Vuorre, M., &amp; Bolger, N. (2018). Within-subject mediation analysis for experimental data in cognitive psychology and neuroscience. <em>Behavior Research Methods</em>, <em>50</em>(5), 2125–2143. <a href="https://doi.org/10.3758/s13428-017-0980-9">https://doi.org/10.3758/s13428-017-0980-9</a>
+</div>
+<div id="ref-yongReplicationStudiesBad2012" class="csl-entry" role="listitem">
+Yong, E. (2012). Replication studies: <span>Bad</span> copy. <em>Nature News</em>, <em>485</em>(7398), 298. <a href="https://doi.org/10.1038/485298a">https://doi.org/10.1038/485298a</a>
+</div>
+</div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/solomon\.quarto\.pub\/immcpa2\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<input type="hidden" id="giscus-base-theme" value="light">
+<input type="hidden" id="giscus-alt-theme" value="dark">
+<script>
+  function loadGiscus() {
+    // Function to get the theme based on body class
+    const getTheme = () => {
+      let baseTheme = document.getElementById('giscus-base-theme').value;
+      let altTheme = document.getElementById('giscus-alt-theme').value;
+      return document.body.classList.contains('quarto-dark') ? altTheme : baseTheme;
+    };
+    const script = document.createElement("script");
+    script.src = "https://giscus.app/client.js";
+    script.async = true;
+    script.dataset.repo = "ASKurz/recoding-Hayes-2018";
+    script.dataset.repoId = "";
+    script.dataset.category = "General";
+    script.dataset.categoryId = "";
+    script.dataset.mapping = "title";
+    script.dataset.reactionsEnabled = "1";
+    script.dataset.emitMetadata = "0";
+    script.dataset.inputPosition = "top";
+    script.dataset.theme = getTheme();
+    script.dataset.lang = "en";
+    script.crossOrigin = "anonymous";
+    // Append the script to the desired div instead of at the end of the body
+    document.getElementById("quarto-content").appendChild(script);
+  }
+  loadGiscus();
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./part_05.html" class="pagination-link" aria-label="PART V: MISCELLANEA">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">PART V: MISCELLANEA</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./references.html" class="pagination-link" aria-label="References">
+        <span class="nav-page-text">References</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/ASKurz/recoding-Hayes-2018/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
